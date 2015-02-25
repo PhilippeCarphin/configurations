@@ -1,7 +1,7 @@
     # include .bashrc if it exists
-    if [ -f "$HOME/.bash_profile" ]; then
-	source $HOME/.bash_profile
-    fi
+    #if [ -f "$HOME/.bash_profile" ]; then
+#	source $HOME/.bash_profile
+    #fi
 PS1='\[\e[0;32m\][\u@\h \W] \$ \[\e[0m\]'
 
 alias INF2705='cd ~/Documents/INF2705-Infographie/tp3-orbite/inf2705-base'
