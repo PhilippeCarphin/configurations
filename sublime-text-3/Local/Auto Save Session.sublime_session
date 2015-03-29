@@ -1,6 +1,7 @@
 {
 	"folder_history":
 	[
+		"/home/pcarphin/Documents/FedoraInstall",
 		"/home/pcarphin/Documents/Install/sublime_text/Icon",
 		"/home/pcarphin/Documents/Tests/INF2705-Infographie"
 	],
@@ -213,6 +214,17 @@
 					]
 				]
 			},
+			"buffers":
+			[
+				{
+					"file": "/home/pcarphin/Documents/FedoraInstall/startupScriptFedora.sh",
+					"settings":
+					{
+						"buffer_size": 8701,
+						"line_ending": "Unix"
+					}
+				}
+			],
 			"build_system": "",
 			"build_system_choices":
 			[
@@ -220,10 +232,14 @@
 			"build_varint": "",
 			"command_palette":
 			{
-				"height": 92.0,
-				"last_filter": "menu",
+				"height": 72.0,
+				"last_filter": "install",
 				"selected_items":
 				[
+					[
+						"install",
+						"Package Control: Install Package"
+					],
 					[
 						"menu",
 						"View: Toggle Menu"
@@ -231,10 +247,6 @@
 					[
 						"remove",
 						"Package Control: Remove Package"
-					],
-					[
-						"install",
-						"Package Control: Install Package"
 					]
 				],
 				"width": 449.0
@@ -256,6 +268,10 @@
 				"side_bar_visible": false,
 				"status_bar_visible": false
 			},
+			"expanded_folders":
+			[
+				"/home/pcarphin/Documents/FedoraInstall"
+			],
 			"file_history":
 			[
 				"/run/user/1001/gvfs/sftp:host=l3818-01.info.polymtl.ca,user=phcarb/usagers/phcarb/.config/sublime-text-2/Packages/User/test.sublime-build",
@@ -330,6 +346,51 @@
 				"whole_word": false,
 				"wrap": true
 			},
+			"folders":
+			[
+				{
+					"path": "/home/pcarphin/Documents/FedoraInstall"
+				}
+			],
+			"groups":
+			[
+				{
+					"selected": 0,
+					"sheets":
+					[
+						{
+							"buffer": 0,
+							"file": "/home/pcarphin/Documents/FedoraInstall/startupScriptFedora.sh",
+							"semi_transient": true,
+							"settings":
+							{
+								"buffer_size": 8701,
+								"regions":
+								{
+								},
+								"selection":
+								[
+									[
+										0,
+										0
+									]
+								],
+								"settings":
+								{
+									"syntax": "Packages/ShellScript/Shell-Unix-Generic.tmLanguage",
+									"tab_size": 2,
+									"translate_tabs_to_spaces": true
+								},
+								"translation.x": 0.0,
+								"translation.y": 0.0,
+								"zoom_level": 1.0
+							},
+							"stack_index": 0,
+							"type": "text"
+						}
+					]
+				}
+			],
 			"incremental_find":
 			{
 				"height": 21.0
@@ -370,7 +431,8 @@
 				"height": 330.0
 			},
 			"pinned_build_system": "",
-			"position": "0,1,0,0,0,2737,59,3653,923,3840,1080",
+			"position": "0,0,0,0,0,2922,87,3838,951,3840,1080",
+			"project": "",
 			"replace":
 			{
 				"height": 38.0
@@ -403,6 +465,7 @@
 				],
 				"width": 0.0
 			},
+			"selected_group": 0,
 			"settings":
 			{
 			},
@@ -415,7 +478,8 @@
 			"template_settings":
 			{
 			},
-			"window_id": 20
+			"window_id": 20,
+			"workspace_name": ""
 		}
 	],
 	"workspaces":
