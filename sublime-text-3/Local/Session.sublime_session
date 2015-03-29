@@ -1,6 +1,7 @@
 {
 	"folder_history":
 	[
+		"/home/pcarphin/Documents/FedoraInstall",
 		"/home/pcarphin/Documents/Install/sublime_text/Icon",
 		"/home/pcarphin/Documents/Tests/INF2705-Infographie"
 	],
@@ -28,10 +29,14 @@
 			"build_varint": "",
 			"command_palette":
 			{
-				"height": 92.0,
-				"last_filter": "menu",
+				"height": 72.0,
+				"last_filter": "install",
 				"selected_items":
 				[
+					[
+						"install",
+						"Package Control: Install Package"
+					],
 					[
 						"menu",
 						"View: Toggle Menu"
@@ -39,10 +44,6 @@
 					[
 						"remove",
 						"Package Control: Remove Package"
-					],
-					[
-						"install",
-						"Package Control: Install Package"
 					]
 				],
 				"width": 449.0
@@ -220,10 +221,14 @@
 			"build_varint": "",
 			"command_palette":
 			{
-				"height": 92.0,
-				"last_filter": "menu",
+				"height": 72.0,
+				"last_filter": "install",
 				"selected_items":
 				[
+					[
+						"install",
+						"Package Control: Install Package"
+					],
 					[
 						"menu",
 						"View: Toggle Menu"
@@ -231,10 +236,6 @@
 					[
 						"remove",
 						"Package Control: Remove Package"
-					],
-					[
-						"install",
-						"Package Control: Install Package"
 					]
 				],
 				"width": 449.0
@@ -370,7 +371,7 @@
 				"height": 330.0
 			},
 			"pinned_build_system": "",
-			"position": "0,1,0,0,0,2737,59,3653,923,3840,1080",
+			"position": "0,0,0,0,0,2922,87,3838,951,3840,1080",
 			"replace":
 			{
 				"height": 38.0
