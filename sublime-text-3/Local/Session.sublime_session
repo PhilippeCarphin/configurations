@@ -1,0 +1,473 @@
+{
+	"folder_history":
+	[
+		"/home/pcarphin/Documents/Install/sublime_text/Icon",
+		"/home/pcarphin/Documents/Tests/INF2705-Infographie"
+	],
+	"last_version": 3083,
+	"last_window_id": 20,
+	"log_indexing": false,
+	"settings":
+	{
+		"new_window_height": 830.0,
+		"new_window_settings":
+		{
+			"auto_complete":
+			{
+				"selected_items":
+				[
+					[
+						"sublime",
+						"sublimeExecDir"
+					]
+				]
+			},
+			"build_system_choices":
+			[
+			],
+			"build_varint": "",
+			"command_palette":
+			{
+				"height": 92.0,
+				"last_filter": "menu",
+				"selected_items":
+				[
+					[
+						"menu",
+						"View: Toggle Menu"
+					],
+					[
+						"remove",
+						"Package Control: Remove Package"
+					],
+					[
+						"install",
+						"Package Control: Install Package"
+					]
+				],
+				"width": 449.0
+			},
+			"console":
+			{
+				"height": 114.0,
+				"history":
+				[
+					"import urllib.request,os,hashlib; h = 'eb2297e1a458f27d836c04bb0cbaf282' + 'd0e7a3098092775ccb37ca9d6b2e4b7d'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by) "
+				]
+			},
+			"distraction_free":
+			{
+				"menu_visible": true,
+				"show_minimap": false,
+				"show_open_files": false,
+				"show_tabs": false,
+				"side_bar_visible": false,
+				"status_bar_visible": false
+			},
+			"file_history":
+			[
+				"/home/pcarphin/.config/sublime-text-3/Packages/User/Package Control.merged-ca-bundle",
+				"/run/media/pcarphin/My Book/Fedora Install march 2015/Install/FedoraInstall/OLD FEDORA SETUP",
+				"/run/media/pcarphin/My Book/Fedora Install march 2015/Install/FedoraInstall/startupScriptFedora.sh",
+				"/home/pcarphin/Documents/Install/correction",
+				"/home/pcarphin/Documents/TestArea/test.sh",
+				"/home/pcarphin/Documents/TestArea/startupScriptFedora.sh",
+				"/run/media/pcarphin/My Book/correction",
+				"/home/pcarphin/philconfig/bashrc",
+				"/home/pcarphin/Documents/Tests/INF2705-Infographie/tp5-illumination/inf2705-base/main.cpp",
+				"/home/pcarphin/Documents/Tests/INF2705-Infographie/tp4-particules/inf2705-base/main.cpp",
+				"/run/media/pcarphin/My Book/Fedora Install march 2015/Install/FedoraInstall/sublime_text/sublime_text.desktop",
+				"/run/media/pcarphin/My Book/Fedora Install march 2015/Install/startupScriptFedora.sh",
+				"/run/media/pcarphin/My Book/Fedora Install march 2015/Install/march28.txt",
+				"/run/media/pcarphin/My Book/FEDORA SETUP",
+				"/usr/share/applications/sublime_text.desktop",
+				"/run/media/pcarphin/My Book/Fedora Install march 2015/Install/history.txt",
+				"/home/pcarphin/Install/bonjour.txt",
+				"/home/pcarphin/Install/startupScriptFedora.sh",
+				"/run/media/pcarphin/My Book/Fedora Install march 2015/Tests/INF2705-Infographie/tp5-illumination/inf2705-base/nuanceurs/nuanceurSommets.glsl",
+				"/run/media/pcarphin/My Book/Fedora Install march 2015/Tests/INF2705-Infographie/tp5-illumination/inf2705-base/nuanceurs/nuanceurFragments.glsl",
+				"/home/pcarphin/skype",
+				"/home/pcarphin/.config/sublime-text-3/Local/License.sublime_license",
+				"/run/media/pcarphin/My Book/Fedora Install march 2015/Install/OLD FEDORA SETUP",
+				"/run/media/pcarphin/My Book/Backup from Fedora/OpenGL_installation.txt",
+				"/home/pcarphin/Templates/Text File.txt",
+				"/home/pcarphin/Documents/Install/startupScriptFedora.sh",
+				"/run/media/pcarphin/My Book/Fedora Install march 2015/alias.txt",
+				"/home/pcarphin/Documents/sublime_text_3/sublime.py"
+			],
+			"find":
+			{
+				"height": 21.0
+			},
+			"find_in_files":
+			{
+				"height": 0.0,
+				"where_history":
+				[
+				]
+			},
+			"find_state":
+			{
+				"case_sensitive": false,
+				"find_history":
+				[
+					"/home/pcarphin",
+					"yum",
+					"getopts",
+					"printf",
+					"configurations",
+					"bashrc",
+					"31"
+				],
+				"highlight": true,
+				"in_selection": false,
+				"preserve_case": false,
+				"regex": false,
+				"replace_history":
+				[
+				],
+				"reverse": false,
+				"show_context": true,
+				"use_buffer2": true,
+				"whole_word": false,
+				"wrap": true
+			},
+			"incremental_find":
+			{
+				"height": 21.0
+			},
+			"input":
+			{
+				"height": 29.0
+			},
+			"menu_visible": true,
+			"output.find_results":
+			{
+				"height": 0.0
+			},
+			"output.unsaved_changes":
+			{
+				"height": 330.0
+			},
+			"pinned_build_system": "",
+			"replace":
+			{
+				"height": 38.0
+			},
+			"save_all_on_build": true,
+			"select_file":
+			{
+				"height": 0.0,
+				"last_filter": "",
+				"selected_items":
+				[
+				],
+				"width": 0.0
+			},
+			"select_project":
+			{
+				"height": 0.0,
+				"last_filter": "",
+				"selected_items":
+				[
+				],
+				"width": 0.0
+			},
+			"select_symbol":
+			{
+				"height": 0.0,
+				"last_filter": "",
+				"selected_items":
+				[
+				],
+				"width": 0.0
+			},
+			"show_minimap": true,
+			"show_open_files": false,
+			"show_tabs": true,
+			"side_bar_visible": true,
+			"side_bar_width": 150.0,
+			"status_bar_visible": true,
+			"template_settings":
+			{
+			}
+		},
+		"new_window_width": 1715.0
+	},
+	"windows":
+	[
+		{
+			"auto_complete":
+			{
+				"selected_items":
+				[
+					[
+						"sublime",
+						"sublimeExecDir"
+					]
+				]
+			},
+			"buffers":
+			[
+				{
+					"contents": "#!/bin/bash\n#\n#    Fedora install script.  \n#    \n#    This script is meant to be run on a completely fresh Fedora\n#    \n#    Running it twice might cause problems with the following sections\n#        - Installing Sublime Text : Copying files\n#        - Installing Skype : Copying files\n#        \n#    The rest is a bunch of yum install's so there won't be any problem\n#    if the script is run twice.  \n#    \n#    If it is run twice, however, I don't think that it will cause a \n#    problem because we copy files to places and create links, and\n#    the command just fails if the link or file already exists.\n#    \n#    NOTE: you must be in the script directory to run this script.\n#    \n#    NOTE: This script should be split up into it's Distro specific\n#    and non-distro specific parts. For example, config setup with \n#    git is not-distro specific, sublime too, not skype though\n#    and then you have everything that uses yum that is specific to fedora\n#    \n#    NOTE: Think about whether or not it makes a difference if the command\n#    is run as root or as pcarphin\n#    \n#    That way I can use $HOME and $USER instead of hard coding /home/pcarphin\n#    possibly doing something like this can help:\n#    \n#        user=$USER\n#        home=$HOME\n#        \n#        su -c \n#        # The password has to be entered after running the script\n#        ... the script using $user and $home instead of pcarphin and /home/pcarphin\n#        # exit from being superuser\n#        exit \n#        \n#    Also, maybe I can run the script as sudo, and the script can \n#    go from su $user to su root and bounce between the two during the script.\n#    \n#\n# git configs cant be done as sudo, it doesn't work that way.\n# \n# \n\n\nwhile getopts u:p:o:bdnhr opt\ndo\n    case \"$opt\" in\n      u) user=$OPTARG;;\n      b) echo \"Option b sans argument\";;\n      \\?)		# unknown flag\n        echo \"Options invalides\"\n	    ;;\n    esac\ndone\nshift `expr $OPTIND - 1`\n\n\nif [ \"$user\" == \"\" ]\nthen\nread -p \"Please enter user name \" -s user\necho\nfi\npass=\"\"\nwhile [[ ! $REPLY =~ ^[Yy]$ ]]\ndo\n	read -p \"Please enter Password \" -s pass\n	echo\n\n	echo \"Testing password with sudo\"\n	echo -ne \"$pass\\n\" | sudo -S yum install vim\n\n	read -p \"Did it work? \" -n 1 -r\n	echo    # (optional) move to a new line\ndone\n\n\n\necho -ne \"$pass\\n\" | sudo -S yum update -y\necho -ne \"$pass\\n\" | sudo -S yum groupinstall -y \"Development Tools\"\necho -ne \"$pass\\n\" | sudo -S yum install -y kernel-devel kernel-headers\necho -ne \"$pass\\n\" | sudo -S yum install -y grub-customizer\necho -ne \"$pass\\n\" | sudo -S yum install -y vim\necho -ne \"$pass\\n\" | sudo -S yum install -y nautilus-open-terminal\necho -ne \"$pass\\n\" | sudo -S yum install -y gimp\n\nprintf \"\\033[1;31m=================== Installing Sublime Text==============\\033[0m\\n\"\ninstallDir=$PWD \nsublimeExecDir=/opt/sublime_text\napplicationDir=/usr/share/applications\nsublimeBin=/usr/bin\n\necho -ne \"$pass\\n\" | sudo -S cp -r sublime_text/ $sublimeExecDir\necho -ne \"$pass\\n\" | sudo -S cp sublime_text/sublime_text.desktop $applicationDir/sublime_text.desktop\necho -ne \"$pass\\n\" | sudo -S ln -s /opt/sublime_text/sublime_text $sublimeBin/sublime_text\ncd $sublimeExecDir\necho $PWD\necho \"chmod 777 --recursive .\"\necho -ne \"$pass\\n\" | sudo -S chmod 777 --recursive .\necho -ne \"$pass\\n\" | sudo -S chmod +x $sublimeBin/sublime_textLINK\necho -ne \"$pass\\n\" | sudo -S chmod 777 $applicationDir/sublime_text.desktop\n\ngit config --global user.name \"Philippe Carphin\"\ngit config --global user.email phil103@hotmail.com\ngit clone https://github.com/PewMcDaddy/configurations.git $HOME/philconfig\nrm $HOME/.bashrc\nrm $HOME/.vimrc\nrm $HOME/.config/sublime-text-3/Packages/User/Preferences.sublime-settings\nln -s $HOME/philconfig/Preferences.sublime-settings $HOME/.config/sublime-text-3/Packages/User/Preferences.sublime-settings\nln -s $HOME/philconfig/bashrc $HOME/.bashrc\nln -s $HOME/philconfig/vimrc $HOME/.vimrc\nchmod 777 --recursive /home/pcarphin/philconfig\n\ncd $installDir\necho $PWD\necho \"You will need to install your licence\"\n\nprintf \"\\033[1;31m=============== Installing AVR-GCC stuff ================\\033[0m\\n\"\necho -ne \"$pass\\n\" | sudo -S yum -y install avr-gcc avr-binutils avr-libc avr-gdb avrdude eclipse eclipse-cdt avr-gcc-c++ \nprintf \"\\033[1;31m================ Installing regurlar GCC ================\\033[0m\\n\"\n#yum -y install gcc* gcc-c++\necho -ne \"$pass\\n\" | sudo -S yum install gcc gcc-c++\nprintf \"\\033[1;31m======= Installing 32 bit support for INF1600 TP4 =======\\033[0m\\n\"\necho \"Installing 32 bit support for INF1600 TP4\"\necho -ne \"$pass\\n\" | sudo -S yum install -y libstdc++.i686 freeglut-devel.i686 mesa-libGL-devel.i686 mesa-libGLU-devel.i686\necho -ne \"$pass\\n\" | sudo -S yum -y install glibc-devel.i686 glibc-devel\n\n\n\nprintf \"\\033[1;31m=================== Installing Latex ====================\\033[0m\\n\"\necho -ne \"$pass\\n\" | sudo -S yum install -y texlive-scheme-full\necho -ne \"$pass\\n\" | sudo -S yum install -y latexmk # Sublime Text utilise latexmk pour compiler.\n\nprintf \"\\033[1;31m=================== Installing Skype ====================\\033[0m\\n\"\n# Dependencies for skype\necho -ne \"$pass\\n\" | sudo -S yum install -y alsa-lib.i686 fontconfig.i686 freetype.i686 glib2.i686 libSM.i686 libXScrnSaver.i686 libXi.i686 libXrandr.i686 libXrender.i686 libXv.i686 libstdc++.i686 pulseaudio-libs.i686 qt.i686 qt-x11.i686 zlib.i686\necho -ne \"$pass\\n\" | sudo -S yum install -y qtwebkit.i686\n\ncd /tmp\necho -ne \"$pass\\n\" | sudo -S wget --trust-server-names http://www.skype.com/go/getskype-linux-dynamic\necho -ne \"$pass\\n\" | sudo -S mkdir /opt/skype\necho \"Possible failure due to different version. look in temp and change script accordingly\"\necho -ne \"$pass\\n\" | sudo -S tar xvf skype-4.3* -C /opt/skype --strip-components=1\necho -ne \"$pass\\n\" | sudo -S ln -s /opt/skype/skype.desktop /usr/share/applications/skype.desktop\necho -ne \"$pass\\n\" | sudo -S ln -s /opt/skype/icons/SkypeBlue_48x48.png /usr/share/icons/skype.png\necho -ne \"$pass\\n\" | sudo -S ln -s /opt/skype/icons/SkypeBlue_48x48.png /usr/share/pixmaps/skype.png\necho -ne \"$pass\\n\" | sudo -S touch /usr/bin/skype\necho -ne \"$pass\\n\" | sudo -S chmod 755 /usr/bin/skype\ncd $installDir\n\n\n# Skype:Add something to a file\n    # #!/bin/sh\n    # export SKYPE_HOME=\"/opt/skype\"\n    # $SKYPE_HOME/skype --resources=$SKYPE_HOME $*\n\necho -ne \"$pass\\n\" | sudo -S echo \"#!/bin/sh\"  > /home/pcarphin/skype\necho -ne \"$pass\\n\" | sudo -S echo \"export SKYPE_HOME=\\\"/opt/skype\\\"\" >> /home/pcarphin/skype\necho -ne \"$pass\\n\" | sudo -S echo \"\\$SKYPE_HOME/skype --resources=\\$SKYPE_HOME \\$*\" >> /home/pcarphin/skype\n\nprintf \"\\033[1;31m========== Installing Latex Mesa, Glut, Glew ============\\033[0m\\n\"\necho \"Installing OpenGL development support Maybe hold off on this until after NVIDIA drivers are isntalled\"\necho -ne \"$pass\\n\" | sudo -S yum install -y mesa-libGL mesa-libGLU mesa-libGL-devel mesa-libGLU-devel\necho -ne \"$pass\\n\" | sudo -S yum install -y glew glew-devel freeglut freeglut-devel\n\necho \"Killing all nautilus windows for open-in-terminal to take effect\"\nkillall nautilus\nprintf \"\\033[1;32mCheck to make sure that OpenGL stuff is really installed.\\033[0m\\n\"\nprintf \"\\033[1;33mEnter sublime_text license\\033[0m\\n\"\nprintf \"\\033[1;30m----- BEGIN LICENSE -----\nPhilippe Carphin\nSingle User License\nEA7E-912365\nD43AD65C 6A5EFF71 C10E30D7 AC539FB9\n00B524AC F967763A 64765472 10E40088\n8C0D5A52 BC8477DA 8EC91317 B009988A\nF2C11D84 0E0F39A0 E8BB0E8F 59917D39\nDE9AA6E7 09562303 9882AC33 CD6E6D31\n1E376E52 64CB993D 884A00FA 5D10D16C\n0DDCEB40 FCE749BB 534FCDC3 04AB9614\n1E692289 ABC74ECC 851DCC4D D5AAEAE6\n------ END LICENSE ------\\n\"\n#    # Package Control\n#    import urllib.request,os,hashlib; h = 'eb2297e1a458f27d836c04bb0cbaf282' + 'd0e7a3098092775ccb37ca9d6b2e4b7d'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by) \n#    sublimerge license\n#    J9FM-K8XN-RRFJ-4MX3-LL2G-53BV-YQUQ-BQHZ-C7UK-RKFH\n\nprintf \"\\033[1;36mYou need to reboot.\\033[0m\\n\"\n#Prompt for reboot.\n\n# ===============================================================\n# ==========           NOTES            =========================\n# ===============================================================\n# \n# INTERNET NOT WORKING ERROR\n# Connection works automatically on live CD but not on the installed version\n# ==> Change the firewall location to \"Home\" for the wired connection",
+					"file": "/home/pcarphin/Documents/FedoraInstall/startupScriptFedora.sh",
+					"file_size": 8500,
+					"file_write_time": 130720751207783453,
+					"settings":
+					{
+						"buffer_size": 8701,
+						"line_ending": "Unix"
+					}
+				}
+			],
+			"build_system": "",
+			"build_system_choices":
+			[
+			],
+			"build_varint": "",
+			"command_palette":
+			{
+				"height": 92.0,
+				"last_filter": "menu",
+				"selected_items":
+				[
+					[
+						"menu",
+						"View: Toggle Menu"
+					],
+					[
+						"remove",
+						"Package Control: Remove Package"
+					],
+					[
+						"install",
+						"Package Control: Install Package"
+					]
+				],
+				"width": 449.0
+			},
+			"console":
+			{
+				"height": 114.0,
+				"history":
+				[
+					"import urllib.request,os,hashlib; h = 'eb2297e1a458f27d836c04bb0cbaf282' + 'd0e7a3098092775ccb37ca9d6b2e4b7d'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by) "
+				]
+			},
+			"distraction_free":
+			{
+				"menu_visible": true,
+				"show_minimap": false,
+				"show_open_files": false,
+				"show_tabs": false,
+				"side_bar_visible": false,
+				"status_bar_visible": false
+			},
+			"file_history":
+			[
+				"/home/pcarphin/Documents/TestArea/test.sh",
+				"/home/pcarphin/Documents/FedoraInstall/startupScriptFedora.sh",
+				"/home/pcarphin/philconfig/Preferences.sublime-settings",
+				"/home/pcarphin/.config/sublime-text-3/Packages/User/Package Control.merged-ca-bundle",
+				"/run/media/pcarphin/My Book/Fedora Install march 2015/Install/FedoraInstall/OLD FEDORA SETUP",
+				"/run/media/pcarphin/My Book/Fedora Install march 2015/Install/FedoraInstall/startupScriptFedora.sh",
+				"/home/pcarphin/Documents/Install/correction",
+				"/home/pcarphin/Documents/TestArea/startupScriptFedora.sh",
+				"/run/media/pcarphin/My Book/correction",
+				"/home/pcarphin/philconfig/bashrc",
+				"/home/pcarphin/Documents/Tests/INF2705-Infographie/tp5-illumination/inf2705-base/main.cpp",
+				"/home/pcarphin/Documents/Tests/INF2705-Infographie/tp4-particules/inf2705-base/main.cpp",
+				"/run/media/pcarphin/My Book/Fedora Install march 2015/Install/FedoraInstall/sublime_text/sublime_text.desktop",
+				"/run/media/pcarphin/My Book/Fedora Install march 2015/Install/startupScriptFedora.sh",
+				"/run/media/pcarphin/My Book/Fedora Install march 2015/Install/march28.txt",
+				"/run/media/pcarphin/My Book/FEDORA SETUP",
+				"/usr/share/applications/sublime_text.desktop",
+				"/run/media/pcarphin/My Book/Fedora Install march 2015/Install/history.txt",
+				"/home/pcarphin/Install/bonjour.txt",
+				"/home/pcarphin/Install/startupScriptFedora.sh",
+				"/run/media/pcarphin/My Book/Fedora Install march 2015/Tests/INF2705-Infographie/tp5-illumination/inf2705-base/nuanceurs/nuanceurSommets.glsl",
+				"/run/media/pcarphin/My Book/Fedora Install march 2015/Tests/INF2705-Infographie/tp5-illumination/inf2705-base/nuanceurs/nuanceurFragments.glsl",
+				"/home/pcarphin/skype",
+				"/home/pcarphin/.config/sublime-text-3/Local/License.sublime_license",
+				"/run/media/pcarphin/My Book/Fedora Install march 2015/Install/OLD FEDORA SETUP",
+				"/run/media/pcarphin/My Book/Backup from Fedora/OpenGL_installation.txt",
+				"/home/pcarphin/Templates/Text File.txt",
+				"/home/pcarphin/Documents/Install/startupScriptFedora.sh",
+				"/run/media/pcarphin/My Book/Fedora Install march 2015/alias.txt",
+				"/home/pcarphin/Documents/sublime_text_3/sublime.py"
+			],
+			"find":
+			{
+				"height": 21.0
+			},
+			"find_in_files":
+			{
+				"height": 0.0,
+				"where_history":
+				[
+				]
+			},
+			"find_state":
+			{
+				"case_sensitive": false,
+				"find_history":
+				[
+					"/home/pcarphin",
+					"yum",
+					"getopts",
+					"printf",
+					"configurations",
+					"bashrc",
+					"31"
+				],
+				"highlight": true,
+				"in_selection": false,
+				"preserve_case": false,
+				"regex": false,
+				"replace_history":
+				[
+				],
+				"reverse": false,
+				"show_context": true,
+				"use_buffer2": true,
+				"whole_word": false,
+				"wrap": true
+			},
+			"groups":
+			[
+				{
+					"selected": 0,
+					"sheets":
+					[
+						{
+							"buffer": 0,
+							"file": "/home/pcarphin/Documents/FedoraInstall/startupScriptFedora.sh",
+							"semi_transient": false,
+							"settings":
+							{
+								"buffer_size": 8701,
+								"regions":
+								{
+								},
+								"selection":
+								[
+									[
+										3400,
+										3400
+									]
+								],
+								"settings":
+								{
+									"syntax": "Packages/ShellScript/Shell-Unix-Generic.tmLanguage",
+									"tab_size": 2,
+									"translate_tabs_to_spaces": true
+								},
+								"translation.x": 0.0,
+								"translation.y": 1560.0,
+								"zoom_level": 1.0
+							},
+							"stack_index": 0,
+							"type": "text"
+						}
+					]
+				}
+			],
+			"incremental_find":
+			{
+				"height": 21.0
+			},
+			"input":
+			{
+				"height": 29.0
+			},
+			"layout":
+			{
+				"cells":
+				[
+					[
+						0,
+						0,
+						1,
+						1
+					]
+				],
+				"cols":
+				[
+					0.0,
+					1.0
+				],
+				"rows":
+				[
+					0.0,
+					1.0
+				]
+			},
+			"menu_visible": false,
+			"output.find_results":
+			{
+				"height": 0.0
+			},
+			"output.unsaved_changes":
+			{
+				"height": 330.0
+			},
+			"pinned_build_system": "",
+			"position": "0,0,0,0,0,2907,119,3823,983,3840,1080",
+			"project": "",
+			"replace":
+			{
+				"height": 38.0
+			},
+			"save_all_on_build": true,
+			"select_file":
+			{
+				"height": 0.0,
+				"last_filter": "",
+				"selected_items":
+				[
+				],
+				"width": 0.0
+			},
+			"select_project":
+			{
+				"height": 0.0,
+				"last_filter": "",
+				"selected_items":
+				[
+				],
+				"width": 0.0
+			},
+			"select_symbol":
+			{
+				"height": 0.0,
+				"last_filter": "",
+				"selected_items":
+				[
+				],
+				"width": 0.0
+			},
+			"selected_group": 0,
+			"settings":
+			{
+			},
+			"show_minimap": true,
+			"show_open_files": false,
+			"show_tabs": true,
+			"side_bar_visible": true,
+			"side_bar_width": 150.0,
+			"status_bar_visible": true,
+			"template_settings":
+			{
+			},
+			"window_id": 20,
+			"workspace_name": ""
+		}
+	],
+	"workspaces":
+	{
+		"recent_workspaces":
+		[
+		]
+	}
+}
