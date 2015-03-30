@@ -6,7 +6,7 @@
 		"/home/pcarphin/Documents/Tests/INF2705-Infographie"
 	],
 	"last_version": 3083,
-	"last_window_id": 20,
+	"last_window_id": 23,
 	"log_indexing": false,
 	"settings":
 	{
@@ -29,17 +29,17 @@
 			"build_varint": "",
 			"command_palette":
 			{
-				"height": 72.0,
-				"last_filter": "install",
+				"height": 112.0,
+				"last_filter": "menu",
 				"selected_items":
 				[
 					[
-						"install",
-						"Package Control: Install Package"
-					],
-					[
 						"menu",
 						"View: Toggle Menu"
+					],
+					[
+						"install",
+						"Package Control: Install Package"
 					],
 					[
 						"remove",
@@ -67,12 +67,13 @@
 			},
 			"file_history":
 			[
+				"/home/pcarphin/Documents/INF1995/inf1995-tp8/143659/inf1995-143659/code_commun/exec_dir/Makefile",
+				"/home/pcarphin/Documents/FedoraInstall/startupScriptFedora.sh",
 				"/run/user/1001/gvfs/sftp:host=l3818-01.info.polymtl.ca,user=phcarb/usagers/phcarb/.config/sublime-text-2/Packages/User/test.sublime-build",
 				"/run/user/1001/gvfs/sftp:host=l3818-01.info.polymtl.ca,user=phcarb/usagers/phcarb/.config/sublime-text-2/Packages/User/Robot.sublime-build",
 				"/run/user/1001/gvfs/sftp:host=l3818-01.info.polymtl.ca,user=phcarb/SETUP_FIN.txt",
 				"/run/user/1001/gvfs/sftp:host=l3818-01.info.polymtl.ca,user=phcarb/SETUP_DEBUT.txt",
 				"/home/pcarphin/Documents/TestArea/test.sh",
-				"/home/pcarphin/Documents/FedoraInstall/startupScriptFedora.sh",
 				"/home/pcarphin/philconfig/Preferences.sublime-settings",
 				"/home/pcarphin/.config/sublime-text-3/Packages/User/Package Control.merged-ca-bundle",
 				"/run/media/pcarphin/My Book/Fedora Install march 2015/Install/FedoraInstall/OLD FEDORA SETUP",
@@ -104,7 +105,7 @@
 			],
 			"find":
 			{
-				"height": 21.0
+				"height": 34.0
 			},
 			"find_in_files":
 			{
@@ -147,7 +148,7 @@
 			{
 				"height": 29.0
 			},
-			"menu_visible": false,
+			"menu_visible": true,
 			"output.find_results":
 			{
 				"height": 0.0
@@ -199,7 +200,7 @@
 			{
 			}
 		},
-		"new_window_width": 916.0
+		"new_window_width": 1446.0
 	},
 	"windows":
 	[
@@ -221,17 +222,17 @@
 			"build_varint": "",
 			"command_palette":
 			{
-				"height": 72.0,
-				"last_filter": "install",
+				"height": 112.0,
+				"last_filter": "menu",
 				"selected_items":
 				[
 					[
-						"install",
-						"Package Control: Install Package"
-					],
-					[
 						"menu",
 						"View: Toggle Menu"
+					],
+					[
+						"install",
+						"Package Control: Install Package"
 					],
 					[
 						"remove",
@@ -259,12 +260,13 @@
 			},
 			"file_history":
 			[
+				"/home/pcarphin/Documents/INF1995/inf1995-tp8/143659/inf1995-143659/code_commun/exec_dir/Makefile",
+				"/home/pcarphin/Documents/FedoraInstall/startupScriptFedora.sh",
 				"/run/user/1001/gvfs/sftp:host=l3818-01.info.polymtl.ca,user=phcarb/usagers/phcarb/.config/sublime-text-2/Packages/User/test.sublime-build",
 				"/run/user/1001/gvfs/sftp:host=l3818-01.info.polymtl.ca,user=phcarb/usagers/phcarb/.config/sublime-text-2/Packages/User/Robot.sublime-build",
 				"/run/user/1001/gvfs/sftp:host=l3818-01.info.polymtl.ca,user=phcarb/SETUP_FIN.txt",
 				"/run/user/1001/gvfs/sftp:host=l3818-01.info.polymtl.ca,user=phcarb/SETUP_DEBUT.txt",
 				"/home/pcarphin/Documents/TestArea/test.sh",
-				"/home/pcarphin/Documents/FedoraInstall/startupScriptFedora.sh",
 				"/home/pcarphin/philconfig/Preferences.sublime-settings",
 				"/home/pcarphin/.config/sublime-text-3/Packages/User/Package Control.merged-ca-bundle",
 				"/run/media/pcarphin/My Book/Fedora Install march 2015/Install/FedoraInstall/OLD FEDORA SETUP",
@@ -296,7 +298,7 @@
 			],
 			"find":
 			{
-				"height": 21.0
+				"height": 34.0
 			},
 			"find_in_files":
 			{
@@ -348,11 +350,18 @@
 						0,
 						1,
 						1
+					],
+					[
+						1,
+						0,
+						2,
+						1
 					]
 				],
 				"cols":
 				[
 					0.0,
+					0.784923928078,
 					1.0
 				],
 				"rows":
@@ -361,7 +370,7 @@
 					1.0
 				]
 			},
-			"menu_visible": false,
+			"menu_visible": true,
 			"output.find_results":
 			{
 				"height": 0.0
@@ -371,7 +380,7 @@
 				"height": 330.0
 			},
 			"pinned_build_system": "",
-			"position": "0,0,0,0,0,2922,87,3838,951,3840,1080",
+			"position": "0,0,0,0,0,2229,549,3675,1413,3840,1080",
 			"replace":
 			{
 				"height": 38.0
