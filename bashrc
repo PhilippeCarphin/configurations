@@ -14,6 +14,13 @@
 	# 	source $HOME/.bash_profile
     # fi
 
+# Make bash history unlimited.
+export HISTFILESIZE=
+export HISTSIZE=
+#	From "man bash":
+#	
+#	    If HISTFILESIZE is not set, no truncation is performed.
+
 PS1='\[\e[0;32m\][\u@\h \W] \$ \[\e[0m\]'
 
 alias INF2705='cd ~/Documents/INF2705-Infographie/tp3-orbite/inf2705-base'
