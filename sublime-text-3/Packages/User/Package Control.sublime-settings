@@ -4,6 +4,7 @@
 	],
 	"installed_packages":
 	[
+		"Alignment",
 		"Package Control",
 		"Sublimerge Pro"
 	]
