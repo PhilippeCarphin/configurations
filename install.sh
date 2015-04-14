@@ -27,6 +27,6 @@ ln -s $installDir/sublime-text-3 $HOME/.config/sublime-text-3
 ln -s $installDir/bashrc 		 $HOME/.bashrc
 ln -s $installDir/vimrc 		 $HOME/.vimrc
 ln -s $installDir/Templates 	 $HOME/Templates
-ls -s $installDir/gitconfig 	 $HOME/.gitconfig
+ln -s $installDir/gitconfig 	 $HOME/.gitconfig
 
 chmod 777 --recursive $HOME/philconfig
