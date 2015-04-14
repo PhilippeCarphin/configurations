@@ -30,4 +30,6 @@ ln -s $installDir/vimrc 			$HOME/.vimrc
 ln -s $installDir/Templates 		$HOME/Templates
 ln -s $installDir/gitconfig 		$HOME/.gitconfig
 
-chmod 777 --recursive $HOME/philconfig
+killall nautilus
+
+chmod 777 --recursive $installDir
