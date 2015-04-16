@@ -15,3 +15,4 @@ sublime-text-3/Local/Session.sublime_session
 sublime-text-3/Local/License.sublime_license
 sublime-text-3/Backup/
 sublime-text-3/Local/.*
+*.sublime-package
