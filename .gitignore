@@ -17,3 +17,4 @@ sublime-text-3/Backup/
 sublime-text-3/Local/.*
 *.sublime-package
 sublime-text-3/Local
+sublime-text-3/Packages/User/Sublimerge.sublime-license
