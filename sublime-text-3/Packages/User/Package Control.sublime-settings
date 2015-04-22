@@ -5,7 +5,6 @@
 	"installed_packages":
 	[
 		"Alignment",
-		"GitGutter",
 		"Package Control",
 		"Sublimerge Pro"
 	]
