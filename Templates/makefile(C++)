@@ -1,0 +1,18 @@
+CXXFLAGS += -std=c++11
+
+SRC = $(wildcard *.cpp)
+OBJ = $(SRC:.cpp=.o)
+
+.PHONY:clean
+
+all:main.exe
+run:main.exe
+	./main.exe
+main.exe:$(OBJ)
+	$(CXX) $(LDFLAGS) -o $@ $(OBJ)
+
+.cpp.o:
+	$(CXX) $(CXXFLAGS) -c $<
+
+clean:
+	rm *.o *.exe
