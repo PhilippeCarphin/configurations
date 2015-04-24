@@ -26,6 +26,7 @@ rm $HOME/.bashrc
 rm $HOME/.bash_profile
 rm $HOME/.vimrc
 rm -rf $HOME/Templates
+rm -rf $HOME/.emacs.d
 rm -rf $HOME/.config/sublime-text-3
 rm $HOME/.gitconfig
 
@@ -34,6 +35,7 @@ ln -s $installDir/bashrc 			$HOME/.bashrc
 ln -s $installDir/bash_profile 		$HOME/.bash_profile
 ln -s $installDir/vimrc 			$HOME/.vimrc
 ln -s $installDir/Templates 		$HOME/Templates
+ln -s $installDir/emacs.d	 		$HOME/.emacs.d
 ln -s $installDir/gitconfig 		$HOME/.gitconfig
 
 killall nautilus
