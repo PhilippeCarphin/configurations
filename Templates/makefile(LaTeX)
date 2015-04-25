@@ -1,0 +1,31 @@
+##### automatic target names ####
+
+RAPPORT=INF2705-Rapport
+TITLEPAGE=pageTitre
+
+.PHONY: clean 
+
+# Make targets:
+
+all: $(RAPPORT).pdf
+
+$(RAPPORT).pdf:$(TITLEPAGE).pdf
+
+%.pdf:%.tex
+	pdflatex $<
+
+#### Cleanup ####
+# Je sais que c'est laid, mais rm *.log marchait pas avec make sur windows.
+clean: 
+	rm -f $(RAPPORT).log 
+	rm -f $(RAPPORT).aux 
+	rm -f $(RAPPORT).pdf 
+	rm -f $(RAPPORT)_latexmk 
+	rm -f $(RAPPORT).syntex.gz
+	rm -f $(TITLEPAGE).log 
+	rm -f $(TITLEPAGE).aux 
+	rm -f $(TITLEPAGE)_latexmk 
+	rm -f $(TITLEPAGE).synctex.gz
+
+#####                    EOF                   #####
+
