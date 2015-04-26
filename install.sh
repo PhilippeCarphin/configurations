@@ -22,6 +22,7 @@ then
     fi
 fi
 
+rm $HOME/.profile
 rm $HOME/.bashrc
 rm $HOME/.bash_profile
 rm $HOME/.vimrc
@@ -31,6 +32,7 @@ rm -rf $HOME/.config/sublime-text-3
 rm $HOME/.gitconfig
 rm $HOME/.git-completion.bash
 
+ln -s $installDir/profile 			$HOME/.profile
 ln -s $installDir/sublime-text-3	$HOME/.config/sublime-text-3
 ln -s $installDir/bashrc 			$HOME/.bashrc
 ln -s $installDir/bash_profile 		$HOME/.bash_profile
