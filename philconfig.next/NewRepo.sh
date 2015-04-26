@@ -70,10 +70,7 @@ ln -s $installDir/git-completion.bash 	$HOME/.git-completion.bash
 # Generate install script to install your own configurations on oth
 pushd $installDir
 echo "
-# InstallDir should actually be the directory where the install script is stored
-# so that when you clone your repo on a new machine, you can put it anywhere and 
-# the install script will make links to the folder where you put them.
-installDir=$installDir
+installDir=$"${BASH_SOURCE%/*}"
 
 # Get options, if there is no -u option (UNDO) do this
 rm 		\$HOME/.bashrc
