@@ -70,7 +70,7 @@ ln -s $installDir/git-completion.bash 	$HOME/.git-completion.bash
 # Generate install script to install your own configurations on oth
 pushd $installDir
 echo "
-installDir=$"${BASH_SOURCE%/*}"
+installDir=\"\${BASH_SOURCE%/*}\"
 
 # Get options, if there is no -u option (UNDO) do this
 rm 		\$HOME/.bashrc
