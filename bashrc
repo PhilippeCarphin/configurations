@@ -13,7 +13,7 @@
     # if [ -f "$HOME/.bash_profile" ]; then
 	# 	source $HOME/.bash_profile
     # fi
-
+echo "Sourcing bashrc"
 # Make bash history unlimited.
 export HISTFILESIZE=
 export HISTSIZE=
