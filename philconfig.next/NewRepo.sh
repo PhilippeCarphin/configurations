@@ -70,40 +70,40 @@ ln -s $installDir/git-completion.bash 	$HOME/.git-completion.bash
 # Generate install script to install your own configurations on oth
 pushd $installDir
 echo "
-	# InstallDir should actually be the directory where the install script is stored
-	# so that when you clone your repo on a new machine, you can put it anywhere and 
-	# the install script will make links to the folder where you put them.
-	installDir=$installDir
+# InstallDir should actually be the directory where the install script is stored
+# so that when you clone your repo on a new machine, you can put it anywhere and 
+# the install script will make links to the folder where you put them.
+installDir=$installDir
 
-	# Get options, if there is no -u option (UNDO) do this
-	rm 		\$HOME/.bashrc
-	rm 		\$HOME/.bash_profile
-	rm 		\$HOME/.vimrc
-	rm -rf 	\$HOME/Templates
-	rm -rf 	\$HOME/.emacs.d
-	rm -rf 	\$HOME/.config/sublime-text-3
-	rm 		\$HOME/.gitconfig
-	rm 		\$HOME/.git-completion.bash
+# Get options, if there is no -u option (UNDO) do this
+rm 		\$HOME/.bashrc
+rm 		\$HOME/.bash_profile
+rm 		\$HOME/.vimrc
+rm -rf 	\$HOME/Templates
+rm -rf 	\$HOME/.emacs.d
+rm -rf 	\$HOME/.config/sublime-text-3
+rm 		\$HOME/.gitconfig
+rm 		\$HOME/.git-completion.bash
 
-	ln -s \$installDir/sublime-text-3		\$HOME/.config/sublime-text-3
-	ln -s \$installDir/bashrc 				\$HOME/.bashrc
-	ln -s \$installDir/bash_profile 		\$HOME/.bash_profile
-	ln -s \$installDir/vimrc 				\$HOME/.vimrc
-	ln -s \$installDir/Templates 			\$HOME/Templates
-	ln -s \$installDir/emacs.d	 			\$HOME/.emacs.d
-	ln -s \$installDir/gitconfig 			\$HOME/.gitconfig
-	ln -s \$installDir/git-completion.bash 	\$HOME/.git-completion.bash
+ln -s \$installDir/sublime-text-3		\$HOME/.config/sublime-text-3
+ln -s \$installDir/bashrc 				\$HOME/.bashrc
+ln -s \$installDir/bash_profile 		\$HOME/.bash_profile
+ln -s \$installDir/vimrc 				\$HOME/.vimrc
+ln -s \$installDir/Templates 			\$HOME/Templates
+ln -s \$installDir/emacs.d	 			\$HOME/.emacs.d
+ln -s \$installDir/gitconfig 			\$HOME/.gitconfig
+ln -s \$installDir/git-completion.bash 	\$HOME/.git-completion.bash
 
-	killall nautilus # For templates to take effect.
-	chmod 777 --recursive \$installDir
+killall nautilus # For templates to take effect.
+chmod 777 --recursive \$installDir
 
-	# UNDOING SECTION have something like install.sh -u execute this instead of the above.
-	#	# Remove the link
-	#	rm \$HOME/.config/sublime-text-3 
+# UNDOING SECTION have something like install.sh -u execute this instead of the above.
+#	# Remove the link
+#	rm \$HOME/.config/sublime-text-3 
 
-	#	# Put the folder back where it shoutd be
-	#	mv \$installDir/sublime-text-3		\$HOME/.config/sublime-text-3
-	#	# Do this for all the files.
+#	# Put the folder back where it shoutd be
+#	mv \$installDir/sublime-text-3		\$HOME/.config/sublime-text-3
+#	# Do this for all the files.
 " > install.sh
 popd
 
