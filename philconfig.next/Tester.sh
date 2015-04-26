@@ -8,10 +8,11 @@ showUsage()
 {
 	printf "\033[1;32m
 	    Usage: $0 [-d Config directory] 
-	        -d  Choisir le dossier d'installation
+	        -d  Choisir le dossier d'installation (no "/" at the end)
 			-g  Faire un git init, ajouter un .gitignore pour sublime Text
 				ensuite faire un git add . et un commit.
 	        -h  Aide
+	    Exemple: $0 -d ~/MyConfigs -g
 	 \033[0m\n"
 }
 
