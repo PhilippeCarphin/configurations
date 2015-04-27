@@ -10,7 +10,15 @@ set shiftwidth=4
 set noexpandtab
 set autoindent
 
+" Wrapping
+set wrap 
+set linebreak 
+set nolist 
+set textwidth=80 
+set wrapmargin=0 
+
 " Phil
+
 inoremap jk <ESC>
 set nohlsearch
 nnoremap <C-m> :w <CR> :!make run <CR>
