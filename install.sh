@@ -1,47 +1,109 @@
-git config --global user.name "Philippe Carphin"
-git config --global user.email phil103@hotmail.com
-git config --global alias.st status
+#!/bin/bash
+full_install()
+{
+	# Faire des fonctions individuelles pour chaque groupe et toutes les appeler ici.
 
-# Find a way to get the folder containing the script.
-# Since I do the git clone, the folder where I cloned 
-# is what I want for installDir, cause what if I cloned
-# somewhere else than this:
+	rm $HOME/.bashrc
+	rm $HOME/.bash_profile
+	rm $HOME/.vimrc
+	rm -rf $HOME/Templates
+	rm -rf $HOME/.emacs.d
+	rm -rf $HOME/.config/sublime-text-3
+	rm $HOME/.gitconfig
+	rm $HOME/.git-completion.bash
+
+	ln -s $installDir/sublime-text-3		$HOME/.config/sublime-text-3
+	ln -s $installDir/bashrc 				$HOME/.bashrc
+	ln -s $installDir/bash_profile 			$HOME/.bash_profile
+	ln -s $installDir/vimrc 				$HOME/.vimrc
+	ln -s $installDir/Templates 			$HOME/Templates
+	ln -s $installDir/emacs.d	 			$HOME/.emacs.d
+	ln -s $installDir/gitconfig 			$HOME/.gitconfig
+	ln -s $installDir/git-completion.bash 	$HOME/.git-completion.bash
+
+	killall nautilus # For templates to take effect.
+
+	chmod 777 --recursive $installDir
+}
+
+showUsage()
+{
+	printf "\033[1;32m
+	    Usage: $0 [-f] [-m] [-s group] [-d]
+	        -f  Full install
+	        -m  Move existing config files to config folder
+	        -s <group> Install a specific group.
+	        	bash
+	        	vim
+	        	Templates
+	        	emacs
+	        	git
+	        	sublime
+	        	bin
+	        	nautilusScripts
+	        -d  set install directory
+	        -h  Aide
+	    Example 
+	    	./install.sh -s git
+	    	./install.sh -f
+	 \033[0m\n"
+}
+
+REPLACE=true
 installDir=$HOME/Documents/GitHub/philconfig
-# and also, since the cloning is supposed to have been
-# done, the following block is useless.
+while getopts :fbs:h opt 
+do
+	case $opt in
+		f) 	full_install
+			exit 1 ;;
+		m) 	move_install
+			exit 1 ;;
+		s)  group=$OPTARG ;;
+		h)	showUsage
+			exit 1 ;;
+		?)	printf "\033[1;31mInvalid options \033[0m\n"
+			showUsage
+			exit 1
+			;;
+	esac
+done
+shift $((OPTIND - 1))
 
-if [[ ! -d "$installDir" ]]
-then
-    if [[ ! -L $installDir ]]
-    then
-        echo "Directory doesn't exist. Creating now"
-        mkdir $installDir
-        echo "Directory created"
-    else
-        echo "Directory exists"
-    fi
-fi
+# Prompt user for install dir and check it's validity
 
-rm $HOME/.profile
-rm $HOME/.bashrc
-rm $HOME/.bash_profile
-rm $HOME/.vimrc
-rm -rf $HOME/Templates
-rm -rf $HOME/.emacs.d
-rm -rf $HOME/.config/sublime-text-3
-rm $HOME/.gitconfig
-rm $HOME/.git-completion.bash
-
-ln -s $installDir/profile 			$HOME/.profile
-ln -s $installDir/sublime-text-3	$HOME/.config/sublime-text-3
-ln -s $installDir/bashrc 			$HOME/.bashrc
-ln -s $installDir/bash_profile 		$HOME/.bash_profile
-ln -s $installDir/vimrc 			$HOME/.vimrc
-ln -s $installDir/Templates 		$HOME/Templates
-ln -s $installDir/emacs.d	 		$HOME/.emacs.d
-ln -s $installDir/gitconfig 		$HOME/.gitconfig
-ln -s $installDir/git-completion.bash 		$HOME/.git-completion.bash
-
-killall nautilus
-
-chmod 777 --recursive $installDir
+case ${group}
+	bash)
+		rm $HOME/.bashrc
+		rm $HOME/.bash_profile
+		ln -s $installDir/bashrc 				$HOME/.bashrc
+		ln -s $installDir/bash_profile 			$HOME/.bash_profile
+		;;
+	vim)
+		rm $HOME/.vimrc
+		ln -s $installDir/vimrc 				$HOME/.vimrc
+		;;
+	Templates)
+		rm -rf $HOME/Templates
+		ln -s $installDir/Templates 			$HOME/Templates
+		;;
+	emacs)
+		rm -rf $HOME/.emacs.d
+		ln -s $installDir/emacs.d	 			$HOME/.emacs.d
+		;;
+	git)
+		rm $HOME/.gitconfig
+		rm $HOME/.git-completion.bash
+		ln -s $installDir/gitconfig 			$HOME/.gitconfig
+		ln -s $installDir/git-completion.bash 	$HOME/.git-completion.bash
+		;;
+	sublime)
+		rm -rf $HOME/.config/sublime-text-3
+		ln -s $installDir/sublime-text-3		$HOME/.config/sublime-text-3
+		;;
+	bin)
+		
+		;;
+	nautilusScripts)
+		
+		;;
+esac # YARK! Sérieusement! 
