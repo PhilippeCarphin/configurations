@@ -47,6 +47,15 @@ then
 	fi
 fi
 
+# For now, as long as one of them (actually just emacs.d) is a symlink, abort
+# that shit. In the future, it's going to look more like one function to do
+# each group. doBash(), doSublime(), doGit, doVim, doNautilus, doBin.
+if [ -L "$HOME/.emacs.d" ]
+then 
+	echo "\$HOME/.emacs.d is already a symbolic link... Aborting."
+	exit 1
+fi
+
 # Move configuration files to the directory.
 mv $HOME/.config/sublime-text-3 $installDir/sublime-text-3		
 mv $HOME/.bashrc				$installDir/bashrc 				

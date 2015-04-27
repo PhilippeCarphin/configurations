@@ -49,6 +49,11 @@ then
 fi
 
 # Move configuration files to the directory.			
+if [ -L "$HOME/.emacs.d" ]
+then 
+	echo "\$HOME/.emacs.d is already a symbolic link... Aborting."
+	exit 1
+fi
 mv $HOME/.emacs.d				$installDir/emacs.d	
 
 # Make links to said files.
