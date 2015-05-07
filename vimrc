@@ -22,3 +22,7 @@ set wrapmargin=0
 inoremap jk <ESC>
 set nohlsearch
 nnoremap <C-m> :w <CR> :!make run <CR>
+
+" New Section
+
+syntax on
