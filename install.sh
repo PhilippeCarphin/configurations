@@ -71,7 +71,7 @@ shift $((OPTIND - 1))
 
 # Prompt user for install dir and check it's validity
 
-case ${group}
+case ${group} in
 	bash)
 		rm $HOME/.bashrc
 		rm $HOME/.bash_profile
