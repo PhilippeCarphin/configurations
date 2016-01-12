@@ -10,5 +10,5 @@ if [ -f ~/.git-completion.bash ]; then
   . ~/.git-completion.bash
 fi
 
-PATH=$PATH:/home/pcarphin/.local/bin
+PATH=$PATH:$HOME/.local/bin
 export PATH
