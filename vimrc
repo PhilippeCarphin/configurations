@@ -18,12 +18,25 @@ set textwidth=80
 set wrapmargin=0 
 
 " Phil
+" Tell vim to remember certain things when we exit
+"  '10  :  marks will be remembered for up to 10 previously edited files
+"  "100 :  will save up to 100 lines for each register
+"  :20  :  up to 20 lines of command-line history will be remembered
+"  %    :  saves and restores the buffer list
+"  n... :  where to save the viminfo files
+" set viminfo='10,\"100,:20,%,n~/.viminfo
 
+
+if has("autocmd")
+  au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal!  g'\"" | endif
+endif
 inoremap jk <ESC>
 set nohlsearch
-nnoremap <C-m> :w <CR> :!make run <CR>
+nnoremap <C-m> :w<CR>:!gcc % -std=c99 && ./a.out<CR>
 set number
-
+" nnoremap <C-i> =i{
+cnoremap vr<CR> :split ~/.vimrc<CR>
+cnoremap sv<CR> :source ~/.vimrc<CR>
 " New Section
-
+" nnoremap <Down> ddp
 syntax on
