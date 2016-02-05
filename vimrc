@@ -94,7 +94,8 @@ endif
 inoremap jk <ESC>
 " set nohlsearch
 set hlsearch
-nnoremap <C-m> :w<CR>:!gcc % -std=c99 && ./a.out<CR>
+nnoremap <C-b> :w:!gcc % -std=c99 && ./a.out
+" nnoremap <C-b> :w | :!make<CR>
 set number
 " nnoremap <C-i> =i{
 cnoremap vr<CR> :split ~/.vimrc<CR>
@@ -108,5 +109,10 @@ set t_Co=256
 " You may also need to add: 
 "set t_AB=^[[48;5;%dm
 "set t_AF=^[[38;5;%dm
+
+" Non-retarded backspace behavior
+:set backspace=2
+" set foldmethod=indent
+
 
 colorscheme molokai
