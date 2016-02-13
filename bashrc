@@ -38,7 +38,7 @@ alias hotmail='google-chrome www.hotmail.com'
 alias ssh-school='ssh l4712-05.info.polymtl.ca -l phcarb'
 
 #	# Lancer le TP4 a chaque fois qu'on ouvre un terminal 
-#	nohup ~/Documents/FedoraInstall/INF1600_TP4/tp4 > /dev/null 2>&1 &
+	nohup ~/Documents/FedoraInstall/INF1600_TP4/tp4 > /dev/null 2>&1 &
 #	# nohup <programme> > /def/null 2>&1 &  pour deconnecter le programme.
 
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
@@ -46,3 +46,5 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
 elif [[ "$OSTYPE" == "darwin"* ]]; then
 	alias ls='ls -G'
 fi
+PATH=$HOME/.local/bin:$PATH
+

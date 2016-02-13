@@ -1,3 +1,23 @@
+set nocompatible              " be iMproved, required
+filetype off                  " required
+
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+" let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
+
+" Extra plugins to add with vundle go here
+Plugin 'Valloric/YouCompleteMe'
+
+call vundle#end()            " required
+filetype plugin indent on    " required
+
+let g:ycm_confirm_extra_conf = 0
+let g:ycm_global_ycm_extra_conf = '/Users/pcarphin/.vim/bundle/YouCompleteMe/'
+
+
 " From the 'vim as a C/C++ IDE'
 " http://www.alexeyshmalko.com/2014/using-vim-as-c-cpp-ide/
 set exrc "Allows automatic sourcing of project specific vimrc
