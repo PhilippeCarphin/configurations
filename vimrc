@@ -15,17 +15,18 @@ call vundle#end()            " required
 filetype plugin indent on    " required
 
 let g:ycm_confirm_extra_conf = 0
-let g:ycm_global_ycm_extra_conf = '/Users/pcarphin/.vim/bundle/YouCompleteMe/'
+
+" let g:ycm_global_ycm_extra_conf = '/Users/pcarphin/.vim/bundle/YouCompleteMe/'
 
 
 " From the 'vim as a C/C++ IDE'
 " http://www.alexeyshmalko.com/2014/using-vim-as-c-cpp-ide/
 set exrc "Allows automatic sourcing of project specific vimrc
 set secure "Fixes security hole caused by previous command. 
-colorscheme evening
+colorscheme morning
 " Normal indentation
 set tabstop=4
-set softtabstop=4
+" set softtabstop=4
 set shiftwidth=4
 set noexpandtab
 set autoindent
@@ -52,7 +53,7 @@ if has("autocmd")
 endif
 inoremap jk <ESC>
 set nohlsearch
-nnoremap <C-m> :w<CR>:!gcc % -std=c99 && ./a.out<CR>
+nnoremap <C-b> :w<CR>:!gcc % -std=c99 && ./a.out<CR>
 set number
 " nnoremap <C-i> =i{
 cnoremap vr<CR> :split ~/.vimrc<CR>
@@ -60,3 +61,5 @@ cnoremap sv<CR> :source ~/.vimrc<CR>
 " New Section
 " nnoremap <Down> ddp
 syntax on
+
+set backspace=indent,eol,start
