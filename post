@@ -1,0 +1,72 @@
+echo "** Loading \$HOME/.profile.d/interactive/post **"
+export CMCLNG=english
+alias vgrind="valgrind --tool=memcheck --leak-check=yes"
+alias vgrindtotmem="valgrind --tool=massif --stacks=yes"
+alias runxp=/users/dor/afsi/dor/ovbin/i686/runxp 
+
+set -o emacs   # Sets emacs mode.
+
+PS1="${LOGNAME} @ ${HOSTNAME} "'!) '
+ulimit -St unlimited
+
+#export SEQ_MAESTRO_SHORTCUT=". ssmuse-sh -d isst/maestro/1.4.3-rc4"
+export SEQ_MAESTRO_SHORTCUT=". ssmuse-sh -d /users/dor/afsi/dor/testdomain"
+$SEQ_MAESTRO_SHORTCUT
+
+. ssmuse-sh -d cmoi/apps/git/20150526
+. ssmuse-sh -d cmoi/apps/git-procedures/20150622
+
+#PHIL
+#====
+CDPATH=$CDPATH:$HOME/Documents/GitCMC/
+PATH=$HOME/.local/cmake-3.5.0-rc1-Linux-x86_64/bin:$HOME/.local/bin/:$PATH
+if [ $(uname) == Linux ]; then
+	PS1='$(echo -e "\033[32m${LOGNAME} @ ${HOSTNAME} ${PWD##*/} $ \033[00m")'
+	alias ls="ls --color"
+else
+	alias vim=vi
+	alias gvim=vi
+fi
+
+alias profile="vim $HOME/.bashrc"
+alias lprofile=". $HOME/.profile.d/interactive/post"
+
+. ssmuse-sh -d /ssm/net/isst/maestro/1.4.3-rc4
+export SEQ_MAESTRO_SHORTCUT=". ssmuse-sh -d /ssm/net/isst/maestro/1.4.3-rc4"
+
+alias xflow_overviewSuites="xflow_overview -suites ~afsiops/xflow.suites.xml;echo allo"
+alias cd..='cd ..'
+alias ssmtest='. ssmuse-sh -d /users/dor/afsi/phc/Testing/testdomain'
+alias exportssmtest='export SEQ_MAESTRO_SHORTCUT=". ssmuse-sh -d /users/dor/afsi/phc/Testing/testdomain"'
+alias enf=env
+alias dusage='du --max-depth=1 | sort -n'
+EDITOR=vim
+FCEDIT=vim
+export HISTFILESIZE=
+export HISTSIZE=
+
+# Vim style keybindings for terminal
+set -o vi
+
+if [ "$BASH" ]; then
+	echo "Using bash"
+  PS1='\[\e[0;32m\][\u@\h \W] \$ \[\e[0m\]'
+	[ -z "$TMUX" ] && export TERM=xterm-256color
+else
+	alias history='fc -l 1 100000'
+	alias __A=$(print '\0020') # ^P = up = previous command
+	alias __B=$(print '\0016') # ^N = down  = next command
+	alias __C=$(print '\0006') # ^F = right = forward a character
+	alias __D=$(print '\0002') # ^B = left = back a character
+	alias __H=$(print '\0001') # ^A = home = beginning of line
+	alias __Y=$(print '\0005') # ^E = end = end of line
+fi
+
+# Always trace!
+# Note that depending on the version, 
+export SEQ_TRACE_LEVEL=1:TL_MINIMAL
+
+alias mcompile='export SEQ_EXP_HOME=$HOME/Documents/Experiences/compilation && /ssm/net/isst/maestro/1.4.3-rc4/maestro_1.4.3_ubuntu-12.04-amd64-64/bin/maestro -d 20160119000000 -n /compile -s submit -f continue & '
+
+alias xcompile='export SEQ_EXP_HOME=$HOME/Documents/Experiences/compilation && xflow &'
+alias runxp_phil='/usr/bin/rdesktop -a 16 -r sound:local -g 1500x1100 eccmcwts3'
