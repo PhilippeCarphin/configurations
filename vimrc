@@ -28,10 +28,10 @@ Plugin 'VundleVim/Vundle.vim'
 " Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
 " " Avoid a name conflict with L9
 " Plugin 'user/L9', {'name': 'newL9'}
+Plugin 'Lokaltog/vim-powerline'
 
 
-" Plugin 'Valloric/YouCompleteMe'
-
+Plugin 'Valloric/YouCompleteMe'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -49,6 +49,8 @@ filetype plugin indent on    " required
 " Put your non-Plugin stuff after this line
 
 
+" For vim-powerline
+set laststatus=2
 
 
 
@@ -61,19 +63,34 @@ filetype plugin indent on    " required
 " set exrc "Allows automatic sourcing of project specific vimrc
 " set secure "Fixes security hole caused by previous command. 
 "
-"
-"
-"
-" Normal indentation
-set tabstop=2
-" set softtabstop=2
-set shiftwidth=2
-" set expandtab
+
+
+" ================
+" http://stackoverflow.com/questions/234564/tab-key-4-spaces-and-auto-indent-after-curly-braces-in-vim/21323445#21323445
+" Only do this part when compiled with support for autocommands.
+if has("autocmd")
+    " Use filetype detection and file-based automatic indenting.
+    filetype plugin indent on
+
+    " Use actual tab chars in Makefiles.
+    autocmd FileType make set tabstop=8 shiftwidth=8 softtabstop=0 noexpandtab
+endif
+
+" For everything else, use a tab width of 3 space chars.
+set tabstop=3       " The width of a TAB is set to 3.
+                    " Still it is a \t. It is just that
+                    " Vim will interpret it to be having
+                    " a width of 3.
+set shiftwidth=3    " Indents will have a width of 3.
+set softtabstop=3   " Sets the number of columns for a TAB.
+set expandtab       " Expand TABs to spaces.
+" ===============
+
 set autoindent
-hi Tab gui=underline guifg=blue ctermbg=blue
+" hi Tab gui=underline guifg=blue ctermbg=blue
 " Wrapping
 set wrap 
-set linebreak 
+" set linebreak 
 set nolist 
 set textwidth=80 
 set wrapmargin=0 
@@ -115,4 +132,5 @@ set t_Co=256
 " set foldmethod=indent
 
 
-colorscheme molokai
+" colorscheme molokai
+colorscheme morning
