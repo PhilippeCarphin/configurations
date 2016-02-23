@@ -1,9 +1,13 @@
 {
-	"font_size": 9,
+	"color_scheme": "Packages/Color Scheme - Default/Monokai.tmTheme",
+	"font_size": 11,
 	"hot_exit": false,
 	"ignored_packages":
 	[
 		"Vintage"
 	],
-	"remember_open_files": false
+	"remember_open_files": false,
+	// Set to true to ensure the last line of the file ends in a newline
+    // character when saving
+    "ensure_newline_at_eof_on_save": true,
 }
