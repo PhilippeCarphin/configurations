@@ -12,6 +12,8 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 
+Plugin 'https://github.com/steffanc/cscopemaps.vim'
+
 " Extra plugins to add with vundle go here
 Plugin 'Valloric/YouCompleteMe'
 
@@ -37,7 +39,23 @@ filetype plugin indent on    " required
 set laststatus=2
 
 
+" ===========================================================
+if has('cscope')
+  set cscopetag cscopeverbose
 
+  if has('quickfix')
+    set cscopequickfix=s-,c-,d-,i-,t-,e-
+  endif
+
+  cnoreabbrev csa cs add
+  cnoreabbrev csf cs find
+  cnoreabbrev csk cs kill
+  cnoreabbrev csr cs reset
+  cnoreabbrev css cs show
+  cnoreabbrev csh cs help
+
+  command -nargs=0 Cscope cs add $VIMSRC/src/cscope.out $VIMSRC/src
+endif
 
 
 
@@ -96,6 +114,7 @@ inoremap jk <ESC>
 " set nohlsearch
 set hlsearch
 nnoremap <C-b> :w:!gcc % -std=c99 && ./a.out
+nnoremap <C-d> :w:!./%
 " nnoremap <C-b> :w | :!make<CR>
 set number
 " nnoremap <C-i> =i{
@@ -116,6 +135,8 @@ set t_Co=256
 :set backspace=2
 " set foldmethod=indent
 
+set foldnestmax=1
 
-" colorscheme molokai
-colorscheme morning
+" colorscheme morning
+" colorscheme monokai
+colorscheme molokai
