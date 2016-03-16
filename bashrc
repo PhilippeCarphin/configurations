@@ -48,3 +48,4 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
 fi
 PATH=$HOME/.local/bin:$PATH
 
+source ~/.git-completion.bash
