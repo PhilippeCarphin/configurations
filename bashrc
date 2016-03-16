@@ -23,9 +23,6 @@ export HISTSIZE=
 
 PS1='\[\e[0;32m\][\u@\h \W] \$ \[\e[0m\]'
 
-alias INF2705='cd ~/Documents/INF2705-Infographie/tp3-orbite/inf2705-base'
-
-
 alias INF1995='firefox http://www.groupes.polymtl.ca/inf1995/tp/'
 alias docAtmel='gvfs-open ~/Documents/docAtmel.pdf'
 # Put the PDF of the Atmel documentation in the documents folder.
