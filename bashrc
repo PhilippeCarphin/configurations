@@ -29,7 +29,6 @@ alias docAtmel='gvfs-open ~/Documents/docAtmel.pdf'
 
 alias docAVRLibC='firefox http://www.nongnu.org/avr-libc/user-manual/index.html'
 alias chrome='google-chrome'
-alias facebook='google-chrome www.facebook.com'
 alias INF1995='google-chrome http://www.groupes.polymtl.ca/inf1995/tp/'
 alias hotmail='google-chrome www.hotmail.com'
 alias ssh-school='ssh l4712-05.info.polymtl.ca -l phcarb'
