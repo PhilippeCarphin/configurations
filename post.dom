@@ -1,0 +1,33 @@
+export CMCLNG=english
+alias h=history
+alias vgrind="valgrind --tool=memcheck --leak-check=yes"
+alias vgrindtotmem="valgrind --tool=massif --stacks=yes"
+alias disp="export DISPLAY=verona:0.0"
+alias runxp=/users/dor/afsi/dor/ovbin/i686/runxp 
+
+set -o emacs   # Sets emacs mode.
+
+alias __A=$(print '\0020') # ^P = up = previous command
+alias __B=$(print '\0016') # ^N = down  = next command
+alias __C=$(print '\0006') # ^F = right = forward a character
+alias __D=$(print '\0002') # ^B = left = back a character
+alias __H=$(print '\0001') # ^A = home = beginning of line
+alias __Y=$(print '\0005') # ^E = end = end of line
+
+
+PS1="${LOGNAME} @ ${HOSTNAME} "'!) '
+ulimit -St unlimited
+
+#. ssmuse-sh -d /ssm/net/rpn/utils/15.2
+export SEQ_MAESTRO_SHORTCUT=". ssmuse-sh -d isst/maestro/1.5.0-rc1"
+#export SEQ_MAESTRO_SHORTCUT=". ssmuse-sh -d $HOME/testdomain"
+$SEQ_MAESTRO_SHORTCUT
+
+alias runxplap='/usr/bin/X11/rdesktop -g 1250x700 eccmcwts1 &'
+
+. ssmuse-sh -d cmoi/base/20141216
+. ssmuse-sh -d cmoi/apps/git/20150526
+. ssmuse-sh -d cmoi/apps/git-procedures/20150622
+
+#for pidgin to use office communicator
+export NSS_SSL_CBC_RANDOM_IV=0
