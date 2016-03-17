@@ -48,10 +48,12 @@ export HISTSIZE=
 # Vim style keybindings for terminal
 set -o vi
 
+. ~/.git-prompt.sh
 if [ "$BASH" ]; then
-	echo "Using bash"
-  PS1='\[\e[0;32m\][\u@\h \W] \$ \[\e[0m\]'
-	[ -z "$TMUX" ] && export TERM=xterm-256color
+   echo "Using bash"
+   PS1='\[\e[0;32m\][\u@\h \W\[\e[0;33m\]$(__git_ps1 " (%s)")\[\e[0;32m\]] \$ \[\e[0m\]'
+   [ -z "$TMUX" ] && export TERM=xterm-256color
+   source ~/.git-completion.bash 
 else
 	alias history='fc -l 1 100000'
 	alias __A=$(print '\0020') # ^P = up = previous command
@@ -60,8 +62,8 @@ else
 	alias __D=$(print '\0002') # ^B = left = back a character
 	alias __H=$(print '\0001') # ^A = home = beginning of line
 	alias __Y=$(print '\0005') # ^E = end = end of line
+	PS1='$(echo -e "\033[32m${LOGNAME} @ ${HOSTNAME} ${PWD##*/}\033[35m$(__git_ps1 " (%s)")\033[32m $ \033[00m")'
 fi
-
 # Always trace!
 # Note that depending on the version, 
 export SEQ_TRACE_LEVEL=1:TL_FULL_TRACE
@@ -74,4 +76,3 @@ alias vgrind="valgrind --tool=memcheck --leak-check=yes"
 alias dmaestro="cd /users/dor/afsi/dor/tmp/maestro_depot/"
 alias gitk="gitk --all"
 
-source ~/.git-completion.bash 
