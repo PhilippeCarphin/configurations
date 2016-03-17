@@ -64,6 +64,10 @@ else
 	alias __Y=$(print '\0005') # ^E = end = end of line
 	PS1='$(echo -e "\033[32m${LOGNAME} @ ${HOSTNAME} ${PWD##*/}\033[35m$(__git_ps1 " (%s)")\033[32m $ \033[00m")'
 fi
+# cd to the directory containing a symbolic link.
+cdl () {
+    cd "$(dirname "$(readlink "$1")")";
+}
 # Always trace!
 # Note that depending on the version, 
 export SEQ_TRACE_LEVEL=1:TL_FULL_TRACE
