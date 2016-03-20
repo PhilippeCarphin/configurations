@@ -38,13 +38,12 @@ fi
    FCEDIT=vim
 
    set -o vi
-   set -o emacs   # Sets emacs mode.
 
    cdl () {
        cd "$(dirname "$(readlink "$1")")";
    }
 
-if [ $BASH == /bin/bash ]; then 
+if [ $BASH == /usr/bin/bash ]; then 
    echo "Using bash"
    PS1='\[\e[0;32m\][\u@\h \W\[\e[0;33m\]$(__git_ps1 " (%s)")\[\e[0;32m\]] \$ \[\e[0m\]'
    [ -z "$TMUX" ] && export TERM=xterm-256color
@@ -63,6 +62,7 @@ else
 	alias __H=$(print '\0001') # ^A = home = beginning of line
 	alias __Y=$(print '\0005') # ^E = end = end of line
 fi
+
 if [ $BASH == POLYTECHNIQUE ]; then
    alias INF1995='firefox http://www.groupes.polymtl.ca/inf1995/tp/'
    alias docAtmel='gvfs-open ~/Documents/docAtmel.pdf'
