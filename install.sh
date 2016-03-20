@@ -15,17 +15,17 @@ full_install()
 	rm $HOME/.git-completion.bash
    rm $HOME/.git-prompt.sh
 
-   ln-s$installDir/sublime-text-3           $HOME/.config/sublime-text-3
-   ln-s$installDir/bashrc                   $HOME/.bashrc
-   ln-s$installDir/bash_profile             $HOME/.bash_profile
-   ln-s$installDir/vimrc                    $HOME/.vimrc
-   ln-s$installDir/vim/colors               $HOME/.vim/colors
-   ln-s$installDir/vim/indent               $HOME/.vim/indent
-   ln-s$installDir/Templates                $HOME/Templates
-   ln-s$installDir/emacs.d                  $HOME/.emacs.d
-   ln-s$installDir/gitconfig                $HOME/.gitconfig
-   ln-s$installDir/git-completion.bash      $HOME/.git-completion.bash
-   ln-s$installDir/git-prompt.sh            $HOME/.git-prompt.sh
+   ln -s $installDir/sublime-text-3           $HOME/.config/sublime-text-3
+   ln -s $installDir/bashrc                   $HOME/.bashrc
+   ln -s $installDir/bash_profile             $HOME/.bash_profile
+   ln -s $installDir/vimrc                    $HOME/.vimrc
+   ln -s $installDir/vim/colors               $HOME/.vim/colors
+   ln -s $installDir/vim/indent               $HOME/.vim/indent
+   ln -s $installDir/Templates                $HOME/Templates
+   ln -s $installDir/emacs.d                  $HOME/.emacs.d
+   ln -s $installDir/gitconfig                $HOME/.gitconfig
+   ln -s $installDir/git-completion.bash      $HOME/.git-completion.bash
+   ln -s $installDir/git-prompt.sh            $HOME/.git-prompt.sh
 
 	killall nautilus # For templates to take effect.
 
