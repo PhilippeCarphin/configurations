@@ -1,8 +1,28 @@
 echo "** Loading \$HOME/.profile.d/interactive/post **"
 
+# ALL
+
+   . ~/.git-prompt.sh
+   alias profile="vim $HOME/.bashrc"
+   alias lprofile=". $HOME/.profile.d/interactive/post"
+   alias cd..='cd ..'
+   alias dusage='du --max-depth=1 | sort -n'
+   alias gitk="gitk --all"
+   alias vgrindtotmem="valgrind --tool=massif --stacks=yes"
+
+   CDPATH=$CDPATH:$HOME/Documents/GitCMC/:$HOME/Documents/Experiences/
+   PATH=$HOME/.local/cmake-3.5.0-rc1-Linux-x86_64/bin:$HOME/.local/bin/:$HOME/Documents/test/:$PATH
+   EDITOR=vim
+   FCEDIT=vim
 
 
-if [ $BASH == TRUE ]; then
+   cdl () {
+       cd "$(dirname "$(readlink "$1")")";
+   }
+   set -o vi
+
+if [ "$CMCLNG" == english ]; then
+   echo "   Loading CMC commands "
    . ssmuse-sh -d cmoi/apps/git/20150526
    . ssmuse-sh -d cmoi/apps/git-procedures/20150622
    . ssmuse-sh -d /ssm/net/isst/maestro/1.4.3-rc4
@@ -22,35 +42,15 @@ if [ $BASH == TRUE ]; then
    export SEQ_MAESTRO_SHORTCUT=". ssmuse-sh -d /users/dor/afsi/dor/testdomain"
 fi
 
-# ALL
-
-   . ~/.git-prompt.sh
-   alias profile="vim $HOME/.bashrc"
-   alias lprofile=". $HOME/.profile.d/interactive/post"
-   alias cd..='cd ..'
-   alias dusage='du --max-depth=1 | sort -n'
-   alias gitk="gitk --all"
-   alias vgrindtotmem="valgrind --tool=massif --stacks=yes"
-
-   CDPATH=$CDPATH:$HOME/Documents/GitCMC/:$HOME/Documents/Experiences/
-   PATH=$HOME/.local/cmake-3.5.0-rc1-Linux-x86_64/bin:$HOME/.local/bin/:$HOME/Documents/test/:$PATH
-   EDITOR=vim
-   FCEDIT=vim
-
-   set -o vi
-
-   cdl () {
-       cd "$(dirname "$(readlink "$1")")";
-   }
-
-if [ $BASH == /usr/bin/bash ]; then 
-   echo "Using bash"
+if [ $BASH == /bin/bash ]; then 
+   echo "   Loading bash specific commands"
    PS1='\[\e[0;32m\][\u@\h \W\[\e[0;33m\]$(__git_ps1 " (%s)")\[\e[0;32m\]] \$ \[\e[0m\]'
    [ -z "$TMUX" ] && export TERM=xterm-256color
    source ~/.git-completion.bash 
    export HISTFILESIZE=
    export HISTSIZE=
 else
+   echo "   Loading non-bash commands (possibly ksh)"
    ulimit -St unlimited
 	PS1='$(echo -e "\033[32m${LOGNAME} @ ${HOSTNAME} ${PWD##*/}\033[35m$(__git_ps1 " (%s)")\033[32m $ \033[00m")'
 	alias ls="ls --color"
@@ -63,7 +63,8 @@ else
 	alias __Y=$(print '\0005') # ^E = end = end of line
 fi
 
-if [ $BASH == POLYTECHNIQUE ]; then
+if [ $BASH == /usr/bin/bash ]; then # We're at polytechnique
+   echo "   Loading polytechnique commands"
    alias INF1995='firefox http://www.groupes.polymtl.ca/inf1995/tp/'
    alias docAtmel='gvfs-open ~/Documents/docAtmel.pdf'
    # Put the PDF of the Atmel documentation in the documents folder.
@@ -76,13 +77,13 @@ if [ $BASH == POLYTECHNIQUE ]; then
 fi
 
 if [ `uname` == Linux ]; then
-   echo "uname is Linux"   
+   echo "   Loading Linux commands"
 	alias ls='ls --color'
 elif [ `uname` == Darwin ]; then
-   echo "uname is Darwin"   
+   echo "   Loading Darwin commands"   
 	alias ls='ls -G'
 elif [ `uname` == AIX ]; then
-   echo "uname is AIX"   
+   echo "   Loading AIX commands"   
    PS1="${LOGNAME} @ ${HOSTNAME} "'!) '
 	alias vim=vi
 	alias gvim=vi
