@@ -39,14 +39,13 @@ if [ "$CMCLNG" == english ]; then
    export SEQ_MAESTRO_SHORTCUT=". ssmuse-sh -d /ssm/net/isst/maestro/1.4.3-rc4"
    export SEQ_TRACE_LEVEL=1:TL_FULL_TRACE
    export domain="/users/dor/afsi/phc/Testing/testdomain"
-   export SEQ_MAESTRO_SHORTCUT=". ssmuse-sh -d /users/dor/afsi/dor/testdomain"
 fi
 
-if [ $BASH == /bin/bash ]; then 
+if [ "$BASH" != "" ]; then 
    echo "   Loading bash specific commands"
    PS1='\[\e[0;32m\][\u@\h \W\[\e[0;33m\]$(__git_ps1 " (%s)")\[\e[0;32m\]] \$ \[\e[0m\]'
    [ -z "$TMUX" ] && export TERM=xterm-256color
-   source ~/.git-completion.bash 
+   . ~/.git-completion.bash 
    export HISTFILESIZE=
    export HISTSIZE=
 else
@@ -62,7 +61,7 @@ else
 	alias __Y=$(print '\0005') # ^E = end = end of line
 fi
 
-if [ $BASH == /usr/bin/bash ]; then # We're at polytechnique
+if [ "$BASH" == TODO ]; then # We're at polytechnique
    echo "   Loading polytechnique commands"
    alias INF1995='firefox http://www.groupes.polymtl.ca/inf1995/tp/'
    alias docAtmel='gvfs-open ~/Documents/docAtmel.pdf'
@@ -75,15 +74,17 @@ if [ $BASH == /usr/bin/bash ]; then # We're at polytechnique
    alias ssh-school='ssh l4712-05.info.polymtl.ca -l phcarb'
 fi
 
-if [ `uname` == Linux ]; then
+if [ `uname` = Linux ]; then
    echo "   Loading Linux commands"
 	alias ls='ls --color'
-elif [ `uname` == Darwin ]; then
+elif [ `uname` = Darwin ]; then
    echo "   Loading Darwin commands"   
 	alias ls='ls -G'
-elif [ `uname` == AIX ]; then
+elif [ $(uname) = AIX ]; then
    echo "   Loading AIX commands"   
-   PS1="${LOGNAME} @ ${HOSTNAME} "'!) '
+   if [ "$BASH" = "" ]; then
+      PS1="${LOGNAME} @ ${HOSTNAME} "'!) '
+   fi
 	alias vim=vi
 	alias gvim=vi
 fi
