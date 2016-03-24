@@ -10,10 +10,10 @@ echo "** Loading \$HOME/.profile.d/interactive/post **"
    alias gitk="gitk --all"
    alias vgrindtotmem="valgrind --tool=massif --stacks=yes"
 
-   CDPATH=$CDPATH:$HOME/Documents/GitCMC/:$HOME/Documents/Experiences/
-   PATH=$HOME/.local/cmake-3.5.0-rc1-Linux-x86_64/bin:$HOME/.local/bin/:$HOME/Documents/test/:$PATH
-   EDITOR=vim
-   FCEDIT=vim
+   export CDPATH=$CDPATH:$HOME/Documents/GitCMC/:$HOME/Documents/Experiences/
+   export PATH=$HOME/.local/cmake-3.5.0-rc1-Linux-x86_64/bin:$HOME/.local/bin/:$HOME/Documents/test/:$PATH
+   export EDITOR=vim
+   export FCEDIT=vim
 
 
    cdl () {
