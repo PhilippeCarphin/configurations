@@ -19,6 +19,8 @@ Plugin 'Valloric/YouCompleteMe'
 
 Plugin 'Lokaltog/vim-powerline'
 
+Plugin 'https://github.com/scrooloose/nerdtree'
+
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -38,6 +40,10 @@ filetype plugin indent on    " required
 " For vim-powerline
 set laststatus=2
 
+" Nerdtree
+   autocmd StdinReadPre * let s:std_in=1
+   autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+" End nerdtree
 
 " ===========================================================
 if has('cscope')
