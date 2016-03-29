@@ -3,6 +3,12 @@ full_install()
 {
 	# Faire des fonctions individuelles pour chaque groupe et toutes les appeler ici.
 
+   # TODO: For each of these, if the thing to remove is not a link, rename it
+   # from XXXX to XXXX.bak and move it to one specific directory.
+
+   # TODO: Allow to specify the installation directory, or just make installDir
+   # be wherever the stuff is.
+
 	rm $HOME/.bashrc
 	rm $HOME/.bash_profile
 	rm $HOME/.vimrc
@@ -26,6 +32,9 @@ full_install()
    ln -s $installDir/gitconfig                $HOME/.gitconfig
    ln -s $installDir/git-completion.bash      $HOME/.git-completion.bash
    ln -s $installDir/git-prompt.sh            $HOME/.git-prompt.sh
+
+   git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+   vim +:PluginInstall # for the plugins managed by vundle to be installed.
 
 	killall nautilus # For templates to take effect.
 
