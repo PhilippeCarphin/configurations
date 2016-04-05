@@ -1,0 +1,4 @@
+http://vim.wikia.com/wiki/VimTip1643 Undo branches
+http://vim.wikia.com/wiki/VimTip1644 Latex support for $ as a delimiter (yi$, di$...)
+http://vim.wikia.com/wiki/VimTip1646 
+
