@@ -9,8 +9,9 @@ echo "** Loading \$HOME/.profile.d/interactive/post **"
    alias dusage='du --max-depth=1 | sort -n'
    alias gitk="gitk --all"
    alias vgrindtotmem="valgrind --tool=massif --stacks=yes"
+   alias vgrind="valgrind --tool=memcheck --leak-check=yes"
 
-   export CDPATH=$CDPATH:$HOME/Documents/GitCMC/:$HOME/Documents/Experiences/
+   export CDPATH=$CDPATH:$HOME/Documents/GitCMC/:$HOME/Documents/Experiences/:$HOME
    export PATH=$HOME/.local/cmake-3.5.0-rc1-Linux-x86_64/bin:$HOME/.local/bin/:$HOME/Documents/test/:$PATH
    export EDITOR=vim
    export FCEDIT=vim
@@ -31,7 +32,6 @@ if [ "$CMCLNG" == english ]; then
    alias mcompile='export SEQ_EXP_HOME=$HOME/Documents/Experiences/compilation && /ssm/net/isst/maestro/1.4.3-rc4/maestro_1.4.3_ubuntu-12.04-amd64-64/bin/maestro -d 20160119000000 -n /compile -s submit -f continue & '
    alias xcompile='export SEQ_EXP_HOME=$HOME/Documents/Experiences/compilation && xflow &'
    alias runxp_phil='/usr/bin/rdesktop -a 16 -r sound:local -g 1500x1100 eccmcwts3'
-   alias vgrind="valgrind --tool=memcheck --leak-check=yes"
    alias dmaestro="cd /users/dor/afsi/dor/tmp/maestro_depot/"
    alias ssmtest='. ssmuse-sh -d /users/dor/afsi/phc/Testing/testdomain'
    alias exportssmtest='export SEQ_MAESTRO_SHORTCUT=". ssmuse-sh -d /users/dor/afsi/phc/Testing/testdomain"'
