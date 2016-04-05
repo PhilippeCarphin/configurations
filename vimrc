@@ -21,6 +21,8 @@ Plugin 'Lokaltog/vim-powerline'
 
 Plugin 'https://github.com/scrooloose/nerdtree'
 
+Plugin 'tpope/vim-fugitive.git'
+
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -46,6 +48,18 @@ set laststatus=2
 " End nerdtree
 
 " ===========================================================
+" Cscope seems to work without any of this but they must do something useful and
+" besides, I found them on the vim wiki, so it's probably quite standard.  I
+" only use the 'csf' abbreviation which I modified from the wiki to
+" automatically add the 'g' because I use it in vim to jump to definition.  The
+" other possible letters correspond to the options in command line cscope.
+" The set ... command is what causes cscope database to be created when I start
+" I don't know what else it does.
+" As for the command -nargs ... I don't know what it does and it causes an error
+" message to be printed when I sourse my vimrc within vim because it says that
+" the command I'm trying to define already exists.  So I'm commenting it out.
+" http://vim.wikia.com/wiki/VimTip1638
+
 if has('cscope')
   set cscopetag cscopeverbose
 
@@ -54,13 +68,13 @@ if has('cscope')
   endif
 
   cnoreabbrev csa cs add
-  cnoreabbrev csf cs find
+  cnoreabbrev csf cs find g
   cnoreabbrev csk cs kill
   cnoreabbrev csr cs reset
   cnoreabbrev css cs show
   cnoreabbrev csh cs help
 
-  command -nargs=0 Cscope cs add $VIMSRC/src/cscope.out $VIMSRC/src
+  " command -nargs=0 Cscope cs add $VIMSRC/src/cscope.out $VIMSRC/src
 endif
 
 
@@ -111,8 +125,6 @@ set wrapmargin=0
 "  %    :  saves and restores the buffer list
 "  n... :  where to save the viminfo files
 " set viminfo='10,\"100,:20,%,n~/.viminfo
-
-
 if has("autocmd")
   au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal!  g'\"" | endif
 endif
@@ -146,3 +158,10 @@ set foldnestmax=1
 " colorscheme morning
 " colorscheme monokai
 colorscheme molokai
+
+nnoremap <C-y> "+yy
+vnoremap <C-y> "+y
+
+nnoremap <C-p> "+p
+
+set colorcolumn=120
