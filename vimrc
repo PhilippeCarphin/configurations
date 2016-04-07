@@ -12,9 +12,10 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 
+" Extra plugins to add with vundle go here
+
 Plugin 'https://github.com/steffanc/cscopemaps.vim'
 
-" Extra plugins to add with vundle go here
 Plugin 'Valloric/YouCompleteMe'
 
 Plugin 'Lokaltog/vim-powerline'
@@ -22,6 +23,8 @@ Plugin 'Lokaltog/vim-powerline'
 Plugin 'https://github.com/scrooloose/nerdtree'
 
 Plugin 'tpope/vim-fugitive.git'
+
+Plugin 'hari-rangarajan/CCTree'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -37,7 +40,7 @@ filetype plugin indent on    " required
 "
 " see :h vundle for more details or wiki for FAQ
 " Put your non-Plugin stuff after this line
-
+"======================= END VUNDLE =========================
 
 " For vim-powerline
 set laststatus=2
@@ -47,7 +50,7 @@ set laststatus=2
    autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 " End nerdtree
 
-" ===========================================================
+" ===================== CSCOPE ==============================
 " Cscope seems to work without any of this but they must do something useful and
 " besides, I found them on the vim wiki, so it's probably quite standard.  I
 " only use the 'csf' abbreviation which I modified from the wiki to
@@ -62,38 +65,30 @@ set laststatus=2
 
 if has('cscope')
   set cscopetag cscopeverbose
-
   if has('quickfix')
     set cscopequickfix=s-,c-,d-,i-,t-,e-
   endif
-
   cnoreabbrev csa cs add
   cnoreabbrev csf cs find g
   cnoreabbrev csk cs kill
   cnoreabbrev csr cs reset
   cnoreabbrev css cs show
   cnoreabbrev csh cs help
-
   " command -nargs=0 Cscope cs add $VIMSRC/src/cscope.out $VIMSRC/src
 endif
 
-
-
-"======================= END VUNDLE =========================
 " From the 'vim as a C/C++ IDE'
 " http://www.alexeyshmalko.com/2014/using-vim-as-c-cpp-ide/
-" set exrc "Allows automatic sourcing of project specific vimrc
-" set secure "Fixes security hole caused by previous command. 
-"
+set exrc "Allows automatic sourcing of project specific vimrc
+set secure "Fixes security hole caused by previous command. 
+
 
 
 " ================
 " http://stackoverflow.com/questions/234564/tab-key-4-spaces-and-auto-indent-after-curly-braces-in-vim/21323445#21323445
-" Only do this part when compiled with support for autocommands.
 if has("autocmd")
     " Use filetype detection and file-based automatic indenting.
     filetype plugin indent on
-
     " Use actual tab chars in Makefiles.
     autocmd FileType make set tabstop=8 shiftwidth=8 softtabstop=0 noexpandtab
 endif
@@ -125,9 +120,12 @@ set wrapmargin=0
 "  %    :  saves and restores the buffer list
 "  n... :  where to save the viminfo files
 " set viminfo='10,\"100,:20,%,n~/.viminfo
+
+" Remember position in file 
 if has("autocmd")
   au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal!  g'\"" | endif
 endif
+
 inoremap jk <ESC>
 " set nohlsearch
 set hlsearch
@@ -135,23 +133,21 @@ nnoremap <C-b> :w:!gcc % -std=c99 && ./a.out
 nnoremap <C-d> :w:!./%
 " nnoremap <C-b> :w | :!make<CR>
 set number
-" nnoremap <C-i> =i{
 cnoremap vr<CR> :split ~/.vimrc<CR>
 cnoremap sv<CR> :source ~/.vimrc<CR>
-" New Section
-" nnoremap <Down> ddp
 syntax on
 
+" Display incomplete commands at the right
+set showcmd
+
+" Usual backspace behavior
 set backspace=indent,eol,start
+" Non-retarded backspace behavior
+set backspace=2
+" Note: probably only one of the two preceding commands is necessary.
+
 " To enable 256 colors in vim, put this your .vimrc before setting the colorscheme:
 set t_Co=256
-" You may also need to add: 
-"set t_AB=^[[48;5;%dm
-"set t_AF=^[[38;5;%dm
-
-" Non-retarded backspace behavior
-:set backspace=2
-" set foldmethod=indent
 
 set foldnestmax=1
 
@@ -159,9 +155,12 @@ set foldnestmax=1
 " colorscheme monokai
 colorscheme molokai
 
+" Easy interaction with system CTRL-C buffer.
 nnoremap <C-y> "+yy
 vnoremap <C-y> "+y
-
 nnoremap <C-p> "+p
 
+" Have a column with a different color to make me feel bad when I go over 120
+" chars.  Should be 80, but if you look at the C code for maestro, you'll see
+" that this is completely unrealistic.
 set colorcolumn=120
