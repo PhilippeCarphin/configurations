@@ -26,6 +26,10 @@ Plugin 'tpope/vim-fugitive.git'
 
 Plugin 'hari-rangarajan/CCTree'
 
+Plugin 'wikitopian/hardmode'
+" :call HardMode()
+" :call EasyMode()
+
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
