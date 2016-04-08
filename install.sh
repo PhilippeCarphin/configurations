@@ -27,6 +27,7 @@ full_install()
    ln -s $installDir/vimrc                    $HOME/.vimrc
    ln -s $installDir/vim/colors               $HOME/.vim/colors
    ln -s $installDir/vim/indent               $HOME/.vim/indent
+   ln -s $installDir/vim/plugin               $HOME/.vim/plugin
    ln -s $installDir/Templates                $HOME/Templates
    ln -s $installDir/emacs.d                  $HOME/.emacs.d
    ln -s $installDir/gitconfig                $HOME/.gitconfig
@@ -38,7 +39,6 @@ full_install()
 
 	killall nautilus # For templates to take effect.
 
-	chmod 777 --recursive $installDir
 }
 
 showUsage()
