@@ -1,7 +1,12 @@
+echo ".profile called"
 
-# User specific environment and startup programs
-EDITOR=vim
-export EDITOR
+# load env domain
+. /ssm/net/env/3.1-2/etc/ssm.d/profile
 
-PATH=$PATH:$HOME/.local/bin:$HOME/bin
-export PATH
+export ORDENV_COMM=ec/20150731
+. ordenv-load
+
+
+if [ -f ~/.bashrc ]; then
+	. ~/.bashrc
+fi

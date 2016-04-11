@@ -9,7 +9,7 @@ echo Caller is $0 $1 $2
    alias gitk="gitk --all"
    alias vgrindtotmem="valgrind --tool=massif --stacks=yes"
    alias vgrind="valgrind --tool=memcheck --leak-check=yes"
-
+   alias lprofile=". $HOME/.profile.d/interactive/post"
    export CDPATH=$CDPATH:$HOME/Documents/GitCMC/:$HOME/Documents/Experiences/:$HOME
    export PATH=$HOME/.local/cmake-3.5.0-rc1-Linux-x86_64/bin:$HOME/.local/bin/:$HOME/Documents/test/:$PATH
    export EDITOR=vim
@@ -34,6 +34,7 @@ if [ "$CMCLNG" == english ]; then
    alias dmaestro="cd /users/dor/afsi/dor/tmp/maestro_depot/"
    alias ssmtest='. ssmuse-sh -d /users/dor/afsi/phc/Testing/testdomain'
    alias exportssmtest='export SEQ_MAESTRO_SHORTCUT=". ssmuse-sh -d /users/dor/afsi/phc/Testing/testdomain"'
+   alias cmc_origin=/home/ordenv/GIT-DEPOTS/impl/isst
    export CMCLNG=english
    export SEQ_MAESTRO_SHORTCUT=". ssmuse-sh -d /ssm/net/isst/maestro/1.4.3-rc4"
    export SEQ_TRACE_LEVEL=1:TL_FULL_TRACE
