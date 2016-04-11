@@ -7,7 +7,18 @@ full_install()
    # from XXXX to XXXX.bak and move it to one specific directory.
 
    # TODO: Allow to specify the installation directory, or just make installDir
-   # be wherever the stuff is.
+   # be wherever the stuff is. I can find out using PWD I think.  But if the
+   # script is run from ~/Documents/GitHub by typing
+   #        $ ./philconfig/install.sh -f 
+   # then PWD alone won't work.  But the combination of PWD and $0 is all the
+   # information I need.
+   # 
+   # What if the script is somewhere different from where the other files are?
+   # NO! We're not doing that.  You can put everything where ever you want, but
+   # leave everything together.
+   # 
+   # What if the script is used through a link.  God damnit!  Ok, well that's a
+   # possibility I'll look into some other time.
 
 	rm $HOME/.bashrc
 	rm $HOME/.bash_profile
@@ -23,6 +34,8 @@ full_install()
 
    ln -s $installDir/sublime-text-3           $HOME/.config/sublime-text-3
    ln -s $installDir/bashrc                   $HOME/.bashrc
+   # For CMC 
+   ln -s $installDir/bashrc                   $HOME/.profile.d/interactive/post
    ln -s $installDir/bash_profile             $HOME/.bash_profile
    ln -s $installDir/vimrc                    $HOME/.vimrc
    ln -s $installDir/vim/colors               $HOME/.vim/colors
@@ -34,10 +47,14 @@ full_install()
    ln -s $installDir/git-completion.bash      $HOME/.git-completion.bash
    ln -s $installDir/git-prompt.sh            $HOME/.git-prompt.sh
 
-   git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+   if [ ! -e $HOME/.vim/bundle/Vundle.vim ] ; then
+      git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+   fi
    vim +:PluginInstall # for the plugins managed by vundle to be installed.
 
-	killall nautilus # For templates to take effect.
+   if [ `uname` = Linux ] ; then
+      killall nautilus # For templates to take effect.
+   fi
 
 }
 
@@ -65,7 +82,14 @@ showUsage()
 }
 
 REPLACE=true
-installDir=$HOME/Documents/GitHub/philconfig
+
+# Get installDir from command line or link target.
+if [ -L $0 ] ; then
+   installDir=$(dirname $(readlink $0))
+else
+   installDir=$(dirname $PWD/$0)
+fi
+
 while getopts :fbs:h opt 
 do
 	case $opt in

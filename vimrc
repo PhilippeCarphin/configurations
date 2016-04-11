@@ -168,3 +168,15 @@ nnoremap <C-p> "+p
 " chars.  Should be 80, but if you look at the C code for maestro, you'll see
 " that this is completely unrealistic.
 set colorcolumn=120
+
+
+
+inoremap <Up> <ESC>:echoerr "gay"<CR>
+inoremap <Down> <ESC>:echoerr "gay"<CR>
+inoremap <Left> <ESC>:echoerr "gay"<CR>
+inoremap <Right> <ESC>:echoerr "gay"<CR>
+
+nnoremap <Up> <ESC>:echoerr "gay"<CR>
+nnoremap <Down> <ESC>:echoerr "gay"<CR>
+nnoremap <Left> <ESC>:echoerr "gay"<CR>
+nnoremap <Right> <ESC>:echoerr "gay"<CR>
