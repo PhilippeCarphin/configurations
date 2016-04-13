@@ -21,10 +21,12 @@ full_install()
    # possibility I'll look into some other time.
 
 	rm $HOME/.bashrc
+   rm $HOME/.profile.d/interactive/post
 	rm $HOME/.bash_profile
 	rm $HOME/.vimrc
    rm -rf $HOME/.vim/colors
    rm -rf $HOME/.vim/indent
+   rm -rf $HOME/.vim/plugin
 	rm -rf $HOME/Templates
 	rm -rf $HOME/.emacs.d
 	rm -rf $HOME/.config/sublime-text-3
@@ -84,11 +86,10 @@ showUsage()
 REPLACE=true
 
 # Get installDir from command line or link target.
-if [ -L $0 ] ; then
-   installDir=$(dirname $(readlink $0))
-else
-   installDir=$(dirname $PWD/$0)
-fi
+# not a 100% robust method, look at
+# http://stackoverflow.com/questions/59895/can-a-bash-script-tell-what-directory-its-stored-in
+# for more detail
+installDir="$( dirname "$( readlink -f "$0" )" )"
 
 while getopts :fbs:h opt 
 do
