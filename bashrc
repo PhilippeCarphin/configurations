@@ -1,4 +1,7 @@
-echo Caller is $0 $1 $2
+echo Caller is $0
+if [ "$PHIL_BASHRC_SOURCED" != "" ] ; then
+   echo "bashrc already sources skipping. Thank you."
+else
 # ALL
 
    . ~/.git-prompt.sh
@@ -88,4 +91,8 @@ elif [ $(uname) = AIX ]; then
    fi
 	alias vim=vi
 	alias gvim=vi
+fi
+
+export PHIL_BASHRC_SOURCED=true
+
 fi
