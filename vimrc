@@ -169,7 +169,8 @@ nnoremap <C-p> "+p
 " that this is completely unrealistic.
 set colorcolumn=120
 
-
+nnoremap <C-c> I/* <ESC>A */<ESC>
+nnoremap <C-u> :s/\/\* \?//\|s/ \?\*\//<CR>:nohlsearch<CR>
 
 inoremap <Up> <ESC>:echoerr "You are weak."<CR>
 inoremap <Down> <ESC>:echoerr "You are weak."<CR>
