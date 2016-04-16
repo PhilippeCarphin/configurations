@@ -169,14 +169,15 @@ nnoremap <C-p> "+p
 " that this is completely unrealistic.
 set colorcolumn=120
 
+nnoremap <C-c> I/* <ESC>A */<ESC>
+nnoremap <C-u> :s/\/\* \?//\|s/ \?\*\//<CR>:nohlsearch<CR>
 
+inoremap <Up> <ESC>:echoerr "You are weak."<CR>
+inoremap <Down> <ESC>:echoerr "You are weak."<CR>
+inoremap <Left> <ESC>:echoerr "You are weak."<CR>
+inoremap <Right> <ESC>:echoerr "You are weak."<CR>
 
-inoremap <Up> <ESC>:echoerr "gay"<CR>
-inoremap <Down> <ESC>:echoerr "gay"<CR>
-inoremap <Left> <ESC>:echoerr "gay"<CR>
-inoremap <Right> <ESC>:echoerr "gay"<CR>
-
-nnoremap <Up> <ESC>:echoerr "gay"<CR>
-nnoremap <Down> <ESC>:echoerr "gay"<CR>
-nnoremap <Left> <ESC>:echoerr "gay"<CR>
-nnoremap <Right> <ESC>:echoerr "gay"<CR>
+nnoremap <Up> <ESC>:echoerr "You are weak."<CR>
+nnoremap <Down> <ESC>:echoerr "You are weak."<CR>
+nnoremap <Left> <ESC>:echoerr "You are weak."<CR>
+nnoremap <Right> <ESC>:echoerr "You are weak."<CR>
