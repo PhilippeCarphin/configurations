@@ -25,12 +25,14 @@ full_install()
 	rm $HOME/.vimrc
    rm -rf $HOME/.vim/colors
    rm -rf $HOME/.vim/indent
+   rm -rf $HOME/.vim/plugin
 	rm -rf $HOME/Templates
 	rm -rf $HOME/.emacs.d
 	rm -rf $HOME/.config/sublime-text-3
 	rm $HOME/.gitconfig
 	rm $HOME/.git-completion.bash
    rm $HOME/.git-prompt.sh
+   rm $HOME/.tmux.conf
 
    ln -s $installDir/sublime-text-3           $HOME/.config/sublime-text-3
    ln -s $installDir/bashrc                   $HOME/.bashrc
@@ -46,6 +48,7 @@ full_install()
    ln -s $installDir/gitconfig                $HOME/.gitconfig
    ln -s $installDir/git-completion.bash      $HOME/.git-completion.bash
    ln -s $installDir/git-prompt.sh            $HOME/.git-prompt.sh
+   ln -s $installDir/tmux.conf                $HOME/.tmux.conf
 
    if [ ! -e $HOME/.vim/bundle/Vundle.vim ] ; then
       git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
