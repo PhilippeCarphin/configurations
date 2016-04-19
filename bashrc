@@ -21,7 +21,7 @@ echo Caller is $0
    }
    set -o vi
 
-if [ "$CMCLNG" == english ]; then
+if [ "$CMCLNG" != "" ]; then
    echo "   Loading CMC commands "
    . ssmuse-sh -d cmoi/apps/git/20150526
    . ssmuse-sh -d cmoi/apps/git-procedures/20150622
