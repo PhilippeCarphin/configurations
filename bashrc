@@ -23,13 +23,12 @@ echo Caller is $0
 
 if [ "$CMCLNG" != "" ]; then
    echo "   Loading CMC commands "
-   alias gitk=/ssm/net/cmoi/apps/git/20150526/ubuntu-12.04-amd64-64/bin/gitk
+   alias gitk='/ssm/net/cmoi/apps/git/20150526/ubuntu-12.04-amd64-64/bin/gitk --all'
    alias runxp=/users/dor/afsi/dor/ovbin/i686/runxp 
    alias xflow_overviewSuites="xflow_overview -suites ~afsiops/xflow.suites.xml;echo allo"
-   alias mcompile='export SEQ_EXP_HOME=$HOME/Documents/Experiences/compilation && /ssm/net/isst/maestro/1.4.3-rc4/maestro_1.4.3_ubuntu-12.04-amd64-64/bin/maestro -d 20160119000000 -n /compile -s submit -f continue & '
-   alias xcompile='export SEQ_EXP_HOME=$HOME/Documents/Experiences/compilation && xflow &'
+   alias mcompile='export SEQ_EXP_HOME=$HOME/Documents/Experiences/compilation && maestro -d 20160119000000 -n /compile -s submit -f continue'
+   alias xcompile='export SEQ_EXP_HOME=$HOME/Documents/Experiences/compilation && xflow'
    alias runxp_phil='/usr/bin/rdesktop -a 16 -r sound:local -g 1500x1100 eccmcwts3'
-   alias dmaestro="cd /users/dor/afsi/dor/tmp/maestro_depot/"
    alias ssmtest='. ssmuse-sh -d /users/dor/afsi/phc/Testing/testdomain'
    alias exportssmtest='export SEQ_MAESTRO_SHORTCUT=". ssmuse-sh -d /users/dor/afsi/phc/Testing/testdomain"'
    alias cmc_origin='cd /home/ordenv/GIT-DEPOTS/impl/isst'

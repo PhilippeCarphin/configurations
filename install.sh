@@ -51,7 +51,7 @@ case $1 in
    cmc)
       replaceWithLink $HOME/.profile profile
       replaceWithLink $HOME/.bash_profile profile
-      replaceWithLink $HOME/.profile.d/interactive/post bashrc
+      replaceWithLink $HOME/.profile.d/interactive/post post
       ;;
 	nautilusScripts)
 		;;
