@@ -174,12 +174,12 @@ set colorcolumn=120
 nnoremap <C-c> I/* <ESC>A */<ESC>
 nnoremap <C-u> :s/\/\* \?//\|s/ \?\*\//<CR>:nohlsearch<CR>
 
-inoremap <Up> <ESC>:echoerr "You are weak."<CR>
-inoremap <Down> <ESC>:echoerr "You are weak."<CR>
-inoremap <Left> <ESC>:echoerr "You are weak."<CR>
-inoremap <Right> <ESC>:echoerr "You are weak."<CR>
+inoremap <Up> <ESC>:echoerr "Your mind is weak."<CR>
+inoremap <Down> <ESC>:echoerr "Your mind is weak."<CR>
+inoremap <Left> <ESC>:echoerr "Your mind is weak."<CR>
+inoremap <Right> <ESC>:echoerr "Your mind is weak."<CR>
 
-nnoremap <Up> <ESC>:echoerr "You are weak."<CR>
-nnoremap <Down> <ESC>:echoerr "You are weak."<CR>
-nnoremap <Left> <ESC>:echoerr "You are weak."<CR>
-nnoremap <Right> <ESC>:echoerr "You are weak."<CR>
+nnoremap <Up> <ESC>:echoerr "Join me or die"<CR>
+nnoremap <Down> <ESC>:echoerr "The clouded mind sees nothing"<CR>
+nnoremap <Left> <ESC>:echoerr "Your mind is weak."<CR>
+nnoremap <Right> <ESC>:echoerr "The clouded mind sees nothing"<CR>
