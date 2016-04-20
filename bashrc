@@ -23,9 +23,6 @@ echo Caller is $0
 
 if [ "$CMCLNG" != "" ]; then
    echo "   Loading CMC commands "
-   . ssmuse-sh -d cmoi/apps/git/20150526
-   . ssmuse-sh -d cmoi/apps/git-procedures/20150622
-   . ssmuse-sh -d /ssm/net/isst/maestro/1.4.3-rc4
    alias gitk=/ssm/net/cmoi/apps/git/20150526/ubuntu-12.04-amd64-64/bin/gitk
    alias runxp=/users/dor/afsi/dor/ovbin/i686/runxp 
    alias xflow_overviewSuites="xflow_overview -suites ~afsiops/xflow.suites.xml;echo allo"
@@ -46,6 +43,12 @@ if [ "$CMCLNG" != "" ]; then
       echo "      SSM'ing test domain"
       . ssmuse-sh -d /users/dor/afsi/phc/Testing/testdomain
       export SEQ_MAESTRO_SHORTCUT=". ssmuse-sh -d /users/dor/afsi/phc/Testing/testdomain"
+   else
+      echo "      Hello Ubuntu-12.04"
+      echo "      SSM'ing Ubuntu-12.04 stuff git, git-procedures, maestro-1.4.3-rc4"
+      . ssmuse-sh -d cmoi/apps/git/20150526
+      . ssmuse-sh -d cmoi/apps/git-procedures/20150622
+      . ssmuse-sh -d /ssm/net/isst/maestro/1.4.3-rc4
    fi
 fi
 
@@ -59,7 +62,12 @@ if [ "$BASH" != "" ]; then
 else
    echo "   Loading non-bash commands (possibly ksh)"
    ulimit -St unlimited
-	PS1='$(echo -e "\033[32m${LOGNAME} @ ${HOSTNAME} ${PWD##*/}\033[35m$(__git_ps1 " (%s)")\033[32m $ \033[00m")'
+   if [ `hostname` = artanis ] ; then 
+      echo "    git prompt doesn't work on ubuntu14's ksh :("
+      PS1='$(echo -e "\033[32m${LOGNAME} @ ${HOSTNAME} ${PWD##*/} $ \033[00m")'
+   else
+      PS1='$(echo -e "\033[32m${LOGNAME} @ ${HOSTNAME} ${PWD##*/}\033[35m$(__git_ps1 " (%s)")\033[32m $ \033[00m")'
+   fi
 	alias history='fc -l 1 100000'
 	alias __A=$(print '\0020') # ^P = up = previous command
 	alias __B=$(print '\0016') # ^N = down  = next command
