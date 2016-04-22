@@ -190,4 +190,5 @@ inoremap <Down> <ESC>:echoerr "The clouded mind sees nothing"<CR>
 inoremap <Left> <ESC>:echoerr "Your mind is weak."<CR>
 inoremap <Right> <ESC>:echoerr "The clouded mind sees nothing"<CR>
 
-command Notes tabe ~/Desktop/Notes/Daily_Notes/today.txt
+command! Notes tabe ~/Desktop/Notes/Daily_Notes/today.txt
+nnoremap U yyp^v$r=
