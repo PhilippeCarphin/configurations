@@ -9,7 +9,6 @@ echo Caller is $0
    alias gitk="gitk --all"
    alias vgrindtotmem="valgrind --tool=massif --stacks=yes"
    alias vgrind="valgrind --tool=memcheck --leak-check=yes"
-   alias lprofile=". $HOME/.profile.d/interactive/post"
    export CDPATH=$CDPATH:$HOME/Documents/GitCMC/:$HOME/Documents/Experiences/:$HOME:$HOME/Documents
    export PATH=$HOME/.local/cmake-3.5.0-rc1-Linux-x86_64/bin:$HOME/.local/bin/:$HOME/Documents/test/:$PATH
    export EDITOR=vim
@@ -23,31 +22,28 @@ echo Caller is $0
 
 if [ "$CMCLNG" != "" ]; then
    echo "   Loading CMC commands "
-   alias gitk='/ssm/net/cmoi/apps/git/20150526/ubuntu-12.04-amd64-64/bin/gitk --all'
+   . ssmuse-sh -d cmoi/apps/git/20150526
+   . ssmuse-sh -d cmoi/apps/git-procedures/20150622
    alias runxp=/users/dor/afsi/dor/ovbin/i686/runxp 
    alias xflow_overviewSuites="xflow_overview -suites ~afsiops/xflow.suites.xml;echo allo"
-   alias mcompile='export SEQ_EXP_HOME=$HOME/Documents/Experiences/compilation && maestro -d 20160119000000 -n /compile -s submit -f continue'
-   alias xcompile='export SEQ_EXP_HOME=$HOME/Documents/Experiences/compilation && xflow'
    alias runxp_phil='/usr/bin/rdesktop -a 16 -r sound:local -g 1500x1100 eccmcwts3'
    alias ssmtest='. ssmuse-sh -d /users/dor/afsi/phc/Testing/testdomain'
    alias exportssmtest='export SEQ_MAESTRO_SHORTCUT=". ssmuse-sh -d /users/dor/afsi/phc/Testing/testdomain"'
    alias cmc_origin='cd /home/ordenv/GIT-DEPOTS/impl/isst'
    alias dor_origin='cd /home/ops/afsi/dor/tmp/maestro_depot'
    export CMCLNG=english
-   export SEQ_MAESTRO_SHORTCUT=". ssmuse-sh -d /ssm/net/isst/maestro/1.4.3-rc4"
    export SEQ_TRACE_LEVEL=1:TL_FULL_TRACE
    export domain="/users/dor/afsi/phc/Testing/testdomain"
    if [ `hostname` == artanis ] ; then
-      echo "      Entaro Artanis!"
-      echo "      SSM'ing test domain"
+      echo "      ssm'ing maestro 1.5 test version"
       . ssmuse-sh -d /users/dor/afsi/phc/Testing/testdomain
       export SEQ_MAESTRO_SHORTCUT=". ssmuse-sh -d /users/dor/afsi/phc/Testing/testdomain"
    else
-      echo "      Hello Ubuntu-12.04"
-      echo "      SSM'ing Ubuntu-12.04 stuff git, git-procedures, maestro-1.4.3-rc4"
-      . ssmuse-sh -d cmoi/apps/git/20150526
-      . ssmuse-sh -d cmoi/apps/git-procedures/20150622
+      echo "      ssm'ing maestro 1.4.3-rc4"
       . ssmuse-sh -d /ssm/net/isst/maestro/1.4.3-rc4
+      export SEQ_MAESTRO_SHORTCUT=". ssmuse-sh -d /ssm/net/isst/maestro/1.4.3-rc4"
+      alias mcompile='export SEQ_EXP_HOME=$HOME/Documents/Experiences/compilation && maestro -d 20160119000000 -n /compile -s submit -f continue'
+      alias xcompile='export SEQ_EXP_HOME=$HOME/Documents/Experiences/compilation && xflow'
    fi
 fi
 
@@ -104,3 +100,7 @@ elif [ $(uname) = AIX ]; then
 	alias vim=vi
 	alias gvim=vi
 fi
+
+# if [ "$TMUX" = "" -a `hostname` = artanis -a "$SSH_CLIENT" = "" ] ; then
+#    tmux
+# fi
