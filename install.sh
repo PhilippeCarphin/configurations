@@ -52,6 +52,7 @@ case $1 in
       replaceWithLink $HOME/.profile profile
       replaceWithLink $HOME/.bash_profile profile
       replaceWithLink $HOME/.profile.d/interactive/post post
+      replaceWithLink $HOME/.gitconfig gitconfig_cmc
       ;;
 	nautilusScripts)
 		;;
