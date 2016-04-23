@@ -48,6 +48,12 @@ case $1 in
 		;;
 	bin)
 		;;
+   cmc)
+      replaceWithLink $HOME/.profile profile
+      replaceWithLink $HOME/.bash_profile profile
+      replaceWithLink $HOME/.profile.d/interactive/post post
+      replaceWithLink $HOME/.gitconfig gitconfig_cmc
+      ;;
 	nautilusScripts)
 		;;
    *)
@@ -106,6 +112,9 @@ if [ "$1" = full ] ; then
    installGroup git
    installGroup sublime
    installGroup tmux
+   if [ "$CMCLNG" != "" ] ; then
+      installGroup cmc
+   fi
 elif [ "$1" != "" ] ; then
    installGroup $1
 else

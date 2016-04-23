@@ -38,3 +38,8 @@ set colorcolumn=81
 normal mode gf (goto file)
 <C-o> jump stack
 <C-i> something related to <C-o>
+
+
+http://stackoverflow.com/questions/102384/using-vims-tabs-like-buffers?rq=1
+===========================================================================
+

@@ -174,12 +174,21 @@ set colorcolumn=120
 nnoremap <C-c> I/* <ESC>A */<ESC>
 nnoremap <C-u> :s/\/\* \?//\|s/ \?\*\//<CR>:nohlsearch<CR>
 
-inoremap <Up> <ESC>:echoerr "You are weak."<CR>
-inoremap <Down> <ESC>:echoerr "You are weak."<CR>
-inoremap <Left> <ESC>:echoerr "You are weak."<CR>
-inoremap <Right> <ESC>:echoerr "You are weak."<CR>
+" nnoremap <Up> <ESC>:echoerr "Your mind is weak."<CR>
+" nnoremap <Down> <ESC>:echoerr "Your mind is weak."<CR>
+" nnoremap <Left> <ESC>:echoerr "Your mind is weak."<CR>
+" nnoremap <Right> <ESC>:echoerr "Your mind is weak."<CR>
+nnoremap <Up> <C-y>k
+" nnoremap <Up> <C-y>
+nnoremap <Down> <C-e>j
+" nnoremap <Down> <C-e>
+nnoremap <Left> <ESC>:echoerr "Your mind is weak."<CR>
+nnoremap <Right> <ESC>:echoerr "Your mind is weak."<CR>
 
-nnoremap <Up> <ESC>:echoerr "You are weak."<CR>
-nnoremap <Down> <ESC>:echoerr "You are weak."<CR>
-nnoremap <Left> <ESC>:echoerr "You are weak."<CR>
-nnoremap <Right> <ESC>:echoerr "You are weak."<CR>
+inoremap <Up> <ESC>:echoerr "Join me or die"<CR>
+inoremap <Down> <ESC>:echoerr "The clouded mind sees nothing"<CR>
+inoremap <Left> <ESC>:echoerr "Your mind is weak."<CR>
+inoremap <Right> <ESC>:echoerr "The clouded mind sees nothing"<CR>
+
+command! Notes tabe ~/Desktop/Notes/Daily_Notes/today.txt
+nnoremap U yyp^v$r=
