@@ -101,6 +101,6 @@ elif [ $(uname) = AIX ]; then
 	alias gvim=vi
 fi
 
-if [ "$TMUX" = "" -a `hostname` = artanis -a "$SSH_CLIENT" = "" ] ; then
+if [ "$TMUX" = "" -a "$SSH_CLIENT" = "" ] ; then
    tmux
 fi
