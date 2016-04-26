@@ -15,6 +15,9 @@ echo Caller is $0
    export FCEDIT=vim
 
 
+   ssh-school() {
+      ssh $1.info.polymtl.ca -l phcarb
+   }
    cdl () {
        cd "$(dirname "$(readlink "$1")")";
    }
@@ -72,7 +75,7 @@ else
 	alias __Y=$(print '\0005') # ^E = end = end of line
 fi
 
-if [ "$BASH" == TODO ]; then # We're at polytechnique
+if [ "$USER" = prcarb ]; then # We're at polytechnique
    echo "   Loading polytechnique commands"
    alias INF1995='firefox http://www.groupes.polymtl.ca/inf1995/tp/'
    alias docAtmel='gvfs-open ~/Documents/docAtmel.pdf'
@@ -82,7 +85,6 @@ if [ "$BASH" == TODO ]; then # We're at polytechnique
    alias chrome='google-chrome'
    alias INF1995='google-chrome http://www.groupes.polymtl.ca/inf1995/tp/'
    alias hotmail='google-chrome www.hotmail.com'
-   alias ssh-school='ssh l4712-05.info.polymtl.ca -l phcarb'
 fi
 
 if [ `uname` = Linux ]; then
