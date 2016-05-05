@@ -30,6 +30,10 @@ Plugin 'wikitopian/hardmode'
 " :call HardMode()
 " :call EasyMode()
 
+" Plugin to highlight trailing whitespace and provides a function to clear
+" whitespace in the whole file or a range.
+Plugin 'ntpeters/vim-better-whitespace'
+
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
