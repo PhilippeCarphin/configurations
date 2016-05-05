@@ -192,3 +192,19 @@ inoremap <Right> <ESC>:echoerr "The clouded mind sees nothing"<CR>
 
 command! Notes tabe ~/Desktop/Notes/Daily_Notes/today.txt
 nnoremap U yyp^v$r=
+
+"  Not sure about this: it is for display word wrapping. It makes it work with
+"  indentation, but it breaks up words.  Broken up words is not as bad for
+"  understanding the code as not having clear visual indentation so I'm going to
+"  use it.  The ideal solution would be to use
+if v:version >= 704
+    set breakindent
+endif
+"  but also figure out which extra option to set so that it doesn't break up
+"  words. See also showbreak
+
+"  Redo line breaks for a paragraph
+nnoremap <C-j> {jV}kJgqgq
+vnoremap <C-j> Jgqgq
+
+
