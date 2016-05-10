@@ -6,7 +6,7 @@ echo Caller is $0
    alias lprofile=". $HOME/.bashrc"
    alias cd..='cd ..'
    alias dusage='du --max-depth=1 | sort -n'
-   alias gitk="gitk --all"
+   alias gitk="gitk --all --select-commit=HEAD"
    alias vgrindtotmem="valgrind --tool=massif --stacks=yes"
    alias vgrind="valgrind --tool=memcheck --leak-check=yes"
    export CDPATH=$CDPATH:$HOME/Documents/GitCMC/:$HOME/Documents/Experiences/:$HOME:$HOME/Documents
@@ -27,7 +27,7 @@ if [ "$CMCLNG" != "" ]; then
    echo "   Loading CMC commands "
    . ssmuse-sh -d cmoi/apps/git/20150526
    . ssmuse-sh -d cmoi/apps/git-procedures/20150622
-   alias runxp=/users/dor/afsi/dor/ovbin/i686/runxp 
+   alias runxp=/users/dor/afsi/dor/ovbin/i686/runxp
    alias xflow_overviewSuites="xflow_overview -suites ~afsiops/xflow.suites.xml;echo allo"
    alias runxp_phil='/usr/bin/rdesktop -a 16 -r sound:local -g 1500x1100 eccmcwts3'
    alias ssmtest='. ssmuse-sh -d /users/dor/afsi/phc/Testing/testdomain'
@@ -50,17 +50,17 @@ if [ "$CMCLNG" != "" ]; then
    fi
 fi
 
-if [ "$BASH" != "" ]; then 
+if [ "$BASH" != "" ]; then
    echo "   Loading bash specific commands"
    PS1='\[\e[0;32m\][\u@\h \W\[\e[0;33m\]$(__git_ps1 " (%s)")\[\e[0;32m\]] \$ \[\e[0m\]'
    [ -z "$TMUX" ] && export TERM=xterm-256color
-   . ~/.git-completion.bash 
+   . ~/.git-completion.bash
    export HISTFILESIZE=
    export HISTSIZE=
 else
    echo "   Loading non-bash commands (possibly ksh)"
    ulimit -St unlimited
-   if [ `hostname` = artanis ] ; then 
+   if [ `hostname` = artanis ] ; then
       echo "    git prompt doesn't work on ubuntu14's ksh :("
       PS1='$(echo -e "\033[32m${LOGNAME} @ ${HOSTNAME} ${PWD##*/} $ \033[00m")'
    else
@@ -91,11 +91,11 @@ if [ `uname` = Linux ]; then
    echo "   Loading Linux commands"
 	alias ls='ls --color'
 elif [ `uname` = Darwin ]; then
-   echo "   Loading Darwin commands"   
+   echo "   Loading Darwin commands"
 	alias ls='ls -G'
    alias dusage='du -d 1 | sort -n'
 elif [ $(uname) = AIX ]; then
-   echo "   Loading AIX commands"   
+   echo "   Loading AIX commands"
    if [ "$BASH" = "" ]; then
       PS1="${LOGNAME} @ ${HOSTNAME} "'!) '
    fi
