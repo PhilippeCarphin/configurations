@@ -39,12 +39,14 @@ if [ "$CMCLNG" != "" ]; then
    export domain="/users/dor/afsi/phc/Testing/testdomain"
    if [ `hostname` == artanis ] ; then
       echo "      ssm'ing maestro 1.5 test version"
-      . ssmuse-sh -d /users/dor/afsi/phc/Testing/testdomain
+      maestro=/users/dor/afsi/phc/Testing/testdomain
+      . ssmuse-sh -d $maestro
       export SEQ_MAESTRO_SHORTCUT=". ssmuse-sh -d /users/dor/afsi/phc/Testing/testdomain"
    else
-      echo "      ssm'ing maestro 1.4.3-rc4"
-      . ssmuse-sh -d /ssm/net/isst/maestro/1.4.3-rc4
-      export SEQ_MAESTRO_SHORTCUT=". ssmuse-sh -d /ssm/net/isst/maestro/1.4.3-rc4"
+      echo "      ssm'ing maestro 1.5.0-rc7"
+      maestro=/ssm/net/isst/maestro/1.5.0-rc7
+      . ssmuse-sh -d $maestro
+      export SEQ_MAESTRO_SHORTCUT=". ssmuse-sh -d $maestro"
       alias mcompile='export SEQ_EXP_HOME=$HOME/Documents/Experiences/compilation && maestro -d 20160119000000 -n /compile -s submit -f continue'
       alias xcompile='export SEQ_EXP_HOME=$HOME/Documents/Experiences/compilation && xflow'
    fi
