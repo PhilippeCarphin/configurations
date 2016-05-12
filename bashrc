@@ -10,12 +10,12 @@ echo Caller is $0
    alias vgrindtotmem="valgrind --tool=massif --stacks=yes"
    alias vgrind="valgrind --tool=memcheck --leak-check=yes"
    export CDPATH=$CDPATH:$HOME/Documents/GitCMC/:$HOME/Documents/Experiences/:$HOME:$HOME/Documents
-   export PATH=$HOME/.local/cmake-3.5.0-rc1-Linux-x86_64/bin:$HOME/.local/bin/:$HOME/Documents/test/:$PATH
+   export PATH=$HOME/.local/cmake-3.5.0-rc1-Linux-x86_64/bin:$HOME/.local/bin:$HOME/Documents/test:$PATH
    export EDITOR=vim
    export FCEDIT=vim
 
 
-   ssh-school() {
+   ssh_school() {
       ssh $1.info.polymtl.ca -l phcarb
    }
    cdl () {
@@ -62,11 +62,12 @@ if [ "$BASH" != "" ]; then
 else
    echo "   Loading non-bash commands (possibly ksh)"
    ulimit -St unlimited
-   if [ `hostname` = artanis ] ; then
-      echo "    git prompt doesn't work on ubuntu14's ksh :("
-      PS1='$(echo -e "\033[32m${LOGNAME} @ ${HOSTNAME} ${PWD##*/} $ \033[00m")'
-   else
+   if [ "${KSH_VERSION#*PD}" != "$KSH_VERSION" ] ; then
+      echo "    Running pdksh"
       PS1='$(echo -e "\033[32m${LOGNAME} @ ${HOSTNAME} ${PWD##*/}\033[35m$(__git_ps1 " (%s)")\033[32m $ \033[00m")'
+   else
+      echo "    git prompt doesn't work on ksh93 :("
+      PS1='$(echo -e "\033[32m${LOGNAME} @ ${HOSTNAME} ${PWD##*/} $ \033[00m")'
    fi
 	alias history='fc -l 1 100000'
 	alias __A=$(print '\0020') # ^P = up = previous command
