@@ -54,20 +54,28 @@ fi
 
 if [ "$BASH" != "" ]; then
    echo "   Loading bash specific commands"
-   PS1='\[\e[0;32m\][\u@\h \W\[\e[0;33m\]$(__git_ps1 " (%s)")\[\e[0;32m\]] \$ \[\e[0m\]'
+   green='\[\e[0;32m\]'
+   yellow='\[\e[0;33m\]'
+   purple='\[\e[0;35m\]'
+   no_color='\[\e[0m\]'
+   PS1=$green'[\u@\h \W'$yellow'$(__git_ps1 " (%s)")'$green'] \$ '$no_color
    [ -z "$TMUX" ] && export TERM=xterm-256color
    . ~/.git-completion.bash
    export HISTFILESIZE=
    export HISTSIZE=
 else
+   green='\033[32m'
+   yellow='\033[33m'
+   purple='\033[35m'
+   no_color='\033[00m'
    echo "   Loading non-bash commands (possibly ksh)"
    ulimit -St unlimited
    if [ "${KSH_VERSION#*PD}" != "$KSH_VERSION" ] ; then
       echo "    Running pdksh"
-      PS1='$(echo -e "\033[32m${LOGNAME} @ ${HOSTNAME} ${PWD##*/}\033[35m$(__git_ps1 " (%s)")\033[32m $ \033[00m")'
+      PS1='$(echo -e "$green${LOGNAME} @ ${HOSTNAME} ${PWD##*/}$purple$(__git_ps1 " (%s)")$green \$ $no_color")'
    else
       echo "    git prompt doesn't work on ksh93 :("
-      PS1='$(echo -e "\033[32m${LOGNAME} @ ${HOSTNAME} ${PWD##*/} $ \033[00m")'
+      PS1='$(echo -e "$green${LOGNAME} @ ${HOSTNAME} ${PWD##*/} $ $no_color")'
    fi
 	alias history='fc -l 1 100000'
 	alias __A=$(print '\0020') # ^P = up = previous command
