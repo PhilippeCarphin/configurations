@@ -139,7 +139,7 @@ endif
 inoremap jk <ESC>
 " set nohlsearch
 set hlsearch
-nnoremap <C-b> :w:!gcc % -std=c99 && ./a.out
+nnoremap <C-b> :w:!cc % -std=c99 && ./a.out
 nnoremap <C-d> :w:!%
 " nnoremap <C-b> :w | :!make<CR>
 set number
