@@ -3,7 +3,7 @@
 	email = phil103@hotmail.com
 [alias]
 	st = status
-	logl = log --oneline --decorate
+	logl = log --oneline --decorate --graph -15
 [credential]
 	helper = gnome-keyring
 	helper = cache --timeout 36000
