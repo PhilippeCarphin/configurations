@@ -1,4 +1,16 @@
 echo Caller is $0
+__paul_check(){
+   echo "|" >> ~/.paul_check
+   checks=$(cat ~/.paul_check.txt | wc | cut -d ' ' -f 8)
+   echo Better pay up, you\'re at $checks checks.
+}
+
+paul_check(){
+if [ `hostname` == MacBook-Pro.local ]
+   echo __paul_check | ssh imac
+else
+   __paul_check
+fi
 
 if [ "$CMCLNG" != "" ]; then
    export SEQ_TRACE_LEVEL=1:TL_FULL_TRACE
