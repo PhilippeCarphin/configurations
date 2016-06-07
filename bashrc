@@ -2,26 +2,26 @@ echo Caller is $0
 
 if [ "$CMCLNG" != "" ]; then
    export SEQ_TRACE_LEVEL=1:TL_FULL_TRACE
-   export domain="/users/dor/afsi/phc/Testing/testdomain"
-   export CMCLNG=english
-   echo "   Loading CMC commands "
-   . ssmuse-sh -d cmoi/apps/git/20150526
-   . ssmuse-sh -d cmoi/apps/git-procedures/20150622
-   if [ `hostname` == artanis ] ; then
-      echo "      ssm'ing maestro 1.5 test version"
-      maestro=$domain
-   else
-      echo "      ssm'ing maestro 1.5.0-rc7"
-      maestro=/ssm/net/isst/maestro/1.5.0-rc7
-   fi
-   . ssmuse-sh -d $maestro
-   export SEQ_MAESTRO_SHORTCUT=". ssmuse-sh -d $maestro"
    if [ `which git` = /usr/bin/git ] ; then
       # To protect against using a bad version of git.
       alias git="echo bad version of git"
    fi
    case $- in
       *i*)
+         export domain="/users/dor/afsi/phc/Testing/testdomain"
+         export CMCLNG=english
+         echo "   Loading CMC commands "
+         . ssmuse-sh -d cmoi/apps/git/20150526
+         . ssmuse-sh -d cmoi/apps/git-procedures/20150622
+         if [ `hostname` == artanis ] ; then
+            echo "      ssm'ing maestro 1.5 test version"
+            maestro=$domain
+         else
+            echo "      ssm'ing maestro 1.5.0-rc7"
+            maestro=/ssm/net/isst/maestro/1.5.0-rc7
+         fi
+         . ssmuse-sh -d $maestro
+         export SEQ_MAESTRO_SHORTCUT=". ssmuse-sh -d $maestro"
          alias runxp=/users/dor/afsi/dor/ovbin/i686/runxp
          alias xflow_overviewSuites="xflow_overview -suites ~afsiops/xflow.suites.xml;echo allo"
          alias runxp_phil='/usr/bin/rdesktop -a 16 -r sound:local -g 1500x1100 eccmcwts3'
