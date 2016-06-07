@@ -6,11 +6,12 @@ __paul_check(){
 }
 
 paul_check(){
-if [ `hostname` == MacBook-Pro.local ]
+if [ `hostname` == MacBook-Pro.local ] ; then
    echo __paul_check | ssh imac
 else
    __paul_check
 fi
+}
 
 if [ "$CMCLNG" != "" ]; then
    export SEQ_TRACE_LEVEL=1:TL_FULL_TRACE
