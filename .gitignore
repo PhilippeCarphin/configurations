@@ -20,3 +20,4 @@ sublime-text-3/Local
 sublime-text-3/Packages/User/Sublimerge.sublime-license
 test.sh
 *.swp
+sublime-text-3/*
