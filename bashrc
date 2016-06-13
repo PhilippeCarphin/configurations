@@ -7,7 +7,7 @@ __paul_check(){
 
 paul_check(){
 if [ `hostname` == MacBook-Pro.local ] ; then
-   echo __paul_check | ssh imac
+   echo "source ~/.bashrc && __paul_check" | ssh pcarphin@imac
 else
    __paul_check
 fi
