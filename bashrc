@@ -1,6 +1,6 @@
 echo Caller is $0
 __paul_check(){
-   echo "|" >> ~/.paul_check
+   echo "|" >> ~/.paul_check.txt
    checks=$(cat ~/.paul_check.txt | wc | cut -d ' ' -f 8)
    echo Better pay up, you\'re at $checks checks.
 }
