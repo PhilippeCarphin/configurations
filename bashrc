@@ -1,13 +1,13 @@
 echo Caller is $0
 __paul_check(){
-   echo "|" >> ~/.paul_check
+   echo "|" >> ~/.paul_check.txt
    checks=$(cat ~/.paul_check.txt | wc | cut -d ' ' -f 8)
    echo Better pay up, you\'re at $checks checks.
 }
 
 paul_check(){
 if [ `hostname` == MacBook-Pro.local ] ; then
-   echo __paul_check | ssh imac
+   echo "source ~/.bashrc && __paul_check" | ssh pcarphin@imac
 else
    __paul_check
 fi
