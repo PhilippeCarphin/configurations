@@ -13,12 +13,10 @@ else
 fi
 }
 
+
+
 if [ "$CMCLNG" != "" ]; then
    export SEQ_TRACE_LEVEL=1:TL_FULL_TRACE
-   if [ `which git` = /usr/bin/git ] ; then
-      # To protect against using a bad version of git.
-      alias git="echo bad version of git"
-   fi
    case $- in
       *i*)
          export domain="/users/dor/afsi/phc/Testing/testdomain"
@@ -27,7 +25,7 @@ if [ "$CMCLNG" != "" ]; then
          . ssmuse-sh -d cmoi/apps/git/20150526
          . ssmuse-sh -d cmoi/apps/git-procedures/20150622
          if [ `hostname` == artanis ] ; then
-            echo "      ssm'ing maestro 1.5 test version"
+            echo "      ssm'ing maestro 1.5 development version"
             maestro=$domain
          else
             echo "      ssm'ing maestro 1.5.0-rc7"
@@ -40,7 +38,9 @@ if [ "$CMCLNG" != "" ]; then
          alias runxp_phil='/usr/bin/rdesktop -a 16 -r sound:local -g 1500x1100 eccmcwts3'
          alias cmc_origin='cd /home/ordenv/GIT-DEPOTS/impl/isst'
          alias dor_origin='cd /home/ops/afsi/dor/tmp/maestro_depot'
-         alias emake='make 2>&1 | grep '.*error' --color=always --after-context=4'
+         # Example error line: mtest_main.c:479:4 error expected ';' before 'if' ...
+         # -> anything, then some digits, then a ':', some digits, a ':', then a space, then 'error'
+         alias emake="make 2>&1 | grep '.*[0-9]\+:[0-9]\+: error' --color=always --after-context=4"
          alias wmake='make 2>&1 | grep '.*warning' --color=always --after-context=4'
          alias nmake='make 2>&1 | grep '.*note' --color=always --after-context=4'
 
@@ -52,11 +52,20 @@ if [ "$CMCLNG" != "" ]; then
 
          . ssmuse-sh -d $maestro
          export SEQ_MAESTRO_SHORTCUT=". ssmuse-sh -d $maestro"
+         if [ `which git` = /usr/bin/git ] ; then
+            # To protect against using a bad version of git.
+            alias git="echo bad version of git"
+         fi
          ;;
       *)
          ;;
    esac
 fi
+ssmdev(){
+   maestro=$domain
+   . ssmuse-sh -d $maestro
+   export SEQ_MAESTRO_SHORTCUT=". ssmuse-sh -d $maestro"
+}
 
 
 case $- in

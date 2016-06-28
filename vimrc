@@ -139,7 +139,7 @@ endif
 inoremap jk <ESC>
 " set nohlsearch
 set hlsearch
-nnoremap <C-b> :w:!cc % -std=c99 && ./a.out
+nnoremap <C-b> :w:!cc % -D_BSD_SOURCE -std=c11 && ./a.out
 nnoremap <C-d> :w:!%
 " nnoremap <C-b> :w | :!make<CR>
 set number
@@ -210,5 +210,8 @@ endif
 "  Redo line breaks for a paragraph
 nnoremap <C-j> {jV}kJgqgq
 vnoremap <C-j> Jgqgq
+
+:inoremap <C-u> yyp^v$r-o	
+:inoremap <C-U> yyp^v$r=o	
 
 
