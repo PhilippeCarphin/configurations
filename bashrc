@@ -32,6 +32,7 @@ case $- in
    alias vgrind="valgrind --tool=memcheck --leak-check=yes"
    alias grep='grep --color=always -n'
    alias less='less -R'
+   alias pathpwd='export PATH=$PWD:$PATH'
    export CDPATH=$CDPATH:$HOME/Documents/GitCMC/:$HOME/Documents/Experiences/:$HOME:$HOME/Documents
    export PATH=$HOME/.local/cmake-3.5.0-rc1-Linux-x86_64/bin:$HOME/.local/bin:$HOME/Documents/test:$PATH
    export EDITOR=vim
