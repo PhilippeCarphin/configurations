@@ -6,6 +6,10 @@ if [ -f ~/.profile ]; then
 	. ~/.profile
 fi
 
+if [ -f ~/.bashrc ]; then
+	. ~/.bashrc
+fi
+
 if [ -f ~/.git-completion.bash ]; then
   . ~/.git-completion.bash
 fi
