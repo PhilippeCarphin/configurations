@@ -92,7 +92,7 @@ case $- in
       alias __Y=$(print '\0005') # ^E = end = end of line
    fi
 
-   if [ "$USER" = prcarb ]; then # We're at polytechnique
+   if [ "$USER" = phcarb ]; then # We're at polytechnique
       echo "   Loading polytechnique commands"
       alias INF1995='firefox http://www.groupes.polymtl.ca/inf1995/tp/'
       alias docAtmel='gvfs-open ~/Documents/docAtmel.pdf'
