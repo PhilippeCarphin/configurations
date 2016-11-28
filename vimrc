@@ -173,7 +173,7 @@ nnoremap <C-p> "+p
 " Have a column with a different color to make me feel bad when I go over 120
 " chars.  Should be 80, but if you look at the C code for maestro, you'll see
 " that this is completely unrealistic.
-set colorcolumn=120
+set colorcolumn=80
 
 nnoremap <C-c> I/* <ESC>A */<ESC>
 nnoremap <C-u> :s/\/\* \?//\|s/ \?\*\//<CR>:nohlsearch<CR>
@@ -213,5 +213,5 @@ vnoremap <C-j> Jgqgq
 
 :inoremap <C-u> yyp^v$r-o	
 :inoremap <C-U> yyp^v$r=o	
-
+nnoremap <C-h> O80i*yyp$r/k0r/o
 
