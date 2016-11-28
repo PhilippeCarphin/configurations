@@ -139,7 +139,7 @@ endif
 inoremap jk <ESC>
 " set nohlsearch
 set hlsearch
-nnoremap <C-b> :w:!cc  -g % && ./a.out
+nnoremap <C-b> :w:!cc % -D_BSD_SOURCE -std=c11 && ./a.out
 nnoremap <C-l> :w:!pdflatex %
 inoremap <C-l> <ESC>:w:!pdflatex %
 nnoremap <C-d> :w:!%
@@ -175,7 +175,7 @@ nnoremap <C-p> "+p
 " Have a column with a different color to make me feel bad when I go over 120
 " chars.  Should be 80, but if you look at the C code for maestro, you'll see
 " that this is completely unrealistic.
-set colorcolumn=120
+set colorcolumn=80
 
 nnoremap <C-c> I/* <ESC>A */<ESC>
 nnoremap <C-u> :s/\/\* \?//\|s/ \?\*\//<CR>:nohlsearch<CR>
@@ -213,4 +213,7 @@ endif
 nnoremap <C-j> {jV}kJgqgq
 vnoremap <C-j> Jgqgq
 nnoremap <C-h> O/80a*yypxjkA/ko
+
+:inoremap <C-u> yyp^v$r-o	
+:inoremap <C-U> yyp^v$r=o	
 

@@ -13,52 +13,12 @@ else
 fi
 }
 
+
+
 if [ "$CMCLNG" != "" ]; then
-   export SEQ_TRACE_LEVEL=1:TL_FULL_TRACE
-   if [ `which git` = /usr/bin/git ] ; then
-      # To protect against using a bad version of git.
-      alias git="echo bad version of git"
-   fi
-   case $- in
-      *i*)
-         export domain="/users/dor/afsi/phc/Testing/testdomain"
-         export CMCLNG=english
-         echo "   Loading CMC commands "
-         . ssmuse-sh -d cmoi/apps/git/20150526
-         . ssmuse-sh -d cmoi/apps/git-procedures/20150622
-         if [ `hostname` == artanis ] ; then
-            echo "      ssm'ing maestro 1.5 test version"
-            maestro=$domain
-         else
-            echo "      ssm'ing maestro 1.5.0-rc7"
-            maestro=/ssm/net/isst/maestro/1.5.0-rc7
-         fi
-         . ssmuse-sh -d $maestro
-         export SEQ_MAESTRO_SHORTCUT=". ssmuse-sh -d $maestro"
-         alias runxp=/users/dor/afsi/dor/ovbin/i686/runxp
-         alias xflow_overviewSuites="xflow_overview -suites ~afsiops/xflow.suites.xml;echo allo"
-         alias runxp_phil='/usr/bin/rdesktop -a 16 -r sound:local -g 1500x1100 eccmcwts3'
-         alias cmc_origin='cd /home/ordenv/GIT-DEPOTS/impl/isst'
-         alias dor_origin='cd /home/ops/afsi/dor/tmp/maestro_depot'
-         alias emake='make 2>&1 | grep '.*error' --color=always --after-context=4'
-         alias wmake='make 2>&1 | grep '.*warning' --color=always --after-context=4'
-         alias nmake='make 2>&1 | grep '.*note' --color=always --after-context=4'
+   . CMC.sh
 
-
-         if [ `hostname` != artanis ] ; then
-            alias mcompile='export SEQ_EXP_HOME=$HOME/Documents/Experiences/compilation && maestro -d 20160119000000 -n /compile -s submit -f continue'
-            alias xcompile='export SEQ_EXP_HOME=$HOME/Documents/Experiences/compilation && xflow'
-         fi
-
-         . ssmuse-sh -d $maestro
-         export SEQ_MAESTRO_SHORTCUT=". ssmuse-sh -d $maestro"
-         ;;
-      *)
-         ;;
-   esac
 fi
-
-
 case $- in
    *i*)
 
@@ -72,6 +32,7 @@ case $- in
    alias vgrind="valgrind --tool=memcheck --leak-check=yes"
    alias grep='grep --color=always -n'
    alias less='less -R'
+   alias pathpwd='export PATH=$PWD:$PATH'
    export CDPATH=$CDPATH:$HOME/Documents/GitCMC/:$HOME/Documents/Experiences/:$HOME:$HOME/Documents
    export PATH=$HOME/.local/cmake-3.5.0-rc1-Linux-x86_64/bin:$HOME/.local/bin:$HOME/Documents/test:$PATH
    export EDITOR=vim
@@ -97,13 +58,22 @@ case $- in
    }
    set -o vi
 
+host(){
+   H=$(uname -n)
+   if [[ $H = Sansfil-Securise-Etudiants* ]]; then
+      echo "Sansfil-Poly"
+   else
+      echo "$H"
+   fi
+}
+
    if [ "$BASH" != "" ]; then
       echo "   Loading bash specific commands"
       green='\[\e[0;32m\]'
       yellow='\[\e[0;33m\]'
       purple='\[\e[0;35m\]'
       no_color='\[\e[0m\]'
-      PS1=$green'[\u@\h \W'$yellow'$(__git_ps1 " (%s)")'$green'] \$ '$no_color
+      PS1=$green'[\u@$(host) \W'$yellow'$(__git_ps1 " (%s)")'$green'] \$ '$no_color
       [ -z "$TMUX" ] && export TERM=xterm-256color
       . ~/.git-completion.bash
       export HISTFILESIZE=
@@ -131,7 +101,7 @@ case $- in
       alias __Y=$(print '\0005') # ^E = end = end of line
    fi
 
-   if [ "$USER" = prcarb ]; then # We're at polytechnique
+   if [ "$USER" = phcarb ]; then # We're at polytechnique
       echo "   Loading polytechnique commands"
       alias INF1995='firefox http://www.groupes.polymtl.ca/inf1995/tp/'
       alias docAtmel='gvfs-open ~/Documents/docAtmel.pdf'
