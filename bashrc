@@ -58,13 +58,22 @@ case $- in
    }
    set -o vi
 
+host(){
+   H=$(uname -n)
+   if [[ $H = Sansfil-Securise-Etudiants* ]]; then
+      echo "Sansfil-Poly"
+   else
+      echo "$H"
+   fi
+}
+
    if [ "$BASH" != "" ]; then
       echo "   Loading bash specific commands"
       green='\[\e[0;32m\]'
       yellow='\[\e[0;33m\]'
       purple='\[\e[0;35m\]'
       no_color='\[\e[0m\]'
-      PS1=$green'[\u@\h \W'$yellow'$(__git_ps1 " (%s)")'$green'] \$ '$no_color
+      PS1=$green'[\u@$(host) \W'$yellow'$(__git_ps1 " (%s)")'$green'] \$ '$no_color
       [ -z "$TMUX" ] && export TERM=xterm-256color
       . ~/.git-completion.bash
       export HISTFILESIZE=
