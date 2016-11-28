@@ -1,6 +1,6 @@
 [user]
-	name = PewMcDaddy
-	email = phil103@hotmail.com
+	name = "Philippe Carphin"
+	email = philippe.carphin@polymtl.ca
 [alias]
 	st = status
 	logl = log --oneline --decorate --graph -15
