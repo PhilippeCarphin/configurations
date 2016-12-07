@@ -13,6 +13,19 @@ else
 fi
 }
 
+cdf(){
+	result="$(find . -name "$1" -print -quit)"
+	if [[ -d "$result" ]] ; then
+		cd $result
+		echo $(pwd)
+	elif [[ -f "$result" ]] ; then
+		cd "$(dirname "$result")"
+		echo $(pwd)
+	else
+		echo "result $result could not be cd'd into"
+	fi
+}
+
 
 
 if [ "$CMCLNG" != "" ]; then
