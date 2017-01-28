@@ -26,6 +26,13 @@ cdf(){
 	fi
 }
 
+pushall(){
+	# Todo: upgrade this to prompt for each branch (asking y/n) whether we want
+	# to push it.
+	for b in $(git branch | tr '*' ' ' |tr '\n' ' '); do
+		git push origin $b;
+	done
+}
 
 
 if [ "$CMCLNG" != "" ]; then
