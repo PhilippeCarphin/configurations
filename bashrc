@@ -33,6 +33,8 @@ case $- in
    alias grep='grep --color=always -n'
    alias less='less -R'
    alias pathpwd='export PATH=$PWD:$PATH'
+   alias 4705='cd ~/Documents/INF4705'
+   alias docatmel='gvfs-open ~/Documents/docAtmel.pdf &'
    export CDPATH=$CDPATH:$HOME/Documents/GitCMC/:$HOME/Documents/Experiences/:$HOME:$HOME/Documents
    export PATH=$HOME/.local/cmake-3.5.0-rc1-Linux-x86_64/bin:$HOME/.local/bin:$HOME/Documents/test:$PATH
    export EDITOR=vim
@@ -74,6 +76,8 @@ host(){
       purple='\[\e[0;35m\]'
       no_color='\[\e[0m\]'
       PS1=$green'[\u@$(host) \W'$yellow'$(__git_ps1 " (%s)")'$green'] \$ '$no_color
+      PS1=$green'[\u@\h \W'$yellow'$(__git_ps1 " (%s)")'$green'] \$ '$no_color
+      # PS1=$green'[\u@$(host) \W'$no_color$yellow'$(__git_ps1 " (%s)")'$no_color$green'] \$ '$no_color
       [ -z "$TMUX" ] && export TERM=xterm-256color
       . ~/.git-completion.bash
       export HISTFILESIZE=
