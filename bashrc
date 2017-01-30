@@ -13,6 +13,26 @@ else
 fi
 }
 
+cdf(){
+	result="$(find . -name "$1" -print -quit)"
+	if [[ -d "$result" ]] ; then
+		cd $result
+		echo $(pwd)
+	elif [[ -f "$result" ]] ; then
+		cd "$(dirname "$result")"
+		echo $(pwd)
+	else
+		echo "result $result could not be cd'd into"
+	fi
+}
+
+pushall(){
+	# Todo: upgrade this to prompt for each branch (asking y/n) whether we want
+	# to push it.
+	for b in $(git branch | tr '*' ' ' |tr '\n' ' '); do
+		git push origin $b;
+	done
+}
 
 
 if [ "$CMCLNG" != "" ]; then
