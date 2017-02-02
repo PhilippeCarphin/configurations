@@ -212,7 +212,7 @@ endif
 "  Redo line breaks for a paragraph
 nnoremap <C-j> {jV}kJgqgq
 vnoremap <C-j> Jgqgq
-nnoremap <C-h> O/80a*yypxjkA/ko
+nnoremap <C-h> O/79a*yypxjkA/ko
 
 :inoremap <C-u> yyp^v$r-o	
 :inoremap <C-U> yyp^v$r=o	
