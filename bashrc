@@ -43,6 +43,12 @@ case $- in
    *i*)
 
    . ~/.git-prompt.sh
+	# Make sure git's language is english
+	# Ref : http://askubuntu.com/questions/320661/change-gits-language-to-english-without-changing-the-locale
+	# the site says to make an alias
+	# alias git='LANG=en_US.UTF-8 git'
+	# but I want everything to be in english so I'm going to do this:
+	export LANG=en_US.UTF-8
    alias profile="vim $HOME/.bashrc"
    alias lprofile=". $HOME/.bashrc"
    alias cd..='cd ..'
