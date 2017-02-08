@@ -1,4 +1,12 @@
-echo Caller is $0
+host(){
+   H=$(uname -n)
+   if [[ $H = Sansfil-Securise-Etudiants* ]]; then
+      echo "Sansfil-Poly"
+   else
+      echo "$H"
+   fi
+}
+
 __paul_check(){
    echo "|" >> ~/.paul_check.txt
    checks=$(cat ~/.paul_check.txt | wc | cut -d ' ' -f 8)
@@ -33,15 +41,34 @@ pushall(){
 		git push origin $b;
 	done
 }
+ssh_school() {
+	ssh $1.info.polymtl.ca -l phcarb
+}
+
+p_valgrind(){
+	flags=$3
+	cmd=$1
+	if [ "$2" != "" ] ; then
+		target=$2
+	else
+		target=~/valgrind.lst
+	fi
+	valgrind $flags $cmd > $target 2>&1
+}
+cdl () {
+	cd "$(dirname "$(readlink "$1")")";
+}
 
 
 if [ "$CMCLNG" != "" ]; then
    . CMC.sh
 
 fi
+
 case $- in
    *i*)
 
+	echo Caller is $0
    . ~/.git-prompt.sh
 	# Make sure git's language is english
 	# Ref : http://askubuntu.com/questions/320661/change-gits-language-to-english-without-changing-the-locale
@@ -66,34 +93,7 @@ case $- in
    export EDITOR=vim
    export FCEDIT=vim
 
-
-   ssh_school() {
-      ssh $1.info.polymtl.ca -l phcarb
-   }
-
-   p_valgrind(){
-      flags=$3
-      cmd=$1
-      if [ "$2" != "" ] ; then
-         target=$2
-      else
-         target=~/valgrind.lst
-      fi
-      valgrind $flags $cmd > $target 2>&1
-   }
-   cdl () {
-       cd "$(dirname "$(readlink "$1")")";
-   }
    set -o vi
-
-host(){
-   H=$(uname -n)
-   if [[ $H = Sansfil-Securise-Etudiants* ]]; then
-      echo "Sansfil-Poly"
-   else
-      echo "$H"
-   fi
-}
 
    if [ "$BASH" != "" ]; then
       echo "   Loading bash specific commands"
