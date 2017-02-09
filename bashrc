@@ -42,6 +42,11 @@ pushall(){
 		remote=$1
 	fi
 	for b in $(git branch | tr '*' ' ' |tr '\n' ' '); do
+		echo -n "Push branch $b (y/n)? "
+		read answer
+		if [[ "$answer" == y ]] ; then
+			git push origin $b;
+		fi
 		git push $remote $b;
 	done
 }
@@ -134,7 +139,14 @@ case $- in
 		alias 4705='cd ~/Documents/GitHub/INF4705_TP1'
 		alias 8225='cd ~/Documents/GitHub/INF8225_TP1'
 
+		# Add certain directories to CDPATH environment variable so that we can
+		# cd into some directories from anywhere.
 		export CDPATH=$CDPATH:$HOME/Documents/GitCMC/:$HOME/Documents/Experiences/:$HOME:$HOME/Documents
+
+		# Add certain places to PATH where I have some executables.  Most of
+		# them are installed applications that I have installed locally, and
+		# some of them are in the test folder.  Little toy programs that turned
+		# out to be useful.
 		export PATH=$HOME/.local/cmake-3.5.0-rc1-Linux-x86_64/bin:$HOME/.local/bin:$HOME/Documents/test:$PATH
 
 		# Set editor as vim for most things
@@ -167,7 +179,6 @@ case $- in
 			export HISTFILESIZE=
 			export HISTSIZE=
 		else
-
 			echo "   Loading non-bash commands (possibly ksh)"
 			green='\033[32m'
 			yellow='\033[33m'
@@ -203,6 +214,7 @@ case $- in
 			alias INF1995='google-chrome http://www.groupes.polymtl.ca/inf1995/tp/'
 		fi
 
+		# OS specific commands
 		if [ `uname` = Linux ]; then
 			echo "   Loading Linux commands"
 			# ls always shows color
