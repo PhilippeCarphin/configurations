@@ -232,5 +232,6 @@ case $- in
 			# Redefine dusage command for MAC
 			alias dusage='du -d 1 | sort -n'
 		fi
+		export CONFIG_DIR=$(dirname $(readlink ~/.bashrc))
 		;;
 esac
