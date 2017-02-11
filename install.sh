@@ -1,5 +1,5 @@
 #!/bin/bash
-replaceWithLink(){
+replace_with_link(){
    original=$1
    target=$installDir/$2
    if [ -L $original ] ; then
@@ -13,47 +13,47 @@ replaceWithLink(){
 installGroup() {
 case $1 in
 	bash)
-      replaceWithLink $HOME/.bashrc bashrc
-      replaceWithLink $HOME/.bash_profile bash_profile
+      replace_with_link $HOME/.bashrc bashrc
+      replace_with_link $HOME/.bash_profile bash_profile
 		;;
 	vim)
-      replaceWithLink $HOME/.vimrc vimrc
-      replaceWithLink $HOME/.vim/colors vim/colors
-      replaceWithLink $HOME/.vim/indent vim/indent
-      replaceWithLink $HOME/.vim/plugin vim/plugin
-	  replaceWithLink $HOME/.ideavimrc vimrc
+      replace_with_link $HOME/.vimrc vimrc
+      replace_with_link $HOME/.vim/colors vim/colors
+      replace_with_link $HOME/.vim/indent vim/indent
+      replace_with_link $HOME/.vim/plugin vim/plugin
+	  replace_with_link $HOME/.ideavimrc vimrc
       if [ ! -e $HOME/.vim/bundle/Vundle.vim ] ; then
          git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
       fi
       vim +:PluginInstall # for the plugins managed by vundle to be installed.
 		;;
 	Templates)
-      replaceWithLink $HOME/Templates Templates
+      replace_with_link $HOME/Templates Templates
       if [ `uname` = Linux ] ; then
          killall nautilus # For templates to take effect.
       fi
 		;;
 	emacs)
-      replaceWithLink $HOME/.emacs.d emacs.d
+      replace_with_link $HOME/.emacs.d emacs.d
 		;;
 	git)
-      replaceWithLink $HOME/.gitconfig gitconfig
-      replaceWithLink $HOME/.git-completion.bash git-completion.bash
-      replaceWithLink $HOME/.git-prompt.sh git-prompt.sh
+      replace_with_link $HOME/.gitconfig gitconfig
+      replace_with_link $HOME/.git-completion.bash git-completion.bash
+      replace_with_link $HOME/.git-prompt.sh git-prompt.sh
 		;;
 	sublime)
-      replaceWithLink $HOME/.config/sublime-text-3 config/sublime-text-3
+      replace_with_link $HOME/.config/sublime-text-3 config/sublime-text-3
       ;;
    tmux)
-      replaceWithLink $HOME/.tmux.conf tmux.conf
+      replace_with_link $HOME/.tmux.conf tmux.conf
 		;;
 	bin)
 		;;
    cmc)
-      replaceWithLink $HOME/.profile profile
-      replaceWithLink $HOME/.bash_profile profile
-      replaceWithLink $HOME/.profile.d/interactive/post post
-      replaceWithLink $HOME/.gitconfig gitconfig_cmc
+      replace_with_link $HOME/.profile profile
+      replace_with_link $HOME/.bash_profile profile
+      replace_with_link $HOME/.profile.d/interactive/post post
+      replace_with_link $HOME/.gitconfig gitconfig_cmc
       ;;
 	nautilusScripts)
 		;;
