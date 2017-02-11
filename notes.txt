@@ -1,18 +1,12 @@
-Functions on the newRepo side:
-doBash()
-{
-	if [ -L "$HOME/.bashrc" ]
-	then
-		echo "\$HOME/.bashrc is already a symbolic link... aborting for bash"
-		return
-	fi
-	mv bashrc, bashprofile, profile
-	ln -s those three files
-	echo "
-		rm the three files in the home folder
-		ln -s from the home folder to the files
-	" >> $installDir/install.sh
-}
-... similar functions for all the groups of files
-(!) If I run this twice, I'll get the lines twice in the install.sh,
-(!) Still have to prevent from running the script twice, check if $HOME/file is link and if so don't do it.
+Imac:
+	SYMPTOM
+		I installed R and Rstudio and then gitk stopped working
+	PROBLEM
+		One of them installed the latest version of wish (TCL/tk)
+	SOLUTION
+		$ which -a wish
+		/usr/local/bin/wish
+		/usr/bin/wish
+		mv /usr/local/bin/wish /usr/local/bin/wish.bak
+	RESULT
+		now I can run gitk no problem.
