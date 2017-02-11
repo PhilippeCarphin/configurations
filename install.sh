@@ -21,6 +21,7 @@ case $1 in
       replaceWithLink $HOME/.vim/colors vim/colors
       replaceWithLink $HOME/.vim/indent vim/indent
       replaceWithLink $HOME/.vim/plugin vim/plugin
+	  replaceWithLink $HOME/.ideavimrc vimrc
       if [ ! -e $HOME/.vim/bundle/Vundle.vim ] ; then
          git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
       fi
