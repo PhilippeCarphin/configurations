@@ -1,3 +1,14 @@
+
+
+################################################################################
+# Pulls the configurations
+################################################################################
+pull_config(){
+	pushd $CONFIG_DIR
+	git pull
+	popd
+}
+
 ################################################################################
 # Echoes a shortened version of host name when at polytechnique
 ################################################################################
@@ -233,5 +244,6 @@ case $- in
 			alias dusage='du -d 1 | sort -n'
 		fi
 		export CONFIG_DIR=$(dirname $(readlink ~/.bashrc))
+		pull_config
 		;;
 esac
