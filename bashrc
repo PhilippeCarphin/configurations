@@ -177,7 +177,7 @@ case $- in
 			no_color='\[\e[0m\]'
 			# Prompt string shows user@host current_dir (git branch) with
 			# everything except git branch in green and the branch in yellow
-			PS1=$green'[\u@\h \W'$yellow'$(__git_ps1 " (%s)")'$green'] \$ '$no_color
+			PS1=$green'[\u@$(host) \W'$yellow'$(__git_ps1 " (%s)")'$green'] \$ '$no_color
 			# PS1=$green'[\u@$(host) \W'$no_color$yellow'$(__git_ps1 " (%s)")'$no_color$green'] \$ '$no_color
 
 			#if in tmux, export this I forget why
