@@ -10,3 +10,11 @@ Imac:
 		mv /usr/local/bin/wish /usr/local/bin/wish.bak
 	RESULT
 		now I can run gitk no problem.
+
+
+git-sh
+	Not sure if I like it but it exists and it is obtained by cloning and
+	make installing github:rtomayko/git-sh
+
+	To add it to git setup, create tmp directory, then do make install with
+	prefix equal to $HOME/.local/bin
