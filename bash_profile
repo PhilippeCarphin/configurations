@@ -1,4 +1,16 @@
 # .bash_profile
+################################################################################
+# Pulls the configurations
+################################################################################
+pull_config(){
+	pushd $CONFIG_DIR
+	git pull
+	popd
+}
+
+export CONFIG_DIR=$(dirname $(readlink ~/.bashrc))
+pull_config
+
 
 echo "Sourcing bash_profile"
 # Get the aliases and functions

@@ -1,14 +1,3 @@
-
-
-################################################################################
-# Pulls the configurations
-################################################################################
-pull_config(){
-	pushd $CONFIG_DIR
-	git pull
-	popd
-}
-
 ################################################################################
 # Echoes a shortened version of host name when at polytechnique
 ################################################################################
@@ -155,6 +144,7 @@ case $- in
 		# Aliases for the current TP of the given course
 		alias 4705='cd ~/Documents/GitHub/INF4705_TP1'
 		alias 8225='cd ~/Documents/GitHub/INF8225_TP2'
+		alias 1995='cd ~/Documents/GitHub/Projet1Info'
 
 		# Add certain directories to CDPATH environment variable so that we can
 		# cd into some directories from anywhere.
@@ -169,6 +159,10 @@ case $- in
 		# Set editor as vim for most things
 		export EDITOR=vim
 		export FCEDIT=vim
+
+		# Opens the master PDF documenation for ATMega324PA assuming it is
+		# at this path.
+		alias docatmel='gvfs-open ~/Documents/docatmel.pdf'
 
 		# Make bash behave a bit like vim.
 		set -o vi
@@ -220,9 +214,6 @@ case $- in
 
 		if [ "$USER" = phcarb ]; then # We're at polytechnique
 			echo "   Loading polytechnique commands"
-			# Opens the master PDF documenation for ATMega324PA assuming it is
-			# at this path.
-			alias docAtmel='gvfs-open ~/Documents/docAtmel.pdf'
 
 			# Opens AvrLibC documentation
 			alias docAVRLibC='firefox http://www.nongnu.org/avr-libc/user-manual/index.html'
@@ -243,7 +234,5 @@ case $- in
 			# Redefine dusage command for MAC
 			alias dusage='du -d 1 | sort -n'
 		fi
-		export CONFIG_DIR=$(dirname $(readlink ~/.bashrc))
-		pull_config
 		;;
 esac
