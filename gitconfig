@@ -10,6 +10,8 @@
        insteadOf = PhilippeCarphin:
 [url "https://github.com/AymenDje/"]
        insteadOf = AymenDje:
+[url "https://github.com/"]
+       insteadOf = github:
 [push]
 	default = simple
 [filter "media"]
