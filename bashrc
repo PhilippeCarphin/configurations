@@ -143,7 +143,8 @@ case $- in
 
 		# Aliases for the current TP of the given course
 		alias 4705='cd ~/Documents/GitHub/INF4705_TP1'
-		alias 8225='cd ~/Documents/GitHub/INF8225_TP2'
+		alias 82252='cd ~/Documents/GitHub/INF8225_TP2'
+		alias 82253='cd ~/Documents/GitHub/INF8225_TP3'
 		alias 1995='cd ~/Documents/GitHub/INF1995_PRJ'
 
 		# Add certain directories to CDPATH environment variable so that we can
