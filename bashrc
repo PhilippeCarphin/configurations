@@ -155,7 +155,7 @@ case $- in
 		# them are installed applications that I have installed locally, and
 		# some of them are in the test folder.  Little toy programs that turned
 		# out to be useful.
-		export PATH=$HOME/.local/cmake-3.5.0-rc1-Linux-x86_64/bin:$HOME/.local/bin:$HOME/Documents/test:$PATH
+		export PATH=$HOME/.local/cmake-3.5.0-rc1-Linux-x86_64/bin:$HOME/.local/bin:$HOME/Documents/GitHub/utils:$PATH
 
 		# Set editor as vim for most things
 		export EDITOR=vim
