@@ -114,7 +114,7 @@ case $- in
 		export LANG=en_US.UTF-8
 
 		# Allows me to open my bashrc quickly and reload it quickly
-		alias profile="vim $HOME/.bashrc"
+		alias profile="vim $HOME/.bashrc && . $HOME/.bashrc"
 		alias lprofile=". $HOME/.bashrc"
 
 		# If I skip the space with cd ..
@@ -142,10 +142,12 @@ case $- in
 		alias pathpwd='export PATH=$PWD:$PATH'
 
 		# Aliases for the current TP of the given course
-		alias 4705='cd ~/Documents/GitHub/INF4705_TP1'
+		alias 47051='cd ~/Documents/GitHub/INF4705_TP1'
+		alias 47052='cd ~/Documents/GitHub/INF4705_TP2'
 		alias 82252='cd ~/Documents/GitHub/INF8225_TP2'
 		alias 82253='cd ~/Documents/GitHub/INF8225_TP3'
 		alias 1995='cd ~/Documents/GitHub/INF1995_PRJ'
+		alias audio='cd ~/Documents/GitHub/Projet_Audiologie/'
 
 		# Add certain directories to CDPATH environment variable so that we can
 		# cd into some directories from anywhere.
@@ -213,7 +215,7 @@ case $- in
 			alias __Y=$(print '\0005') # ^E = end = end of line
 		fi
 
-		if [ "$USER" = phcarb ]; then # We're at polytechnique
+		if [ "$USER" = phcarb -o "$USER" = "" ]; then # We're at polytechnique
 			echo "   Loading polytechnique commands"
 
 			# Opens AvrLibC documentation
