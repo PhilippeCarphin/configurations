@@ -125,7 +125,7 @@ case $- in
 		alias dusage='du --max-depth=1 | sort -n'
 
 		# Make gitk always show all branches
-		alias gitk="gitk --all --select-commit=HEAD"
+		alias gitk="gitk --all --select-commit=HEAD &"
 
 		# Quick aliases for valgrind
 		alias vgrindtotmem="valgrind --tool=massif --stacks=yes"
@@ -176,11 +176,12 @@ case $- in
 			# Define colors for making prompt string.
 			green='\[\e[0;32m\]'
 			yellow='\[\e[0;33m\]'
-			purple='\[\e[0;35m\]'
+			purple='\[\e[0;34m\]'
 			no_color='\[\e[0m\]'
 			# Prompt string shows user@host current_dir (git branch) with
 			# everything except git branch in green and the branch in yellow
 			PS1=$green'[\u@'$(host)' \W'$yellow'$(__git_ps1 " (%s)")'$green'] \$ '$no_color
+			PS2=$purple'cont > '$no_color
 			# PS1=$green'[\u@$(host) \W'$no_color$yellow'$(__git_ps1 " (%s)")'$no_color$green'] \$ '$no_color
 
 			#if in tmux, export this I forget why
