@@ -1,3 +1,5 @@
+# '#' and ';' indicate comments
+
 [user]
 	name = "Philippe Carphin"
 	email = philippe.carphin@polymtl.ca
