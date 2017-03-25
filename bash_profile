@@ -26,12 +26,22 @@ if [ -f ~/.git-completion.bash ]; then
   . ~/.git-completion.bash
 fi
 
-PATH=$PATH:$HOME/.local/bin
+# Locally installed programs
+export PATH=$PATH:$HOME/.local/bin
+# Utility scripts that I keep track of with git.
+export PATH=$HOME/Documents/GitHub/utils:$PATH
 
+# Add cuda stuff to path
+#export PATH=/usr/local/cuda/bin:$PATH
+export PATH=/Developer/NVIDIA/CUDA-8.0/bin${PATH:+:${PATH}}
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/cuda/lib"
+export THEANO_FLAGS=device=gpu,force_device=True,optimizer=fast_run
+export DYLD_LIBRARY_PATH=/Developer/NVIDIA/CUDA-8.0/lib\
+	${DYLD_LIBRARY_PATH:+:${DYLD_LIBRARY_PATH}}
 
 # Setting PATH for Python 3.5
 # The orginal version is saved in .bash_profile.pysave
-PATH="/Library/Frameworks/Python.framework/Versions/3.5/bin:${PATH}"
+export PATH="/Library/Frameworks/Python.framework/Versions/3.5/bin:${PATH}"
 export PATH
 
 # added by Anaconda3 4.3.0 installer

@@ -153,12 +153,6 @@ case $- in
 		# cd into some directories from anywhere.
 		export CDPATH=$CDPATH:$HOME/Documents/GitCMC/:$HOME/Documents/Experiences/:$HOME:$HOME/Documents
 
-		# Add certain places to PATH where I have some executables.  Most of
-		# them are installed applications that I have installed locally, and
-		# some of them are in the test folder.  Little toy programs that turned
-		# out to be useful.
-		export PATH=$HOME/.local/cmake-3.5.0-rc1-Linux-x86_64/bin:$HOME/.local/bin:$HOME/Documents/GitHub/utils:$PATH
-
 		# Set editor as vim for most things
 		export EDITOR=vim
 		export FCEDIT=vim
@@ -181,7 +175,7 @@ case $- in
 			# Prompt string shows user@host current_dir (git branch) with
 			# everything except git branch in green and the branch in yellow
 			PS1=$green'[\u@'$(host)' \W'$yellow'$(__git_ps1 " (%s)")'$green'] \$ '$no_color
-			PS2=$purple'cont > '$no_color
+			PS2=$purple' > '$no_color
 			# PS1=$green'[\u@$(host) \W'$no_color$yellow'$(__git_ps1 " (%s)")'$no_color$green'] \$ '$no_color
 
 			#if in tmux, export this I forget why
@@ -227,11 +221,11 @@ case $- in
 		fi
 
 		# OS specific commands
-		if [ `uname` = Linux ]; then
+		if [ $(uname) = Linux ]; then
 			echo "   Loading Linux commands"
 			# ls always shows color
 			alias ls='ls --color'
-		elif [ `uname` = Darwin ]; then
+		elif [ $(uname) = Darwin ]; then
 			echo "   Loading Darwin commands"
 			# ls always shows color
 			alias ls='ls -G'
