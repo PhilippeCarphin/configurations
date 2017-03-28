@@ -169,10 +169,10 @@ case $- in
 			echo "   Loading bash specific commands"
 
 			# Define colors for making prompt string.
-			green='\[\e[0;32m\]'
-			yellow='\[\e[0;33m\]'
-			purple='\[\e[0;34m\]'
-			no_color='\[\e[0m\]'
+			export green='\[\e[0;32m\]'
+			export yellow='\[\e[0;33m\]'
+			export purple='\[\e[0;35m\]'
+			export no_color='\[\e[0m\]'
 			# Prompt string shows user@host current_dir (git branch) with
 			# everything except git branch in green and the branch in yellow
 			PS1=$green'[\u@'$(host)' \W'$yellow'$(__git_ps1 " (%s)")'$green'] \$ '$no_color
