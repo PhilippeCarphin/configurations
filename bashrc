@@ -144,6 +144,7 @@ case $- in
 		# Aliases for the current TP of the given course
 		alias 47051='cd ~/Documents/GitHub/INF4705_TP1'
 		alias 47052='cd ~/Documents/GitHub/INF4705_TP2'
+		alias 47053='cd ~/Documents/GitHub/INF4705_TP3'
 		alias 82252='cd ~/Documents/GitHub/INF8225_TP2'
 		alias 82253='cd ~/Documents/GitHub/INF8225_TP3'
 		alias 1995='cd ~/Documents/GitHub/INF1995_PRJ'
