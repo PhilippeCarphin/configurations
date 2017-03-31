@@ -140,11 +140,11 @@ inoremap jk <ESC>
 " vnoremap jk <ESC>
 " set nohlsearch
 set hlsearch
-" nnoremap <C-b> :w:!cc % -D_BSD_SOURCE -std=c11 && ./a.out
-nnoremap <C-b> :w:!g++ %  && ./a.out
 nnoremap <C-l> :w:!pdflatex %
 inoremap <C-l> <ESC>:w:!pdflatex %
 nnoremap <C-d> :w:!%:p
+" nnoremap <C-d> :w:!%
+nnoremap <C-b> :w:!cc % -D_BSD_SOURCE -std=c11 && ./a.out
 nnoremap <C-m> :w:!make test
 set number
 cnoremap vr split ~/.vimrc
