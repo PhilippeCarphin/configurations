@@ -18,10 +18,11 @@ case $1 in
 		;;
 	vim)
       replace_with_link $HOME/.vimrc vimrc
+	  replace_with_link $HOME/.ideavimrc vimrc # Pycharm uses this
       replace_with_link $HOME/.vim/colors vim/colors
       replace_with_link $HOME/.vim/indent vim/indent
       replace_with_link $HOME/.vim/plugin vim/plugin
-	  replace_with_link $HOME/.ideavimrc vimrc
+	  replace_with_link $HOME/.ycm_extra_conf.py ycm_extra_conf.py
       if [ ! -e $HOME/.vim/bundle/Vundle.vim ] ; then
          git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
       fi
