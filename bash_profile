@@ -3,9 +3,16 @@
 # Pulls the configurations
 ################################################################################
 pull_config(){
-	pushd $CONFIG_DIR
-	git pull
-	popd
+	echo -n "Pulling philconfig configurations : "
+	pushd $CONFIG_DIR > /dev/null
+	git pull > /dev/null 2>&1
+	pull_success=$?
+	popd > /dev/null
+	if [[ $pull_success == 0 ]]; then
+		echo "philconfig up to date"
+	else
+		echo "!! Could not pull pull philconfig !!"
+	fi
 }
 
 export CONFIG_DIR=$(dirname $(readlink ~/.bashrc))
