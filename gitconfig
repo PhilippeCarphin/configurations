@@ -5,6 +5,7 @@
 	email = philippe.carphin@polymtl.ca
 [alias]
 	st = status
+	s = status
 	logl = log --oneline --decorate --graph -15
 	logp = log -p
 [credential]

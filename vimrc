@@ -137,7 +137,6 @@ if has("autocmd")
 endif
 
 inoremap jk <ESC>
-vnoremap jk <ESC>
 " set nohlsearch
 set hlsearch
 " nnoremap <C-b> :w:!cc % -D_BSD_SOURCE -std=c11 && ./a.out
