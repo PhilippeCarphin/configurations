@@ -3,8 +3,8 @@ replace_with_link(){
    original=$1
    target=$installDir/$2
    if [ -L $original ] ; then
-      rm $original 
-   else
+      rm $original
+   elif [ -e $original -o -d $original ] ; then
       mv $original $original.bak
    fi
    ln -s $target $original
@@ -23,6 +23,10 @@ case $1 in
       replace_with_link $HOME/.vim/indent vim/indent
       replace_with_link $HOME/.vim/plugin vim/plugin
 	  replace_with_link $HOME/.ycm_extra_conf.py ycm_extra_conf.py
+	  # Note that the vundle stuff that goes in the fimrc file is already there
+	  # in my  vimrc file.  Otherwise, one can use the vundle_install.sh
+	  # from my tests repository (https://github.com/PhilippeCarphin/tests
+	  # in the BASH_tests directory).
       if [ ! -e $HOME/.vim/bundle/Vundle.vim ] ; then
          git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
       fi

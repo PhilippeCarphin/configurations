@@ -185,7 +185,9 @@ case $- in
 			# PS1=$green'[\u@$(host) \W'$no_color$yellow'$(__git_ps1 " (%s)")'$no_color$green'] \$ '$no_color
 
 			#if in tmux, export this I forget why
-			[ -z "$TMUX" ] && export TERM=xterm-256color
+			if [ -z "$TMUX" ] ; then
+				export TERM=xterm-256color
+			fi
 
 			# Source git completion script.  Works only with bash shell
 			. ~/.git-completion.bash
@@ -195,6 +197,7 @@ case $- in
 			export HISTSIZE=
 		else
 			echo "   Loading non-bash commands (possibly ksh)"
+			# Phil_PS1
 			green='\033[32m'
 			yellow='\033[33m'
 			purple='\033[35m'
