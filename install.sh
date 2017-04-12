@@ -3,8 +3,8 @@ replace_with_link(){
    original=$1
    target=$installDir/$2
    if [ -L $original ] ; then
-      rm $original 
-   else
+      rm $original
+   elif [ -e $original -o -d $original ] ; then
       mv $original $original.bak
    fi
    ln -s $target $original
