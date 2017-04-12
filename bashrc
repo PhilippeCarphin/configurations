@@ -192,6 +192,7 @@ case $- in
 			export HISTSIZE=
 		else
 			echo "   Loading non-bash commands (possibly ksh)"
+			# Phil_PS1
 			green='\033[32m'
 			yellow='\033[33m'
 			purple='\033[35m'
