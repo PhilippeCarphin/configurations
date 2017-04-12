@@ -70,7 +70,7 @@ purple='\[\e[35m\]'
 no_color='\[\e[m\]'
 PS1=\$green'[\u@\h \W'\$yellow'\$(__git_ps1 \" (%s)\")'\$green'] \\$ '\$no_color"
 
-if [[ "$(grep Phil_PS1 test_bashrc)" == "" ]]; then
+if [[ "$(grep Phil_PS1 $dir/$bashrc)" == "" ]]; then
 	echo "Adding Phil_colors to ~/.bashrc"
 	echo "$phil_colors" >> $dir/$bashrc
 else
