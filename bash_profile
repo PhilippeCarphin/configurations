@@ -44,7 +44,7 @@ export PATH=$HOME/Documents/GitHub/utils:$PATH
 #export PATH=/usr/local/cuda/bin:$PATH
 export PATH=/Developer/NVIDIA/CUDA-8.0/bin${PATH:+:${PATH}}
 export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/cuda/lib"
-export THEANO_FLAGS=device=gpu,force_device=True,optimizer=fast_run
+export THEANO_FLAGS=device=gpu,force_device=True,optimizer=fast_run,exception_verbosity=high
 export DYLD_LIBRARY_PATH=/Developer/NVIDIA/CUDA-8.0/lib${DYLD_LIBRARY_PATH:+:${DYLD_LIBRARY_PATH}}
 
 # Setting PATH for Python 3.5
