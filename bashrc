@@ -145,6 +145,7 @@ case $- in
 		alias github='cd ~/Documents/GitHub'
 
 		source ~/.github-aliases
+		alias new-repo='source new-repo.sh'
 
 		# Add certain directories to CDPATH environment variable so that we can
 		# cd into some directories from anywhere.
