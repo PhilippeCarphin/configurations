@@ -57,6 +57,7 @@ pushall(){
 	done
 }
 
+
 ################################################################################
 # Connects over ssh to school computer of my choice
 ################################################################################
@@ -166,13 +167,14 @@ case $- in
 			echo "   Loading bash specific commands"
 
 			# Define colors for making prompt string.
-			export green='\[\e[0;32m\]'
-			export yellow='\[\e[0;33m\]'
-			export purple='\[\e[0;35m\]'
-			export no_color='\[\e[0m\]'
+			green=$(tput setaf 10)
+			yellow=$(tput setaf 11)
+			purple=$(tput setaf 5)
+			no_color=$(tput sgr 0)
 			# Prompt string shows user@host current_dir (git branch) with
 			# everything except git branch in green and the branch in yellow
-			PS1=$green'[\u@'$(host)' \W'$yellow'$(__git_ps1 " (%s)")'$green'] \$ '$no_color
+			# PS1=$green'[\u@'$(host)' \W'$yellow'$(__git_ps1 " (%s)")'$green'] \$ '$no_color
+			PS1=$green'[\W'$yellow'$(__git_ps1 " (%s)")'$green'] \$ '$no_color
 			PS2=$purple' > '$no_color
 			# PS1=$green'[\u@$(host) \W'$no_color$yellow'$(__git_ps1 " (%s)")'$no_color$green'] \$ '$no_color
 
