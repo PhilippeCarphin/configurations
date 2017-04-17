@@ -167,10 +167,10 @@ case $- in
 			echo "   Loading bash specific commands"
 
 			# Define colors for making prompt string.
-			green='$(tput setaf 10)'
-			yellow='$(tput setaf 11)'
-			purple='$(tput setaf 5)'
-			no_color='$(tput sgr 0)'
+			green='\[$(tput setaf 10)\]'
+			yellow='\[$(tput setaf 11)\]'
+			purple='\[$(tput setaf 5)\]'
+			no_color='\[$(tput sgr 0)\]'
 			# Prompt string shows user@host current_dir (git branch) with
 			# everything except git branch in green and the branch in yellow
 			# PS1=$green'[\u@'$(host)' \W'$yellow'$(__git_ps1 " (%s)")'$green'] \$ '$no_color
