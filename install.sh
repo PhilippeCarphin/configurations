@@ -15,6 +15,7 @@ case $1 in
 	bash)
       replace_with_link $HOME/.bashrc bashrc
       replace_with_link $HOME/.bash_profile bash_profile
+	  replace_with_link $HOME/.github-aliases github-aliases
 		;;
 	vim)
       replace_with_link $HOME/.vimrc vimrc

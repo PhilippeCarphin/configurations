@@ -57,6 +57,7 @@ pushall(){
 	done
 }
 
+
 ################################################################################
 # Connects over ssh to school computer of my choice
 ################################################################################
@@ -144,16 +145,8 @@ case $- in
 		# Aliases for quick directories:
 		alias github='cd ~/Documents/GitHub'
 
-		# Aliases for the current TP of the given course
-		alias 47051='cd ~/Documents/GitHub/INF4705_TP1'
-		alias 47052='cd ~/Documents/GitHub/INF4705_TP2'
-		alias 47053='cd ~/Documents/GitHub/INF4705_TP3'
-		alias 82252='cd ~/Documents/GitHub/INF8225_TP2'
-		alias 82253='cd ~/Documents/GitHub/INF8225_TP3'
-		alias 8225p='cd ~/Documents/GitHub/INF8225_projet'
-		alias 1995='cd ~/Documents/GitHub/INF1995_PRJ'
-		alias c1995='cd ~/Documents/GitHub/INF1995_1HIV2017_TP7'
-		alias audio='cd ~/Documents/GitHub/Projet_Audiologie/'
+		source ~/.github-aliases
+		alias new-repo='source new-repo.sh'
 
 		# Add certain directories to CDPATH environment variable so that we can
 		# cd into some directories from anywhere.
@@ -174,13 +167,14 @@ case $- in
 			echo "   Loading bash specific commands"
 
 			# Define colors for making prompt string.
-			export green='\[\e[0;32m\]'
-			export yellow='\[\e[0;33m\]'
-			export purple='\[\e[0;35m\]'
-			export no_color='\[\e[0m\]'
+			green='\[$(tput setaf 10)\]'
+			yellow='\[$(tput setaf 11)\]'
+			purple='\[$(tput setaf 5)\]'
+			no_color='\[$(tput sgr 0)\]'
 			# Prompt string shows user@host current_dir (git branch) with
 			# everything except git branch in green and the branch in yellow
-			PS1=$green'[\u@'$(host)' \W'$yellow'$(__git_ps1 " (%s)")'$green'] \$ '$no_color
+			# PS1=$green'[\u@'$(host)' \W'$yellow'$(__git_ps1 " (%s)")'$green'] \$ '$no_color
+			PS1=$green'[\W'$yellow'$(__git_ps1 " (%s)")'$green'] \$ '$no_color
 			PS2=$purple' > '$no_color
 			# PS1=$green'[\u@$(host) \W'$no_color$yellow'$(__git_ps1 " (%s)")'$no_color$green'] \$ '$no_color
 
