@@ -21,7 +21,11 @@ case $- in
 		export log_file
 		export PHIL_LOGGING=true
 		use_exec=exec
-		eval $use_exec script --command '"bash --rcfile $0"' $log_file
+		if [[ $(uname) == Darwin ]] ; then
+			eval $use_exec script $log_file "bash --rcfile $0"
+		else
+			eval $use_exec script --command '"bash --rcfile $0"' $log_file
+		fi
 		echo "you did not use exec"
 
 		# exec bash --rcfile $0 -c "script $log_file"
