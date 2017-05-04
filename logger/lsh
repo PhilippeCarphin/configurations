@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# THIS IS LSH
+# echo $-
+case $- in
+	*i*|*c*)
+		# echo 'lsh_interactive'
+		# echo "\$0 = $0"
+		pushd ~ > /dev/null
+		. .bashrc
+		#export PS1='\[$(tput setab 8)\]$PWD '"$log_file "'\[$(tput sgr 0)\]'
+		export PS1='\[$(tput setab 8)\]'"$PS1 $log_file <<< "
+		popd > /dev/null
+		;;
+	*)
+		# echo 'Non interactive'
+		log_file=$1
+		if [[ "$log_file" == "" ]] ; then
+			log_file=lsh_log_file
+		fi
+		export log_file
+		export PHIL_LOGGING=true
+		use_exec=exec
+		eval $use_exec script --command '"bash --rcfile $0"' $log_file
+		echo "you did not use exec"
+
+		# exec bash --rcfile $0 -c "script $log_file"
+		# exec script --command "bash --rcfile $0" $1
+		# script log.log --rcfile "$0"
+		# exec /usr/bin/env bash --rcfile "$0" "$@"
+		;;
+esac
+
+
+
+
+# PS1="$PS1"$purple COCK
+
+# export PS1="COCK"
+
