@@ -1,0 +1,8 @@
+# Remove escape chars from text file
+# regex is one escape char (^[) made on the terminal by C-v ESC
+# then any number of digits followed by m
+sed 's/^[\[[0-9]*m//g' < typescript | sed 's/^[(B//g' | sed 's/^M//g' > new
+# Note ^[ is done by C-v ESC
+       ^] is done by C-v C-]
+	   ^m is done by C-v C-m
+# it has to be typed in the shell by using the C-v things.

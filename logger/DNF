@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Link to this file and the name of the link will show up
+# as $0.  We can use this to select which file we log to
+# or we could say that you log to $1 and shift once
+
+echo $@ > DNFADD.txt
+eval $@
