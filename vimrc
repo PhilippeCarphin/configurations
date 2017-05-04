@@ -52,6 +52,8 @@ filetype plugin indent on    " required
 
 " For vim-powerline
 set laststatus=2
+set t_Co=256
+set encoding=utf-8
 
 " Nerdtree
    autocmd StdinReadPre * let s:std_in=1
