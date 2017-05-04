@@ -51,9 +51,8 @@ pushall(){
 		echo -n "Push branch $b (y/n)? "
 		read answer
 		if [[ "$answer" == y ]] ; then
-			git push origin $b;
+			git push $remote $b;
 		fi
-		git push $remote $b;
 	done
 }
 
