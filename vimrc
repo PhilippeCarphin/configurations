@@ -140,8 +140,8 @@ inoremap jk <ESC>
 " vnoremap jk <ESC>
 " set nohlsearch
 set hlsearch
-nnoremap <C-l> :w:!pdflatex %
-inoremap <C-l> <ESC>:w:!pdflatex %
+nnoremap <C-l> :w:!xelatex %
+inoremap <C-l> <ESC>:w:!xelatex %
 nnoremap <C-d> :w:!%:p
 " nnoremap <C-d> :w:!%
 nnoremap <C-b> :w:!cc % -D_BSD_SOURCE -std=c11 && ./a.out
