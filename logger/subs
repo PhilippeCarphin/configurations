@@ -1,4 +1,0 @@
-#!/bin/bash
-
-sed 's/[0-9]*m//g' | sed 's/(B//g' | sed 's///g'
-# sed 's/^[\[[0-9]*m//g' < typescript | sed 's/^[(B//g' | sed 's/^M//g' > new
