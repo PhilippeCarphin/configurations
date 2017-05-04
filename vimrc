@@ -149,7 +149,7 @@ nnoremap <C-m> :w:!make test
 set number
 cnoremap vr split ~/.vimrc
 cnoremap sv source ~/.vimrc
-command Now r!date
+command! Now r!date
 syntax on
 
 " Display incomplete commands at the right
