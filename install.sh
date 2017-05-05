@@ -23,6 +23,8 @@ case $1 in
       replace_with_link $HOME/.vim/colors vim/colors
       replace_with_link $HOME/.vim/indent vim/indent
       replace_with_link $HOME/.vim/plugin vim/plugin
+      replace_with_link $HOME/.vim/doc vim/doc
+      replace_with_link $HOME/.vim/autoload vim/autoload
 	  replace_with_link $HOME/.ycm_extra_conf.py ycm_extra_conf.py
 	  # Note that the vundle stuff that goes in the fimrc file is already there
 	  # in my  vimrc file.  Otherwise, one can use the vundle_install.sh
