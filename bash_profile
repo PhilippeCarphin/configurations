@@ -40,7 +40,7 @@ fi
 PATH=$PATH:$HOME/.local/bin
 
 # Utility scripts that I keep track of with git.
-PATH=:$HOME/Documents/GitHub/utils/bin:$PATH
+PATH=$HOME/Documents/GitHub/utils/bin:$PATH
 
 # Add cuda stuff to path
 #PATH=/usr/local/cuda/bin:$PATH
