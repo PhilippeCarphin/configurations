@@ -1,3 +1,9 @@
+#!/bin/bash
+if [[ "$BASHRC_LOADED" == true ]] ; then
+	echo "$0 Already loaded"
+fi
+export BASHRC_LOADED=true
+
 ################################################################################
 # Echoes a shortened version of host name when at polytechnique
 ################################################################################
@@ -98,6 +104,9 @@ cdl () {
 ################################################################################
 case $- in
 	*i*)
+		if [[ "$BASH_PROFILE_LOADED" != true ]] ; then
+			. ~/.bash_profile
+		fi
 
 		# Echo who is sourcing this script.
 		echo Caller is $0
