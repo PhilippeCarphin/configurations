@@ -1,5 +1,10 @@
 #!/bin/bash
 # .bash_profile
+if [[ "$BASH_PROFILE_LOADED" == true ]] ; then
+	exit
+fi
+export BASH_PROFILE_LOADED=true
+
 ################################################################################
 # Pulls the configurations
 ################################################################################
@@ -27,7 +32,7 @@ if [ -f ~/.profile ]; then
 	. ~/.profile
 fi
 
-if [ -f ~/.bashrc ]; then
+if [[ "$BASHRC_LOADED" != true ]]; then
 	echo "$0 sourcing bashrc from bash_profile"
 	source ~/.bashrc
 fi
