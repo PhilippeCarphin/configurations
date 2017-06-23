@@ -33,7 +33,7 @@ if [ -f ~/.profile ]; then
 fi
 
 if [ -f ~/.bashrc ]; then
-	echo "Sourcing bashrc from bash_profile"
+	echo "$0 sourcing bashrc from bash_profile"
 	source ~/.bashrc
 fi
 
