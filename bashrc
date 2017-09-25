@@ -189,6 +189,7 @@ case $- in
 
 			# Source git completion script.  Works only with bash shell
 			. ~/.git-completion.bash
+			. ~/Templates/.template-completion.bash
 
 			# Make history infinite.
 			export HISTFILESIZE=

@@ -35,7 +35,7 @@ case $1 in
       fi
       vim +:PluginInstall # for the plugins managed by vundle to be installed.
 		;;
-	Templates)
+	templates)
       replace_with_link $HOME/Templates Templates
       if [ `uname` = Linux ] ; then
          killall nautilus # For templates to take effect.
@@ -87,7 +87,7 @@ USAGE: $( basename $0) group
               vimrc, Vundle, non-vundle plugins colors and indents, and
               runs vundleInstall
 
-        Templates : 
+        templates : 
               File creation templates for nautilus
               right-click->new->...
 
