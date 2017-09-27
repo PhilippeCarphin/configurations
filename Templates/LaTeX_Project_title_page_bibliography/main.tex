@@ -1,0 +1,25 @@
+\documentclass[12pt]{article}
+
+\usepackage{geometry}
+\usepackage{apacite}
+\usepackage{setspace}
+\linespread{1.5}
+\geometry{letterpaper,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[frenchb]{babel}
+
+\author{a}
+\title{a}
+\usepackage[final]{pdfpages}
+
+\begin{document}
+\includepdf[pages=1]{pageTitre.pdf}
+\setcounter{page}{1}
+
+Example citation: \citeA{google}.
+
+\bibliographystyle{apacite}
+\bibliography{bibdb}
+\end{document}

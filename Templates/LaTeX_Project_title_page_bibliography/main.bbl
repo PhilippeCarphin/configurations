@@ -1,0 +1,28 @@
+\begin{thebibliography}{}
+
+\bibitem [\protect \citeauthoryear {%
+Page%
+\ \BBA {} some~other guy%
+}{%
+Page%
+\ \BBA {} some~other guy%
+}{%
+{\protect \APACyear {2017}}%
+}]{%
+google}
+\APACinsertmetastar {%
+google}%
+\begin{APACrefauthors}%
+Page, L.%
+\BCBT {}\ \BBA {} some~other guy.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYearMonthDay{2017}{}{}.
+\newblock
+\APACrefbtitle {Google search engine.} {Google search engine.}
+\newblock
+\begin{APACrefURL} \url{www.google.ca} \end{APACrefURL}
+\PrintBackRefs{\CurrentBib}
+
+\end{thebibliography}
