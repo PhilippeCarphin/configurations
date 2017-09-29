@@ -233,6 +233,7 @@ case $- in
 			echo "   Loading Linux commands"
 			# ls always shows color
 			alias ls='ls --color'
+			alias open='gvfs-open'
 		elif [ $(uname) = Darwin ]; then
 			echo "   Loading Darwin commands"
 			# ls always shows color
