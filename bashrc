@@ -1,6 +1,6 @@
 #!/bin/bash
 if [[ "$BASHRC_LOADED" == true ]] ; then
-	echo "bashrc Already loaded"
+	echo "bashrc Already loaded" 1>&2
 fi
 BASHRC_LOADED=true
 
@@ -31,14 +31,14 @@ cdf(){
 	result="$(find . -name "$1" -print -quit)"
 	if [[ -d "$result" ]] ; then
 		cd $result
-		echo $(pwd)
+		echo $(pwd) 1>&2
 	elif [[ -f "$result" ]] ; then
 		cd "$(dirname "$result")"
-		echo $(pwd)
+		echo $(pwd) 1>&2
 	elif [[ $result == "" ]]; then
-		echo "cdf: nothing found matching $1"
+		echo "cdf: nothing found matching $1" 1>&2
 	else
-		echo "result $result could not be cd'd into"
+		echo "result $result could not be cd'd into" 1>&2
 	fi
 }
 
@@ -54,7 +54,7 @@ pushall(){
 		remote=$1
 	fi
 	for b in $(git branch | tr '*' ' ' |tr '\n' ' '); do
-		echo -n "Push branch $b (y/n)? "
+		echo -n "Push branch $b (y/n)? " 1>&2
 		read answer
 		if [[ "$answer" == y ]] ; then
 			git push $remote $b;
@@ -105,7 +105,7 @@ cdl () {
 case $- in
 	*i*)
 		# Echo who is sourcing this script.
-		echo Caller is $0
+		echo Caller is $0 1>&2
 
 		# Loading soursing this script allows the __git_ps1 function to be
 		# called to that I can see my branch in my prompt string.
@@ -168,7 +168,7 @@ case $- in
 		set -o vi
 
 		if [ "$BASH" != "" ]; then
-			echo "   Loading bash specific commands"
+			echo "   Loading bash specific commands" 1>&2
 
 			# Define colors for making prompt string.
 			green='\[$(tput setaf 2)\]'
@@ -195,7 +195,7 @@ case $- in
 			export HISTFILESIZE=
 			export HISTSIZE=
 		else
-			echo "   Loading non-bash commands (possibly ksh)"
+			echo "   Loading non-bash commands (possibly ksh)" 1>&2
 			# Phil_PS1
 			green='\033[32m'
 			yellow='\033[33m'
@@ -203,10 +203,10 @@ case $- in
 			no_color='\033[00m'
 			ulimit -St unlimited
 			if [ "${KSH_VERSION#*PD}" != "$KSH_VERSION" ] ; then
-				echo "    Running pdksh"
+				echo "    Running pdksh" 1>&2
 				PS1='$(echo -e "$green${LOGNAME} @ ${HOSTNAME} ${PWD##*/}$purple$(__git_ps1 " (%s)")$green \$ $no_color")'
 			else
-				echo "    git prompt doesn't work on ksh93 :("
+				echo "    git prompt doesn't work on ksh93 :(" 1>&2
 				PS1='$(echo -e "$green${LOGNAME} @ ${HOSTNAME} ${PWD##*/} $ $no_color")'
 			fi
 			alias history='fc -l 1 100000'
@@ -219,7 +219,7 @@ case $- in
 		fi
 
 		if [ "$USER" = phcarb -o "$USER" = "" ]; then # We're at polytechnique
-			echo "   Loading polytechnique commands"
+			echo "   Loading polytechnique commands" 1>&2
 
 			# Opens AvrLibC documentation
 			alias docAVRLibC='firefox http://www.nongnu.org/avr-libc/user-manual/index.html'
@@ -230,12 +230,12 @@ case $- in
 
 		# OS specific commands
 		if [ $(uname) = Linux ]; then
-			echo "   Loading Linux commands"
+			echo "   Loading Linux commands" 1>&2
 			# ls always shows color
 			alias ls='ls --color'
 			alias open='gvfs-open'
 		elif [ $(uname) = Darwin ]; then
-			echo "   Loading Darwin commands"
+			echo "   Loading Darwin commands" 1>&2
 			# ls always shows color
 			alias ls='ls -G'
 			# Redefine dusage command for MAC
