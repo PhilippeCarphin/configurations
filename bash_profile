@@ -66,5 +66,6 @@ PATH=/usr/bin:$PATH
 # added by Anaconda3 4.3.0 installer
 # It broke youCompleteMe in vim so I'm commenting it out for now.
 # export PATH="/Users/pcarphin/anaconda/bin:$PATH"
+PATH=/usr/local/openclcc/bin${PATH:+:${PATH}}
 
 export PATH
