@@ -219,6 +219,11 @@ nnoremap <C-j> {jV}kJgqgq
 vnoremap <C-j> Jgqgq
 nnoremap <C-h> O/79a*yypxjkA/ko
 
+"  For when I try to open a file like I was in a terminal but I forgot that I'm
+"  in vim.
+nnoremap vim :tabe
+cnoremap vim tabe
+
 :inoremap <C-u> yyp^v$r-o	
 :inoremap <C-U> yyp^v$r=o	
 
