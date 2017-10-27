@@ -177,9 +177,6 @@ nnoremap <C-y> "+yy
 vnoremap <C-y> "+y
 nnoremap <C-p> "+p
 
-" Have a column with a different color to make me feel bad when I go over 120
-" chars.  Should be 80, but if you look at the C code for maestro, you'll see
-" that this is completely unrealistic.
 set colorcolumn=80
 
 nnoremap <C-c> I/* <ESC>A */<ESC>
