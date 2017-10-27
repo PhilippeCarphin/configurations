@@ -20,8 +20,6 @@ pull_config(){
 }
 
 export CONFIG_DIR=$(dirname $(readlink ~/.bashrc))
-pull_config
-
 
 # echo "Sourcing bash_profile"
 # Get the aliases and functions
