@@ -9,14 +9,12 @@ BASH_PROFILE_LOADED=true
 # Pulls the configurations
 ################################################################################
 pull_config(){
-	echo -n "Pulling philconfig configurations : "
+	# echo -n "Pulling philconfig configurations : "
 	pushd $CONFIG_DIR > /dev/null
 	git pull > /dev/null 2>&1
 	pull_success=$?
 	popd > /dev/null
-	if [[ $pull_success == 0 ]]; then
-		echo "philconfig up to date"
-	else
+	if [[ $pull_success != 0 ]]; then
 		echo "!! Could not pull pull philconfig !!"
 	fi
 }
@@ -25,15 +23,15 @@ export CONFIG_DIR=$(dirname $(readlink ~/.bashrc))
 pull_config
 
 
-echo "Sourcing bash_profile"
+# echo "Sourcing bash_profile"
 # Get the aliases and functions
 if [ -f ~/.profile ]; then
-	echo "$0 sourcing profile from bash_profile"
+	# echo "$0 sourcing profile from bash_profile"
 	. ~/.profile
 fi
 
 if [ -f ~/.bashrc ]; then
-	echo "$0 sourcing bashrc from bash_profile"
+	# echo "$0 sourcing bashrc from bash_profile"
 	source ~/.bashrc
 fi
 

@@ -1,7 +1,7 @@
 #!/bin/bash
-if [[ "$BASHRC_LOADED" == true ]] ; then
-	echo "bashrc Already loaded" 1>&2
-fi
+# if [[ "$BASHRC_LOADED" == true ]] ; then
+	# echo "bashrc Already loaded" 1>&2
+# fi
 BASHRC_LOADED=true
 
 ################################################################################
@@ -14,12 +14,6 @@ host(){
 	else
 		echo "$H"
 	fi
-}
-################################################################################
-# Adds one file and commits it with message
-################################################################################
-commit1(){
-	git add $1 && git commit -m "$2"
 }
 
 ################################################################################
@@ -105,7 +99,7 @@ cdl () {
 case $- in
 	*i*)
 		# Echo who is sourcing this script.
-		echo Caller is $0 1>&2
+		# echo Caller is $0 1>&2
 
 		# Loading soursing this script allows the __git_ps1 function to be
 		# called to that I can see my branch in my prompt string.
@@ -168,7 +162,7 @@ case $- in
 		set -o vi
 
 		if [ "$BASH" != "" ]; then
-			echo "   Loading bash specific commands" 1>&2
+			# echo "   Loading bash specific commands" 1>&2
 
 			# Define colors for making prompt string.
 			green='\[$(tput setaf 2)\]'
@@ -219,7 +213,7 @@ case $- in
 		fi
 
 		if [ "$USER" = phcarb -o "$USER" = "" ]; then # We're at polytechnique
-			echo "   Loading polytechnique commands" 1>&2
+			# echo "   Loading polytechnique commands" 1>&2
 
 			# Opens AvrLibC documentation
 			alias docAVRLibC='firefox http://www.nongnu.org/avr-libc/user-manual/index.html'
@@ -230,12 +224,12 @@ case $- in
 
 		# OS specific commands
 		if [ $(uname) = Linux ]; then
-			echo "   Loading Linux commands" 1>&2
+			# echo "   Loading Linux commands" 1>&2
 			# ls always shows color
 			alias ls='ls --color'
 			alias open='gvfs-open'
 		elif [ $(uname) = Darwin ]; then
-			echo "   Loading Darwin commands" 1>&2
+			# echo "   Loading Darwin commands" 1>&2
 			# ls always shows color
 			alias ls='ls -G'
 			# Redefine dusage command for MAC
