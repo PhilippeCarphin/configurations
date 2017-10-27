@@ -1,7 +1,0 @@
-{
-	"shell" : true,
-	"cmd": 
-	[
-		"make clean; make run" 
-	]
-}

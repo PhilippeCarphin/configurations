@@ -1,7 +1,0 @@
-{
-	"shell" : true,
-	"cmd": 
-	[
-		"make;./banque -l serial;./banque -l fork;./banque -l pthread;./banque -l pth" 
-	]
-}
