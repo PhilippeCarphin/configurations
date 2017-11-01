@@ -66,7 +66,7 @@ ssh_school() {
 	else
 		computer=$1
 	fi
-	ssh $computer.info.polymtl.ca -l phcarb
+	ssh $computer.info.polymtl.ca -l phcarb -Y
 }
 
 ################################################################################
