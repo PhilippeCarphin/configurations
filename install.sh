@@ -17,6 +17,12 @@ case $1 in
       replace_with_link $HOME/.bash_profile bash_profile
 	  replace_with_link $HOME/.github-aliases github-aliases
 		;;
+	logging)
+	  replace_with_link $HOME/.local/bin/SUDO SUDO
+	  if [[ $(uname) == Darwin ]] ; then
+		  replace_with_link $HOME/.local/bin/BREW BREW
+	  fi
+		;;
 	vim)
       replace_with_link $HOME/.vimrc vimrc
 	  replace_with_link $HOME/.ideavimrc vimrc # Pycharm uses this
@@ -121,6 +127,7 @@ if [ "$1" = full ] ; then
    installGroup git
    installGroup sublime
    installGroup tmux
+   installGroup logging
    if [ "$CMCLNG" != "" ] ; then
       installGroup cmc
    fi
