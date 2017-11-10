@@ -2,6 +2,12 @@
 # if [[ "$BASHRC_LOADED" == true ]] ; then
 	# echo "bashrc Already loaded" 1>&2
 # fi
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+	. /etc/bashrc
+fi
+
 BASHRC_LOADED=true
 
 ################################################################################
@@ -131,7 +137,7 @@ case $- in
 		alias vgrind="valgrind --tool=memcheck --leak-check=yes"
 
 		# Make grep show colors and line numbers
-		alias grep='grep --color=always -n'
+		alias grep='grep --color=auto -n'
 
 		# Make less accept colored input
 		alias less='less -R'
@@ -168,11 +174,12 @@ case $- in
 			green='\[$(tput setaf 2)\]'
 			yellow='\[$(tput setaf 3)\]'
 			purple='\[$(tput setaf 5)\]'
+			blue='\[$(tput setaf 4)\]'
 			no_color='\[$(tput sgr 0)\]'
 			# Prompt string shows user@host current_dir (git branch) with
 			# everything except git branch in green and the branch in yellow
 			# PS1=$green'[\u@'$(host)' \W'$yellow'$(__git_ps1 " (%s)")'$green'] \$ '$no_color
-			PS1=$green'[\W'$yellow'$(__git_ps1 " (%s)")'$green'] \$ '$no_color
+			PS1=$green'[\W'$yellow'$(__git_ps1 " (%s)")'" $blue$$$green"'] \$ '$no_color
 			PS2=$purple' > '$no_color
 			# PS1=$green'[\u@$(host) \W'$no_color$yellow'$(__git_ps1 " (%s)")'$no_color$green'] \$ '$no_color
 
