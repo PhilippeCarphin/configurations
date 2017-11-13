@@ -11,6 +11,17 @@ Imac:
 	RESULT
 		now I can run gitk no problem.
 
+Zsh
+	SITUATION
+		I installed zsh, oh-my-zsh and powerline fonts
+	PROBLEM
+		I haven't added any of this to my .philconfig repo
+	SOLUTION
+		1) Move my .zshrc to .philconfig
+		2) Add stuff in install.sh to do replace_with_link for that file
+		3) Offer to install powerline fonts and ohmyzsh
+	RESULT
+		Not done yet :)
 
 git-sh
 	Not sure if I like it but it exists and it is obtained by cloning and
