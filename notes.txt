@@ -23,6 +23,19 @@ Zsh
 	RESULT
 		Not done yet :)
 
+Vimpager
+	SITUATION
+		I saw that you could have a color-highlighting in manpages using the
+		pager 'most', however, it did not have the keybingings like more
+		(h,j,k,l).
+
+		As I looked into setting those keybindings, I stumbled upon vimpagergit clone git://github.com/rkitover/vimpager
+
+		running make builds the executable but make install put it somewhere
+		that is not in my path.  I have yet to look into where make put it,
+		but I did test it by doing "export PAGER=$PWD/vimpager" and did get
+		nice syntax highlighting for "man bash".
+
 git-sh
 	Not sure if I like it but it exists and it is obtained by cloning and
 	make installing github:rtomayko/git-sh
