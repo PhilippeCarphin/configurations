@@ -1,0 +1,57 @@
+
+# Allows me to open my rcfile quickly and reload it quickly
+if [[ "$SHELL" == /bin/zsh ]] ; then
+	rcfile=$HOME/.zshrc
+else
+	rcfile=$HOME/.bashrc
+fi
+alias profile='vim $rcfile && source $rcfile'
+alias lprofile="source $rcfile"
+
+# If I skip the space with cd ..
+alias cd..='cd ..'
+
+# See disk usage: lists the sizes of the folders in the current
+# directory and sorts them by size
+alias dusage='du --max-depth=1 | sort -n'
+
+# Make gitk always show all branches
+alias gitk="gitk --all --select-commit=HEAD &"
+
+# Quick aliases for valgrind
+alias vgrindtotmem="valgrind --tool=massif --stacks=yes"
+alias vgrind="valgrind --tool=memcheck --leak-check=yes"
+
+# Make grep show colors and line numbers
+alias grep='grep --color=auto -n'
+
+# Make less accept colored input
+alias less='less -R'
+
+# Add PWD to path for current session.  Useful for recompiling and
+# running executables without always writing './'
+alias pathpwd='export PATH=$PWD:$PATH'
+
+# Aliases for quick directories:
+alias github='cd ~/Documents/GitHub'
+
+source ~/.github-aliases
+alias new-repo='source new-repo.sh'
+
+# Opens the master PDF documenation for ATMega324PA assuming it is
+# at this path.
+alias docatmel='gvfs-open ~/Documents/docatmel.pdf'
+
+# OS specific commands
+if [ $(uname) = Linux ]; then
+	# echo "   Loading Linux commands" 1>&2
+	# ls always shows color
+	alias ls='ls --color'
+	alias open='gvfs-open'
+elif [ $(uname) = Darwin ]; then
+	# echo "   Loading Darwin commands" 1>&2
+	# ls always shows color
+	alias ls='ls -G'
+	# Redefine dusage command for MAC
+	alias dusage='du -d 1 | sort -n'
+fi
