@@ -1,0 +1,34 @@
+
+export CONFIG_DIR=$(dirname $(readlink ~/.bashrc))
+
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/cuda/lib"
+
+export THEANO_FLAGS=device=cpu,optimizer=fast_run,exception_verbosity=high
+
+export DYLD_LIBRARY_PATH=/Developer/NVIDIA/CUDA-8.0/lib${DYLD_LIBRARY_PATH:+:${DYLD_LIBRARY_PATH}}
+
+# Locally installed programs
+PATH=$PATH:$HOME/.local/bin
+
+# Utility scripts that I keep track of with git.
+PATH=$HOME/Documents/GitHub/utils/bin:$PATH
+
+# Add cuda stuff to path
+#PATH=/usr/local/cuda/bin:$PATH
+PATH=/Developer/NVIDIA/CUDA-8.0/bin${PATH:+:${PATH}}
+
+# Setting PATH for Python 3.5
+# The orginal version is saved in .bash_profile.pysave
+PATH="$PATH:/Library/Frameworks/Python.framework/Versions/3.5/bin"
+
+# added by Anaconda3 4.3.0 installer
+# It broke youCompleteMe in vim so I'm commenting it out for now.
+# export PATH="/Users/pcarphin/anaconda/bin:$PATH"
+
+PATH=/usr/local/openclcc/bin${PATH:+:${PATH}}
+
+# This is stupid but it makes it so that the python version that is run is the
+# one in /usr/bin which is important for vim-YouCompleteMe.
+PATH=/usr/bin:$PATH
+
+export PATH
