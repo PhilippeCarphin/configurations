@@ -12,10 +12,18 @@ replace_with_link(){
 
 installGroup() {
 case $1 in
+	zsh)
+		replace_with_link $HOME/.zprofile zprofile
+		replace_with_link $HOME/.zshrc zshrc
+		replace_with_link $HOME/.zshenv zshenv
+		;;
 	bash)
       replace_with_link $HOME/.bashrc bashrc
       replace_with_link $HOME/.bash_profile bash_profile
 	  replace_with_link $HOME/.github-aliases github-aliases
+	  replace_with_link $HOME/.functions functions
+	  replace_with_link $HOME/.general-aliases general-aliases
+	  replace_with_link $HOME/.envvars envvars
 		;;
 	logging)
 	  replace_with_link $HOME/.local/bin/SUDO SUDO
