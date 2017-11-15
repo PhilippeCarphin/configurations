@@ -72,7 +72,6 @@ set encoding=utf-8
 " message to be printed when I sourse my vimrc within vim because it says that
 " the command I'm trying to define already exists.  So I'm commenting it out.
 " http://vim.wikia.com/wiki/VimTip1638
-
 if has('cscope')
   set cscopetag cscopeverbose
   if has('quickfix')
@@ -91,8 +90,6 @@ endif
 " http://www.alexeyshmalko.com/2014/using-vim-as-c-cpp-ide/
 set exrc "Allows automatic sourcing of project specific vimrc
 set secure "Fixes security hole caused by previous command. 
-
-
 
 " ================
 " http://stackoverflow.com/questions/234564/tab-key-4-spaces-and-auto-indent-after-curly-braces-in-vim/21323445#21323445
@@ -124,40 +121,12 @@ set wrapmargin=0
 
 set scrolloff=5
 
-" Phil
-" Tell vim to remember certain things when we exit
-"  '10  :  marks will be remembered for up to 10 previously edited files
-"  "100 :  will save up to 100 lines for each register
-"  :20  :  up to 20 lines of command-line history will be remembered
-"  %    :  saves and restores the buffer list
-"  n... :  where to save the viminfo files
-" set viminfo='10,\"100,:20,%,n~/.viminfo
-
-" Remember position in file 
-if has("autocmd")
-  au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal!  g'\"" | endif
-endif
-
-inoremap jk <ESC>
-" vnoremap jk <ESC>
-" set nohlsearch
 set hlsearch
-nnoremap <C-l> :w:!xelatex %
-inoremap <C-l> <ESC>:w:!xelatex %
-nnoremap <C-d> :w:!%:p
-" nnoremap <C-d> :w:!%
-nnoremap <C-b> :w:!make
-inoremap <C-b> <ESC>:w:!makeli
 
 set number
-cnoremap vr split ~/.vimrc
-cnoremap sv source ~/.vimrc
-command! Now r!date
 syntax on
-
 " Display incomplete commands at the right
 set showcmd
-
 " Usual backspace behavior
 set backspace=indent,eol,start
 " Non-retarded backspace behavior
@@ -166,31 +135,30 @@ set backspace=2
 
 " To enable 256 colors in vim, put this your .vimrc before setting the colorscheme:
 set t_Co=256
-
-set foldnestmax=1
-
-" colorscheme morning
-" colorscheme monokai
 colorscheme molokai
-
-" Easy interaction with system CTRL-C buffer.
-nnoremap <C-y> "+yy
-vnoremap <C-y> "+y
-nnoremap <C-p> "+p
-
+set foldnestmax=1
 set colorcolumn=80
+set clipboard=unnamed
+if v:version >= 704
+    set breakindent
+endif
 
-nnoremap <C-c> I/* <ESC>A */<ESC>
-nnoremap <C-u> :s/\/\* \?//\|s/ \?\*\//<CR>:nohlsearch<CR>
+" Remember position in file 
+if has("autocmd")
+  au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal!  g'\"" | endif
+endif
 
-" nnoremap <Up> <ESC>:echoerr "Your mind is weak."<CR>
-" nnoremap <Down> <ESC>:echoerr "Your mind is weak."<CR>
-" nnoremap <Left> <ESC>:echoerr "Your mind is weak."<CR>
-" nnoremap <Right> <ESC>:echoerr "Your mind is weak."<CR>
+inoremap jk <ESC>
+nnoremap <C-d> :w:!%:p
+nnoremap <C-b> :w:!make
+inoremap <C-b> <ESC>:w:!makeli
+
+cnoremap vr split ~/.vimrc
+cnoremap sv source ~/.vimrc
+command! Now r!date
+
 nnoremap <Up> <C-y>k
-" nnoremap <Up> <C-y>
 nnoremap <Down> <C-e>j
-" nnoremap <Down> <C-e>
 nnoremap <Left> <ESC>:echoerr "Your mind is weak."<CR>
 nnoremap <Right> <ESC>:echoerr "Your mind is weak."<CR>
 
@@ -202,19 +170,11 @@ inoremap <Right> <ESC>:echoerr "The clouded mind sees nothing"<CR>
 command! Notes tabe ~/Desktop/Notes/Daily_Notes/today.txt
 nnoremap U yyp^v$r=
 
-"  Not sure about this: it is for display word wrapping. It makes it work with
-"  indentation, but it breaks up words.  Broken up words is not as bad for
-"  understanding the code as not having clear visual indentation so I'm going to
-"  use it.  The ideal solution would be to use
-if v:version >= 704
-    set breakindent
-endif
-"  but also figure out which extra option to set so that it doesn't break up
-"  words. See also showbreak
-
 "  Redo line breaks for a paragraph
 nnoremap <C-j> {jV}kJgqgq
 vnoremap <C-j> Jgqgq
+
+" Make a C-style header that I like so much
 nnoremap <C-h> O/79a*yypxjkA/ko
 
 "  For when I try to open a file like I was in a terminal but I forgot that I'm
@@ -224,8 +184,6 @@ cnoremap vim tabe
 
 :inoremap <C-u> yyp^v$r-o	
 :inoremap <C-U> yyp^v$r=o	
-
-set clipboard=unnamed
 
 let g:ycm_confirm_extra_conf = 0
 let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
