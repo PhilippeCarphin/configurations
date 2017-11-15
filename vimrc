@@ -146,8 +146,9 @@ nnoremap <C-l> :w:!xelatex %
 inoremap <C-l> <ESC>:w:!xelatex %
 nnoremap <C-d> :w:!%:p
 " nnoremap <C-d> :w:!%
-nnoremap <C-b> :w:!cc % -D_BSD_SOURCE -std=c11 && ./a.out
-nnoremap <C-m> :w:!make test
+nnoremap <C-b> :w:!make
+inoremap <C-b> <ESC>:w:!makeli
+
 set number
 cnoremap vr split ~/.vimrc
 cnoremap sv source ~/.vimrc
