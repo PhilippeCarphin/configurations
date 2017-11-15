@@ -4,6 +4,8 @@
 # Path to your oh-my-zsh installation.
 export ZSH=/Users/pcarphin/.oh-my-zsh
 
+export CDPATH="$HOME":$HOME/Documents:$HOME/Documents/GitHub
+
 source ~/.functions
 source ~/.general-aliases
 source ~/.github-aliases
