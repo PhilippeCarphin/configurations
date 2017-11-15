@@ -89,7 +89,7 @@ endif
 " From the 'vim as a C/C++ IDE'
 " http://www.alexeyshmalko.com/2014/using-vim-as-c-cpp-ide/
 set exrc "Allows automatic sourcing of project specific vimrc
-set secure "Fixes security hole caused by previous command. 
+set secure "Fixes security hole caused by previous command.
 
 " ================
 " http://stackoverflow.com/questions/234564/tab-key-4-spaces-and-auto-indent-after-curly-braces-in-vim/21323445#21323445
@@ -113,11 +113,11 @@ set noexpandtab       " Expand TABs to spaces.
 set autoindent
 " hi Tab gui=underline guifg=blue ctermbg=blue
 " Wrapping
-set wrap 
-" set linebreak 
-set nolist 
-set textwidth=80 
-set wrapmargin=0 
+set wrap
+" set linebreak
+set nolist
+set textwidth=80
+set wrapmargin=0
 
 set scrolloff=5
 
@@ -143,7 +143,7 @@ if v:version >= 704
     set breakindent
 endif
 
-" Remember position in file 
+" Remember position in file
 if has("autocmd")
   au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal!  g'\"" | endif
 endif
@@ -182,8 +182,8 @@ nnoremap <C-h> O/79a*yypxjkA/ko
 nnoremap vim :tabe
 cnoremap vim tabe
 
-:inoremap <C-u> yyp^v$r-o	
-:inoremap <C-U> yyp^v$r=o	
+:inoremap <C-u> yyp^v$r-o
+:inoremap <C-U> yyp^v$r=o
 
 let g:ycm_confirm_extra_conf = 0
 let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
