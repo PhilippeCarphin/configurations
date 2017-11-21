@@ -10,6 +10,15 @@ replace_with_link(){
    ln -s $target $original
 }
 
+sudo_replace_with_file(){
+	original_file=$1
+	my_file=$2
+	if ! grep PHILCONFIG $file ; then
+		sudo mv $original_file $my_file.phil.bak
+	fi
+	sudo cp $my_file $original_file
+}
+
 installGroup() {
 case $1 in
 	zsh)
@@ -24,6 +33,9 @@ case $1 in
 	  replace_with_link $HOME/.functions functions
 	  replace_with_link $HOME/.general-aliases general-aliases
 	  replace_with_link $HOME/.envvars envvars
+		;;
+	root-bashrc)
+		sudo_replace_with_file /root/.bashrc root_bashrc
 		;;
 	logging)
 	  replace_with_link $HOME/.local/bin/SUDO SUDO
