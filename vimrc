@@ -150,8 +150,8 @@ endif
 
 inoremap jk <ESC>
 nnoremap <C-d> :w:!%:p
-nnoremap <C-b> :w:!make
-inoremap <C-b> <ESC>:w:!makeli
+nnoremap <C-b> :wa:!make
+inoremap <C-b> <ESC>:wa:!makeli
 
 cnoremap vr split ~/.vimrc
 cnoremap sv source ~/.vimrc
