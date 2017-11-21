@@ -2,14 +2,8 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-if [[ $(uname) == Linux ]] ; then
-	export ZSH=/home/pcarphin/.oh-my-zsh
-	export SHELL=zsh
-elif [[ $(uname) == Darwin ]] ; then
-	export ZSH=/Users/pcarphin/.oh-my-zsh
-else
-	echo "PHIL::zshrc : ERROR \$(uname) is not Linux or Darwin" >&2
-fi
+export ZSH=$HOME/.oh-my-zsh
+export SHELL=zsh
 
 export CDPATH="$HOME":$HOME/Documents:$HOME/Documents/GitHub
 
@@ -21,7 +15,7 @@ source ~/.github-aliases
 # it'll load a random theme each time that oh-my-zsh is loaded.
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
 if [[ $USER == phcarb ]] ; then
-	ZSH_THEME="wedisagree"
+	ZSH_THEME="agnoster"
 else
 	ZSH_THEME="agnoster"
 fi
