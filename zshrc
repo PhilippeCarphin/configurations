@@ -2,7 +2,14 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH=/Users/pcarphin/.oh-my-zsh
+if [[ $(uname) == Linux ]] ; then
+	export ZSH=/home/pcarphin/.oh-my-zsh
+	export SHELL=zsh
+elif [[ $(uname) == Darwin ]] ; then
+	export ZSH=/Users/pcarphin/.oh-my-zsh
+else
+	echo "PHIL::zshrc : ERROR \$(uname) is not Linux or Darwin" >&2
+fi
 
 export CDPATH="$HOME":$HOME/Documents:$HOME/Documents/GitHub
 
