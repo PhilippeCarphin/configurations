@@ -37,6 +37,9 @@ case $1 in
 	root-bashrc)
 		sudo_replace_with_file /root/.bashrc root_bashrc
 		;;
+	root-zshrc)
+		sudo_replace_with_file /root/.zshrc root_zshrc
+		sudo cp -R $HOME/.oh-my-zsh /root/.oh-my-zsh
 	logging)
 	  replace_with_link $HOME/.local/bin/SUDO SUDO
 	  if [[ $(uname) == Darwin ]] ; then
