@@ -149,7 +149,6 @@ if has("autocmd")
 endif
 
 inoremap jk <ESC>
-nnoremap <C-d> :w:!%:p
 nnoremap <C-b> :wa:!make
 inoremap <C-b> <ESC>:wa:!makeli
 
