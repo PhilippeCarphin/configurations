@@ -43,7 +43,7 @@ pushall(){
 	else
 		remote=$1
 	fi
-	for b in $(git branch | tr '*' ' ' |tr '\n' ' '); do
+	for b in $(git branch | tr '*' ' '); do
 		echo -n "Push branch $b (y/n)? " 1>&2
 		read answer
 		if [[ "$answer" == y ]] ; then
