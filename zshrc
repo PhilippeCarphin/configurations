@@ -107,4 +107,6 @@ export LESS="$LESS -FX"
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 #
+source ~/.philconfig/local_file
+
 export PHILRC_ZSHRC=".zshrc sourced at $(date)"
