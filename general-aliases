@@ -1,6 +1,6 @@
 
 # Allows me to open my rcfile quickly and reload it quickly
-if [[ "$SHELL" == /bin/zsh ]] ; then
+if [[ "$SHELL" == zsh ]] ; then
 	rcfile=$HOME/.zshrc
 else
 	rcfile=$HOME/.bashrc
