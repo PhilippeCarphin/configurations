@@ -1,3 +1,4 @@
+#!/bin/sh
 
 export CONFIG_DIR=$(dirname $(readlink ~/.bashrc))
 
@@ -30,5 +31,7 @@ PATH=/usr/local/openclcc/bin${PATH:+:${PATH}}
 # This is stupid but it makes it so that the python version that is run is the
 # one in /usr/bin which is important for vim-YouCompleteMe.
 PATH=/usr/bin:$PATH
+
+PATH=/usr/lib64/openmpi/bin:$PATH
 
 export PATH
