@@ -9,6 +9,7 @@
 	logl = log --oneline --decorate --graph -15
 	logp = log -p
 	pm = push origin master
+	gui = !sh -c /usr/local/git/libexec/git-core/git-gui
 [credential]
 	helper = cache --timeout 36000
 [url "https://github.com/PhilippeCarphin/"]
@@ -28,3 +29,8 @@
 	pager = less -x1,5
 [diff]
    tool = vimdiff
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
