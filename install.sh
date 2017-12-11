@@ -78,6 +78,7 @@ case $1 in
       replace_with_link $HOME/.gitconfig gitconfig
       replace_with_link $HOME/.git-completion.bash git-completion.bash
       replace_with_link $HOME/.git-prompt.sh git-prompt.sh
+	  replace_with_link $HOME/.gitignore gitignore
 		;;
 	sublime)
       replace_with_link $HOME/.config/sublime-text-3 config/sublime-text-3

@@ -26,5 +26,6 @@
 [core]
 	editor = vim
 	pager = less -x1,5
+	excludesfile = ~/.gitignore
 [diff]
    tool = vimdiff
