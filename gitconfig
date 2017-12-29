@@ -9,6 +9,7 @@
 	logl = log --oneline --decorate --graph -15
 	logp = log -p
 	pm = push origin master
+	gui = !sh -c '/usr/local/git/libexec/git-core/git-gui'
 [credential]
 	helper = cache --timeout 36000
 [url "https://github.com/PhilippeCarphin/"]
