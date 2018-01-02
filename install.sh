@@ -40,6 +40,7 @@ case $1 in
 	root-zshrc)
 		sudo_replace_with_file /root/.zshrc root_zshrc
 		sudo cp -R $HOME/.oh-my-zsh /root/.oh-my-zsh
+		;;
 	logging)
 	  replace_with_link $HOME/.local/bin/SUDO SUDO
 	  if [[ $(uname) == Darwin ]] ; then
@@ -77,6 +78,7 @@ case $1 in
       replace_with_link $HOME/.gitconfig gitconfig
       replace_with_link $HOME/.git-completion.bash git-completion.bash
       replace_with_link $HOME/.git-prompt.sh git-prompt.sh
+	  replace_with_link $HOME/.gitignore.global gitignore.global
 		;;
 	sublime)
       replace_with_link $HOME/.config/sublime-text-3 config/sublime-text-3
