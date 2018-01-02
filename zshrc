@@ -15,9 +15,9 @@ source ~/.github-aliases
 # it'll load a random theme each time that oh-my-zsh is loaded.
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
 if [[ $USER == phcarb ]] ; then
-	ZSH_THEME="agnoster"
+	ZSH_THEME="agnoster-phil"
 else
-	ZSH_THEME="agnoster"
+	ZSH_THEME="agnoster-phil"
 fi
 
 # Set list of themes to load
