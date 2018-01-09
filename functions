@@ -1,4 +1,5 @@
-################################################################################
+#!/bin/bash
+#################################################################################
 # Pulls the configurations
 ################################################################################
 pull_config(){
@@ -87,14 +88,3 @@ p_valgrind(){
 cdl () {
 	cd "$(dirname "$(readlink "$1")")";
 }
-
-git_pwd() {
-	whole_path=$(pwd)
-	repo_dir=$(git rev-parse --show-toplevel 2>/dev/null)
-	[ ! -z $repo_dir ] && repo=$(basename $repo_dir) || repo=""
-	inner=${whole_path#$repo_dir}
-
-	echo ${inner}
-
-}
-
