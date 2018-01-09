@@ -25,6 +25,7 @@ case $1 in
 		replace_with_link $HOME/.zprofile zprofile
 		replace_with_link $HOME/.zshrc zshrc
 		replace_with_link $HOME/.zshenv zshenv
+		replace_with_link $HOME/.zsh_custom zsh_custom
 		;;
 	bash)
       replace_with_link $HOME/.bashrc bashrc
