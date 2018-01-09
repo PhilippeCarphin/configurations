@@ -187,13 +187,11 @@ prompt_hg() {
 }
 
 git_pwd_prompt() {
-	whole_path=$(pwd)
-	repo_dir=$(git rev-parse --show-toplevel 2>/dev/null)
-	[ ! -z $repo_dir ] && repo=$(basename $repo_dir) || repo=""
-	inner=${whole_path#$repo_dir}
-
-	if [[ ${repo} != "" ]] ; then
-		prompt_segment blue black "%B${repo}%u%b${inner}%b"
+	if [[ $(git rev-parse --is-inside-work-tree 2>/dev/null) == true ]] ; then
+		repo_dir=$(git rev-parse --show-toplevel 2>/dev/null)
+		outer=$(basename $repo_dir)
+		inner=$(git rev-parse --show-prefix 2>/dev/null)
+		prompt_segment blue black "%B${outer}%u%b/${inner}%b"
 	else
 		prompt_segment blue black "%~"
 	fi
