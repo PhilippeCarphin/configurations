@@ -74,7 +74,6 @@ plugins=(
 )
 
 source $ZSH/oh-my-zsh.sh
-source ~/.philconfig/agnoster-phil.zsh-theme
 
 # User configuration
 

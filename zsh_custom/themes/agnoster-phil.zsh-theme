@@ -186,7 +186,7 @@ prompt_hg() {
   fi
 }
 
-git_pwd() {
+git_pwd_prompt() {
 	whole_path=$(pwd)
 	repo_dir=$(git rev-parse --show-toplevel 2>/dev/null)
 	[ ! -z $repo_dir ] && repo=$(basename $repo_dir) || repo=""
@@ -233,7 +233,7 @@ build_prompt() {
   prompt_virtualenv
   prompt_context
   prompt_git
-  git_pwd
+  git_pwd_prompt
   prompt_bzr
   prompt_hg
   prompt_end
