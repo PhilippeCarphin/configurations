@@ -1,4 +1,5 @@
 # vim swap files
+.DS_Store
 *.swo
 *.swp
 *.swn
