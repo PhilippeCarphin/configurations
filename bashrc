@@ -11,9 +11,11 @@ BASHRC_LOADED=true
 ################################################################################
 # Echoes a shortened version of host name when at polytechnique
 ################################################################################
-host(){
+short_host(){
 	H=$(uname -n)
-	if [[ $H == Sansfil-Securise-Etudiants* ]]; then
+	if [[ $H == *EDUROAM* ]]; then
+		echo "Sansfil-Poly"
+	elif [[ $H == *.polymtl.ca ]] ; then
 		echo "Sansfil-Poly"
 	else
 		echo "$H"
@@ -52,7 +54,7 @@ if [[ "$-" == *i* ]] ; then
 	purple='\[$(tput setaf 5)\]'
 	blue='\[$(tput setaf 4)\]'
 	no_color='\[$(tput sgr 0)\]'
-	PS1=$green'[\W'$yellow'$(__git_ps1 " (%s)")'" $blue$$$green"'] \$ '$no_color
+	PS1=$green'[\W'$yellow'$(__git_ps1 " (%s)")'" $green"'] \$ '$no_color
 	PS2=$purple' > '$no_color
 
 	#if in tmux, export this I forget why
