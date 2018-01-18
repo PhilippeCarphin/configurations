@@ -27,7 +27,6 @@
 	required = true
 	editor = vim
 	pager = less -x1,5
-	excludesfile = ~/.gitignore
 [diff]
    tool = vimdiff
 [filter "lfs"]
@@ -41,3 +40,5 @@
 [mergetool "sourcetree"]
 	cmd = /Users/pcarphin/Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
 	trustExitCode = true
+[core]
+	excludesfile = ~/.gitignore.global
