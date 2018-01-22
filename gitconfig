@@ -4,7 +4,7 @@
 	name = "Philippe Carphin"
 	email = philippe.carphin@polymtl.ca
 [alias]
-	st = status
+	st = !sh  -c 'git status && git diff --stat'
 	s = status
 	logl = log --oneline --decorate --graph -15
 	logp = log -p
