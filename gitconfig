@@ -13,6 +13,8 @@
 	pwd = rev-parse --show-prefix
 	root = rev-parse --show-toplevel
 	go-root = !sh -c 'cd $(git rev-parse --show-toplevel)'
+	ds = diff --stat
+	fs = sh -c 'git fetch && git diff --stat origin'
 [credential]
 	helper = cache --timeout 36000
 [url "https://github.com/PhilippeCarphin/"]
