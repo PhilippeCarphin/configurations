@@ -47,7 +47,7 @@ if [ $(uname) = Linux ]; then
 	# echo "   Loading Linux commands" 1>&2
 	# ls always shows color
 	alias ls='ls --color'
-	alias open='gvfs-open'
+	alias open='gio open'
 elif [ $(uname) = Darwin ]; then
 	# echo "   Loading Darwin commands" 1>&2
 	# ls always shows color
