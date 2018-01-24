@@ -34,28 +34,29 @@ dir=~
 get_and_source(){
 	local file_url=$1
 	local file=$2
-	if [ -e "$dir/.$file" -o -L "$dir/.$file" ]; then
-		echo ".$file already present in home directory"
+	local downloaded_file=$(basename file_url)
+	if [ -e "$dir/$file" -o -L "$dir/.$file" ]; then
+		echo "$file already present in home directory"
 	else
 		echo "Downloading file from $file_url"
 		wget $file_url > /dev/null 2>&1
-		echo "Renaming $file to ~/.$file"
-		mv $file $dir/.$file
-		echo "Adding 'source ~/.$file' to ~/.bashrc"
-		echo "source $dir/.$file" >> $dir/$bashrc
+		echo "Renaming $downloaded_file to ~/$file"
+		mv $downloaded_file $file
+		echo "Adding 'source ~/$file' to ~/.bashrc"
+		echo "source $dir/$file" >> $dir/$bashrc
 	fi
 }
 
 # git-prompt.sh will allow us to display the current branch in the prompt string
 # by using the function __git_ps1
 git_prompt_url=https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh
-git_prompt_file=git-prompt.sh
+git_prompt_file=.git-prompt.sh
 get_and_source $git_prompt_url $git_prompt_file
 
 # git-completion.bash will allow us to have autocompletion of git commands and
 # branch names by pressing tab.
 git_completion_url=https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash
-git_completion_file=git-completion.bash
+git_completion_file=.git-completion.bash
 get_and_source $git_completion_url $git_completion_file
 
 # This next part appends the content of the variable phil_colors to the bashrc

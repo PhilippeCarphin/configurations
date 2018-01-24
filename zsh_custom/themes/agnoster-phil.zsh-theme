@@ -78,10 +78,20 @@ prompt_end() {
 ### Prompt components
 # Each component will draw itself, and hide itself if no information needs to be shown
 
+short_host(){
+	H=$(uname -n)
+	if [[ $H == *EDUROAM* ]]; then
+		echo "WiFi-Poly"
+	elif [[ $H == *.polymtl.ca ]] ; then
+		echo "WiFi-Poly"
+	else
+		echo "$H"
+	fi
+}
 # Context: user@hostname (who am I and where am I)
 prompt_context() {
   if [[ "$USER" != "$DEFAULT_USER" || -n "$SSH_CLIENT" ]]; then
-    prompt_segment black default '%m'
+	  prompt_segment black default "$(short_host)"
   fi
 }
 

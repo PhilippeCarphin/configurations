@@ -18,6 +18,8 @@ alias dusage='du --max-depth=1 | sort -n'
 # Make gitk always show all branches
 alias gitk="gitk --all --select-commit=HEAD &"
 
+alias gitroot='cd $(git root)'
+
 # Quick aliases for valgrind
 alias vgrindtotmem="valgrind --tool=massif --stacks=yes"
 alias vgrind="valgrind --tool=memcheck --leak-check=yes"
