@@ -1,4 +1,5 @@
-
+#!/bin/sh
+#
 # Allows me to open my rcfile quickly and reload it quickly
 if [[ "$SHELL" == zsh ]] ; then
 	rcfile=$HOME/.zshrc
