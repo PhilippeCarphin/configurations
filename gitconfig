@@ -12,7 +12,6 @@
 	gui = !sh -c '/usr/local/git/libexec/git-core/git-gui'
 	pwd = rev-parse --show-prefix
 	root = rev-parse --show-toplevel
-	go-root = !sh -c 'cd $(git rev-parse --show-toplevel)'
 	ds = diff --stat
 	fs = sh -c 'git fetch && git diff --stat origin'
 [credential]
