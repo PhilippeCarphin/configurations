@@ -4,7 +4,11 @@
 	name = "Philippe Carphin"
 	email = philippe.carphin@polymtl.ca
 [alias]
-	st = !sh  -c 'git status && git diff --stat'
+	# This alias annoys me, it lists paths relative to root
+	# and the diffstat part isn't as helpful as I thought it
+	# would be.
+	# st = !sh  -c 'git status && git diff --stat'
+	st = status
 	s = status
 	logl = log --oneline --decorate --graph -15
 	logp = log -p
