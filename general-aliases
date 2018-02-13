@@ -43,7 +43,7 @@ alias new-repo='source new-repo.sh'
 
 # Opens the master PDF documenation for ATMega324PA assuming it is
 # at this path.
-alias docatmel='open ~/Documents/docatmel.pdf'
+alias docatmel='open ~/Documents/docatmel.pdf 2>/dev/null &'
 
 # OS specific commands
 if [ $(uname) = Linux ]; then
