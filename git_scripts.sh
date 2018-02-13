@@ -21,30 +21,31 @@
 # search through code and other files because it also supports regular
 # expressions.
 
-# Shourld always be .bashrc and ~ but for testing purposes, it is useful to be
-# able to change them.
-bashrc=.bashrc
-dir=~
-
 ################################################################################
 # If the file exists, nothing is done, otherwise, wget is used to download the
-# file, rename it as a hidden file (putting a '.' in front of it), then a line
-# is added to bashrc to source the file.
+# file, then move the file to the home folder under the target name.
 ################################################################################
 get_and_source(){
+	echo "$(tput setaf 2)Setting up $downloaded_file$(tput sgr 0)"
+
 	local file_url=$1
-	local file=$2
-	local downloaded_file=$(basename file_url)
-	if [ -e "$dir/$file" -o -L "$dir/.$file" ]; then
-		echo "$file already present in home directory"
-	else
-		echo "Downloading file from $file_url"
-		wget $file_url > /dev/null 2>&1
-		echo "Renaming $downloaded_file to ~/$file"
-		mv $downloaded_file $file
-		echo "Adding 'source ~/$file' to ~/.bashrc"
-		echo "source $dir/$file" >> $dir/$bashrc
+	local target_file=$2
+	local downloaded_file=$(basename $file_url)
+
+	# Abort if the file already exists
+	if [ -e ~/$target_file -o -L ~/$target_file ]; then
+		echo "$target_file already present in home"
+		return
 	fi
+
+	echo "Downloading $downloaded_file from $file_url"
+	wget $file_url 1>/dev/null 2>&1
+
+	echo "Moving ./$downloaded_file to ~/$target_file"
+	mv $downloaded_file ~/$target_file
+
+	echo "Adding 'source ~/$target_file' to ~/.bashrc"
+	echo "source ~/$target_file" >> ~/.bashrc
 }
 
 # git-prompt.sh will allow us to display the current branch in the prompt string
@@ -52,6 +53,7 @@ get_and_source(){
 git_prompt_url=https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh
 git_prompt_file=.git-prompt.sh
 get_and_source $git_prompt_url $git_prompt_file
+
 
 # git-completion.bash will allow us to have autocompletion of git commands and
 # branch names by pressing tab.
@@ -64,18 +66,21 @@ get_and_source $git_completion_url $git_completion_file
 phil_colors="
 # Define colors for making prompt string.
 # Phil_PS1
-# Vous pouvez changer les couleurs en changeant les nombres (htt
-green='\[\e[32m\]'
-yellow='\[\e[33m\]'
-purple='\[\e[35m\]'
-no_color='\[\e[m\]'
+# Vous pouvez changer les couleurs en changeant les nombres
+green='\[\$(tput setaf 2)\]'
+yellow='\[\$(tput setaf 3)\]'
+purple='\[\$(tput setaf 5)\]'
+blue='\[\$(tput setaf 4)\]'
+no_color='\[\$(tput sgr 0)\]'
 PS1=\$green'[\u@\h \W'\$yellow'\$(__git_ps1 \" (%s)\")'\$green'] \\$ '\$no_color"
 
-if [[ "$(grep Phil_PS1 $dir/$bashrc)" == "" ]]; then
+echo "$(tput setaf 2)Setting up prompt string$(tput sgr 0)"
+if ! grep Phil_PS1 ~/.bashrc >/dev/null 2>&1 ; then
 	echo "Adding Phil_colors to ~/.bashrc"
-	echo "$phil_colors" >> $dir/$bashrc
+	echo "$phil_colors" >> ~/.bashrc
 else
-	echo "Phil_PS1 already added to bashrc"
+	echo "prompt string already setup"
 fi
 
-source $dir/$bashrc
+echo "$(tput setaf 5)run the command 'source ~/.bashrc' or restart your your terminal.$(tput sgr 0)
+"
