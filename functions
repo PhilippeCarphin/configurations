@@ -88,3 +88,32 @@ p_valgrind(){
 cdl () {
 	cd "$(dirname "$(readlink "$1")")";
 }
+
+################################################################################
+# Remove accents from a file in-place (note, only the accented characters that
+# would show up in the French language).
+################################################################################
+if ! which remove-accents > /dev/null ; then
+	echo "The function <insert_name> relies on the alias remove-accents"
+fi
+fremove-accents () {
+	file=$1
+	if [ -z $file ] ; then
+		echo "fremove-accents error: no file specified"
+		return
+	fi
+
+	if ! [ -e $file -o -L $file ] ; then
+		echo "fremove-accents error: file $file doesn't exist"
+		return
+	fi
+
+	cp $file $file.bak
+	remove-accents < $file > $file.removed_accents
+	mv $file.removed_accents $file
+}
+
+
+
+
+

@@ -59,4 +59,7 @@ elif [ $(uname) = Darwin ]; then
 	alias dusage='du -d 1 | sort -n'
 fi
 
+accents="âàäêèëéîïôöûùüÿçÂÀÄÊÈËÉÎÏÔÖÛÙÜŸÇ¨"
+no_accents="aaaeeeeiioouuuycAAAEEEEIIOOUUUYC "
+alias remove-accents="tr '$accents' '$no_accents'"
 alias setenv='source ./setenv'

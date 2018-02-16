@@ -7,8 +7,8 @@ export SHELL=zsh
 
 export CDPATH="$HOME":$HOME/Documents:$HOME/Documents/GitHub
 
-source ~/.functions
 source ~/.general-aliases
+source ~/.functions
 source ~/.github-aliases
 
 # Set name of the theme to load. Optionally, if you set this to "random"
