@@ -60,6 +60,9 @@ if [[ "$-" == *i* ]] ; then
 	# define variables for prompt colors
 	prompt_color=$orange
 	branch_color=$yellow
+	GIT_PS1_PHIL_HEADLESS_COLOR=$(tput setaf 9)
+	GIT_PS1_PHIL_DIRTY_COLOR=$(tput setaf 3)
+	GIT_PS1_PHIL_CLEAN_COLOR=$(tput setaf 2)
 
 	prompt_start='\[$prompt_color\][\W\[$reset_colors\]'
 	# git_part='$(__git_ps1 " \[$branch_color\](%s)")$(git_ps1_phil >&2)\[$reset_colors\]'
