@@ -94,9 +94,17 @@ function git_ps1_phil(){
 
 	fg_color=$(tput setaf 3)
 	if ! [ -z $_git_ps1_phil_headless ] ; then
-		fg_color=$(tput setaf 9)
+		if ! [ -z $GIT_PS1_PHIL_HEADLESS_COLOR ] ; then
+			fg_color=$GIT_PS1_PHIL_HEADLESS_COLOR
+		else
+			fg_color=$(tput setaf 9)
+		fi
 	elif [ -z $_git_ps1_phil_has_unstaged_changes ] && [ -z $_git_ps1_phil_has_staged_changes ] ; then
-		fg_color=$(tput setaf 2)
+		if ! [ -z $GIT_PS1_PHIL_CLEAN_COLOR ] ; then
+			fg_color=$GIT_PS1_PHIL_CLEAN_COLOR
+		else
+			fg_color=$(tput setaf 2)
+		fi
 	fi
 
 	if ! [ -z $_git_ps1_phil_has_untracked ] ; then
