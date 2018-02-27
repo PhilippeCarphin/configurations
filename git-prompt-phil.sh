@@ -69,24 +69,15 @@ function git_ps1_phil_get_info(){
 }
 
 function git_ps1_phil(){
-
-	local _git_ps1_phil_in_repo=""
-	local _git_ps1_phil_inside_git_dir=""
-	local _git_ps1_phil_rebase_state=""
-	local _git_ps1_phil_branch=""
-	local _git_ps1_phil_has_untracked=""
-	local _git_ps1_phil_has_unstaged_changes=""
-	local _git_ps1_phil_has_staged_changes=""
+	_git_ps1_phil_in_repo=""
+	_git_ps1_phil_inside_git_dir=""
+	_git_ps1_phil_rebase_state=""
+	_git_ps1_phil_branch=""
+	_git_ps1_phil_has_untracked=""
+	_git_ps1_phil_has_unstaged_changes=""
+	_git_ps1_phil_has_staged_changes=""
 
 	git_ps1_phil_get_info
-
-	echo "_git_ps1_phil_inside_git_dir = $_git_ps1_phil_inside_git_dir" >&2
-	echo "_git_ps1_phil_in_repo = $_git_ps1_phil_in_repo" >&2
-	echo "_git_ps1_phil_rebase_state = $_git_ps1_phil_rebase_state" >&2
-	echo "_git_ps1_phil_branch = $_git_ps1_phil_branch" >&2
-	echo "_git_ps1_phil_headless = $_git_ps1_phil_headless" >&2
-	echo "_git_ps1_phil_has_unstaged_changes = $_git_ps1_phil_has_unstaged_changes" >&2
-	echo "_git_ps1_phil_has_staged_changes = $_git_ps1_phil_has_staged_changes" >&2
 
 	if [ -z $_git_ps1_phil_in_repo ] ; then
 		return
@@ -107,11 +98,40 @@ function git_ps1_phil(){
 		fi
 	fi
 
+	export git_ps1_phil_color=$fg_color
+
 	if ! [ -z $_git_ps1_phil_has_untracked ] ; then
 		_git_ps1_phil_untracked="[UNTRACKED FILES]"
 	fi
 
 	if ! [ -z $_git_ps1_phil_in_repo ] ; then
-		echo " $fg_color($_git_ps1_phil_branch)$_git_ps1_phil_untracked"
+		echo "($_git_ps1_phil_branch)$_git_ps1_phil_untracked"
 	fi
+}
+
+function git_ps1_phil_color(){
+	_git_ps1_phil_in_repo=""
+	_git_ps1_phil_inside_git_dir=""
+	_git_ps1_phil_rebase_state=""
+	_git_ps1_phil_branch=""
+	_git_ps1_phil_has_untracked=""
+	_git_ps1_phil_has_unstaged_changes=""
+	_git_ps1_phil_has_staged_changes=""
+
+	git_ps1_phil_get_info
+	fg_color=$(tput setaf 3)
+	if ! [ -z $_git_ps1_phil_headless ] ; then
+		if ! [ -z $GIT_PS1_PHIL_HEADLESS_COLOR ] ; then
+			fg_color=$GIT_PS1_PHIL_HEADLESS_COLOR
+		else
+			fg_color=$(tput setaf 9)
+		fi
+	elif [ -z $_git_ps1_phil_has_unstaged_changes ] && [ -z $_git_ps1_phil_has_staged_changes ] ; then
+		if ! [ -z $GIT_PS1_PHIL_CLEAN_COLOR ] ; then
+			fg_color=$GIT_PS1_PHIL_CLEAN_COLOR
+		else
+			fg_color=$(tput setaf 2)
+		fi
+	fi
+	echo $fg_color
 }

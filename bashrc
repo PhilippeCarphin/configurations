@@ -55,18 +55,20 @@ if [[ "$-" == *i* ]] ; then
 	yellow=$(tput setaf 3)
 	purple=$(tput setaf 5)
 	blue=$(tput setaf 4)
+	red=$(tput setaf 9)
 	reset_colors=$(tput sgr 0)
 
 	# define variables for prompt colors
 	prompt_color=$orange
 	branch_color=$yellow
-	GIT_PS1_PHIL_HEADLESS_COLOR=$(tput setaf 9)
-	GIT_PS1_PHIL_DIRTY_COLOR=$(tput setaf 3)
-	GIT_PS1_PHIL_CLEAN_COLOR=$(tput setaf 2)
+
+	GIT_PS1_PHIL_HEADLESS_COLOR=$red
+	GIT_PS1_PHIL_DIRTY_COLOR=$yellow
+	GIT_PS1_PHIL_CLEAN_COLOR=$green
 
 	prompt_start='\[$prompt_color\][\W\[$reset_colors\]'
 	# git_part='$(__git_ps1 " \[$branch_color\](%s)")$(git_ps1_phil >&2)\[$reset_colors\]'
-	git_part='$(git_ps1_phil 2>/dev/null)'
+	git_part='$(git_ps1_phil_get_info) \[$(git_ps1_phil_color)\]$(git_ps1_phil)\[$reset_colors\]'
 	last_part='\[$prompt_color\]] \$\[$reset_colors\] '
 
 	PS1="$prompt_start$git_part$last_part"
