@@ -35,6 +35,7 @@ if [[ "$-" == *i* ]] ; then
 
 	source ~/.git-completion.bash
 	source ~/.git-prompt.sh
+	source ~/.git-prompt-phil.sh
 
 	export LANG=en_US.UTF-8
 
@@ -49,13 +50,24 @@ if [[ "$-" == *i* ]] ; then
 	set -o vi
 
 	# Define colors for making prompt string.
-	green='\[$(tput setaf 2)\]'
-	yellow='\[$(tput setaf 3)\]'
-	purple='\[$(tput setaf 5)\]'
-	blue='\[$(tput setaf 4)\]'
-	no_color='\[$(tput sgr 0)\]'
-	PS1=$green'[\W'$yellow'$(__git_ps1 " (%s)")'"$green"'] \$ '$no_color
-	PS2=$purple' > '$no_color
+	orange=$(tput setaf 208)
+	green=$(tput setaf 2)
+	yellow=$(tput setaf 3)
+	purple=$(tput setaf 5)
+	blue=$(tput setaf 4)
+	reset_colors=$(tput sgr 0)
+
+	# define variables for prompt colors
+	prompt_color=$orange
+	branch_color=$yellow
+
+	prompt_start='\[$prompt_color\][\W\[$reset_colors\]'
+	# git_part='$(__git_ps1 " \[$branch_color\](%s)")$(git_ps1_phil >&2)\[$reset_colors\]'
+	git_part='$(git_ps1_phil 2>/dev/null)'
+	last_part='\[$prompt_color\]] \$\[$reset_colors\] '
+
+	PS1="$prompt_start$git_part$last_part"
+	PS2='\[$purple\] > \[$reset_colors\]'
 
 	#if in tmux, export this I forget why
 	if [ -z "$TMUX" ] ; then
