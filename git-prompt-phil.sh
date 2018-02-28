@@ -24,7 +24,7 @@ function git_time_since_commit() {
 	SUB_HOURS=$((HOURS % 24))
 	SUB_MINUTES=$((MINUTES % 60))
 
-	if [[ -n $(git status -s 2> /dev/null) ]]; then
+	if [ -z "$(git status -s 2> /dev/null)" ] ; then
 		if [ "$HOURS" -gt 2 ]; then
 			COLOR="$purple"
 		elif [ "$MINUTES" -gt 1 ]; then
@@ -168,7 +168,11 @@ function git_ps1_phil(){
 		fi
 	fi
 
+	if ! [ -z $_git_ps1_phil_has_staged_changes ] || ! [ -z $_git_ps1_phil_has_unstaged_changes ] ; then
+		time_since_last_commit=" $(git_time_since_commit)"
+	fi
+
 	if ! [ -z $_git_ps1_phil_in_repo ] ; then
-		echo "\[$fg_color\]($_git_ps1_phil_branch)$_git_ps1_phil_untracked $(git_time_since_commit)\[$(tput sgr 0)\]"
+		echo "\[$fg_color\]($_git_ps1_phil_branch)$_git_ps1_phil_untracked$time_since_last_commit\[$(tput sgr 0)\]"
 	fi
 }
