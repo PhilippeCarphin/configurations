@@ -93,7 +93,7 @@ cdl () {
 # Remove accents from a file in-place (note, only the accented characters that
 # would show up in the French language).
 ################################################################################
-if ! which remove-accents > /dev/null ; then
+if ! alias remove-accents > /dev/null ; then
 	echo "The function <insert_name> relies on the alias remove-accents"
 fi
 fremove-accents () {
