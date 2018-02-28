@@ -32,6 +32,7 @@
 CURRENT_BG='NONE'
 
 # Special Powerline characters
+source ~/.git-prompt-phil.sh
 
 () {
   local LC_ALL="" LC_CTYPE="en_US.UTF-8"
@@ -91,7 +92,7 @@ short_host(){
 # Context: user@hostname (who am I and where am I)
 prompt_context() {
   if [[ "$USER" != "$DEFAULT_USER" || -n "$SSH_CLIENT" ]]; then
-	  prompt_segment black default "$(short_host)"
+    prompt_segment black default '%m'
   fi
 }
 
@@ -111,6 +112,7 @@ prompt_git() {
     ref=$(git symbolic-ref HEAD 2> /dev/null) || ref="➦ $(git rev-parse --short HEAD 2> /dev/null)"
     if [[ -n $dirty ]]; then
       prompt_segment yellow black
+	  tm="$(git_time_since_commit)"
     else
       prompt_segment green black
     fi
@@ -134,7 +136,7 @@ prompt_git() {
     zstyle ':vcs_info:*' formats ' %u%c'
     zstyle ':vcs_info:*' actionformats ' %u%c'
     vcs_info
-    echo -n "${ref/refs\/heads\//$PL_BRANCH_CHAR }${vcs_info_msg_0_%% }${mode}"
+    echo -n "${ref/refs\/heads\//$PL_BRANCH_CHAR } $tm${vcs_info_msg_0_%% }${mode}"
   fi
 }
 
@@ -240,8 +242,8 @@ build_prompt() {
   prompt_status
   prompt_virtualenv
   prompt_context
-  prompt_git
   git_pwd_prompt
+  prompt_git
   prompt_bzr
   prompt_hg
   prompt_end
