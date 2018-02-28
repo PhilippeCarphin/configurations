@@ -1,5 +1,52 @@
 #!/bin/bash
 
+function git_time_since_commit() {
+	# Lifted from zsh theme dogenpunk
+	if ! git rev-parse --git-dir > /dev/null 2>&1; then
+		return
+	fi
+	# Only proceed if there is actually a commit.
+	if ! git log -n 1  > /dev/null 2>&1; then
+		return
+	fi
+
+	# Get the last commit.
+	last_commit=`git log --pretty=format:'%at' -1 2> /dev/null`
+	now=`date +%s`
+	seconds_since_last_commit=$((now-last_commit))
+
+	# Totals
+	MINUTES=$((seconds_since_last_commit / 60))
+	HOURS=$((seconds_since_last_commit/3600))
+
+	# Sub-hours and sub-minutes
+	DAYS=$((seconds_since_last_commit / 86400))
+	SUB_HOURS=$((HOURS % 24))
+	SUB_MINUTES=$((MINUTES % 60))
+
+	if [[ -n $(git status -s 2> /dev/null) ]]; then
+		if [ "$HOURS" -gt 2 ]; then
+			COLOR="$purple"
+		elif [ "$MINUTES" -gt 1 ]; then
+			COLOR="$orange"
+		else
+			COLOR="$yellow"
+		fi
+	fi
+
+	# Don't use color for now but leave the code there
+	# so that I can just remove this line
+	COLOR=""
+
+	if [ "$HOURS" -gt 24 ]; then
+		echo "$COLOR${DAYS}d${SUB_HOURS}h${SUB_MINUTES}m"
+	elif [ "$MINUTES" -gt 60 ]; then
+		echo "$COLOR${HOURS}h${SUB_MINUTES}m"
+	else
+		echo "$COLOR${MINUTES}m"
+	fi
+}
+
 function git_ps1_phil_get_info(){
 	local r=""
 	local b=""
@@ -66,6 +113,7 @@ function git_ps1_phil_get_info(){
 	_git_ps1_phil_rebase_state=$r
 	_git_ps1_phil_branch=${b##refs/heads/}
 	_git_ps1_phil_headless=$detached
+	_git_ps1_phil_time_since_commit=$(git_time_since_commit)
 }
 
 function git_ps1_phil(){
@@ -76,6 +124,7 @@ function git_ps1_phil(){
 	_git_ps1_phil_has_untracked=""
 	_git_ps1_phil_has_unstaged_changes=""
 	_git_ps1_phil_has_staged_changes=""
+	_git_ps1_phil_time_since_commit=""
 
 	git_ps1_phil_get_info
 
@@ -120,6 +169,6 @@ function git_ps1_phil(){
 	fi
 
 	if ! [ -z $_git_ps1_phil_in_repo ] ; then
-		echo "\[$fg_color\]($_git_ps1_phil_branch)$_git_ps1_phil_untracked"
+		echo "\[$fg_color\]($_git_ps1_phil_branch)$_git_ps1_phil_untracked $(git_time_since_commit)\[$(tput sgr 0)\]"
 	fi
 }
