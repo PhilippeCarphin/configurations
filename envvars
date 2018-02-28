@@ -34,4 +34,8 @@ PATH=/usr/bin:$PATH
 
 PATH=/usr/lib64/openmpi/bin:$PATH
 
+# Added this so that apr-1-config could be found on my mac on Feb 7th 2018.
+# I don't remember why.
+PATH="/usr/local/opt/apr/bin:$PATH"
+
 export PATH
