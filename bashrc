@@ -21,7 +21,24 @@ short_host(){
 		echo "$H"
 	fi
 }
+sub_function(){
+	echo '\[$(tput setaf 9)\]'
+}
 
+################################################################################
+# Different way of making PS1.  We rewrite PS1 right before it is to be
+# displayed.  This is way more simple since we don't have to deal with all the
+# weird ways that escaping characters can make our life difficult.
+################################################################################
+make_ps1(){
+	prompt_start="\[$prompt_color\][\W\[$reset_colors\]"
+	# git_part='$(__git_ps1 " \[$branch_color\](%s)")$(git_ps1_phil >&2)\[$reset_colors\]'
+	git_part=" $(git_ps1_phil)\[$reset_colors\]"
+	last_part="\[$prompt_color\]] \$\[$reset_colors\] "
+
+	PS1="$prompt_start$git_part$last_part"
+}
+export PROMPT_COMMAND=make_ps1
 
 ################################################################################
 # Checks for interactive shell.  The following will only be done if the shell is
@@ -66,12 +83,6 @@ if [[ "$-" == *i* ]] ; then
 	GIT_PS1_PHIL_DIRTY_COLOR=$yellow
 	GIT_PS1_PHIL_CLEAN_COLOR=$green
 
-	prompt_start='\[$prompt_color\][\W\[$reset_colors\]'
-	# git_part='$(__git_ps1 " \[$branch_color\](%s)")$(git_ps1_phil >&2)\[$reset_colors\]'
-	git_part='$(git_ps1_phil_get_info) \[$(git_ps1_phil_color)\]$(git_ps1_phil)\[$reset_colors\]'
-	last_part='\[$prompt_color\]] \$\[$reset_colors\] '
-
-	PS1="$prompt_start$git_part$last_part"
 	PS2='\[$purple\] > \[$reset_colors\]'
 
 	#if in tmux, export this I forget why
