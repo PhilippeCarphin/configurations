@@ -79,6 +79,7 @@ case $1 in
       replace_with_link $HOME/.gitconfig gitconfig
       replace_with_link $HOME/.git-completion.bash git-completion.bash
       replace_with_link $HOME/.git-prompt.sh git-prompt.sh
+      replace_with_link $HOME/.git-prompt-phil.sh git-prompt-phil.sh
 	  replace_with_link $HOME/.gitignore.global gitignore.global
 	  replace_with_link $HOME/.config/git git
 		;;
