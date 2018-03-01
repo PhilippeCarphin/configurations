@@ -1,5 +1,5 @@
 #!/bin/bash
-export PHILRC_BASHRC=".bashrc sourced at $(date)"
+PHILRC_BASHRC=".bashrc sourced at $(date)"
 
 # Source global definitions
 if [ -f /etc/bashrc ]; then
