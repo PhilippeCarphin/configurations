@@ -63,3 +63,4 @@ accents="âàäêèëéîïôöûùüÿçÂÀÄÊÈËÉÎÏÔÖÛÙÜŸÇ¨"
 no_accents="aaaeeeeiioouuuycAAAEEEEIIOOUUUYC "
 alias remove-accents="tr '$accents' '$no_accents'"
 alias setenv='source ./setenv'
+alias my-ip='curl ipinfo.io/ip'
