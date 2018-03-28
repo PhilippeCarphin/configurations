@@ -8,6 +8,7 @@ move_and_link()
 	fi
 	if [ ! -e "$source" ]; then
 		echo "Source file $source doesn't exist, skipping"
+		return 1
 	fi
 	mv $source $dest
 	ln -s $dest $source
