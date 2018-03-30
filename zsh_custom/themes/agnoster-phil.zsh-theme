@@ -80,24 +80,34 @@ prompt_end() {
 # Each component will draw itself, and hide itself if no information needs to be shown
 
 short_host(){
-	N="$(scutil --get LocalHostName)"
-	if ! [ -z $N ] ; then
-		echo "$N"
-		return
-	fi
-	H=$(hostname)
-	if [[ $H == *WIFI-EDUROAM* ]]; then
-		echo "WIFI-EDUROAM"
-	elif [[ $H == *.info.polymtl.ca ]] ; then
-		echo Poly:${H%%.info.polymtl.ca}
-	else
-		echo "$H"
-	fi
+	case $(uname) in
+		Darwin)
+			N="$(scutil --get LocalHostName)"
+			if ! [ -z $N ] ; then
+				echo "$N"
+				return
+			fi
+			;;
+		Linux)
+			H=$(hostname)
+			case $H in
+				*WIFI-EDUROAM*)
+					echo "WIFI-EDUROAM"
+					;;
+				*.info.polymtl.ca)
+					machine=${H%%.info.polymtl.ca}
+					echo Poly:$machine
+					;;
+				*)
+					echo $H
+			esac
+			;;
+	esac
 }
 # Context: user@hostname (who am I and where am I)
 prompt_context() {
   if [[ "$USER" != "$DEFAULT_USER" || -n "$SSH_CLIENT" ]]; then
-	  prompt_segment black default "$(short_host)"
+	  prompt_segment black default "%u$(short_host)"
   fi
 }
 
