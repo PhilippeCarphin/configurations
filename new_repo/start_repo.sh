@@ -8,6 +8,7 @@ move_and_link()
 	fi
 	if [ ! -e "$source" ]; then
 		echo "Source file $source doesn't exist, skipping"
+		return 1
 	fi
 	mv $source $dest
 	ln -s $dest $source
@@ -35,7 +36,7 @@ move_and_link $HOME/.bashrc $install_dir/bashrc
 move_and_link $HOME/.bash_profile $install_dir/bash_profile
 move_and_link $HOME/.vimrc $install_dir/vimrc
 move_and_link $HOME/.gitconfig $install_dir/gitconfig
-move_and_link $HOME/.git-completion.bash $install_dir/gitconfig
+move_and_link $HOME/.git-completion.bash $install_dir/git-completion.bash
 move_and_link $HOME/.git-prompt.sh $install_dir/git-prompt.sh
 move_and_link $HOME/.tmux.conf $install_dir/tmux.conf
 
