@@ -107,7 +107,7 @@ set tabstop=4       " The width of a TAB is set to 3.
                     " a width of 3.
 set shiftwidth=4    " Indents will have a width of 3.
 set softtabstop=4   " Sets the number of columns for a TAB.
-set noexpandtab       " Expand TABs to spaces.
+set expandtab       " Expand TABs to spaces.
 " ===============
 
 set autoindent
