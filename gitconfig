@@ -51,3 +51,4 @@
 	trustExitCode = true
 [core]
 	excludesfile = ~/.gitignore.global
+	editor = vim
