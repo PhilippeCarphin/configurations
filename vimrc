@@ -149,7 +149,7 @@ if has("autocmd")
 endif
 
 inoremap jk <ESC>
-nnoremap <C-b> :wa:!make
+nnoremap <C-b> :wa:!clear;make
 inoremap <C-b> <ESC>:wa:!makeli
 
 cnoremap vr split ~/.vimrc
