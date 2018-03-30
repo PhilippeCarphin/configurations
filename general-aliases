@@ -64,3 +64,4 @@ no_accents="aaaeeeeiioouuuycAAAEEEEIIOOUUUYC "
 alias remove-accents="tr '$accents' '$no_accents'"
 alias setenv='source ./setenv'
 alias my-ip='curl ipinfo.io/ip'
+alias show-log='cat ~/Documents/GitHub/flask_test/nohup.out'
