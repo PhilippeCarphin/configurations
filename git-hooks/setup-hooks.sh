@@ -2,9 +2,9 @@
 
 repo_dir=$(git rev-parse --show-toplevel)
 
-target=$repo_dir/.git/hooks/post_commit
-src=$repo_dir/git-hooks/post_commit
+link=$repo_dir/.git/hooks/post-commit
+link_target=$repo_dir/git-hooks/post-commit
 
-rm -f $target
+rm -f $link
 
-ln -s $src $target
+ln -s $link_target $link
