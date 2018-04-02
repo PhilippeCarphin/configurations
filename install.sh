@@ -27,6 +27,9 @@ case $1 in
 		replace_with_link $HOME/.zshenv zshenv
 		replace_with_link $HOME/.zsh_custom zsh_custom
 		;;
+    fish)
+        replace_with_link $HOME/.config/fish config/fish
+        ;;
 	bash)
       replace_with_link $HOME/.bashrc bashrc
       replace_with_link $HOME/.bash_profile bash_profile
