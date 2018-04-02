@@ -33,7 +33,10 @@ sub_function(){
 make_ps1(){
 	prompt_start="\[$prompt_color\][\W\[$reset_colors\]"
 	# git_part='$(__git_ps1 " \[$branch_color\](%s)")$(git_ps1_phil >&2)\[$reset_colors\]'
-	git_part=" $(git_ps1_phil)\[$reset_colors\]"
+    git_part="$(git_ps1_phil)"
+    if ! [ -z "$git_part" ] ; then
+        git_part=" $git_part\[$reset_colors\]"
+    fi
 	last_part="\[$prompt_color\]] \$\[$reset_colors\] "
 
 	PS1="$prompt_start$git_part$last_part"
