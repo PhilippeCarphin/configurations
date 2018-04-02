@@ -98,6 +98,9 @@ short_host(){
 					machine=${H%%.info.polymtl.ca}
 					echo Poly:$machine
 					;;
+        *localhost*)
+          echo "localhost"
+          ;;
 				*)
 					echo $H
 			esac
@@ -219,7 +222,7 @@ git_pwd_prompt() {
 		repo_dir=$(git rev-parse --show-toplevel 2>/dev/null)
 		outer=$(basename $repo_dir)
 		inner=$(git rev-parse --show-prefix 2>/dev/null)
-		prompt_segment blue black "%B${outer}%u%b/${inner}%b"
+		prompt_segment cyan black "${outer}/${inner}"
 	else
 		prompt_segment blue black "%~"
 	fi
