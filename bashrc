@@ -101,4 +101,5 @@ if [[ "$-" == *i* ]] ; then
 	if [ "$USER" = phcarb -o "$USER" = "" ]; then
 		true
 	fi
+    fish
 fi
