@@ -113,7 +113,8 @@ fremove-accents () {
 	mv $file.removed_accents $file
 }
 
-
-
-
+function cdw (){
+    target=$(which $1)
+    cd $(dirname $target)
+}
 
