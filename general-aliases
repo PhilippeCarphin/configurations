@@ -70,11 +70,10 @@ alias tk='tmux kill-window'
 alias ts='tmux source-file launch-everything-home.tmux'
 alias play='mpv --quiet -vo caca'
 alias sabaki='/Applications/Sabaki.app/Contents/MacOS/Sabaki'
-
-
-# CMC Aliases
-alias gospi='cd ~/Documents/GitLab/SPI-PHIL'
-alias gospic='cd ~/Documents/GitLab/SPI-PHIL/LibTkGL/TclGeoEER'
-alias quota='at_cmc && ssh lightning quota || quota'
-alias git=/ssm/net/cmoi/apps/git/20150526/ubuntu-14.04-amd64-64/bin/git
-alias gitk=/ssm/net/cmoi/apps/git/20150526/ubuntu-14.04-amd64-64/bin/gitk
+if at_cmc ; then
+    alias gospi='cd ~/Documents/GitLab/SPI-PHIL'
+    alias gospic='cd ~/Documents/GitLab/SPI-PHIL/LibTkGL/TclGeoEER'
+    alias quota='at_cmc && ssh lightning quota || quota'
+    alias git=/ssm/net/cmoi/apps/git/20150526/ubuntu-14.04-amd64-64/bin/git
+    alias gitk=/ssm/net/cmoi/apps/git/20150526/ubuntu-14.04-amd64-64/bin/gitk
+fi
