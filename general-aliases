@@ -70,3 +70,8 @@ alias tk='tmux kill-window'
 alias ts='tmux source-file launch-everything-home.tmux'
 alias play='mpv --quiet -vo caca'
 alias sabaki='/Applications/Sabaki.app/Contents/MacOS/Sabaki'
+
+
+# CMC Aliases
+alias gospi='cd ~/Documents/GitLab/SPI-PHIL'
+alias gospic='cd ~/Documents/GitLab/SPI-PHIL/LibTkGL/TclGeoEER'
