@@ -16,7 +16,7 @@ Plugin 'VundleVim/Vundle.vim'
 
 Plugin 'https://github.com/steffanc/cscopemaps.vim'
 
-Plugin 'Valloric/YouCompleteMe'
+" Plugin 'Valloric/YouCompleteMe'
 
 Plugin 'Lokaltog/vim-powerline'
 
@@ -139,9 +139,9 @@ colorscheme molokai
 set foldnestmax=1
 set colorcolumn=80
 set clipboard=unnamed
-if v:version >= 704
-    set breakindent
-endif
+ " if v:version >= 704
+ "     set breakindent
+ " endif
 
 " Remember position in file
 if has("autocmd")
