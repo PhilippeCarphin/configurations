@@ -103,3 +103,7 @@ if [[ "$-" == *i* ]] ; then
 		true
 	fi
 fi
+
+if at_cmc ; then
+    source ~/.profile
+fi
