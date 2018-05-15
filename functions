@@ -144,3 +144,8 @@ at_poly() {
         return $(false)
     fi
 }
+
+vimw() {
+    path=$(which $1)
+    vim $path
+}
