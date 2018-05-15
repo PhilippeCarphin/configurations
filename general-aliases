@@ -75,3 +75,4 @@ alias sabaki='/Applications/Sabaki.app/Contents/MacOS/Sabaki'
 # CMC Aliases
 alias gospi='cd ~/Documents/GitLab/SPI-PHIL'
 alias gospic='cd ~/Documents/GitLab/SPI-PHIL/LibTkGL/TclGeoEER'
+alias quota='at_cmc && ssh lightning quota || quota'
