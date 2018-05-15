@@ -132,40 +132,48 @@ function git_ps1_phil(){
 		return
 	fi
 
-	fg_color=$(tput setaf 3)
+    state=clean
+
 	if ! [ -z $_git_ps1_phil_headless ] ; then
-		if ! [ -z $GIT_PS1_PHIL_HEADLESS_COLOR ] ; then
-			fg_color=$GIT_PS1_PHIL_HEADLESS_COLOR
-		else
-			fg_color=$(tput setaf 9)
-		fi
+        state=headless
 	elif [ -z $_git_ps1_phil_has_unstaged_changes ] && [ -z $_git_ps1_phil_has_staged_changes ] ; then
-		if ! [ -z $GIT_PS1_PHIL_CLEAN_COLOR ] ; then
-			fg_color=$GIT_PS1_PHIL_CLEAN_COLOR
-		else
-			fg_color=$(tput setaf 2)
-		fi
+        state=clean
+    else
+        state=dirty
 	fi
+
+    case $state in
+        headless)
+            if ! [ -z $GIT_PS1_PHIL_HEADLESS_COLOR ] ; then
+                fg_color=$GIT_PS1_PHIL_HEADLESS_COLOR
+            else
+                fg_color=$(tput setaf 9)
+            fi
+            ;;
+        clean)
+            if ! [ -z $GIT_PS1_PHIL_CLEAN_COLOR ] ; then
+                fg_color=$GIT_PS1_PHIL_CLEAN_COLOR
+            else
+                fg_color=$(tput setaf 2)
+            fi
+            ;;
+        dirty)
+            if ! [ -z $GIT_PS1_PHIL_DIRTY_COLOR ] ; then
+                fg_color=$GIT_PS1_PHIL_DIRTY_COLOR
+            else
+                fg_color=$(tput setaf 2)
+            fi
+            ;;
+        *)
+            fg_color=$(tput setaf 3)
+            ;;
+    esac
+
 
 	export git_ps1_phil_color=$fg_color
 
 	if ! [ -z $_git_ps1_phil_has_untracked ] ; then
 		_git_ps1_phil_untracked="[UNTRACKED FILES]"
-	fi
-
-	fg_color=$(tput setaf 3)
-	if ! [ -z $_git_ps1_phil_headless ] ; then
-		if ! [ -z $GIT_PS1_PHIL_HEADLESS_COLOR ] ; then
-			fg_color=$GIT_PS1_PHIL_HEADLESS_COLOR
-		else
-			fg_color=$(tput setaf 9)
-		fi
-	elif [ -z $_git_ps1_phil_has_unstaged_changes ] && [ -z $_git_ps1_phil_has_staged_changes ] ; then
-		if ! [ -z $GIT_PS1_PHIL_CLEAN_COLOR ] ; then
-			fg_color=$GIT_PS1_PHIL_CLEAN_COLOR
-		else
-			fg_color=$(tput setaf 2)
-		fi
 	fi
 
 	if ! [ -z $_git_ps1_phil_has_staged_changes ] || ! [ -z $_git_ps1_phil_has_unstaged_changes ] ; then
