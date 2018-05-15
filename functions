@@ -118,3 +118,18 @@ function cdw (){
     cd $(dirname $target)
 }
 
+at_cmc() {
+    if [ $(whoami) = afsmpca ] ; then
+        return $(true)
+    else
+        return $(false)
+    fi
+}
+
+at_poly() {
+    if [ $(whoami) = phcarb ] ; then
+        return $(true)
+    else
+        return $(false)
+    fi
+}
