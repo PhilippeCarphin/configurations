@@ -94,8 +94,8 @@ if [[ "$-" == *i* ]] ; then
 	if [ "$USER" = phcarb -o "$USER" = "" ]; then
 		true
 	fi
+    if at_cmc ; then
+        source ~/.profile
+    fi
 fi
 
-if at_cmc ; then
-    source ~/.profile
-fi
