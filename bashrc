@@ -59,9 +59,6 @@ if [[ "$-" == *i* ]] ; then
 
 	export LANG=en_US.UTF-8
 
-	# cd into some directories from anywhere.
-	export CDPATH=$CDPATH:$HOME/Documents/GitCMC/:$HOME/Documents/Experiences/:$HOME:$HOME/Documents
-
 	# Set editor as vim for most things
 	export EDITOR=vim
 	export FCEDIT=vim

@@ -5,8 +5,6 @@
 export ZSH=$HOME/.oh-my-zsh
 export SHELL=zsh
 
-export CDPATH="$HOME":$HOME/Documents:$HOME/Documents/GitHub
-
 source ~/.general-aliases
 source ~/.functions
 source ~/.github-aliases
