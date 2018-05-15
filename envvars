@@ -2,11 +2,11 @@
 
 export CONFIG_DIR=$(dirname $(readlink ~/.bashrc))
 
-export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/cuda/lib"
+export LD_LIBRARY_PATH="$HOME/.local/openblas/lib/:$LD_LIBRARY_PATH:/usr/local/cuda/lib"
 
 export THEANO_FLAGS=device=cpu,optimizer=fast_run,exception_verbosity=high
 
-export DYLD_LIBRARY_PATH=/Developer/NVIDIA/CUDA-8.0/lib${DYLD_LIBRARY_PATH:+:${DYLD_LIBRARY_PATH}}
+export DYLD_LIBRARY_PATH=~/.local/openblas/lib:/Developer/NVIDIA/CUDA-8.0/lib${DYLD_LIBRARY_PATH:+:${DYLD_LIBRARY_PATH}}
 
 # Locally installed programs
 PATH=$PATH:$HOME/.local/bin
@@ -42,3 +42,11 @@ export PATH
 
 # cd into some directories from anywhere.
 export CDPATH="$HOME":$HOME/Documents:$HOME/Documents/GitHub
+
+# For git log to display without paging if output fits on one screen
+LESS="$LESS -FX"
+
+# For less to have color
+LESS="$LESS -R"
+
+export LESS

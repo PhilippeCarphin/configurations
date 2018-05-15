@@ -71,9 +71,6 @@ source $ZSH/oh-my-zsh.sh
 
 # User configuration
 
-# For git log to display without paging if output fits on one screen
-export LESS="$LESS -FX"
-
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment
