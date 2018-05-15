@@ -76,7 +76,11 @@ if [[ "$-" == *i* ]] ; then
 	reset_colors=$(tput sgr 0)
 
 	# define variables for prompt colors
-	prompt_color=$orange
+    if at_cmc ; then
+        prompt_color=$green
+    else
+        prompt_color=$orange
+    fi
 	branch_color=$yellow
 
 	GIT_PS1_PHIL_HEADLESS_COLOR=$red
