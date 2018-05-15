@@ -21,9 +21,7 @@ short_host(){
 		echo "$H"
 	fi
 }
-sub_function(){
-	echo '\[$(tput setaf 9)\]'
-}
+
 
 ################################################################################
 # Different way of making PS1.  We rewrite PS1 right before it is to be
@@ -32,7 +30,6 @@ sub_function(){
 ################################################################################
 make_ps1(){
     prompt_start="\[$prompt_color\][$(git_pwd)\[$reset_colors\]"
-	# git_part='$(__git_ps1 " \[$branch_color\](%s)")$(git_ps1_phil >&2)\[$reset_colors\]'
     git_part="$(git_ps1_phil)"
     if ! [ -z "$git_part" ] ; then
         git_part=" $git_part\[$reset_colors\]"
