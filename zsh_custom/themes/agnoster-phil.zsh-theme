@@ -219,10 +219,7 @@ prompt_hg() {
 
 git_pwd_prompt() {
 	if [[ $(git rev-parse --is-inside-work-tree 2>/dev/null) == true ]] ; then
-		repo_dir=$(git rev-parse --show-toplevel 2>/dev/null)
-		outer=$(basename $repo_dir)
-		inner=$(git rev-parse --show-prefix 2>/dev/null)
-		prompt_segment cyan black "${outer}/${inner}"
+    prompt_segment cyan black "$(git_pwd)"
 	else
 		prompt_segment blue black "%~"
 	fi

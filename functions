@@ -118,6 +118,17 @@ function cdw (){
     cd $(dirname $target)
 }
 
+git_pwd() {
+	if [[ $(git rev-parse --is-inside-work-tree 2>/dev/null) == true ]] ; then
+		repo_dir=$(git rev-parse --show-toplevel 2>/dev/null)
+		outer=$(basename $repo_dir)
+		inner=$(git rev-parse --show-prefix 2>/dev/null)
+		echo "${outer}/${inner}"
+	else
+		pwd
+	fi
+}
+
 at_cmc() {
     if [ $(whoami) = afsmpca ] ; then
         return $(true)
