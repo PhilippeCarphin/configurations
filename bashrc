@@ -66,19 +66,14 @@ if [[ "$-" == *i* ]] ; then
 	# Define colors for making prompt string.
 	orange=$(tput setaf 208)
 	green=$(tput setaf 2)
-	yellow=$(tput setaf 3)
+    yellow=$(at_cmc && tput setaf 11 || tput setaf 3)
 	purple=$(tput setaf 5)
 	blue=$(tput setaf 4)
 	red=$(tput setaf 9)
 	reset_colors=$(tput sgr 0)
 
 	# define variables for prompt colors
-    if at_cmc ; then
-        prompt_color=$green
-    else
-        prompt_color=$orange
-    fi
-	branch_color=$yellow
+    prompt_color=$orange
 
 	GIT_PS1_PHIL_HEADLESS_COLOR=$red
 	GIT_PS1_PHIL_DIRTY_COLOR=$yellow
