@@ -41,7 +41,12 @@ PATH="/usr/local/opt/apr/bin:$PATH"
 export PATH
 
 # cd into some directories from anywhere.
-export CDPATH="$HOME":$HOME/Documents:$HOME/Documents/GitHub
+CDPATH="$HOME":$HOME/Documents:$HOME/Documents/GitHub
+# Add current dir to CDPATH for CMC
+CDPATH=".:$CDPATH"
+export CDPATH
+
+
 
 # For git log to display without paging if output fits on one screen
 LESS="$LESS -FX"
