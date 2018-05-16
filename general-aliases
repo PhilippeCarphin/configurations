@@ -76,3 +76,5 @@ alias sabaki='/Applications/Sabaki.app/Contents/MacOS/Sabaki'
 alias gospi='cd ~/Documents/GitLab/SPI-PHIL'
 alias gospic='cd ~/Documents/GitLab/SPI-PHIL/LibTkGL/TclGeoEER'
 alias quota='at_cmc && ssh lightning quota || quota'
+alias git=/ssm/net/cmoi/apps/git/20150526/ubuntu-14.04-amd64-64/bin/git
+alias gitk=/ssm/net/cmoi/apps/git/20150526/ubuntu-14.04-amd64-64/bin/gitk
