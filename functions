@@ -125,7 +125,7 @@ git_pwd() {
 		inner=$(git rev-parse --show-prefix 2>/dev/null)
 		echo "${outer}/${inner}"
 	else
-		pwd
+		echo '\w'
 	fi
 }
 
