@@ -38,6 +38,9 @@ PATH=/usr/lib64/openmpi/bin:$PATH
 # I don't remember why.
 PATH="/usr/local/opt/apr/bin:$PATH"
 
+# For Amazon AWS
+PATH="$PATH:$HOME/Library/Python/2.7/bin"
+
 export PATH
 
 # cd into some directories from anywhere.
