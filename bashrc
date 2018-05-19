@@ -46,8 +46,8 @@ export PROMPT_COMMAND=make_ps1
 ################################################################################
 if [[ "$-" == *i* ]] ; then
 
-	source ~/.general-aliases
 	source ~/.functions
+	source ~/.general-aliases
 	source ~/Templates/.template-completion.bash
 
 	source ~/.git-completion.bash
