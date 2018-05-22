@@ -101,12 +101,12 @@ if has("autocmd")
 endif
 
 " For everything else, use a tab width of 3 space chars.
-set tabstop=4       " The width of a TAB is set to 3.
+set tabstop=3       " The width of a TAB is set to 3.
                     " Still it is a \t. It is just that
                     " Vim will interpret it to be having
                     " a width of 3.
-set shiftwidth=4    " Indents will have a width of 3.
-set softtabstop=4   " Sets the number of columns for a TAB.
+set shiftwidth=3    " Indents will have a width of 3.
+set softtabstop=3   " Sets the number of columns for a TAB.
 set expandtab       " Expand TABs to spaces.
 " ===============
 

@@ -1,0 +1,17 @@
+pushd /tmp
+
+   mkdir -p phil
+   mkdir -p phil/.cache
+
+   pushd phil
+
+   if ! [ -e SPI ] ; then
+      git clone https://github.com/philippecarphin/spi SPI
+      git remote set-url origin /users/dor/afsr/005/Projects/eerSPI/.
+      git remote add _ https://github.com/PhilippeCarphin/spi.git
+      git fetch
+   fi
+
+   popd
+
+popd
