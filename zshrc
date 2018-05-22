@@ -5,8 +5,8 @@
 export ZSH=$HOME/.oh-my-zsh
 export SHELL=zsh
 
-source ~/.general-aliases
 source ~/.functions
+source ~/.general-aliases
 source ~/.github-aliases
 
 # Set name of the theme to load. Optionally, if you set this to "random"

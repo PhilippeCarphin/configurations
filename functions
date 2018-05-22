@@ -93,9 +93,8 @@ cdl () {
 # Remove accents from a file in-place (note, only the accented characters that
 # would show up in the French language).
 ################################################################################
-if ! alias remove-accents > /dev/null ; then
-	echo "The function <insert_name> relies on the alias remove-accents"
-fi
+accents="âàäêèëéîïôöûùüÿçÂÀÄÊÈËÉÎÏÔÖÛÙÜŸÇ¨"
+no_accents="aaaeeeeiioouuuycAAAEEEEIIOOUUUYC "
 fremove-accents () {
 	file=$1
 	if [ -z $file ] ; then
@@ -109,8 +108,7 @@ fremove-accents () {
 	fi
 
 	cp $file $file.bak
-	remove-accents < $file > $file.removed_accents
-	mv $file.removed_accents $file
+	tr "$accents" "$no_accents" < $file > $file.removed_accents
 }
 
 function cdw (){
