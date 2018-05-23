@@ -1,5 +1,5 @@
 #!/bin/sh
-
+# echo ".envvars START"
 export CONFIG_DIR=$(dirname $(readlink ~/.bashrc))
 
 export LD_LIBRARY_PATH="$HOME/.local/openblas/lib/:$LD_LIBRARY_PATH:/usr/local/cuda/lib"
@@ -10,37 +10,27 @@ export DYLD_LIBRARY_PATH=~/.local/openblas/lib:/Developer/NVIDIA/CUDA-8.0/lib${D
 
 # Locally installed programs
 PATH=$PATH:$HOME/.local/bin
-
 # Utility scripts that I keep track of with git.
 PATH=$HOME/Documents/GitHub/utils/bin:$PATH
-
 # Add cuda stuff to path
 #PATH=/usr/local/cuda/bin:$PATH
 PATH=/Developer/NVIDIA/CUDA-8.0/bin${PATH:+:${PATH}}
-
 # Setting PATH for Python 3.5
 # The orginal version is saved in .bash_profile.pysave
 PATH="$PATH:/Library/Frameworks/Python.framework/Versions/3.5/bin"
-
 # added by Anaconda3 4.3.0 installer
 # It broke youCompleteMe in vim so I'm commenting it out for now.
 # export PATH="/Users/pcarphin/anaconda/bin:$PATH"
-
 PATH=/usr/local/openclcc/bin${PATH:+:${PATH}}
-
 # This is stupid but it makes it so that the python version that is run is the
 # one in /usr/bin which is important for vim-YouCompleteMe.
 PATH=/usr/bin:$PATH
-
 PATH=/usr/lib64/openmpi/bin:$PATH
-
 # Added this so that apr-1-config could be found on my mac on Feb 7th 2018.
 # I don't remember why.
 PATH="/usr/local/opt/apr/bin:$PATH"
-
 # For Amazon AWS
 PATH="$PATH:$HOME/Library/Python/2.7/bin"
-
 export PATH
 
 # cd into some directories from anywhere.
@@ -49,12 +39,20 @@ CDPATH="$HOME":$HOME/Documents:$HOME/Documents/GitHub
 CDPATH=".:$CDPATH"
 export CDPATH
 
-
-
 # For git log to display without paging if output fits on one screen
 LESS="$LESS -FX"
-
 # For less to have color
 LESS="$LESS -R"
-
 export LESS
+
+export LANG=en_US.UTF-8
+# Set editor as vim for most things
+export EDITOR=vim
+export FCEDIT=vim
+
+#if in tmux, export this I forget why
+if [ -z "$TMUX" ] ; then
+   export TERM=xterm-256color
+fi
+
+# echo ".envvars END"

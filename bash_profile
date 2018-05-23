@@ -1,4 +1,5 @@
 #!/bin/bash
+# echo ".bash_profile START"
 
 PHILRC_BASH_PROFILE="bash_profile loaded at $(date)"
 
@@ -9,3 +10,5 @@ if [ -z "$PHILRC_BASHRC" ]  ; then
 fi
 
 source ~/.envvars
+
+# echo ".bash_profile END"
