@@ -1,0 +1,32 @@
+
+#----- Override EER environment variables
+
+export EER_USERREP=
+export SSM_DEV=/fs/cetus/fs2/ops/cmoe/afsr005/ssm/
+
+export EXT_SRC_PATH=/users/dor/afsr/ops/Links/devfs/Archive 
+export EXT_LIB_PATH=/users/dor/afsr/ops/Links/devfs/Lib
+
+export EER_GRIDF=/home/binops/afse/par/links/meteo/castor
+#export EER_DIRSCRIPT=/home/afsr/005/Projects/eerENV/script
+#export EER_TOOL=/home/afsr/005/Projects/eerENV/tcl
+#export SPI_TOOL=/home/afsr/005/Projects/eerENV/tcl
+#export SPI_LIB=/fs/cetus/fs2/ops/cmoe/afsr005/ssm/workspace/libSPI_7.9.0_ubuntu-12.04-amd64-64
+
+typeset -fx chdir
+umask 022
+
+export PATH=/home/afsr/005/bin:$PATH
+
+#----- Testing eerENV
+#export PATH=/users/dor/afsr/005/Projects/eerENV/script:$PATH
+#export EER_DIRSCRIPT=/users/dor/afsr/005/Projects/eerENV/script
+
+#export EER_TOOL=/home/afsr/005/Projects/eerENV/tcl; 
+#export TCLLIBPATH="${TCLLIBPATH} ${EER_TOOL}/tcl/Models"; 
+#export SPI_LIB=$SSM_DEV/workspace/libSPI_7.11.4_${ORDENV_PLAT}; 
+#export SPI_PATH=${HOME}/SPI-BETA
+
+export SSCP_SSH_OPTIONS="-F /dev/null"
+
+alias asep='ssh afsynav@asep-dev1'
