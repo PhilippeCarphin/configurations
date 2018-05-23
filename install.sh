@@ -22,8 +22,8 @@ sudo_replace_with_file(){
 installGroup() {
 case $1 in
    cmc)
-      replace_with_link $HOME/.profile cmc_profile/profile
-      replace_with_link $HOME/.profile.d cmc_profile/profile.d
+      replace_with_link $HOME/.profile CMC/profile
+      replace_with_link $HOME/.profile.d CMC/profile.d
       ;;
 	zsh)
 		replace_with_link $HOME/.zprofile zprofile
