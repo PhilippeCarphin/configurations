@@ -1,5 +1,6 @@
-PHIL_DEFAULT_PRE_SOURCED=$(date)
-
+#!/bin/sh
+#
+# echo ".profile.d/default/pre START"
 #----- HPCS
 . ssmuse-sh -x hpcs/ext/sscp
 
@@ -31,3 +32,4 @@ PHIL_DEFAULT_PRE_SOURCED=$(date)
 #----- Temporary test
 #. ssmuse-sh -p cmoe/eer/master/eerENV_2.2.1
 #. ssmuse-sh -p cmoe/eer/master/eerModel_1.9.0
+# echo ".profile.d/default/pre END"
