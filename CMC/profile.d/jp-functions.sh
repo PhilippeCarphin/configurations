@@ -52,7 +52,7 @@ lphp() {
    a2ps -o- -R --medium=Letter --columns=1 -f6.0 $* | lpr -Pcmodhp
 }
 
-quota() {
+jp-quota() {
     ssh joule '/opt/ssm/linux26-i386/bin/chngquota -list -tree afsr' | gawk 'NR<=3;NR>=4{print| "sort -k 3 -n -r"}' | gawk '
 BEGIN {
     split("B_KB_MB_GB_TB_PB", SYMS, "_");
