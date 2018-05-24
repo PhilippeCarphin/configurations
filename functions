@@ -144,6 +144,6 @@ at_poly() {
 }
 
 vimw() {
-    path=$(which $1)
-    vim $path
+    filepath=$(which $1)
+    vim $filepath
 }

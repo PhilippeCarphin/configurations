@@ -52,3 +52,6 @@
 [core]
 	excludesfile = ~/.gitignore.global
 	editor = vim
+[gui]
+	fontui = -family \".SF NS Text\" -size 18 -weight normal -slant roman -underline 0 -overstrike 0
+	fontdiff = -family Monaco -size 16 -weight normal -slant roman -underline 0 -overstrike 0
