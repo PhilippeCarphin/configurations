@@ -1,6 +1,0 @@
-#----- Souce compiler environmnet
-
-#. ssmuse-sh -d hpcs/201402/02/base -d hpcs/ext/xlf_13.1.0.10
-#. ssmuse-sh  -d hpcs/201402/02/base -d hpcs/ext/xlf_14.1.0.3
-
-. ssmuse-sh -d cmdn/vgrid/6.0.1/xlf13
