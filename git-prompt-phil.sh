@@ -99,7 +99,7 @@ function git_ps1_phil_get_info(){
 		_git_ps1_phil_in_repo=true
 	fi
 
-	if ! [ -z "$(git ls-files --others --exclude-standard 2>/dev/null)" ] ; then
+	if ! [ -z "$(git ls-files $g/.. --others --exclude-standard 2>/dev/null)" ] ; then
 		_git_ps1_phil_has_untracked=true
 	fi
 
