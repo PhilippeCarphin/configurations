@@ -127,19 +127,22 @@ git_pwd() {
 	fi
 }
 
+################################################################################
+# Functions j
+################################################################################
 at_cmc() {
     if [ $(whoami) = afsmpca ] ; then
-        return $(true)
+        true
     else
-        return $(false)
+        false
     fi
 }
 
 at_poly() {
     if [ $(whoami) = phcarb ] ; then
-        return $(true)
+        true
     else
-        return $(false)
+        false
     fi
 }
 
