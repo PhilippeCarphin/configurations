@@ -143,7 +143,54 @@ at_poly() {
     fi
 }
 
+################################################################################
+# Vim with special arguments
+################################################################################
 vimw() {
-    filepath=$(which $1)
-    vim $filepath
+    filepath=$(which $1); shift
+    vim $filepath $@
+}
+
+longest_common_prefix() {
+    # ref https://stackoverflow.com/a/32116308/5795941
+    lines="$1"
+    prefix="$(echo "$lines" | \grep -zoP '^(.*)(?=.*?\n\1)')"
+    echo "$prefix" | tail -1
+}
+
+common_dir() {
+    lines=$1
+    common_text="$(longest_common_prefix "$lines")"
+    if [ -d $common_text ] ; then
+        common_dir=$common_text
+    else
+        common_dir=$(dirname $common_text)
+    fi
+    echo $common_dir
+}
+
+vimf() {
+    query=$1; shift
+    results="$(find . -name "$query")"
+
+    dir=$(common_dir "$results")
+
+    # Go into found directory
+    if pushd $dir 2>/dev/null ; then
+
+        # Re-do query from new directory
+        new_results="$(find . -name "$query")"
+
+        # Report results
+        echo -e "directory=$dir \nfiles="
+        echo "$new_results" | sed 's/^/   /g'
+        echo "Press any key to continue"
+        read
+
+        # Launch vim with these results
+        vim $new_results $@
+        popd 2>/dev/null
+    else
+        echo "Could not cd into $common_dir"
+    fi
 }
