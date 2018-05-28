@@ -30,14 +30,20 @@ short_host(){
 # weird ways that escaping characters can make our life difficult.
 ################################################################################
 make_ps1(){
+    previous_exit_code=$?
+    if [[ $previous_exit_code == 0 ]] ; then
+       pec="$green 0 $reset_colors"
+    else
+       pec="$(tput setaf 1) $previous_exit_code $reset_colors"
+    fi
     prompt_start="\[$prompt_color\][$(git_pwd)\[$reset_colors\]"
     git_part="$(git_ps1_phil)"
     if ! [ -z "$git_part" ] ; then
         git_part=" $git_part\[$reset_colors\]"
     fi
-	last_part="\[$prompt_color\]] \$\[$reset_colors\] "
+	 last_part="\[$prompt_color\]] \$\[$reset_colors\] "
 
-	PS1="$prompt_start$git_part$last_part"
+	 PS1="$pec$prompt_start$git_part$last_part"
 }
 export PROMPT_COMMAND=make_ps1
 
