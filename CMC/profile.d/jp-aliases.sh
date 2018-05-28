@@ -1,14 +1,17 @@
 alias beta='export SPI_LIB=$SSM_DEV/workspace/libSPI_7.12.2_${ORDENV_PLAT}; export SPI_PATH=${HOME}/SPI-BETA'
 alias spi++='beta; $SPI_PATH/bin/SPI'
+
 alias sci='ssh -CX nil000@sci-eccc-in.science.gc.ca'
 alias sops='ssh -CX smco610@sci-eccc-in.science.gc.ca'
 alias spar='ssh -CX smco601@sci-eccc-in.science.gc.ca'
 alias seer='ssh -CX smco600@sci-eccc-in.science.gc.ca'
 alias ppp1='ssh -CX -t nil000@sci-eccc-in.science.gc.ca ssh -CX nil000@eccc-ppp1'
 alias sedi='ssh -CX gauthierjp@nii-edigraf-dev.wul.qc.ec.gc.ca'
+
 alias rq='/home/binops/afsf/ops/S/TCL/RapQuart/Rap_Quart.tcl'
 alias tdev='ssh -YX $USER@terascan-dev "export TZ=GMT; . /opt/terascan/etc/tscan.bash_profile; tvis -true -windows 15"'
 alias tops='ssh -YX $USER@terascan-op  "export TZ=GMT; . /opt/terascan/etc/tscan.bash_profile; tvis -true -windows 15"'
+
 alias hi='history 100'
 alias psu='ps -u $USER'
 alias psp='ps -o pid,ppid,cmd'
