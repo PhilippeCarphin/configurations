@@ -14,23 +14,56 @@ pull_config(){
 }
 
 ################################################################################
-# Uses find to go to a directory that is not in the PWD nor on CDPATH
-# If the target is a directory, we go into it, if the target is a file, we go
-# into the directory containing the file.
+# Variants on the cd function:
+# - cdf : cd to the first result of a find command
+# - cdl : cd to the target directory of a link
+# - cdw : cd to the directory found using which
 ################################################################################
 cdf(){
-	result="$(find . -name "$1" -print -quit)"
-	if [[ -d "$result" ]] ; then
-		cd $result
-		echo $(pwd) 1>&2
-	elif [[ -f "$result" ]] ; then
-		cd "$(dirname "$result")"
-		echo $(pwd) 1>&2
-	elif [[ $result == "" ]]; then
-		echo "cdf: nothing found matching $1" 1>&2
-	else
-		echo "result $result could not be cd'd into" 1>&2
-	fi
+    result="$(find . -name "$1" -print -quit)"
+    if [[ -d "$result" ]] ; then
+        cd $result
+        echo $(pwd) 1>&2
+    elif [[ -f "$result" ]] ; then
+        cd "$(dirname "$result")"
+        echo $(pwd) 1>&2
+    elif [[ $result == "" ]]; then
+        echo "cdf: nothing found matching $1" 1>&2
+    else
+        echo "result $result could not be cd'd into" 1>&2
+    fi
+}
+
+path_is_relative() {
+    if ! [[ "$1" == /* ]] ; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+cdl () {
+    link=$1
+
+    target=$(readlink $link)
+    link_dir=$(dirname $link)
+
+    if path_is_relative $target ; then
+        target=$link_dir/$target
+    fi
+
+    if [ -d $target ] ; then
+        dir=$target
+    else
+        dir=$(dirname $target)
+    fi
+
+    cd $dir
+}
+
+cdw (){
+    target=$(which $1)
+    cd $(dirname $target)
 }
 
 ################################################################################
@@ -80,15 +113,6 @@ p_valgrind(){
 	valgrind $flags $cmd > $target 2>&1
 }
 
-
-################################################################################
-# Follows one level of link indirection.  The target must be a link otherwise
-# readlink returns nothing.
-################################################################################
-cdl () {
-	cd "$(dirname "$(readlink "$1")")";
-}
-
 ################################################################################
 # Remove accents from a file in-place (note, only the accented characters that
 # would show up in the French language).
@@ -109,11 +133,6 @@ fremove-accents () {
 
 	cp $file $file.bak
 	tr "$accents" "$no_accents" < $file > $file.removed_accents
-}
-
-function cdw (){
-    target=$(which $1)
-    cd $(dirname $target)
 }
 
 git_pwd() {
