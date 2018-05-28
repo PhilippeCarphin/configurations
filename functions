@@ -3,14 +3,14 @@
 # Pulls the configurations
 ################################################################################
 pull_config(){
-	# echo -n "Pulling philconfig configurations : "
-	pushd $CONFIG_DIR > /dev/null
-	git pull > /dev/null 2>&1
-	pull_success=$?
-	popd > /dev/null
-	if [[ $pull_success != 0 ]]; then
-		echo "!! Could not pull pull philconfig !!"
-	fi
+    # echo -n "Pulling philconfig configurations : "
+    pushd $CONFIG_DIR > /dev/null
+    git pull > /dev/null 2>&1
+    pull_success=$?
+    popd > /dev/null
+    if [[ $pull_success != 0 ]]; then
+        echo "!! Could not pull pull philconfig !!"
+    fi
 }
 
 ################################################################################
@@ -70,20 +70,20 @@ cdw (){
 # Git push all branches to repository
 ################################################################################
 pushall(){
-	# Todo: upgrade this to prompt for each branch (asking y/n) whether we want
-	# to push it.
-	if [[ $1 == "" ]]; then
-		remote=origin
-	else
-		remote=$1
-	fi
-	for b in $(git branch | tr '*' ' '); do
-		echo -n "Push branch $b (y/n)? " 1>&2
-		read answer
-		if [[ "$answer" == y ]] ; then
-			git push $remote $b;
-		fi
-	done
+    # Todo: upgrade this to prompt for each branch (asking y/n) whether we want
+    # to push it.
+    if [[ $1 == "" ]]; then
+        remote=origin
+    else
+        remote=$1
+    fi
+    for b in $(git branch | tr '*' ' '); do
+        echo -n "Push branch $b (y/n)? " 1>&2
+        read answer
+        if [[ "$answer" == y ]] ; then
+            git push $remote $b;
+        fi
+    done
 }
 
 
@@ -91,26 +91,26 @@ pushall(){
 # Connects over ssh to school computer of my choice
 ################################################################################
 ssh_school() {
-	if [[ $1 == "" ]]; then
-		computer="l4712-01"
-	else
-		computer=$1
-	fi
-	ssh $computer.info.polymtl.ca -l phcarb -Y
+    if [[ $1 == "" ]]; then
+        computer="l4712-01"
+    else
+        computer=$1
+    fi
+    ssh $computer.info.polymtl.ca -l phcarb -Y
 }
 
 ################################################################################
 # Uses find to go to a directory that is not in the PWD nor on CDPATH
 ################################################################################
 p_valgrind(){
-	flags=$3
-	cmd=$1
-	if [ "$2" != "" ] ; then
-		target=$2
-	else
-		target=~/valgrind.lst
-	fi
-	valgrind $flags $cmd > $target 2>&1
+    flags=$3
+    cmd=$1
+    if [ "$2" != "" ] ; then
+        target=$2
+    else
+        target=~/valgrind.lst
+    fi
+    valgrind $flags $cmd > $target 2>&1
 }
 
 ################################################################################
@@ -120,30 +120,30 @@ p_valgrind(){
 accents="âàäêèëéîïôöûùüÿçÂÀÄÊÈËÉÎÏÔÖÛÙÜŸÇ¨"
 no_accents="aaaeeeeiioouuuycAAAEEEEIIOOUUUYC "
 fremove-accents () {
-	file=$1
-	if [ -z $file ] ; then
-		echo "fremove-accents error: no file specified"
-		return
-	fi
+file=$1
+if [ -z $file ] ; then
+    echo "fremove-accents error: no file specified"
+    return
+fi
 
-	if ! [ -e $file -o -L $file ] ; then
-		echo "fremove-accents error: file $file doesn't exist"
-		return
-	fi
+if ! [ -e $file -o -L $file ] ; then
+    echo "fremove-accents error: file $file doesn't exist"
+    return
+fi
 
-	cp $file $file.bak
-	tr "$accents" "$no_accents" < $file > $file.removed_accents
+cp $file $file.bak
+tr "$accents" "$no_accents" < $file > $file.removed_accents
 }
 
 git_pwd() {
-	if [[ $(git rev-parse --is-inside-work-tree 2>/dev/null) == true ]] ; then
-		repo_dir=$(git rev-parse --show-toplevel 2>/dev/null)
-		outer=$(basename $repo_dir)
-		inner=$(git rev-parse --show-prefix 2>/dev/null)
-		echo "${outer}/${inner}"
-	else
-		echo '\w'
-	fi
+    if [[ $(git rev-parse --is-inside-work-tree 2>/dev/null) == true ]] ; then
+        repo_dir=$(git rev-parse --show-toplevel 2>/dev/null)
+        outer=$(basename $repo_dir)
+        inner=$(git rev-parse --show-prefix 2>/dev/null)
+        echo "${outer}/${inner}"
+    else
+        echo '\w'
+    fi
 }
 
 ################################################################################
