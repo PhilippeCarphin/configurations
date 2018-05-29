@@ -94,6 +94,7 @@ if [[ "$-" == *i* ]] ; then
        source ~/.profile
        source ~/.profile.d/jp-aliases.sh
        source ~/.profile.d/jp-functions.sh
+       exec zsh
    fi
 fi
 
