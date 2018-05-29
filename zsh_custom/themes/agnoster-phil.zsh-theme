@@ -29,10 +29,12 @@
 ### Segment drawing
 # A few utility functions to make it easy and re-usable to draw segmented prompts
 
+# This is to get the function git_time_since_commit() used in 
+source ~/.git-prompt-phil.sh
+
 CURRENT_BG='NONE'
 
 # Special Powerline characters
-source ~/.git-prompt-phil.sh
 
 () {
   local LC_ALL="" LC_CTYPE="en_US.UTF-8"
