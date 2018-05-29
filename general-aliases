@@ -71,6 +71,10 @@ alias ts='tmux source-file launch-everything-home.tmux'
 alias play='mpv --quiet -vo caca'
 alias sabaki='/Applications/Sabaki.app/Contents/MacOS/Sabaki'
 
+open_cmc() {
+   to_open=$1
+   nohup dolphin $to_open > /dev/null 2>&1 &
+}
 if at_cmc ; then
     SPI_DIR=~/Documents/GitHub/SPI
     alias gospi='cd $SPI_DIR'
@@ -83,4 +87,6 @@ if at_cmc ; then
     alias tclsh='/ssm/net/cmoe/apps/libSPI_7.12.2_ubuntu-14.04-amd64-64/TCL/bin/tclsh8.6'
     alias wish='/ssm/net/isst/maestro/1.4.3-rc4/linux26-x86-64/bin/wish'
     alias runxp='rdesktop -g 1280x720 eccmcwts3 -d ECQUEBEC -u CarphinP'
+    alias open=open_cmc
+    alias make=pmake
 fi
