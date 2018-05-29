@@ -271,8 +271,8 @@ build_prompt() {
   prompt_context
   git_pwd_prompt
   prompt_git
-  prompt_bzr
-  prompt_hg
+  # prompt_bzr
+  # prompt_hg
   prompt_end
 }
 
