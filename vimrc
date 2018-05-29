@@ -175,6 +175,7 @@ vnoremap <C-j> Jgqgq
 
 " Make a C-style header that I like so much
 nnoremap <C-h> O/79a*yypxjkA/ko
+nnoremap <C-g> 0f(bywk:r ~/Documents/GitHub/utils/misc/cmc_header.c<CR>/Nom<CR>$a <<ESC>pA><ESC>
 
 "  For when I try to open a file like I was in a terminal but I forgot that I'm
 "  in vim.
