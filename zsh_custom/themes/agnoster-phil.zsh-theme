@@ -55,15 +55,22 @@ CURRENT_BG='NONE'
 # Takes two arguments, background and foreground. Both can be omitted,
 # rendering default background/foreground.
 prompt_segment() {
+  local bg_in=$1
+  local fg_in=$2
+  if [[ $(whoami) == afsmpca ]] ; then
+    [[ $fg_in == yellow ]] && fg_in=11
+    [[ $bg_in == yellow ]] && bg_in=11
+  fi
   local bg fg
-  [[ -n $1 ]] && bg="%K{$1}" || bg="%k"
-  [[ -n $2 ]] && fg="%F{$2}" || fg="%f"
+  [[ -n $bg_in ]] && bg="%K{$bg_in}" || bg="%k"
+  [[ -n $fg_in ]] && fg="%F{$fg_in}" || fg="%f"
   if [[ $CURRENT_BG != 'NONE' && $1 != $CURRENT_BG ]]; then
     echo -n " %{$bg%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR%{$fg%} "
   else
     echo -n "%{$bg%}%{$fg%} "
   fi
-  CURRENT_BG=$1
+  # Current bg will be previous bg for next call
+  CURRENT_BG=$bg_in
   [[ -n $3 ]] && echo -n $3
 }
 
@@ -110,10 +117,12 @@ short_host(){
 	esac
 }
 
+context_bg=$( if at_cmc ; then echo 12 ; else echo black ; fi)
+
 # Context: user@hostname (who am I and where am I)
 prompt_context() {
   if [[ "$USER" != "$DEFAULT_USER" || -n "$SSH_CLIENT" ]]; then
-	  prompt_segment black default "$(short_host)"
+	  prompt_segment $context_bg default "$(short_host)"
   fi
 }
 
