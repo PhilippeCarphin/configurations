@@ -52,6 +52,12 @@ function git_ps1_phil_get_info(){
 	local b=""
 	local g=$(git rev-parse --git-dir 2>/dev/null)
 
+	if ! [ -z $g ] ; then
+		_git_ps1_phil_in_repo=true
+   else
+      return
+   fi
+
 	if [ -f "$g/rebase-merge/interactive" ]; then
 		r="|REBASE-i"
 		b="$(cat "$g/rebase-merge/head-name")"
@@ -93,10 +99,6 @@ function git_ps1_phil_get_info(){
 			b="unknown"
 			b="($b)"
 		}
-	fi
-
-	if ! [ -z $g ] ; then
-		_git_ps1_phil_in_repo=true
 	fi
 
 	if ! [ -z "$(git ls-files $g/.. --others --exclude-standard 2>/dev/null)" ] ; then
