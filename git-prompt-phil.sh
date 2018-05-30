@@ -171,9 +171,6 @@ function git_ps1_phil(){
             ;;
     esac
 
-
-	export git_ps1_phil_color=$fg_color
-
 	if ! [ -z $_git_ps1_phil_has_untracked ] ; then
 		_git_ps1_phil_untracked="[UNTRACKED FILES]"
 	fi
