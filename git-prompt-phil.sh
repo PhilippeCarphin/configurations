@@ -11,9 +11,9 @@ function git_time_since_commit() {
 	fi
 
 	# Get the last commit.
-	last_commit=`git log --pretty=format:'%at' -1 2> /dev/null`
+	last_commit=$(git log --pretty=format:'%at' -1 2> /dev/null)
 	now=`date +%s`
-	seconds_since_last_commit=$((now-last_commit))
+	seconds_since_last_commit=$((now - last_commit))
 
 	# Totals
 	MINUTES=$((seconds_since_last_commit / 60))
