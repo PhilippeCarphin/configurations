@@ -1,3 +1,4 @@
+#!/bin/bash
 pushd /tmp
 
    mkdir -p phil
@@ -6,12 +7,16 @@ pushd /tmp
    pushd phil
 
    if ! [ -e SPI ] ; then
-      git clone https://github.com/philippecarphin/spi SPI
-      git remote set-url origin /users/dor/afsr/005/Projects/eerSPI/.
-      git remote add _ https://github.com/PhilippeCarphin/spi.git
-      git fetch
+      git clone ~/Documents/GitHub/SPI_PHIL SPI
    fi
 
+   if ! [ -e emacs.d ] ; then
+      git clone https://github.com/syl20bnr/spacemacs emacs.d
+   fi
+
+   if ! [ -e emacs-26.1.tar.gz ] ; then
+      wget http://gnu.mirror.iweb.com/emacs/emacs-26.1.tar.gz
+      tar -zxvf emacs-26.1.tar.gz
    popd
 
 popd
