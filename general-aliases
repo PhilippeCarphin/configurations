@@ -6,7 +6,7 @@ if [[ "$SHELL" == zsh ]] ; then
 else
 	rcfile=$HOME/.bashrc
 fi
-alias profile='vim $rcfile $HOME/.functions $HOME/.general-aliases $HOME/.envvars && source $rcfile'
+
 alias lprofile="source $rcfile"
 
 # If I skip the space with cd ..

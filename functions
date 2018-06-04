@@ -216,3 +216,30 @@ vimf() {
         echo "Could not cd into $common_dir"
     fi
 }
+
+vimff() {
+   vim $(fuzzyfind "$1")
+}
+
+################################################################################
+# Edit philconfig
+################################################################################
+function profile() {
+    echo "Edit philconfig"
+    old_pwd=$PWD
+    cd $CONFIG_DIR
+    files=""
+    for arg in $@ ; do
+        files="$files $(find ./* -name "*$arg*" | tr '\n' ' ')"
+    done
+    eval vim $files $rcfile $(find ./* -type f)
+    source $rcfile
+    cd $old_pwd
+}
+
+fuzzyfind() {
+    search_string="$(echo $1 | sed 's/\(.\)/\*\1/g')*"
+    find ./* -name "$search_string"
+}
+
+
