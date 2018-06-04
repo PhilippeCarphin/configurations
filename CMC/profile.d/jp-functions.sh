@@ -32,17 +32,6 @@ bfind() {
    find ~ -type f -perm +022 -print && find ~ -type d -perm +022 -print
 }
 
-la() {
-   ls -la $* | more
-}
-
-ll() {
-   ls -l $* | more
-}
-
-lc() {
-   ls  -al --color=always $* |more
-}
 
 lpxe() {
    a2ps -o- -R --medium=Letter --columns=1 -f6.0 $* | lpr -Pcmodxerox
