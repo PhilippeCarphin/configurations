@@ -91,4 +91,8 @@ if at_cmc ; then
     alias make=pmake
     fs3=/fs/cetus3/fs3/cmd/s/afsm/pca
     alias fs3='cd $fs3'
+    alias spireconf='cd $SPI_DIR/LibTkGL/TclGeoEER ; /usr/bin/autoconf2.50 || echo "spireconf failed" ; cd - >/dev/null'
+    alias spacemacs='/tmp/emacs/bin/emacs'
+    alias bash_back="sed 's/\\(exec zsh\\)/# \\1/' < ~/.bashrc > ~/.philconfig/brc ; mv ~/.philconfig/brc ~/.philconfig/bashrc"
+    alias zsh_back="sed 's/\\(# \\)*\\(exec zsh\\)/\\2/' < ~/.bashrc > ~/.philconfig/brc ; mv ~/.philconfig/brc ~/.philconfig/bashrc"
 fi
