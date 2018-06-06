@@ -10,6 +10,7 @@ source ~/.general-aliases
 source ~/.github-aliases
 
 if at_cmc ; then
+    source ~/.zprofile # It doesn't get sourced because I do exec zsh from bashrc
     source ~/.profile
     source ~/.profile.d/jp-aliases.sh
     source ~/.profile.d/jp-functions.sh
