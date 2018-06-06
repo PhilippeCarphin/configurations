@@ -16,7 +16,7 @@ Plugin 'VundleVim/Vundle.vim'
 
 Plugin 'https://github.com/steffanc/cscopemaps.vim'
 
-" Plugin 'Valloric/YouCompleteMe'
+Plugin 'Valloric/YouCompleteMe'
 
 Plugin 'Lokaltog/vim-powerline'
 
