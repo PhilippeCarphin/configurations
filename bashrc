@@ -93,8 +93,9 @@ if [[ "$-" == *i* ]] ; then
 		true
 	fi
    if at_cmc ; then
-       exec zsh
+       # This file must be sourced by bash before zsh is launched
        source ~/.profile
+       exec zsh
        source ~/.profile.d/jp-aliases.sh
        source ~/.profile.d/jp-functions.sh
    fi
