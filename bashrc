@@ -62,7 +62,9 @@ if [[ "$-" == *i* ]] ; then
 	source ~/.git-prompt-phil.sh
 
 	# Make bash behave a bit like vim.
-	set -o vi
+   if ! [ -e ~/.normal_mode ] ; then
+      set -o vi
+   fi
 
 	# Define colors for making prompt string.
 	orange=$(tput setaf 208)

@@ -33,11 +33,13 @@ PATH="/usr/local/opt/apr/bin:$PATH"
 PATH="$PATH:$HOME/Library/Python/2.7/bin"
 export PATH
 
-# cd into some directories from anywhere.
-CDPATH="$HOME":$HOME/Documents:$HOME/Documents/GitHub
-# Add current dir to CDPATH for CMC
-CDPATH=".:$CDPATH"
-export CDPATH
+if ! [ -e ~/.normal_mode ] ; then
+   # cd into some directories from anywhere.
+   CDPATH="$HOME":$HOME/Documents:$HOME/Documents/GitHub
+   # Add current dir to CDPATH for CMC
+   CDPATH=".:$CDPATH"
+   export CDPATH
+fi
 
 # For git log to display without paging if output fits on one screen
 LESS="$LESS -FX"
