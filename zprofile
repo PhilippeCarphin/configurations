@@ -1,5 +1,6 @@
-
-source /etc/zprofile
+if [ -e /etc/zprofile ] ; then
+   source /etc/zprofile
+fi
 source ~/.envvars
 
 export PHILRC_ZPROFILE=".zprofile sourced at $(date)"
