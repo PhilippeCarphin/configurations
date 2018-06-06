@@ -93,10 +93,10 @@ if [[ "$-" == *i* ]] ; then
 		true
 	fi
    if at_cmc ; then
+       exec zsh
        source ~/.profile
        source ~/.profile.d/jp-aliases.sh
        source ~/.profile.d/jp-functions.sh
-       exec zsh
    fi
 fi
 
