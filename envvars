@@ -2,36 +2,37 @@
 # echo ".envvars START"
 export CONFIG_DIR=$(dirname $(readlink ~/.bashrc))
 
-export LD_LIBRARY_PATH="$HOME/.local/openblas/lib/:$LD_LIBRARY_PATH:/usr/local/cuda/lib"
+# echo "initial LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
+MY_LD_LIBRARY_PATH=$MY_LD_LIBRARY_PATH:$HOME/.local/lib
+MY_LD_LIBRARY_PATH=$MY_LD_LIBRARY_PATH:$HOME/.local/openblas/lib/
+MY_LD_LIBRARY_PATH=$MY_LD_LIBRARY_PATH:/usr/local/cuda/lib
+export LD_LIBRARY_PATH="$MY_LD_LIBRARY_PATH:$LD_LIBRARY_PATH"
 
-export THEANO_FLAGS=device=cpu,optimizer=fast_run,exception_verbosity=high
+export THEANO_FLAGS=\
+device=cpu,\
+optimizer=fast_run,\
+exception_verbosity=high\
 
-export DYLD_LIBRARY_PATH=~/.local/openblas/lib:/Developer/NVIDIA/CUDA-8.0/lib${DYLD_LIBRARY_PATH:+:${DYLD_LIBRARY_PATH}}
+# echo "initial DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH"
+MY_DYLD_LIBRARY_PATH=$MY_DYLD_LIBRARY_PATH:$HOME/.local/lib
+MY_DYLD_LIBRARY_PATH=$MY_DYLD_LIBRARY_PATH:$HOME/.local/openblas/lib
+MY_DYLD_LIBRARY_PATH=$MY_DYLD_LIBRARY_PATH:/Developer/NVIDIA/CUDA-8.0/lib
+export DYLD_LIBRARY_PATH=$MY_DYLD_LIBRARY_PATH:$DYLD_LIBRARY_PATH
 
-# Locally installed programs
-PATH=$PATH:$HOME/.local/bin
-# Utility scripts that I keep track of with git.
-PATH=$HOME/Documents/GitHub/utils/bin:$PATH
-# Add cuda stuff to path
-#PATH=/usr/local/cuda/bin:$PATH
-PATH=/Developer/NVIDIA/CUDA-8.0/bin${PATH:+:${PATH}}
-# Setting PATH for Python 3.5
-# The orginal version is saved in .bash_profile.pysave
-PATH="$PATH:/Library/Frameworks/Python.framework/Versions/3.5/bin"
-# added by Anaconda3 4.3.0 installer
-# It broke youCompleteMe in vim so I'm commenting it out for now.
+
+# echo "initial path = $PATH"
+MY_PATH=$HOME/.local/bin                                                       # Locally installed programs
+MY_PATH=$MY_PATH:$HOME/Documents/GitHub/utils/bin                              # Utility scripts that I keep track of with git.
+MY_PATH=$MY_PATH:/Developer/NVIDIA/CUDA-8.0/bin                                # Add cuda stuff to path
+MY_PATH=$MY_PATH:/Library/Frameworks/Python.framework/Versions/3.5/bin         # Setting PATH for Python 3.5 on OSX
+MY_PATH=$MY_PATH:/usr/lib64/openmpi/bin                                        # For systemes paralleles
+MY_PATH=$MY_PATH:/usr/local/openclcc/bin                                       # For systemes paralleles
+MY_PATH=$MY_PATH:/usr/local/opt/apr/bin                                        # Added this so that apr-1-config could be found on my mac on Feb 7th 2018.
+MY_PATH=$MY_PATH:$HOME/Library/Python/2.7/bin                                  # For Amazon AWS
+# added by Anaconda3 4.3.0 installer It broke youCompleteMe in vim so I'm
+# commenting it out for now.
 # export PATH="/Users/pcarphin/anaconda/bin:$PATH"
-PATH=/usr/local/openclcc/bin${PATH:+:${PATH}}
-# This is stupid but it makes it so that the python version that is run is the
-# one in /usr/bin which is important for vim-YouCompleteMe.
-PATH=/usr/bin:$PATH
-PATH=/usr/lib64/openmpi/bin:$PATH
-# Added this so that apr-1-config could be found on my mac on Feb 7th 2018.
-# I don't remember why.
-PATH="/usr/local/opt/apr/bin:$PATH"
-# For Amazon AWS
-PATH="$PATH:$HOME/Library/Python/2.7/bin"
-export PATH
+export PATH=$MY_PATH:$PATH
 
 if ! [ -e ~/.normal_mode ] ; then
    # cd into some directories from anywhere.
