@@ -95,7 +95,13 @@ if [[ "$-" == *i* ]] ; then
    if at_cmc ; then
        # This file must be sourced by bash before zsh is launched
        source ~/.profile
-       exec zsh
+       if ! [ -e ~/.normal_mode ] ; then
+          exec zsh
+          true # This is needed for when I comment out the first line (bash
+               # doens't allow empty if blocks
+       else
+          unset CDPATH
+       fi
        source ~/.profile.d/jp-aliases.sh
        source ~/.profile.d/jp-functions.sh
    fi

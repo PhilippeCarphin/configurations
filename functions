@@ -251,5 +251,10 @@ echopath() {
 normal_mode() {
    unset CDPATH
 	set +o vi
-   bash_back
+   touch ~/.normal_mode
+   lprofile
+}
+phil_mode(){
+   rm ~/.normal_mode
+   lprofile
 }
