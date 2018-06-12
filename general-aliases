@@ -97,4 +97,7 @@ if at_cmc ; then
     alias spacemacs='/tmp/emacs/bin/emacs'
     alias bash_back="sed 's/\\(exec zsh\\)/# \\1/' < ~/.bashrc > ~/.philconfig/brc ; mv ~/.philconfig/brc ~/.philconfig/bashrc"
     alias zsh_back="sed 's/\\(# \\)*\\(exec zsh\\)/\\2/' < ~/.bashrc > ~/.philconfig/brc ; mv ~/.philconfig/brc ~/.philconfig/bashrc"
+    alias push_notes='rsync -av --cvs-exclude ~/Dropbox/Notes/ apt:~/Dropbox/Notes/CMC/'
+    alias pull_notes='rsync -av --cvs-exclude apt:~/Dropbox/Notes/CMC/ ~/Dropbox/Notes/'
 fi
+alias sql_date='date +%Y-%m-%d\ %H:%M:%S'
