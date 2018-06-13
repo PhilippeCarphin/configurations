@@ -252,9 +252,14 @@ normal_mode() {
    unset CDPATH
 	set +o vi
    touch ~/.normal_mode
-   lprofile
+   exec bash
 }
+
 phil_mode(){
    rm ~/.normal_mode
-   lprofile
+   if which zsh 2>/dev/null ; then
+      exec zsh
+   else
+      exec bash
+   fi
 }
