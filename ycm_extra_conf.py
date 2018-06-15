@@ -71,6 +71,8 @@ flags = [
 '-isystem',
 '../llvm/tools/clang/include',
 '-I',
+'/usr/include/python2.7',
+'-I',
 '.',
 '-I',
 '/fs/cetus3/fs3/cmd/s/afsm/pca/ssm/workspace/libSPI_7.12.2_ubuntu-14.04-amd64-64/TCL/include',
