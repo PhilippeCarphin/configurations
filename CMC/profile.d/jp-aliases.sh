@@ -1,6 +1,3 @@
-alias beta='export SPI_LIB=$SSM_DEV/workspace/libSPI_7.12.2_${ORDENV_PLAT}; export SPI_PATH=${HOME}/SPI-BETA'
-alias spi++='beta; $SPI_PATH/bin/SPI'
-
 alias sci='ssh -CX nil000@sci-eccc-in.science.gc.ca'
 alias sops='ssh -CX smco610@sci-eccc-in.science.gc.ca'
 alias spar='ssh -CX smco601@sci-eccc-in.science.gc.ca'
