@@ -264,3 +264,18 @@ phil_mode(){
       exec bash
    fi
 }
+
+gitignore() {
+   # The name giti comes from tab completion:
+   # If you're in your repo's root, you have to type up to the second i for the
+   # comleter to complete with .gitignore because of the .git directory.
+   # Therefore giti has become strongly associated in my mind with the gitignore
+   # file.
+   giti=$(git root)/.gitignore
+   if [ -z $1 ] ; then
+      vim $giti
+   else
+      echo $1 >> $giti
+      git add $giti
+   fi
+}
