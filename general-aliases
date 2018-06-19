@@ -71,6 +71,7 @@ alias ts='tmux source-file launch-everything-home.tmux'
 alias play='mpv --quiet -vo caca'
 alias sabaki='/Applications/Sabaki.app/Contents/MacOS/Sabaki'
 alias callgrind='valgrind --tool=callgrind'
+alias MAKE='make clean >/dev/null 2>&1 ; make'
 
 open_cmc() {
    to_open=$1
