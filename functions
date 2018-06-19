@@ -210,7 +210,8 @@ vimf() {
         read
 
         # Launch vim with these results
-        vim $new_results $@
+        cmd="vim $new_results $@"
+        eval $(echo $cmd | tr '\n' ' ')
         popd 2>/dev/null
     else
         echo "Could not cd into $common_dir"
