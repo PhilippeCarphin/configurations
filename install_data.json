@@ -1,0 +1,55 @@
+{
+   "pip" : [ "pyperclip", "numpy", ""],
+   "brew" : [],
+   "dnf" : {
+      "basic" : [ "zsh", "tmux", "vim" ],
+      "python" : [ "python", "python3", "python-devel", "python3-devel"],
+      "misc" : ["nautilus-open-terminal", "gnome-tweak-tool", "grub-customizer"],
+      "avr" : [
+         "avr-gcc",
+         "avr-binutils",
+         "avr-libc",
+         "avr-gdb",
+         "avrdude",
+         "eclipse",
+         "eclipse-cdt",
+         "avr-gcc-c++"
+      ],
+      "clanguage" : ["clang", "llvm", "gcc", "gcc-c++", "cmake", "ncurses"],
+      "opengl" : [
+         "mesa-libGL",
+         "mesa-libGLU",
+         "mesa-libGL-devel",
+         "mesa-libGLU-devel",
+         "glew",
+         "glew-devel",
+         "freeglut",
+         "freeglut-devel",
+         "glm-devel"
+      ],
+      "other" : ["opencv", "opencv-devel", "qt5", "qt5-devel"],
+      "32bit-devel" : [
+         "libstdc++.i686",
+         "freeglut-devel.i686",
+         "mesa-libGL-devel.i686",
+         "mesa-libGLU-devel.i686",
+         "glibc-devel.i686",
+         "glibc-devel"
+      ],
+      "latex" : ["texlive-scheme-full"]
+
+   },
+   "gui-installs" : [
+      {
+         "name" : "google-chrome",
+         "ref"  : "google.ca/chrome",
+         "instructions" : ""
+      },
+      {
+         "name" : "dropbox",
+         "ref"  : "https://www.dropbox.com/install",
+         "instructions" : ""
+      }
+   ],
+   "cli-installs" : []
+}
