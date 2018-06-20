@@ -21,6 +21,12 @@ sudo_replace_with_file(){
 
 installGroup() {
 case $1 in
+   utils)
+      if ! [ -d ~/Documents/GitHub ] ; then
+         mkdir ~/Documents/GitHub
+      fi
+      git clone https://github.com/PhilippeCarphin/utils ~/Documents/GitHub/utils
+      ;;
    cmc)
       replace_with_link $HOME/.profile CMC/profile
       replace_with_link $HOME/.profile.d CMC/profile.d
@@ -30,6 +36,7 @@ case $1 in
 		replace_with_link $HOME/.zshrc zshrc
 		replace_with_link $HOME/.zshenv zshenv
 		replace_with_link $HOME/.zsh_custom zsh_custom
+      git clone https://github.com/robbyrussell/oh-my-zsh ~/.oh-my-zsh
 		;;
     fish)
         replace_with_link $HOME/.config/fish config/fish
