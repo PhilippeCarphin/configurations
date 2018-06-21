@@ -24,10 +24,14 @@
 	helper = cache --timeout 36000
 [url "https://github.com/PhilippeCarphin/"]
        insteadOf = PhilippeCarphin:
+[url "https://github.com/PhilippeCarphin/"]
+       insteadOf = me:
 [url "https://github.com/AymenDje/"]
        insteadOf = AymenDje:
 [url "https://github.com/"]
        insteadOf = github:
+[url "https://github.com/"]
+       insteadOf = gh:
 [push]
 	default = simple
 [filter "media"]
