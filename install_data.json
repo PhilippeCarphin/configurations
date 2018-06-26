@@ -4,7 +4,7 @@
    "dnf" : {
       "basic" : [ "zsh", "tmux", "vim" ],
       "python" : [ "python", "python3", "python-devel", "python3-devel"],
-      "misc" : ["nautilus-open-terminal", "gnome-tweak-tool", "grub-customizer"],
+      "misc" : ["python3-pygit2-0.26.4-1.fc28.x86_64", "libgit2-devel", "git-gui", "nautilus-open-terminal", "gnome-tweak-tool", "grub-customizer"],
       "avr" : [
          "avr-gcc",
          "avr-binutils",
@@ -15,7 +15,7 @@
          "eclipse-cdt",
          "avr-gcc-c++"
       ],
-      "clanguage" : ["clang", "llvm", "gcc", "gcc-c++", "cmake", "ncurses"],
+      "clanguage" : ["cscope","clang", "llvm", "gcc", "gcc-c++", "cmake", "ncurses"],
       "opengl" : [
          "mesa-libGL",
          "mesa-libGLU",
@@ -36,15 +36,12 @@
          "glibc-devel.i686",
          "glibc-devel"
       ],
-      "latex" : ["texlive-scheme-full"]
+      "latex" : ["texlive-scheme-full"],
+      "chrome": ["google-chrome"],
+      "vlc"   : ["https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rmp -E %fedora).noarch.rpm", "vlc", "python-vlc", "npapi-vlc"]
 
    },
    "gui-installs" : [
-      {
-         "name" : "google-chrome",
-         "ref"  : "google.ca/chrome",
-         "instructions" : ""
-      },
       {
          "name" : "dropbox",
          "ref"  : "https://www.dropbox.com/install",
