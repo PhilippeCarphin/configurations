@@ -5,3 +5,4 @@
 *.swn
 *.swm
 .DS_Store
+.vim-build.sh
