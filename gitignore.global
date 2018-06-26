@@ -6,3 +6,4 @@
 *.swm
 .DS_Store
 .vim-build.sh
+__pycache__
