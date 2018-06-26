@@ -271,11 +271,12 @@ gitignore() {
    # comleter to complete with .gitignore because of the .git directory.
    # Therefore giti has become strongly associated in my mind with the gitignore
    # file.
-   giti=$(git root)/.gitignore
+   local giti=$(git root)/.gitignore
    if [ -z $1 ] ; then
       vim $giti
    else
       echo $1 >> $giti
-      git add $giti
    fi
+   git add $giti
+   git diff --staged $giti
 }
