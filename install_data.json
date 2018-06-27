@@ -1,10 +1,24 @@
 {
-   "pip" : [ "pyperclip", "numpy", ""],
+   "pip" : [ "pyperclip", "numpy", "pyinstaller", "pygit2", "sqlalchemy"],
    "brew" : [],
    "dnf" : {
       "basic" : [ "zsh", "tmux", "vim" ],
-      "python" : [ "python", "python3", "python-devel", "python3-devel"],
-      "misc" : ["python3-pygit2-0.26.4-1.fc28.x86_64", "libgit2-devel", "git-gui", "nautilus-open-terminal", "gnome-tweak-tool", "grub-customizer"],
+      "python" : [
+         "python",
+         "python3",
+         "python-devel",
+         "python3-devel",
+         "python3-pygit2-0.26.4-1.fc28.x86_64",
+         "python3-tkinter"
+      ],
+      "misc" : [
+         "firewall-config",
+         "libgit2-devel",
+         "git-gui",
+         "nautilus-open-terminal",
+         "gnome-tweak-tool",
+         "grub-customizer"
+      ],
       "avr" : [
          "avr-gcc",
          "avr-binutils",
@@ -38,15 +52,33 @@
       ],
       "latex" : ["texlive-scheme-full"],
       "chrome": ["google-chrome"],
-      "vlc"   : ["https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rmp -E %fedora).noarch.rpm", "vlc", "python-vlc", "npapi-vlc"]
-
+      "vlc"   : [
+         "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rmp -E %fedora).noarch.rpm",
+         "vlc",
+         "python-vlc",
+         "npapi-vlc"
+      ]
    },
    "gui-installs" : [
       {
          "name" : "dropbox",
          "ref"  : "https://www.dropbox.com/install",
          "instructions" : ""
+      },
+      {
+         "name" : "pycharm",
+         "ref"  : "https://www.jetbrains.com/pycharm/download/#section=linux",
+         "instructions" : "Download, extract and place at the location of your choice.\nLaunch \"unpack_dir/bin/pycharm.sh\""
       }
    ],
-   "cli-installs" : []
+   "cli-installs" : [
+      {
+         "name" : "sshd",
+         "ref"  : "https://bytefreaks.net/gnulinux/fedora-25-install-start-enable-ssh-server",
+         "commands" : [
+            ["sudo", "systemctl", "enable", "sshd"],
+            ["sudo", "systemctl", "start", "sshd"]
+         ]
+      }
+   ]
 }
