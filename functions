@@ -280,3 +280,7 @@ gitignore() {
    git add $giti
    git diff --staged $giti
 }
+
+pycharm(){
+   nohup pycharm $@ >/dev/null 2>&1 &
+}
