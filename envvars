@@ -5,6 +5,7 @@ export CONFIG_DIR=$(dirname $(readlink ~/.bashrc))
 # echo "initial LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
 MY_LD_LIBRARY_PATH=$MY_LD_LIBRARY_PATH:$HOME/.local/lib
 MY_LD_LIBRARY_PATH=$MY_LD_LIBRARY_PATH:$HOME/.local/openblas/lib/
+MY_LD_LIBRARY_PATH=$MY_LD_LIBRARY_PATH:$HOME/.local/libgit2/lib
 MY_LD_LIBRARY_PATH=$MY_LD_LIBRARY_PATH:/usr/local/cuda/lib
 export LD_LIBRARY_PATH="$MY_LD_LIBRARY_PATH:$LD_LIBRARY_PATH"
 
