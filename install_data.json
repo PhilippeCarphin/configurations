@@ -18,6 +18,8 @@
          "nautilus-open-terminal",
          "gnome-tweak-tool",
          "grub-customizer"
+         "eclipse",
+         "eclipse-cdt",
       ],
       "avr" : [
          "avr-gcc",
@@ -25,8 +27,6 @@
          "avr-libc",
          "avr-gdb",
          "avrdude",
-         "eclipse",
-         "eclipse-cdt",
          "avr-gcc-c++"
       ],
       "clanguage" : ["cscope","clang", "llvm", "gcc", "gcc-c++", "cmake", "ncurses"],
