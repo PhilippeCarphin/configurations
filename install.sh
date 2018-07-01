@@ -87,7 +87,7 @@ case $1 in
       fi
 		;;
 	emacs)
-      replace_with_link $HOME/.emacs.d emacs.d
+      replace_with_link $HOME/.spacemacs spacemacs
 		;;
 	git)
       replace_with_link $HOME/.gitconfig gitconfig
@@ -170,6 +170,7 @@ if [ "$1" = full ] ; then
    installGroup sublime
    installGroup tmux
    installGroup logging
+   installGroup emacs
    if [ "$CMCLNG" != "" ] ; then
       installGroup cmc
    fi
