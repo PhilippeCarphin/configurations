@@ -99,8 +99,8 @@ if at_cmc ; then
     alias spacemacs='/tmp/emacs/bin/emacs'
     alias bash_back="sed 's/\\(exec zsh\\)/# \\1/' < ~/.bashrc > ~/.philconfig/brc ; mv ~/.philconfig/brc ~/.philconfig/bashrc"
     alias zsh_back="sed 's/\\(# \\)*\\(exec zsh\\)/\\2/' < ~/.bashrc > ~/.philconfig/brc ; mv ~/.philconfig/brc ~/.philconfig/bashrc"
-    alias push_notes='rsync -av --cvs-exclude ~/Dropbox/Notes/ apt:~/Dropbox/Notes/CMC/'
-    alias pull_notes='rsync -av --cvs-exclude apt:~/Dropbox/Notes/CMC/ ~/Dropbox/Notes/'
+    alias push_notes='rsync -av --cvs-exclude ~/Dropbox/Notes/ house:~/Dropbox/Notes/CMC/'
+    alias pull_notes='rsync -av --cvs-exclude house:~/Dropbox/Notes/CMC/ ~/Dropbox/Notes/'
     alias spi_beta='export SPI_LIB=$SSM_DEV/workspace/libSPI_7.12.2_${ORDENV_PLAT}; export SPI_PATH=${HOME}/Documents/GitHub/SPI_PHIL'
     alias spi++='spi_beta; $SPI_PATH/eer_SPI/bin/SPI'
 
