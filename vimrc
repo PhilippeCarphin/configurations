@@ -154,7 +154,7 @@ inoremap <C-b> <ESC>:wa:!makeli
 
 cnoremap vr split ~/.vimrc
 cnoremap sv source ~/.vimrc
-command! Now r!date
+command! Now r!TZ=America/New_York date
 
 nnoremap <Up> <C-y>k
 nnoremap <Down> <C-e>j
