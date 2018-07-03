@@ -1,7 +1,7 @@
 ;; -*- mode: emacs-lisp -*-
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
-(load-theme 'wombat)
+
 
 (defun dotspacemacs/layers ()
   "Configuration Layers declaration.
@@ -312,12 +312,23 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
+  ;; Typical keybinding definition : (define-key evil-insert-state-map [tab] 'evil-normal-state)
+  ;; This value is used when hard wrapping lines with M-x or automatically
+  (setq-default fill-column 80)
+  ;; I like automatic hard wrapping so this:
+  (setq-default auto-fill-mode)
+
   ;; This uses the key-chord library to setup the same jk thing that I had in
   ;; vim to do 'esc' when I press them rapidly.
   (setq key-chord-two-keys-delay 0.3)
   (key-chord-define evil-insert-state-map "jk" 'evil-normal-state)
   (key-chord-mode 1)
   
+  ;;(define-key evil-insert-state-map [tab] 'evil-normal-state)
+  (define-key key-translation-map [C-a] 'evil-normal-state)
+
+  (setq-default git-magit-status-fullscreen t))
+  (global-git-commit-mode t)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
