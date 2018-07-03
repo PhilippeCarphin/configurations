@@ -327,8 +327,6 @@ you should place your code here."
   ;;(define-key evil-insert-state-map [tab] 'evil-normal-state)
   (define-key key-translation-map [C-a] 'evil-normal-state)
 
-  (setq-default git-magit-status-fullscreen t))
-  (global-git-commit-mode t)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
