@@ -82,6 +82,7 @@ if at_cmc ; then
     SPI_DIR=~/Documents/GitHub/SPI_PHIL
     alias gospi='cd $SPI_DIR'
     alias gospic='cd $SPI_DIR/LibTkGL/TclGeoEER/generic'
+    alias makespi='(cd $SPI_DIR/LibTkGL/ ; ./makeit -spi)'
     alias quota='ssh lightning quota'
     alias git='/ssm/net/cmoi/apps/git/20150526/ubuntu-14.04-amd64-64/bin/git'
     alias gitk='/ssm/net/cmoi/apps/git/20150526/ubuntu-14.04-amd64-64/bin/gitk --all &'
