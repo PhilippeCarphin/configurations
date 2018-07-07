@@ -339,6 +339,10 @@ you should place your code here."
   ;;(define-key evil-insert-state-map [tab] 'evil-normal-state)
   (define-key key-translation-map [C-a] 'evil-normal-state)
 
+
+  ;; Automatically follow symlinks when they point to a version controlled
+  ;; source file.
+  (setq-default vc-follow-symlinks t)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
