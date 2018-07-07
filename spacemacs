@@ -316,8 +316,18 @@ you should place your code here."
   ;; Typical keybinding definition : (define-key evil-insert-state-map [tab] 'evil-normal-state)
   ;; This value is used when hard wrapping lines with M-x or automatically
   (setq-default fill-column 80)
+
   ;; I like automatic hard wrapping so this:
-  (setq-default auto-fill-mode)
+  ;; ref : https://www.emacswiki.org/emacs/AutoFillMode
+  (add-hook 'text-mode-hook 'turn-on-auto-fill)
+  (add-hook 'c-mode-common-hook
+            (lambda ()
+              (autofill-mode 1)
+              (set (make-local-variable 'fill-nobreak-predicate)
+                   (lambda ()
+                     (not (eq (get-text-property (point) 'face)
+                              'font-lock-comment-face))))))
+
   ;; Typing 'jk' fast will exit inser-mode
   (setq-default evil-escape-key-sequence "jk")
 
