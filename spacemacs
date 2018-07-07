@@ -32,9 +32,14 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
+     osx
      html
      colors
      python
+     erc
+     (wakatime :variables
+               wakatime-api-key "806875af-9b0b-47b0-bcdc-f940ce434c86"
+               )
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
