@@ -58,7 +58,7 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '( key-chord )
+   dotspacemacs-additional-packages '(mobile-org)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -318,13 +318,9 @@ you should place your code here."
   (setq-default fill-column 80)
   ;; I like automatic hard wrapping so this:
   (setq-default auto-fill-mode)
+  ;; Typing 'jk' fast will exit inser-mode
+  (setq-default evil-escape-key-sequence "jk")
 
-  ;; This uses the key-chord library to setup the same jk thing that I had in
-  ;; vim to do 'esc' when I press them rapidly.
-  (setq key-chord-two-keys-delay 0.3)
-  (key-chord-define evil-insert-state-map "jk" 'evil-normal-state)
-  (key-chord-mode 1)
-  
   ;;(define-key evil-insert-state-map [tab] 'evil-normal-state)
   (define-key key-translation-map [C-a] 'evil-normal-state)
 
