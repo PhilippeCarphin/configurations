@@ -284,3 +284,11 @@ gitignore() {
 pycharm(){
    nohup pycharm $@ >/dev/null 2>&1 &
 }
+
+org(){
+    emacs -nw ~/Documents/Notes/Notes_BUCKET/Notes_MAIN.org
+}
+
+org-new(){
+    emacs -nw ~/Documents/Notes/Notes_BUCKET/__NEW__.org
+}
