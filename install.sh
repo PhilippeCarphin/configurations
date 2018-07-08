@@ -2,6 +2,7 @@
 replace_with_link(){
    original=$1
    target=$installDir/$2
+   mkdir -p $(dirname $original)
    if [ -L $original ] ; then
       rm $original
    elif [ -e $original -o -d $original ] ; then
@@ -83,6 +84,7 @@ case $1 in
 	templates)
       replace_with_link $HOME/Templates Templates
       if [ `uname` = Linux ] ; then
+         echo "$0 (group=templates) : killing nautilus"
          killall nautilus # For templates to take effect.
       fi
 		;;
@@ -114,7 +116,7 @@ case $1 in
 	nautilusScripts)
 		;;
    *)
-      echo Invalid group
+      echo Invalid group $1
       showUsage
       ;;
 esac
@@ -164,8 +166,10 @@ fi
 
 if [ "$1" = full ] ; then
    installGroup bash
+   installGroup zsh
+   installGroup fish
    installGroup vim
-   installGroup Templates
+   installGroup templates
    installGroup git
    installGroup sublime
    installGroup tmux
