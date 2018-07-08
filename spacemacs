@@ -377,6 +377,13 @@ you should place your code here."
           ("org"
            :components ("org-notes" "org-static"))
           ))
+  ;; Use pipes for subprocess communication
+  ;; This is because withoug this, in org-mode 'C-c C-e h' did not open
+  ;; the exported file.  With this it does.
+  ;; REF: https://askubuntu.com/questions/646631/emacs-doesnot-work-with-xdg-open
+  ;; Note: People in the reference say that this breaks using gnuplot with org-mode.
+  ;; See comments on the answer that gives this line.
+  (setq process-connection-type nil)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
