@@ -322,8 +322,15 @@ before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
   )
 
-(defun say-hello()
-  (message "hello"))
+;; Example of an interactive 
+(defun say-hello ()
+  (interactive)
+  (message "Hello World"))
+
+;; Message to remind me of something
+(defun rebind-key-todo ()
+  (interactive)
+  (message "TODO Rebind this key to something else (See spacemacs file)"))
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
@@ -332,7 +339,16 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
-  ;; Typical keybinding definition : (define-key evil-insert-state-map [tab] 'evil-normal-state)
+
+  ;; Remap C-tab to do call an interactive function
+  (define-key evil-normal-state-map [C-tab] '(say-hello))
+
+  ;; Rebinding C-w to the rebind-key-todo interactive function because I hate hitting it
+  ;; in insert mode and erasing words when I meant to switch windows.
+  (define-key evil-insert-state-map (kbd "C-w") 'rebind-key-todo)
+
+  (define-key evil-insert-state-map (kbd "C-b") (lambda () (interactive) (message "You pressed C-b in evil-insert-state")))
+
   ;; This value is used when hard wrapping lines with M-x or automatically
   (setq-default fill-column 80)
 
