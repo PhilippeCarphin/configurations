@@ -40,6 +40,15 @@ values."
      python
      erc
      pdf-tools
+     ycmd
+     (auto-completion :variables
+                   auto-completion-return-key-behavior 'complete
+                   auto-completion-tab-key-behavior 'complete
+                   auto-completion-complete-with-key-sequence "fd"
+                   auto-completion-complete-with-key-sequence-delay 0.1
+                   auto-completion-private-snippets-directory nil)
+     (c-c++ :variables
+            c-c++-enable-clang-support t)
      (wakatime :variables
                wakatime-api-key "806875af-9b0b-47b0-bcdc-f940ce434c86"
                )
@@ -49,7 +58,6 @@ values."
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
      helm
-     auto-completion
      better-defaults
      emacs-lisp
      git
@@ -384,6 +392,8 @@ you should place your code here."
   ;; Note: People in the reference say that this breaks using gnuplot with org-mode.
   ;; See comments on the answer that gives this line.
   (setq process-connection-type nil)
+
+  (global-company-mode)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
