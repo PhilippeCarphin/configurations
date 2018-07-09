@@ -37,7 +37,10 @@ values."
      osx
      html
      colors
-     python
+     ;; I don't know if it was pip-installing flake8 or adding this variable
+     ;; that gave me python syntax checking TODO : Find out
+     (python :variables
+             python-test-runner 'pytest)
      erc
      pdf-tools
      ycmd
