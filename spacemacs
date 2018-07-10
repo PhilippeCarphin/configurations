@@ -42,7 +42,6 @@ values."
      (python :variables
              python-test-runner 'pytest)
      erc
-     pdf-tools
      ycmd
      (auto-completion :variables
                    auto-completion-return-key-behavior 'complete
