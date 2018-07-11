@@ -335,6 +335,10 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (interactive)
   (message "TODO Rebind this key to something else (See spacemacs file)"))
 
+(defun set-c-indent-behavior (tab-width)
+  (setq-local evil-shift-width tab-width)
+  (setq-local c-basic-offset tab-width))
+
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
 This function is called at the very end of Spacemacs initialization after
@@ -357,16 +361,21 @@ you should place your code here."
 
   ;; I like automatic hard wrapping so this:
   ;; ref : https://www.emacswiki.org/emacs/AutoFillMode
+  ;; See : http://blog.binchen.org/posts/easy-indentation-setup-in-emacs-for-web-development.html
   (add-hook 'text-mode-hook 'turn-on-auto-fill)
   (add-hook 'c-mode-common-hook
             (lambda ()
               (auto-fill-mode 1)
-              (setq-local evil-shift-width 3)
-              (setq-default c-basic-offset 3)
               (set (make-local-variable 'fill-nobreak-predicate)
                    (lambda ()
                      (not (eq (get-text-property (point) 'face)
                               'font-lock-comment-face))))))
+
+  (add-hook 'c-mode-common-hook (lambda () (set-c-indent-behavior 3)))
+  (add-hook 'org-mode-hook (lambda ()
+                             (setq-local evil-shift-width 4)
+                             (setq-local tab-width)
+                             (setq-local org-indent-indentation-per-level 4)))
 
   ;; Typing 'jk' fast will exit inser-mode
   (setq-default evil-escape-key-sequence "jk")
