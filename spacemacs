@@ -43,7 +43,7 @@ values."
              python-test-runner 'pytest)
      erc
      (ycmd :variables
-           ycmd-server-command '("pyton" "/users/pcarphin/.local/share/ycmd/"))
+           ycmd-server-command '("python" "/users/pcarphin/.local/share/ycmd/"))
      (auto-completion :variables
                    auto-completion-return-key-behavior 'complete
                    auto-completion-tab-key-behavior 'complete
