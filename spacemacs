@@ -333,6 +333,8 @@ before packages are loaded. If you are unsure, you should try in setting them in
 ;; Message to remind me of something
 (defun rebind-key-todo ()
   (interactive)
+  (async-shell-command "git gui")
+  (shell-command "gitk")
   (message "TODO Rebind this key to something else (See spacemacs file)"))
 
 (defun set-c-indent-behavior (tab-width)
