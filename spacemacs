@@ -360,7 +360,9 @@ you should place your code here."
   (add-hook 'text-mode-hook 'turn-on-auto-fill)
   (add-hook 'c-mode-common-hook
             (lambda ()
-              (autofill-mode 1)
+              (auto-fill-mode 1)
+              (setq-local evil-shift-width 3)
+              (setq-default c-basic-offset 3)
               (set (make-local-variable 'fill-nobreak-predicate)
                    (lambda ()
                      (not (eq (get-text-property (point) 'face)
