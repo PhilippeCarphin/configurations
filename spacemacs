@@ -42,7 +42,6 @@ values."
      (python :variables
              python-test-runner 'pytest)
      erc
-     pdf-tools
      (ycmd :variables
            ycmd-server-command '("pyton" "/users/pcarphin/.local/share/ycmd/"))
      (auto-completion :variables
