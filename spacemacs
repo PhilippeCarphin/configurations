@@ -43,7 +43,8 @@ values."
              python-test-runner 'pytest)
      erc
      pdf-tools
-     ycmd
+     (ycmd :variables
+           ycmd-server-command '("pyton" "/users/pcarphin/.local/share/ycmd/"))
      (auto-completion :variables
                    auto-completion-return-key-behavior 'complete
                    auto-completion-tab-key-behavior 'complete
