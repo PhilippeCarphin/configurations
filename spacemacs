@@ -42,7 +42,9 @@ values."
      (python :variables
              python-test-runner 'pytest)
      erc
-     ycmd
+     pdf-tools
+     (ycmd :variables
+           ycmd-server-command '("pyton" "/users/pcarphin/.local/share/ycmd/"))
      (auto-completion :variables
                    auto-completion-return-key-behavior 'complete
                    auto-completion-tab-key-behavior 'complete
@@ -332,7 +334,13 @@ before packages are loaded. If you are unsure, you should try in setting them in
 ;; Message to remind me of something
 (defun rebind-key-todo ()
   (interactive)
+  (async-shell-command "git gui")
+  (shell-command "gitk")
   (message "TODO Rebind this key to something else (See spacemacs file)"))
+
+(defun set-c-indent-behavior (tab-width)
+  (setq-local evil-shift-width tab-width)
+  (setq-local c-basic-offset tab-width))
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
@@ -356,14 +364,21 @@ you should place your code here."
 
   ;; I like automatic hard wrapping so this:
   ;; ref : https://www.emacswiki.org/emacs/AutoFillMode
+  ;; See : http://blog.binchen.org/posts/easy-indentation-setup-in-emacs-for-web-development.html
   (add-hook 'text-mode-hook 'turn-on-auto-fill)
   (add-hook 'c-mode-common-hook
             (lambda ()
-              (autofill-mode 1)
+              (auto-fill-mode 1)
               (set (make-local-variable 'fill-nobreak-predicate)
                    (lambda ()
                      (not (eq (get-text-property (point) 'face)
                               'font-lock-comment-face))))))
+
+  (add-hook 'c-mode-common-hook (lambda () (set-c-indent-behavior 3)))
+  (add-hook 'org-mode-hook (lambda ()
+                             (setq-local evil-shift-width 4)
+                             (setq-local tab-width)
+                             (setq-local org-indent-indentation-per-level 4)))
 
   ;; Typing 'jk' fast will exit inser-mode
   (setq-default evil-escape-key-sequence "jk")
