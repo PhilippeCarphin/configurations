@@ -377,7 +377,7 @@ you should place your code here."
   (add-hook 'c-mode-common-hook (lambda () (set-c-indent-behavior 3)))
   (add-hook 'org-mode-hook (lambda ()
                              (setq-local evil-shift-width 4)
-                             (setq-local tab-width)
+                             (setq-local tab-width 4)
                              (setq-local org-indent-indentation-per-level 4)))
 
   ;; Typing 'jk' fast will exit inser-mode
