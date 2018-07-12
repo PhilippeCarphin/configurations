@@ -342,6 +342,23 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (setq-local evil-shift-width tab-width)
   (setq-local c-basic-offset tab-width))
 
+(defun bind-insert-mode-window-change-keys ()
+  ;; TODO Make I want to remap this to do the same thing that the prefix command does in normal mode.
+  ;; Making my own keymap for insert mode.
+  ;; I create a prefix command, and treat it as a keymap and "define keys into it".
+  (progn
+    (define-prefix-command 'evil-insert-state-c-w)
+    (define-key evil-insert-state-c-w (kbd "h") 'evil-window-left)
+    (define-key evil-insert-state-c-w (kbd "j") 'evil-window-down)
+    (define-key evil-insert-state-c-w (kbd "k") 'evil-window-up)
+    (define-key evil-insert-state-c-w (kbd "l") 'evil-window-right))
+  ;; Now I bind a key to 'trigger' this prefix command.  Which results in emacs
+  ;; expecting a key from that group
+  (define-key evil-insert-state-map (kbd "C-w") evil-insert-state-c-w)
+  (define-key evil-insert-state-map (kbd "C-a") evil-insert-state-c-w)
+  (define-key evil-normal-state-map (kbd "C-a") evil-insert-state-c-w)
+  )
+
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
 This function is called at the very end of Spacemacs initialization after
@@ -353,9 +370,7 @@ you should place your code here."
   ;; Remap C-tab to do call an interactive function
   (define-key evil-normal-state-map [C-tab] '(say-hello))
 
-  ;; Rebinding C-w to the rebind-key-todo interactive function because I hate hitting it
-  ;; in insert mode and erasing words when I meant to switch windows.
-  (define-key evil-insert-state-map (kbd "C-w") 'rebind-key-todo)
+  (bind-insert-mode-window-change-keys)
 
   (define-key evil-insert-state-map (kbd "C-b") (lambda () (interactive) (message "You pressed C-b in evil-insert-state")))
 
