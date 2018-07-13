@@ -343,20 +343,15 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (setq-local c-basic-offset tab-width))
 
 (defun bind-insert-mode-window-change-keys ()
-  ;; TODO Make I want to remap this to do the same thing that the prefix command does in normal mode.
-  ;; Making my own keymap for insert mode.
-  ;; I create a prefix command, and treat it as a keymap and "define keys into it".
-  (progn
-    (define-prefix-command 'evil-insert-state-c-w)
-    (define-key evil-insert-state-c-w (kbd "h") 'evil-window-left)
-    (define-key evil-insert-state-c-w (kbd "j") 'evil-window-down)
-    (define-key evil-insert-state-c-w (kbd "k") 'evil-window-up)
-    (define-key evil-insert-state-c-w (kbd "l") 'evil-window-right))
-  ;; Now I bind a key to 'trigger' this prefix command.  Which results in emacs
-  ;; expecting a key from that group
-  (define-key evil-insert-state-map (kbd "C-w") evil-insert-state-c-w)
-  (define-key evil-insert-state-map (kbd "C-a") evil-insert-state-c-w)
-  (define-key evil-normal-state-map (kbd "C-a") evil-insert-state-c-w)
+  ;; This allows for changing windows without having to get out of insert mode
+  ;; which is the same behavior one would get in a TMUX-vim setupk.
+  ;; It has the added bonus that C-w doesn't erase words in insert mode.
+  ;; It also has the advantage of leaving your buffer in whatever mode it's in.
+  ;; This is super useful for shells where you pretty much always want to be in
+  ;; insert mode.
+  (global-set-key (kbd "C-a") evil-window-map)
+  (define-key evil-insert-state-map (kbd "C-w") evil-window-map)
+  (define-key evil-insert-state-map (kbd "C-a") evil-window-map)
   )
 
 (defun dotspacemacs/user-config ()
@@ -397,9 +392,6 @@ you should place your code here."
 
   ;; Typing 'jk' fast will exit inser-mode
   (setq-default evil-escape-key-sequence "jk")
-
-  ;;(define-key evil-insert-state-map [tab] 'evil-normal-state)
-  (define-key key-translation-map [C-a] 'evil-normal-state)
 
   ;; Set to the location of your Org files on your local system
   (setq org-directory "~/Documents/Notes/Notes_BUCKET/")
