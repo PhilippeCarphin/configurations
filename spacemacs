@@ -327,34 +327,36 @@ before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
   )
 
-;; Example of an interactive 
 (defun say-hello ()
+  "Example of an interactive function"
   (interactive)
   (message "Hello World"))
 
-;; Message to remind me of something
 (defun rebind-key-todo ()
+  "Message to remind me of something"
   (interactive)
   (async-shell-command "git gui")
   (shell-command "gitk")
   (message "TODO Rebind this key to something else (See spacemacs file)"))
 
 (defun set-c-indent-behavior (tab-width)
+  "Set the behavior of indentation in C mode to tab-width"
   (setq-local evil-shift-width tab-width)
   (setq-local c-basic-offset tab-width))
 
 (defun custom-prefix-example ()
+  "An example of defining a prefix"
   (define-prefix-command 'my-custom-prefix)
   (define-key my-custom-prefix (kbd "s") 'say-hello)
   (define-key evil-insert-state-map (kbd "C-o") my-custom-prefix))
 
 (defun bind-insert-mode-window-change-keys ()
-  ;; This allows for changing windows without having to get out of insert mode
-  ;; which is the same behavior one would get in a TMUX-vim setupk.
-  ;; It has the added bonus that C-w doesn't erase words in insert mode.
-  ;; It also has the advantage of leaving your buffer in whatever mode it's in.
-  ;; This is super useful for shells where you pretty much always want to be in
-  ;; insert mode.
+  "This allows for changing windows without having to get out of insert mode
+  which is the same behavior one would get in a TMUX-vim setupk.
+  It has the added bonus that C-w doesn't erase words in insert mode.
+  It also has the advantage of leaving your buffer in whatever mode it's in.
+  This is super useful for shells where you pretty much always want to be in
+  insert mode."
   (global-set-key (kbd "C-a") evil-window-map)
   (define-key evil-insert-state-map (kbd "C-w") evil-window-map)
   (define-key evil-insert-state-map (kbd "C-w /") (lambda () (interactive) (split-window-right)))
