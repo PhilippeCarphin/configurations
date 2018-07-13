@@ -342,6 +342,11 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (setq-local evil-shift-width tab-width)
   (setq-local c-basic-offset tab-width))
 
+(defun custom-prefix-example ()
+  (define-prefix-command 'my-custom-prefix)
+  (define-key my-custom-prefix (kbd "s") 'say-hello)
+  (define-key evil-insert-state-map (kbd "C-o") my-custom-prefix))
+
 (defun bind-insert-mode-window-change-keys ()
   ;; This allows for changing windows without having to get out of insert mode
   ;; which is the same behavior one would get in a TMUX-vim setupk.
@@ -362,12 +367,9 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
-  ;; Remap C-tab to do call an interactive function
-  (define-key evil-normal-state-map [C-tab] '(say-hello))
-
   (bind-insert-mode-window-change-keys)
 
-  (define-key evil-insert-state-map (kbd "C-b") (lambda () (interactive) (message "You pressed C-b in evil-insert-state")))
+  (custom-prefix-example)
 
   ;; This value is used when hard wrapping lines with M-x or automatically
   (setq-default fill-column 80)
@@ -383,8 +385,8 @@ you should place your code here."
                    (lambda ()
                      (not (eq (get-text-property (point) 'face)
                               'font-lock-comment-face))))))
-
   (add-hook 'c-mode-common-hook (lambda () (set-c-indent-behavior 3)))
+
   (add-hook 'org-mode-hook (lambda ()
                              (setq-local evil-shift-width 4)
                              (setq-local tab-width 4)
