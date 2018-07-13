@@ -50,6 +50,7 @@ values."
                    auto-completion-tab-key-behavior 'complete
                    auto-completion-complete-with-key-sequence "fd"
                    auto-completion-complete-with-key-sequence-delay 0.1
+                   auto-completion-enable-snippets-in-popup t
                    auto-completion-private-snippets-directory nil)
      (c-c++ :variables
             c-c++-enable-clang-support t)
