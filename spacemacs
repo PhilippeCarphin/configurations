@@ -356,7 +356,15 @@ before packages are loaded. If you are unsure, you should try in setting them in
   ;; insert mode.
   (global-set-key (kbd "C-a") evil-window-map)
   (define-key evil-insert-state-map (kbd "C-w") evil-window-map)
+  (define-key evil-insert-state-map (kbd "C-w /") (lambda () (interactive) (split-window-right)))
+  (define-key evil-insert-state-map (kbd "C-w -") (lambda () (interactive) (split-window-below)))
+
   (define-key evil-insert-state-map (kbd "C-a") evil-window-map)
+  (define-key evil-normal-state-map (kbd "C-a") evil-window-map)
+  (define-key evil-insert-state-map (kbd "C-a /") (lambda () (interactive) (split-window-right)))
+  (define-key evil-insert-state-map (kbd "C-a -") (lambda () (interactive) (split-window-below)))
+  (define-key evil-normal-state-map (kbd "C-a /") (lambda () (interactive) (split-window-right)))
+  (define-key evil-normal-state-map (kbd "C-a -") (lambda () (interactive) (split-window-below)))
   )
 
 (defun dotspacemacs/user-config ()
