@@ -382,6 +382,17 @@ before packages are loaded. If you are unsure, you should try in setting them in
                     (concat "#+BEGIN_SRC " lang "\n")
                     "#+END_SRC"))
 
+(defun new-note (name)
+  "Create a new org-mode notes file in standard location"
+  (interactive
+   (list
+    (read-string "New note name : "
+                 (apply #'concat (map 'list #'int-to-string (calendar-current-date))))))
+  (switch-to-buffer (concat "~/Dropbox/Notes/Notes_BUCKET/Notes_" name ".org"))
+  (org-mode)
+  (evil-insert-state)
+  (yas-insert-snippet "nn"))
+
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
 This function is called at the very end of Spacemacs initialization after
