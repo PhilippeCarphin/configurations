@@ -407,6 +407,7 @@ you should place your code here."
 
   ;; Typing 'jk' fast will exit inser-mode
   (setq-default evil-escape-key-sequence "jk")
+  (setq-default evil-escape-delay 0.3)
 
   ;; Set to the location of your Org files on your local system
   (setq org-directory "~/Documents/Notes/Notes_BUCKET/")
