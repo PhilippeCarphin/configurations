@@ -115,6 +115,9 @@ case $1 in
       ;;
 	nautilusScripts)
 		;;
+  wakatime)
+      replace_with_link $HOME/.wakatime.cfg wakatime.cfg
+      ;;
    *)
       echo Invalid group $1
       showUsage

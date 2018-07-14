@@ -13,6 +13,8 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 
 " Extra plugins to add with vundle go here
+Plugin 'wakatime/vim-wakatime'
+
 Plugin 'jceb/vim-orgmode'
 
 Plugin 'https://github.com/steffanc/cscopemaps.vim'
