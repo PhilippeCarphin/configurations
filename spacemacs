@@ -371,6 +371,16 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (define-key evil-normal-state-map (kbd "C-a /") (lambda () (interactive) (split-window-right)))
   (define-key evil-normal-state-map (kbd "C-a -") (lambda () (interactive) (split-window-below)))
   )
+(defun surround-strings (start end start-string end-string)
+  (save-excursion (goto-char end)
+                  (insert end-string)
+                  (goto-char start)
+                  (insert start-string)))
+
+(defun org-make-code-block (lang start end)
+  (surround-strings start end
+                    (concat "#+BEGIN_SRC " lang "\n")
+                    "#+END_SRC"))
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
@@ -383,6 +393,11 @@ you should place your code here."
   (bind-insert-mode-window-change-keys)
 
   (custom-prefix-example)
+
+  (define-key evil-visual-state-map (kbd "C-o")
+    (lambda (lang start end)
+      (interactive (list (read-string "Enter a language : " "c") (region-beginning) (region-end)))
+      (org-make-code-block lang start end)))
 
   ;; This value is used when hard wrapping lines with M-x or automatically
   (setq-default fill-column 80)
