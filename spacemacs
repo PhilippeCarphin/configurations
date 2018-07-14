@@ -53,6 +53,8 @@ values."
                    auto-completion-private-snippets-directory nil)
      (c-c++ :variables
             c-c++-enable-clang-support t)
+     ;; It is necessary to install wakatime using pip
+     ;; pip install wakatime
      (wakatime :variables
                wakatime-api-key "806875af-9b0b-47b0-bcdc-f940ce434c86"
                )
@@ -326,34 +328,36 @@ before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
   )
 
-;; Example of an interactive 
 (defun say-hello ()
+  "Example of an interactive function"
   (interactive)
   (message "Hello World"))
 
-;; Message to remind me of something
 (defun rebind-key-todo ()
+  "Message to remind me of something"
   (interactive)
   (async-shell-command "git gui")
   (shell-command "gitk")
   (message "TODO Rebind this key to something else (See spacemacs file)"))
 
 (defun set-c-indent-behavior (tab-width)
+  "Set the behavior of indentation in C mode to tab-width"
   (setq-local evil-shift-width tab-width)
   (setq-local c-basic-offset tab-width))
 
 (defun custom-prefix-example ()
+  "An example of defining a prefix"
   (define-prefix-command 'my-custom-prefix)
   (define-key my-custom-prefix (kbd "s") 'say-hello)
   (define-key evil-insert-state-map (kbd "C-o") my-custom-prefix))
 
 (defun bind-insert-mode-window-change-keys ()
-  ;; This allows for changing windows without having to get out of insert mode
-  ;; which is the same behavior one would get in a TMUX-vim setupk.
-  ;; It has the added bonus that C-w doesn't erase words in insert mode.
-  ;; It also has the advantage of leaving your buffer in whatever mode it's in.
-  ;; This is super useful for shells where you pretty much always want to be in
-  ;; insert mode.
+  "This allows for changing windows without having to get out of insert mode
+  which is the same behavior one would get in a TMUX-vim setupk.
+  It has the added bonus that C-w doesn't erase words in insert mode.
+  It also has the advantage of leaving your buffer in whatever mode it's in.
+  This is super useful for shells where you pretty much always want to be in
+  insert mode."
   (global-set-key (kbd "C-a") evil-window-map)
   (define-key evil-insert-state-map (kbd "C-w") evil-window-map)
   (define-key evil-insert-state-map (kbd "C-w /") (lambda () (interactive) (split-window-right)))
@@ -366,6 +370,16 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (define-key evil-normal-state-map (kbd "C-a /") (lambda () (interactive) (split-window-right)))
   (define-key evil-normal-state-map (kbd "C-a -") (lambda () (interactive) (split-window-below)))
   )
+(defun surround-strings (start end start-string end-string)
+  (save-excursion (goto-char end)
+                  (insert end-string)
+                  (goto-char start)
+                  (insert start-string)))
+
+(defun org-make-code-block (lang start end)
+  (surround-strings start end
+                    (concat "#+BEGIN_SRC " lang "\n")
+                    "#+END_SRC"))
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
@@ -378,6 +392,11 @@ you should place your code here."
   (bind-insert-mode-window-change-keys)
 
   (custom-prefix-example)
+
+  (define-key evil-visual-state-map (kbd "C-o")
+    (lambda (lang start end)
+      (interactive (list (read-string "Enter a language : " "c") (region-beginning) (region-end)))
+      (org-make-code-block lang start end)))
 
   ;; This value is used when hard wrapping lines with M-x or automatically
   (setq-default fill-column 80)
@@ -402,6 +421,7 @@ you should place your code here."
 
   ;; Typing 'jk' fast will exit inser-mode
   (setq-default evil-escape-key-sequence "jk")
+  (setq-default evil-escape-delay 0.3)
 
   ;; Set to the location of your Org files on your local system
   (setq org-directory "~/Documents/Notes/Notes_BUCKET/")
