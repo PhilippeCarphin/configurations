@@ -13,6 +13,7 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 
 " Extra plugins to add with vundle go here
+Plugin 'jceb/vim-orgmode'
 
 Plugin 'https://github.com/steffanc/cscopemaps.vim'
 
@@ -184,6 +185,8 @@ cnoremap vim tabe
 
 :inoremap <C-u> yyp^v$r-o
 :inoremap <C-U> yyp^v$r=o
+
+nnoremap <SPACE>w <C-w>
 
 let g:ycm_confirm_extra_conf = 0
 let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
