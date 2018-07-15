@@ -384,7 +384,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
 (defun org-make-code-block (lang start end)
   (surround-strings start end
                     (concat "#+BEGIN_SRC " lang "\n")
-                    "#+END_SRC"))
+                    "#+END_SRC\n"))
 
 (defun new-note (name)
   "Create a new org-mode notes file in standard location"
