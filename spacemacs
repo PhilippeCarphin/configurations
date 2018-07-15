@@ -34,7 +34,8 @@ values."
    '(
      vimscript
      javascript
-     org
+     (org :variables
+          org-agenda-files '("~/Dropbox/Notes/Notes_BUCKET/"))
      osx
      html
      colors
@@ -69,7 +70,6 @@ values."
      emacs-lisp
      git
      markdown
-     org
      (shell :variables
             shell-default-height 30
             shell-default-position 'bottom)
@@ -437,9 +437,10 @@ you should place your code here."
   (setq-default evil-escape-delay 0.3)
 
   ;; Set to the location of your Org files on your local system
-  (setq org-directory "~/Documents/Notes/Notes_BUCKET/")
+  (setq org-directory "~/Dropbox/Notes/Notes_BUCKET/")
   ;; Set to the name of the file where new notes will be stored
-  (setq org-mobile-inbox-for-pull "~/Dropbox/Apps/MobileOrg/inbox-for-pull")
+  (setq org-mobile-inbox-for-pull "~/Dropbox/Notes/Notes_BUCKET/org-mobile-inbox.org")
+
   ;; Set to <your Dropbox root directory>/MobileOrg.
   (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg/")
 
