@@ -413,6 +413,8 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
+  ;; TODO I tried to set this variable in the layers part but that didn't work
+  (setq-default org-default-notes-file "~/Dropbox/Notes/Notes_BUCKET/org-capture.org")
   (bind-insert-mode-window-change-keys)
 
   (custom-prefix-example)
