@@ -35,7 +35,11 @@ values."
      vimscript
      javascript
      (org :variables
-          org-agenda-files '("~/Dropbox/Notes/Notes_BUCKET/"))
+          org-agenda-files '("~/Dropbox/Notes/Notes_BUCKET/")
+          org-directory "~/Dropbox/Notes/Notes_BUCKET/"
+          org-mobile-inbox-for-pull "~/Dropbox/Notes/Notes_BUCKET/org-mobile-inbox.org"
+          org-mobile-directory "~/Dropbox/Apps/MobileOrg/"
+          )
      osx
      html
      colors
@@ -435,14 +439,6 @@ you should place your code here."
   ;; Typing 'jk' fast will exit inser-mode
   (setq-default evil-escape-key-sequence "jk")
   (setq-default evil-escape-delay 0.3)
-
-  ;; Set to the location of your Org files on your local system
-  (setq org-directory "~/Dropbox/Notes/Notes_BUCKET/")
-  ;; Set to the name of the file where new notes will be stored
-  (setq org-mobile-inbox-for-pull "~/Dropbox/Notes/Notes_BUCKET/org-mobile-inbox.org")
-
-  ;; Set to <your Dropbox root directory>/MobileOrg.
-  (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg/")
 
   ;; Automatically follow symlinks when they point to a version controlled
   ;; source file.
