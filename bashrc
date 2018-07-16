@@ -76,10 +76,10 @@ if [[ "$-" == *i* ]] ; then
 	reset_colors=$(tput sgr 0)
 
 	# define variables for prompt colors
-   prompt_color=$orange
+   prompt_color=$purple
 
 	GIT_PS1_PHIL_HEADLESS_COLOR=$red
-	GIT_PS1_PHIL_DIRTY_COLOR=$yellow
+	GIT_PS1_PHIL_DIRTY_COLOR=$orange
 	GIT_PS1_PHIL_CLEAN_COLOR=$green
 
 	PS2='\[$purple\] > \[$reset_colors\]'
