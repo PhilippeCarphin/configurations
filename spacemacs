@@ -335,6 +335,18 @@ before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
   )
 
+;; TODO tailor these to be more useful
+;; Could have 'C-a /' do a projectile-dired
+;; But 'C-w /' could do something else
+(defun split-open ()
+  (interactive)
+  (split-window-below-and-focus)
+  (helm-recentf))
+(defun vsplit-open ()
+  (interactive)
+  (split-window-right-and-focus)
+  (ido-dired))
+
 (defun say-hello ()
   "Example of an interactive function"
   (interactive)
