@@ -117,6 +117,9 @@ if at_cmc ; then
     spi_path=/users/dor/afsm/pca/Documents/GitHub/SPI_PHIL/eer_SPI/
     alias spi_beta='export SPI_LIB=$SSM_DEV/workspace/libSPI_7.12.2_${ORDENV_PLAT}; export SPI_PATH=$spi_path'
     alias spi++='spi_beta; $SPI_PATH/bin/SPI'
+    if [ -e ~/.normal_mode ] ; then
+       alias emacs='/usr/bin/emacs'
+    fi
 
 fi
 alias sql_date='date +%Y-%m-%d\ %H:%M:%S'
