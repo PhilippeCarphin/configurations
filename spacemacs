@@ -335,6 +335,20 @@ before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
   )
 
+(setq-default phil-window-resize-step-size 4)
+(defun set-window-resize-keys ()
+  "Sets hotkeys to resize windows like in tmux"
+  (define-key evil-normal-state-map (kbd "C-w C-j")
+    (lambda () (interactive) (evil-window-increase-height phil-window-resize-step-size)))
+  (define-key evil-normal-state-map (kbd "C-w C-l")
+    (lambda () (interactive) (evil-window-increase-width phil-window-resize-step-size)))
+  (define-key evil-normal-state-map (kbd "C-w C-h")
+    (lambda () (interactive) (evil-window-decrease-width phil-window-resize-step-size)))
+  (define-key evil-normal-state-map (kbd "C-w C-k")
+    (lambda () (interactive) (evil-window-decrease-height phil-window-resize-step-size)))
+  )
+
+
 ;; TODO tailor these to be more useful
 ;; Could have 'C-a /' do a projectile-dired
 ;; But 'C-w /' could do something else
@@ -426,6 +440,8 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
+
+  (set-window-resize-keys)
 
   ;; TODO I tried to set this variable in the layers part but that didn't work
   (setq-default org-default-notes-file "~/Dropbox/Notes/Notes_BUCKET/org-capture.org")
