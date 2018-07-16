@@ -78,10 +78,12 @@ open_cmc() {
    to_open=$1
    nohup dolphin $to_open > /dev/null 2>&1 &
 }
+NOTES_DIR="~/Dropbox/Notes/Notes_BUCKET"
 if at_cmc ; then
-    SPI_DIR=~/Documents/GitHub/SPI_PHIL
+    SPI_DIR="~/Documents/GitHub/SPI_PHIL"
+    CMC_NOTES_DIR="~/Dropbox/Notes/CMC/"
     alias gospi='cd $SPI_DIR'
-    alias gospic='cd $SPI_DIR/LibTkGL/TclGeoEER/generic'
+    alias gospic="cd $SPI_DIR/LibTkGL/TclGeoEER/generic"
     alias makespi='(cd $SPI_DIR/LibTkGL/ ; ./makeit -spi)'
     alias quota='ssh lightning quota'
     alias git='/ssm/net/cmoi/apps/git/20150526/ubuntu-14.04-amd64-64/bin/git'
@@ -100,8 +102,18 @@ if at_cmc ; then
     alias spacemacs='/tmp/emacs/bin/emacs'
     alias bash_back="sed 's/\\(exec zsh\\)/# \\1/' < ~/.bashrc > ~/.philconfig/brc ; mv ~/.philconfig/brc ~/.philconfig/bashrc"
     alias zsh_back="sed 's/\\(# \\)*\\(exec zsh\\)/\\2/' < ~/.bashrc > ~/.philconfig/brc ; mv ~/.philconfig/brc ~/.philconfig/bashrc"
-    alias push_notes='rsync -av --cvs-exclude ~/Dropbox/Notes/ house:~/Dropbox/Notes/CMC/'
-    alias pull_notes='rsync -av --cvs-exclude house:~/Dropbox/Notes/CMC/ ~/Dropbox/Notes/'
+
+    # Here it is important that there be forward slashes at the end.  This
+    # changes what rsync will do.  To be sure in case I forget and remove
+    # the forward slashes in the variable definitions, it is better to add
+    # them here and not wonder if the variable has them.
+    alias push_cmc_notes="rsync -av --cvs-exclude $CMC_NOTES_DIR/ house:$CMC_NOTES_DIR/"
+    alias pull_cmc_notes="rsync -av --cvs-exclude house:$CMC_NOTES_DIR/ $CMC_NOTES_DIR/"
+
+    # No push_notes because I want to be really sure that I don't delete anything important.
+    alias pull_notes="rsync -av --cvs-exclude house:$NOTES_DIR/ $NOTES_DIR/"
+    alias push_notes="rsync -av --cvs-exclude $NOTES_DIR/ house:$NOTES_DIR/"
+
     spi_path=/users/dor/afsm/pca/Documents/GitHub/SPI_PHIL/eer_SPI/
     alias spi_beta='export SPI_LIB=$SSM_DEV/workspace/libSPI_7.12.2_${ORDENV_PLAT}; export SPI_PATH=$spi_path'
     alias spi++='spi_beta; $SPI_PATH/eer_SPI/bin/SPI'
