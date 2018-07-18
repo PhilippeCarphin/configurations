@@ -1,10 +1,13 @@
 # -*- mode: snippet -*-
 # name: c-header
 # key: ch
+# comment : Without the zero argument, the text in the paste buffer gets put in
+#           twice.  It don't know how that works.
 # --
 /********************************************************************************
- * FUNCTION : $1
- * DESCRIPTION : $2
- * ARGUMENTS : $3
- * REMARKS : $4
+ * Name        : `(evil-paste-after 0)`
+ * Description : $2
+ * Arguments   : $3
+ * Return      : $4
+ * Remarks     : $5
  *******************************************************************************/

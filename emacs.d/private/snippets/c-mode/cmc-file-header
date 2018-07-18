@@ -1,0 +1,35 @@
+# -*- mode: snippet -*-
+# name: cmc-file-header
+# key: cmc-file-header
+# --
+/*=========================================================
+ * Environnement Canada
+ * Centre Meteorologique Canadien
+ * 2100 Trans-Canadienne
+ * Dorval, Quebec
+ *
+ * Projet       : $1
+ * Fichier      : $2
+ * Creation     : `(format-time-string "%Y-%m")` - Philippe Carphin
+ *
+ * Description  : $3
+ *
+ * Remarques    : $4
+ *
+ * License      :
+ *    This library is free software; you can redistribute it and/or
+ *    modify it under the terms of the GNU Lesser General Public
+ *    License as published by the Free Software Foundation,
+ *    version 2.1 of the License.
+ *
+ *    This library is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *    Lesser General Public License for more details.
+ *
+ *    You should have received a copy of the GNU Lesser General Public
+ *    License along with this library; if not, write to the
+ *    Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ *
+ *=========================================================
+ */
