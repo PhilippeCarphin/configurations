@@ -434,6 +434,25 @@ before packages are loaded. If you are unsure, you should try in setting them in
                   'font-lock-comment-face))))
   )
 
+(defun put-header ()
+  (interactive)
+  ;; Could have some better code to find the text in the line.
+  (move-beginning-of-line 1)
+  (when (equal (thing-at-point 'word) "static") (forward-word))
+  (forward-word)
+  (forward-char)
+  (when (equal (thing-at-point 'char) "*") (forward-char))
+  (evil-yank-characters (point) (line-end-position))
+  (move-beginning-of-line 1)
+  (let ((w "static"))
+    (while (or (equal w "static") (equal w "int") (equal w "void"))
+      (previous-line)
+      (setq w (thing-at-point 'word))))
+  (move-end-of-line 1)
+  (insert "\n")
+  (yas-insert-snippet)
+  (evil-insert-state))
+
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
 This function is called at the very end of Spacemacs initialization after
