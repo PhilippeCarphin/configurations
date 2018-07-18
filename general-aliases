@@ -78,12 +78,15 @@ open_cmc() {
    to_open=$1
    nohup dolphin $to_open > /dev/null 2>&1 &
 }
-NOTES_DIR="~/Dropbox/Notes/Notes_BUCKET"
+export NOTES_DIR="~/Dropbox/Notes/Notes_BUCKET"
 if at_cmc ; then
-    SPI_DIR="~/Documents/GitHub/SPI_PHIL"
+    export SPI_DIR="~/Documents/GitHub/SPI_PHIL"
+    export SPOOKI_DIR="~/Documents/GitHub/SPOOKI_PHIL"
+    export SPOOKI_TMPDIR="/tmp/$(whoami)/$$"
     CMC_NOTES_DIR="~/Dropbox/Notes/CMC/"
     alias gospi='cd $SPI_DIR'
     alias gospic="cd $SPI_DIR/LibTkGL/TclGeoEER/generic"
+    alias gospit="cd $SPI_DIR/LibTkGL/TclGeoEER/MetObsTest"
     alias makespi='(cd $SPI_DIR/LibTkGL/ ; ./makeit -spi)'
     alias quota='ssh lightning quota'
     alias git='/ssm/net/cmoi/apps/git/20150526/ubuntu-14.04-amd64-64/bin/git'
