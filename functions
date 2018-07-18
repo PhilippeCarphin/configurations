@@ -292,3 +292,7 @@ org(){
 org-new(){
     emacs -nw ~/Documents/Notes/Notes_BUCKET/__NEW__.org
 }
+
+echolist(){
+    echo $1 | tr ':' '\n'
+}
