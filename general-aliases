@@ -95,7 +95,6 @@ if at_cmc ; then
     alias runxp='rdesktop -g 840x525 eccmcwts3 -d ECQUEBEC -u CarphinP'
     alias runxp-big='rdesktop -g 1280x950 eccmcwts3 -d ECQUEBEC -u CarphinP'
     alias open=open_cmc
-    alias make=pmake
     fs3=/fs/cetus3/fs3/cmd/s/afsm/pca
     alias fs3='cd $fs3'
     alias spireconf='cd $SPI_DIR/LibTkGL/TclGeoEER ; /usr/bin/autoconf2.50 || echo "spireconf failed" ; cd - >/dev/null'
