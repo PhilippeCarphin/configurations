@@ -8,7 +8,6 @@ if [ -f /etc/bashrc ]; then
 fi
 
 BASHRC_LOADED=true
-
 ################################################################################
 # Echoes a shortened version of host name when at polytechnique
 ################################################################################
@@ -45,13 +44,13 @@ make_ps1(){
 
 	 PS1="$pec$prompt_start$git_part$last_part"
 }
-export PROMPT_COMMAND=make_ps1
 
 ################################################################################
 # Checks for interactive shell.  The following will only be done if the shell is
 # an interactive session.  Otherwise these things should not be done.
 ################################################################################
 if [[ "$-" == *i* ]] ; then
+	export PROMPT_COMMAND=make_ps1
 
 	source ~/.functions
 	source ~/.general-aliases
