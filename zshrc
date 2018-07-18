@@ -1,3 +1,4 @@
+unset PROMPT_COMMAND  # Because it does something to org-babel when zsh is launched CMC-style by doing 'exec zsh' from the bashrc file.
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
@@ -19,7 +20,7 @@ fi
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-ZSH_THEME="wedisagree"
+ZSH_THEME="agnoster-phil"
 
 # Set list of themes to load
 # Setting this variable when ZSH_THEME=random
