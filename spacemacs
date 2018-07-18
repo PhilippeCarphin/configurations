@@ -421,6 +421,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
     (read-string "New note name : "
                  (apply #'concat (map 'list #'int-to-string (calendar-current-date))))))
   (switch-to-buffer (concat "~/Dropbox/Notes/Notes_BUCKET/Notes_" name ".org"))
+  (set-visited-file-name (concat "~/Dropbox/Notes/Notes_BUCKET/Notes_" name ".org"))
   (org-mode)
   (evil-insert-state)
   (yas-insert-snippet "nn"))
