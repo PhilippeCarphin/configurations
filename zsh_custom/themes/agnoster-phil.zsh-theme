@@ -33,6 +33,7 @@
 source ~/.git-prompt-phil.sh
 
 CURRENT_BG='NONE'
+FG_COLOR='blue'
 
 # Special Powerline characters
 
@@ -122,7 +123,7 @@ context_bg=$( if at_cmc ; then echo 12 ; else echo black ; fi)
 # Context: user@hostname (who am I and where am I)
 prompt_context() {
   if [[ "$USER" != "$DEFAULT_USER" || -n "$SSH_CLIENT" ]]; then
-	  prompt_segment $context_bg default "$(short_host)"
+	  prompt_segment $context_bg $FG_COLOR "$(short_host)"
   fi
 }
 
@@ -141,10 +142,10 @@ prompt_git() {
     dirty=$(parse_git_dirty)
     ref=$(git symbolic-ref HEAD 2> /dev/null) || ref="➦ $(git rev-parse --short HEAD 2> /dev/null)"
     if [[ -n $dirty ]]; then
-      prompt_segment yellow black
+      prompt_segment yellow $FG_COLOR
 	  tm="$(git_time_since_commit)"
     else
-      prompt_segment green black
+      prompt_segment green $FG_COLOR
     fi
 
     if [[ -e "${repo_path}/BISECT_LOG" ]]; then
@@ -177,15 +178,15 @@ prompt_bzr() {
         status_all=`bzr status | head -n1 | wc -m`
         revision=`bzr log | head -n2 | tail -n1 | sed 's/^revno: //'`
         if [[ $status_mod -gt 0 ]] ; then
-            prompt_segment yellow black
+            prompt_segment yellow $FG_COLOR
             echo -n "bzr@"$revision "✚ "
         else
             if [[ $status_all -gt 0 ]] ; then
-                prompt_segment yellow black
+                prompt_segment yellow $FG_COLOR
                 echo -n "bzr@"$revision
 
             else
-                prompt_segment green black
+                prompt_segment green $FG_COLOR
                 echo -n "bzr@"$revision
             fi
         fi
@@ -199,7 +200,7 @@ prompt_hg() {
     if $(hg prompt >/dev/null 2>&1); then
       if [[ $(hg prompt "{status|unknown}") = "?" ]]; then
         # if files are not added
-        prompt_segment red white
+        prompt_segment red $FG_COLOR
         st='±'
       elif [[ -n $(hg prompt "{status|modified}") ]]; then
         # if any modification
@@ -230,15 +231,15 @@ prompt_hg() {
 
 git_pwd_prompt() {
 	if [[ $(git rev-parse --is-inside-work-tree 2>/dev/null) == true ]] ; then
-    prompt_segment cyan black "$(git_pwd)"
+    prompt_segment cyan $FG_COLOR "$(git_pwd)"
 	else
-		prompt_segment blue black "%~"
+		prompt_segment blue "white" "%~"
 	fi
 }
 
 # Dir: current working directory
 prompt_dir() {
-	prompt_segment blue black '%~'
+	prompt_segment blue white '%~'
 }
 
 # Virtualenv: current working virtualenv
