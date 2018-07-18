@@ -449,7 +449,6 @@ you should place your code here."
   (setq-default org-default-notes-file "~/Dropbox/Notes/Notes_BUCKET/org-capture.org")
   (bind-insert-mode-window-change-keys)
 
-  (custom-prefix-example)
   (define-key evil-visual-state-map (kbd "C-o")
     (lambda (lang start end)
       (interactive (list (read-string "Enter a language : " "c") (region-beginning) (region-end)))
