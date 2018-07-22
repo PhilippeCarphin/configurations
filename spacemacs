@@ -513,7 +513,7 @@ you should place your code here."
   (setq org-publish-project-alist
         '(
           ("org-notes"
-          :base-directory "~/Documents/Notes/Notes_BUCKET/"
+          :base-directory "~/Dropbox/Notes/Notes_BUCKET/"
           :base-extension "org"
           :publishing-directory "~/Documents/Notes/published"
           :recursive t
