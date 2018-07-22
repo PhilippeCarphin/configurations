@@ -517,7 +517,8 @@ you should place your code here."
           :base-extension "org"
           :publishing-directory "~/Documents/Notes/published"
           :recursive t
-          :publishing-function org-html-publish-to-html
+          ;; :publishing-function org-html-publish-to-html
+          :publishing-function org-twbs-publish-to-html
           :headline-levels 4
           :auto-preamble t)
           ("org-static"
