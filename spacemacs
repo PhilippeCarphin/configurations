@@ -341,8 +341,10 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (org-shifttab)
   (evil-scroll-line-to-center (line-number-at-pos)))
 (defun org-augment-shifttab ()
+  (define-key evil-normal-state-map [backtab] 'phil-org-shifttab)
   (define-key evil-normal-state-map [S-tab] 'phil-org-shifttab)
   (define-key evil-normal-state-map [S-iso-lefttab] 'phil-org-shifttab))
+
 (setq-default phil-window-resize-step-size 4)
 (defun set-window-resize-keys ()
   "Sets hotkeys to resize windows like in tmux"
