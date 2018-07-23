@@ -23,9 +23,7 @@ sudo_replace_with_file(){
 installGroup() {
     case $1 in
         utils)
-            if ! [ -d ~/Documents/GitHub ] ; then
-                mkdir ~/Documents/GitHub
-            fi
+            mkdir -p ~/Documents/GitHub/
             git clone https://github.com/PhilippeCarphin/utils ~/Documents/GitHub/utils
             ;;
         cmc)
@@ -89,6 +87,7 @@ installGroup() {
             fi
             ;;
         emacs)
+            git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d
             replace_with_link $HOME/.emacs.d/private emacs.d/private
             replace_with_link $HOME/.spacemacs spacemacs
             ;;
@@ -101,7 +100,6 @@ installGroup() {
             replace_with_link $HOME/.git-prompt-phil.sh git-prompt-phil.sh
             replace_with_link $HOME/.gitignore.global gitignore.global
             replace_with_link $HOME/.config/git git
-             
             ;;
         sublime)
             replace_with_link $HOME/.config/sublime-text-3 config/sublime-text-3
@@ -110,12 +108,6 @@ installGroup() {
             replace_with_link $HOME/.tmux.conf tmux.conf
             ;;
         bin)
-            ;;
-        cmc)
-            replace_with_link $HOME/.profile profile
-            replace_with_link $HOME/.bash_profile profile
-            replace_with_link $HOME/.profile.d/interactive/post post
-            replace_with_link $HOME/.gitconfig gitconfig_cmc
             ;;
         nautilusScripts)
             ;;
@@ -173,18 +165,12 @@ fi
 
 if [ "$1" = full ] ; then
     installGroup bash
-    installGroup zsh
-    installGroup fish
-    installGroup vim
-    installGroup templates
     installGroup git
-    installGroup sublime
-    installGroup tmux
-    installGroup logging
     installGroup emacs
-    if [ "$CMCLNG" != "" ] ; then
-        installGroup cmc
-    fi
+    installGroup templates
+    installGroup tmux
+    at_cmc && installGroup cmc
+    installGroup vim
 elif [ "$1" != "" ] ; then
     installGroup $1
 else
