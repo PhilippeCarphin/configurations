@@ -300,3 +300,28 @@ org-new(){
 echolist(){
     echo $1 | tr ':' '\n'
 }
+
+cmc_check_git(){
+    local gv=$(git --version | cut -d ' ' -f 3)
+    local major=$(cut -d '.' -f 1 <<< $gv)
+    local minor=$(cut -d '.' -f 2 <<< $gv)
+
+    if [ $major -lt 2 ] ; then
+        git_stoneage_message $gv
+    elif [ $major -eq 2 ] && [ $minor -lt 13 ] ; then
+        git_unsupported_message $gv
+    fi
+}
+
+git_stoneage_message(){
+    local gv=$1
+    echo "$(tput setab 1)$(tput setaf 15)You are using a version of git ($gv) from the stone age$(tput sgr 0)"
+    echo "You can setup links to things in $(tput setaf 2)/ssm/net/cmoi/apps/git/...$(tput sgr 0) to put in $(tput setaf 2)~/.local/bin$(tput sgr 0)"
+    echo "make sure you do the same for gitk"
+}
+
+git_unsupported_message(){
+    local gv=$1
+    echo "$(tput setab 11)You are using a version of git ($gv) that is no longer supported$(tput sgr 0)"
+    echo "Maybe someday, we'll have a version of git that is still supported"
+}
