@@ -246,13 +246,6 @@ fuzzyfind() {
     search_string="$(echo $1 | sed 's/\(.\)/\*\1/g')*"
     find ./* -name "$search_string"
 }
-
-echopath() {
-   eval echo \$$1 | tr ':' '\n' | sort
-
-
-}
-
 normal_mode() {
    unset CDPATH
 	set +o vi
