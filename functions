@@ -147,13 +147,17 @@ git_pwd() {
 }
 
 ################################################################################
-# Functions j
+# Functions
 ################################################################################
 at_cmc() {
-    if [ $(whoami) = afsmpca ] ; then
-        true
+    local username=$(whoami)
+    [ $username = afsmpca ] || [ $username = afsmphc ]
+}
+cmc_network(){
+    if [ -e ~/.network_is_ec ] ; then
+        echo "ec"
     else
-        false
+        echo "science"
     fi
 }
 
