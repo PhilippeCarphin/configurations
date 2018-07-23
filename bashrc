@@ -101,8 +101,8 @@ if [[ "$-" == *i* ]] ; then
        else
           unset CDPATH
        fi
-       source ~/.profile.d/jp-aliases.sh
-       source ~/.profile.d/jp-functions.sh
+       # source ~/.profile.d/jp-aliases.sh
+       # source ~/.profile.d/jp-functions.sh
    fi
 fi
 
