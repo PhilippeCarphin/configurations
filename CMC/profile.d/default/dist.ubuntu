@@ -1,12 +1,3 @@
 #!/bin/sh
 
-# echo ".profile.d/default/dist.ubuntu START"
-#----- Souce compiler environmnet
-. ssmuse-sh -d hpcs/201402/04/base
-. ssmuse-sh -d hpcs/201402/04/default
-. ssmuse-sh -d cmdn/vgrid/6.1.1/intel13sp1u2
-
-#----- OpenMPI  to use infiniband / tcp
-export OMPI_MCA_btl=tcp,self
-#export OMP_PROC_BIND=TRUE
 # echo ".profile.d/default/dist.ubuntu END"

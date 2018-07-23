@@ -1,10 +1,4 @@
 #!/bin/sh
 #
 # echo ".profile.d/interactive/dist.ubuntu START"
-countdown
-
-#----- Maestro stuff
-
-#ssmuse-sh -d /home/binops/afsi/ssm/domain2 -p maestro-utils_1.0.7_all
-#ssmuse-sh -d /home/binops/afsi/ssm/domain2 -p xflow_1.0.7_all
 # echo ".profile.d/interactive/dist.ubuntu END"

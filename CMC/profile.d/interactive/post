@@ -1,5 +1,4 @@
 #!/bin/sh
 #
 # echo ".profile.d/interactive/post START"
-. ssmuse-sh -d /ssm/net/cmoi/apps/git/20150526
 # echo ".profile.d/interactive/post END"

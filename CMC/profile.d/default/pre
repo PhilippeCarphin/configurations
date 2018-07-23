@@ -1,35 +1,4 @@
 #!/bin/sh
 #
 # echo ".profile.d/default/pre START"
-#----- HPCS
-. ssmuse-sh -x hpcs/ext/sscp
-
-#----- RPN
-
-. ssmuse-sh -d rpn/libs/16.0
-. ssmuse-sh -d rpn/utils/16.0
-
-#----- CMOI (AFSISIO, CMCxxx, ...)
-. ssmuse-sh -d cmoi/base/20160901
-
-#----- CMDS (toimv6, ...)
-. ssmuse-sh -d cmds/base/201609/00/intel13sp1u2
-
-#----- CMOE
-
-. ssmuse-sh -d cmoe/eer/beta
-. ssmuse-sh -d cmoe/base/beta
-#. ssmuse-sh -d cmoe/base/20161213
-#. ssmuse-sh -d cmoe/eer/20161213
-
-#----- Some extras
-. ssmuse-sh -d rpn/OCEAN/cstint-3.0.2
-. ssmuse-sh -p hpcs/ext/thinlinc-4.7.0/thinlinc_4.7.0_all
-#. ssmuse-sh -d /ssm/net/cmda/utils/15.2-2
-
-#----- Patches
-
-#----- Temporary test
-#. ssmuse-sh -p cmoe/eer/master/eerENV_2.2.1
-#. ssmuse-sh -p cmoe/eer/master/eerModel_1.9.0
 # echo ".profile.d/default/pre END"
