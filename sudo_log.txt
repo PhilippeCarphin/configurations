@@ -1,6 +1,0 @@
-Thu Nov  9 11:59:40 EST 2017 : dnf install ncurses ncurses-devel ncurses-c++-libx
-Sat Nov 11 22:22:32 EST 2017 : dnf install lint
-Sat Nov 11 23:14:21 EST 2017 : dnf install clang-tidy
-Sat Nov 11 23:14:45 EST 2017 : dnf install clang-format
-Wed Nov 15 21:48:02 EST 2017 : dnf install zsh
-Wed Nov 15 22:26:56 EST 2017 : dnf install tmux

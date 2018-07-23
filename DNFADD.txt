@@ -1,2 +1,0 @@
-dnf install clang cmake
-sudo yum groupinstall "C Development Tools and Libraries"
