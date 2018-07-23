@@ -87,6 +87,7 @@ if at_cmc ; then
     alias gospi='cd $SPI_DIR'
     alias gospic="cd $SPI_DIR/LibTkGL/TclGeoEER/generic"
     alias gospit="cd $SPI_DIR/LibTkGL/TclGeoEER/MetObsTest"
+    alias gospoo="cd $SPOOKI_DIR"
     alias makespi='(cd $SPI_DIR/LibTkGL/ ; ./makeit -spi)'
     alias quota='ssh lightning quota'
     alias git='/ssm/net/cmoi/apps/git/20150526/ubuntu-14.04-amd64-64/bin/git'
@@ -95,13 +96,12 @@ if at_cmc ; then
     alias tmuxspi='tmux new-session \; source-file ~/spi-dev.tmux'
     alias tclsh='/ssm/net/cmoe/apps/libSPI_7.12.2_ubuntu-14.04-amd64-64/TCL/bin/tclsh8.6'
     alias wish='/ssm/net/isst/maestro/1.4.3-rc4/linux26-x86-64/bin/wish'
-    alias runxp='rdesktop -g 840x525 eccmcwts3 -d ECQUEBEC -u CarphinP'
-    alias runxp-big='rdesktop -g 1280x950 eccmcwts3 -d ECQUEBEC -u CarphinP'
+    alias runxp='nohup rdesktop -g 840x525 eccmcwts3 -d ECQUEBEC -u CarphinP &'
+    alias runxp-big='nohup rdesktop -g 1280x950 eccmcwts3 -d ECQUEBEC -u CarphinP &'
     alias open=open_cmc
     fs3=/fs/cetus3/fs3/cmd/s/afsm/pca
     alias fs3='cd $fs3'
     alias spireconf='cd $SPI_DIR/LibTkGL/TclGeoEER ; /usr/bin/autoconf2.50 || echo "spireconf failed" ; cd - >/dev/null'
-    alias spacemacs='/tmp/emacs/bin/emacs'
     alias bash_back="sed 's/\\(exec zsh\\)/# \\1/' < ~/.bashrc > ~/.philconfig/brc ; mv ~/.philconfig/brc ~/.philconfig/bashrc"
     alias zsh_back="sed 's/\\(# \\)*\\(exec zsh\\)/\\2/' < ~/.bashrc > ~/.philconfig/brc ; mv ~/.philconfig/brc ~/.philconfig/bashrc"
 
@@ -119,9 +119,7 @@ if at_cmc ; then
     spi_path=/users/dor/afsm/pca/Documents/GitHub/SPI_PHIL/eer_SPI/
     alias spi_beta='export SPI_LIB=$SSM_DEV/workspace/libSPI_7.12.2_${ORDENV_PLAT}; export SPI_PATH=$spi_path'
     alias spi++='spi_beta; $SPI_PATH/bin/SPI'
-    if [ -e ~/.normal_mode ] ; then
-       alias emacs='/usr/bin/emacs'
-    fi
-
+    alias emacs='/usr/bin/emacs -q'
+    alias spacemacs=~/.local/bin/emacs-26.1
 fi
 alias sql_date='date +%Y-%m-%d\ %H:%M:%S'
