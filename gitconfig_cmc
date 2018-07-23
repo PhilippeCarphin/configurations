@@ -1,6 +1,6 @@
 [user]
 	name = Philippe Carphin
-	email = philippe.carphin@canada.ca
+	email = philippe.carphin2@canada.ca
 [alias]
 	st = status
 	logl = log --oneline --decorate --graph -15
