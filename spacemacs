@@ -52,12 +52,13 @@ values."
      (ycmd :variables
            ycmd-server-command '("python" "/users/pcarphin/.local/share/ycmd/"))
      (auto-completion :variables
-                   auto-completion-return-key-behavior 'complete
+                   auto-completion-return-key-behavior 'nil
                    auto-completion-tab-key-behavior 'complete
                    auto-completion-complete-with-key-sequence "fd"
                    auto-completion-complete-with-key-sequence-delay 0.1
                    auto-completion-enable-snippets-in-popup t
-                   auto-completion-private-snippets-directory nil)
+                   auto-completion-private-snippets-directory nil
+                   )
      (c-c++ :variables
             c-c++-enable-clang-support t)
      ;; It is necessary to install wakatime using pip
