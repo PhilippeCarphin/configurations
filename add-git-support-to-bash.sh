@@ -21,16 +21,25 @@
 # search through code and other files because it also supports regular
 # expressions.
 
+# Also note that function arguments don't show up in the declaration.  That's
+# they are all strings and bash is very loose.  But functions can take arguments
+# and when they do, we access them in the function using $1, $2, ...
+
+# To make code more readable, I always assign these arguments to variables with
+# better names.  This makes the code of the function more readable and also
+# documents the functions interface (i.e. what arguments it expects).
+
 ################################################################################
 # If the file exists, nothing is done, otherwise, wget is used to download the
 # file, then move the file to the home folder under the target name.
 ################################################################################
 get_and_source(){
-	echo "$(tput setaf 2)Setting up $downloaded_file$(tput sgr 0)"
 
 	local file_url=$1
 	local target_file=$2
 	local downloaded_file=$(basename $file_url)
+
+	echo "$(tput setaf 2)Setting up $downloaded_file$(tput sgr 0)"
 
 	# Abort if the file already exists
 	if [ -e ~/$target_file -o -L ~/$target_file ]; then
