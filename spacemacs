@@ -461,6 +461,12 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (yas-insert-snippet)
   (evil-insert-state))
 
+(defun org-make-code-block-command (lang start end)
+  (interactive (list (read-string "Enter a language : " "c") (region-beginning) (region-end)))
+  (org-make-code-block lang start end))
+(defun org-set-make-code-block-key ()
+  (define-key evil-visual-state-map (kbd "C-o") 'org-make-code-block-command))
+
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
 This function is called at the very end of Spacemacs initialization after
@@ -500,6 +506,7 @@ you should place your code here."
                              (setq-local tab-width 4)
                              (setq-local org-indent-indentation-per-level 4)))
   (add-hook 'org-mode-hook 'org-augment-shifttab)
+  (add-hook 'org-mode-hook 'org-set-make-code-block-key)
 
   ;; Typing 'jk' fast will exit inser-mode
   (setq-default evil-escape-key-sequence "jk")
