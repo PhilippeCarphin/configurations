@@ -7,7 +7,6 @@ if [ -f /etc/bashrc ]; then
 	. /etc/bashrc
 fi
 
-BASHRC_LOADED=true
 ################################################################################
 # Echoes a shortened version of host name when at polytechnique
 ################################################################################
@@ -46,65 +45,96 @@ make_ps1(){
 }
 
 ################################################################################
-# Checks for interactive shell.  The following will only be done if the shell is
-# an interactive session.  Otherwise these things should not be done.
+# 
 ################################################################################
-if [[ "$-" == *i* ]] ; then
+bashrc_configure_prompt(){
 	export PROMPT_COMMAND=make_ps1
-
-	source ~/.functions
-	source ~/.general-aliases
-	source ~/Templates/.template-completion.bash
-
-	source ~/.git-completion.bash
-	source ~/.git-prompt.sh
-	source ~/.git-prompt-phil.sh
-
-	# Make bash behave a bit like vim.
-   if ! [ -e ~/.normal_mode ] ; then
-      set -o vi
-   fi
-
 	# Define colors for making prompt string.
 	orange=$(tput setaf 208)
 	green=$(tput setaf 2)
-   yellow=$(at_cmc && tput setaf 11 || tput setaf 3)
+    yellow=$(at_cmc && tput setaf 11 || tput setaf 3)
 	purple=$(tput setaf 5)
 	blue=$(tput setaf 4)
 	red=$(tput setaf 9)
 	reset_colors=$(tput sgr 0)
 
 	# define variables for prompt colors
-   prompt_color=$purple
+    prompt_color=$purple
 
 	GIT_PS1_PHIL_HEADLESS_COLOR=$red
 	GIT_PS1_PHIL_DIRTY_COLOR=$orange
 	GIT_PS1_PHIL_CLEAN_COLOR=$green
 
 	PS2='\[$purple\] > \[$reset_colors\]'
+}
+
+################################################################################
+# 
+################################################################################
+bashrc_configure_history(){
 
 	# Make history infinite.
 	export HISTFILESIZE=
 	export HISTSIZE=
+}
 
-	# Checking that my username is my polytechnique username
-	if [ "$USER" = phcarb -o "$USER" = "" ]; then
-		true
-	fi
-   if at_cmc ; then
-       # This file must be sourced by bash before zsh is launched
-       cmc_check_git
-       source ~/.profile
-       if ! [ -e ~/.normal_mode ] ; then
-          exec zsh
-          true # This is needed for when I comment out the first line (bash
-               # doens't allow empty if blocks
-       else
-          unset CDPATH
-       fi
-       # source ~/.profile.d/jp-aliases.sh
-       # source ~/.profile.d/jp-functions.sh
+################################################################################
+# 
+################################################################################
+bashrc_cmc_specifics(){
+   # This file must be sourced by bash before zsh is launched
+   cmc_check_git
+   source ~/.profile
+   if ! [ -e ~/.normal_mode ] ; then
+      exec zsh
+      true # This is needed for when I comment out the first line (bash
+           # doens't allow empty if blocks
+   else
+      unset CDPATH
    fi
+   # source ~/.profile.d/jp-aliases.sh
+   # source ~/.profile.d/jp-functions.sh
+}
+
+################################################################################
+# 
+################################################################################
+bashrc_set_vim_keybindigs(){
+	# Make bash behave a bit like vim.
+   if ! [ -e ~/.normal_mode ] ; then
+      set -o vi
+   fi
+}
+
+################################################################################
+# 
+################################################################################
+bashrc_poly_specifics(){
+	true
+}
+
+################################################################################
+# Checks for interactive shell.  The following will only be done if the shell is
+# an interactive session.  Otherwise these things should not be done.
+################################################################################
+if [[ "$-" == *i* ]] ; then
+
+	source ~/.functions
+	source ~/.general-aliases
+	source ~/Templates/.template-completion.bash
+	source ~/.git-completion.bash
+	source ~/.git-prompt.sh
+	source ~/.git-prompt-phil.sh
+	source $CONFIG_DIR/CMC/aliases.sh
+
+	bashrc_set_vim_keybindigs
+    bashrc_configure_prompt
+    bashrc_configure_history
+
+    if    at_cmc ; then bashrc_cmc_specifics
+    elif at_poly ; then bashrc_poly_specifics
+
 fi
 
+BASHRC_LOADED=true
 # echo ".bashrc END"
