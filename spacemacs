@@ -336,14 +336,12 @@ executes.
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
   )
-(defun phil-org-shifttab ()
+
+(defun center-point-vertically ()
   (interactive)
-  (org-shifttab)
   (evil-scroll-line-to-center (line-number-at-pos)))
-(defun org-augment-shifttab ()
-  (define-key evil-normal-state-map [backtab] 'phil-org-shifttab)
-  (define-key evil-normal-state-map [S-tab] 'phil-org-shifttab)
-  (define-key evil-normal-state-map [S-iso-lefttab] 'phil-org-shifttab))
+(defun advise-org-global-cycle ()
+  (advice-add 'org-global-cycle :after #'center-point-vertically))
 
 (setq-default phil-window-resize-step-size 4)
 (defun set-window-resize-keys ()
@@ -507,7 +505,7 @@ you should place your code here."
                              (setq-local evil-shift-width 4)
                              (setq-local tab-width 4)
                              (setq-local org-indent-indentation-per-level 4)))
-  (add-hook 'org-mode-hook 'org-augment-shifttab)
+  (advise-org-global-cycle)
   (add-hook 'org-mode-hook 'org-set-make-code-block-key)
 
   ;; Typing 'jk' fast will exit inser-mode
