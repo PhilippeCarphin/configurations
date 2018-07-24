@@ -337,8 +337,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
   )
 
-(defun center-point-vertically ()
-  (interactive)
+(defun center-point-vertically (&optional arg)
   (evil-scroll-line-to-center (line-number-at-pos)))
 (defun advise-org-global-cycle ()
   (advice-add 'org-global-cycle :after #'center-point-vertically))
