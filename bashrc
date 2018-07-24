@@ -92,6 +92,7 @@ bashrc_cmc_specifics(){
    else
       unset CDPATH
    fi
+   source $CONFIG_DIR/CMC/aliases.sh
    # source ~/.profile.d/jp-aliases.sh
    # source ~/.profile.d/jp-functions.sh
 }
@@ -133,6 +134,7 @@ if [[ "$-" == *i* ]] ; then
 
     if    at_cmc ; then bashrc_cmc_specifics
     elif at_poly ; then bashrc_poly_specifics
+    fi
 
 fi
 

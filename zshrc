@@ -11,10 +11,10 @@ source ~/.general-aliases
 source ~/.github-aliases
 
 if at_cmc ; then
-    # source ~/.profile
+    source $CONFIG_DIR/CMC/aliases.sh
     source ~/.zprofile # It doesn't get sourced because I do exec zsh from bashrc
-    source ~/.profile.d/jp-aliases.sh
-    source ~/.profile.d/jp-functions.sh
+    # source ~/.profile.d/jp-aliases.sh
+    # source ~/.profile.d/jp-functions.sh
 fi
 
 # Set name of the theme to load. Optionally, if you set this to "random"
