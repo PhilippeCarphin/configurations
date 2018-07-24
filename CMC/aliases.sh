@@ -9,7 +9,7 @@ if [[ $(cmc_network) == "ec" ]] ; then
     export SPOOKI_DIR="~/Documents/GitHub/SPOOKI_PHIL"
     export SPOOKI_TMPDIR="/tmp/$(whoami)/$$"
     CMC_NOTES_DIR="~/Dropbox/Notes/CMC/"
-    alias gospi='cd $SPI_DIR'
+    alias gospi="cd $SPI_DIR"
     alias gospic="cd $SPI_DIR/LibTkGL/TclGeoEER/generic"
     alias gospit="cd $SPI_DIR/LibTkGL/TclGeoEER/MetObsTest"
     alias gospoo="cd $SPOOKI_DIR"
