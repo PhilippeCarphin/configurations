@@ -342,6 +342,14 @@ before packages are loaded. If you are unsure, you should try in setting them in
 (defun advise-org-global-cycle ()
   (advice-add 'org-global-cycle :after #'evil-scroll-line-to-center))
 
+;; ref : https://www.emacswiki.org/emacs/KillingBuffers#toc2
+(setq not-to-kill-buffer-list '("*scratch*" "#emacs" "*Messages*" "irc.freenode.net:6667"))
+(defun kill-most-buffers ()
+  (interactive)
+  (if (member (buffer-name (current-buffer)) not-to-kill-buffer-list)
+      (bury-buffer)
+    (kill-buffer (current-buffer))))
+
 (setq-default phil-window-resize-step-size 4)
 (defun set-window-resize-keys ()
   "Sets hotkeys to resize windows like in tmux"
