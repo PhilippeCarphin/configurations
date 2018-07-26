@@ -13,13 +13,13 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 
 " Extra plugins to add with vundle go here
-Plugin 'wakatime/vim-wakatime'
+" Plugin 'wakatime/vim-wakatime'
 
 Plugin 'jceb/vim-orgmode'
 
 Plugin 'https://github.com/steffanc/cscopemaps.vim'
 
-Plugin 'Valloric/YouCompleteMe'
+" Plugin 'Valloric/YouCompleteMe'
 
 Plugin 'Lokaltog/vim-powerline'
 
