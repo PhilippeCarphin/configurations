@@ -344,11 +344,14 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
 ;; ref : https://www.emacswiki.org/emacs/KillingBuffers#toc2
 (setq not-to-kill-buffer-list '("*scratch*" "#emacs" "*Messages*" "irc.freenode.net:6667"))
-(defun kill-most-buffers ()
+(defun maybe-kill-buffer (buffer)
+  (when (not (member buffer not-to-kill-buffer-list))
+    (kill-buffer buffer)))
+
+(defun maybe-kill-all-buffers ()
   (interactive)
-  (if (member (buffer-name (current-buffer)) not-to-kill-buffer-list)
-      (bury-buffer)
-    (kill-buffer (current-buffer))))
+  (mapc 'maybe-kill-buffer (delq (current-buffer) (buffer-list))))
+
 
 (setq-default phil-window-resize-step-size 4)
 (defun set-window-resize-keys ()
