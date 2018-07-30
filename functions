@@ -380,6 +380,6 @@ git_stoneage_message(){
 ################################################################################
 git_unsupported_message(){
     local gv=$1
-    echo "$(tput setab 11)You are using a version of git ($gv) that is no longer supported$(tput sgr 0)"
+    echo "$(tput setab 11)$(tput setaf 0)You are using a version of git ($gv) that is no longer supported$(tput sgr 0)"
     echo "Maybe someday, we'll have a version of git that is still supported"
 }
