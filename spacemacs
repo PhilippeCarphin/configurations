@@ -497,6 +497,7 @@ explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
   (require 'ox-man)
+  (require 'ox-md)
   (setq-default scroll-margin 10)
   (define-key evil-normal-state-map [mouse-8] 'previous-buffer)
   (define-key evil-normal-state-map [mouse-9] 'next-buffer)
