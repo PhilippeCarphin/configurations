@@ -1,6 +1,9 @@
 #!/bin/bash
 
 echo "$(tput setab 8)$(tput setaf 3)Philconfig post commit hook: auto push on commit$(tput sgr 0)"
-git push origin master
 source ~/.functions
-if at_cmc ; then git push origin cmc ; fi
+if at_cmc ; then
+   git push origin cmc ;
+else
+   git push origin master
+fi
