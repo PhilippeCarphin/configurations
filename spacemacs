@@ -50,13 +50,13 @@ values."
      ;; that gave me python syntax checking TODO : Find out
      (python :variables
              python-test-runner 'pytest)
-     erc
+     erc ;; IRC layer
      ;; (ycmd :variables ycmd-server-command '("python" "/users/pcarphin/.local/share/ycmd/"))
      (auto-completion :variables
                    auto-completion-return-key-behavior 'nil
                    auto-completion-tab-key-behavior 'complete
                    auto-completion-complete-with-key-sequence "fd"
-                   auto-completion-complete-with-key-sequence-delay 0.1
+                   auto-completion-complete-with-key-sequence-delay 0.3
                    auto-completion-enable-snippets-in-popup t
                    auto-completion-private-snippets-directory nil
                    )
@@ -78,7 +78,7 @@ values."
      git
      markdown
      (shell :variables
-            shell-default-height 30
+            shell-default-height 10
             shell-default-position 'bottom)
      spell-checking
      syntax-checking
