@@ -69,6 +69,7 @@ values."
      ;; pip install wakatime
      (wakatime :variables
                wakatime-api-key "806875af-9b0b-47b0-bcdc-f940ce434c86"
+               wakatime-cli-path "~/.local/bin/wakatime"
                )
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
