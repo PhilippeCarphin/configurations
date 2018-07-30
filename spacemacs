@@ -482,7 +482,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
                     (concat "#+BEGIN_SRC " lang "\n")
                     "#+END_SRC\n"))
 (defun org-make-code-block-command (lang start end)
-  (interactive (list (read-string "Enter a language : " "c") (region-beginning) (region-end)))
+  (interactive (list (read-string "Enter a language (default C): " "" nil "c") (region-beginning) (region-end)))
   (org-make-code-block lang start end))
 (defun org-set-make-code-block-key ()
   (define-key evil-visual-state-map (kbd "C-o") 'org-make-code-block-command))
