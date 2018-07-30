@@ -14,6 +14,7 @@ Plugin 'VundleVim/Vundle.vim'
 
 " Extra plugins to add with vundle go here
 " Plugin 'wakatime/vim-wakatime'
+Plugin 'nelstrom/vim-markdown-folding'
 
 Plugin 'jceb/vim-orgmode'
 
