@@ -87,6 +87,7 @@ values."
             shell-default-position 'bottom)
      (spell-checking :variables
                      spell-checking-enable-auto-dictionary t
+                     spell-checking-enable-by-default nil
                      enable-flyspell-auto-completion t)
      syntax-checking
      version-control
