@@ -65,7 +65,9 @@ values."
                    auto-completion-private-snippets-directory nil
                    )
      (c-c++ :variables
-            c-c++-enable-clang-support t)
+            c-c++-enable-clang-support t
+            c-comment-continuation-stars t
+            )
      ;; It is necessary to install wakatime using pip
      ;; pip install wakatime
      (wakatime :variables
