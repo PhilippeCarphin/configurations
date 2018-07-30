@@ -508,11 +508,6 @@ you should place your code here."
   (setq-default org-default-notes-file "~/Dropbox/Notes/Notes_BUCKET/org-capture.org")
   (bind-insert-mode-window-change-keys)
 
-  (define-key evil-visual-state-map (kbd "C-o")
-    (lambda (lang start end)
-      (interactive (list (read-string "Enter a language : " "c") (region-beginning) (region-end)))
-      (org-make-code-block lang start end)))
-
   ;; This value is used when hard wrapping lines with M-x or automatically
   (setq-default fill-column 80)
 
