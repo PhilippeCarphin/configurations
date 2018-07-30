@@ -517,7 +517,7 @@ you should place your code here."
   ;; See : http://blog.binchen.org/posts/easy-indentation-setup-in-emacs-for-web-development.html
   (add-hook 'text-mode-hook 'turn-on-auto-fill)
   (add-hook 'c-mode-common-hook 'c-mode-set-comment-indent-style)
-  (add-hook 'c-mode-common-hook (lambda () (set-c-indent-behavior 3)))
+  (add-hook 'c-mode-hook (lambda () (c-set-style "linux")))
 
   (add-hook 'org-mode-hook (lambda ()
                              (setq-local evil-shift-width 4)
