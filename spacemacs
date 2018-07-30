@@ -502,7 +502,6 @@ you should place your code here."
   (define-key evil-normal-state-map [mouse-8] 'previous-buffer)
   (define-key evil-normal-state-map [mouse-9] 'next-buffer)
 
-  (neotree)
   (set-window-resize-keys)
 
   ;; TODO I tried to set this variable in the layers part but that didn't work
