@@ -494,6 +494,9 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
+  (setq-default markdown-open-command "chromium-browser")
+  (define-key evil-normal-state-map (kbd "SPC h s") 'hlt-highlight-symbol)
+  (define-key evil-normal-state-map (kbd "SPC h u") 'hlt-unhighlight-symbol)
 
   (require 'ox-man)
   (require 'ox-md)
