@@ -84,7 +84,9 @@ values."
      (shell :variables
             shell-default-height 10
             shell-default-position 'bottom)
-     spell-checking
+     (spell-checking :variables
+                     spell-checking-enable-auto-dictionary t
+                     enable-flyspell-auto-completion t)
      syntax-checking
      version-control
      )
