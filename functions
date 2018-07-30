@@ -383,3 +383,47 @@ git_unsupported_message(){
     echo "$(tput setab 11)$(tput setaf 0)You are using a version of git ($gv) that is no longer supported$(tput sgr 0)"
     echo "Maybe someday, we'll have a version of git that is still supported"
 }
+
+################################################################################
+# Files:
+#    spacemacs:
+#        .spacemacs.d (not version controlled)
+#        .spacemacs -> .philconfig/spacemacs
+#    vanillamacs:
+#        .vanillamacs.d (not version controlled)
+#        .vanillamacs -> .philconfig/vanillamacs
+# Links: ~/.emacs, ~/.emacs.d
+#    Spacemacs:
+#        .emacs.d -> ~/.spacemacs.d
+#        .spacemacs -> NO LINK: .spacemacs is ignored in vanilla mode
+#    Vanillamacs:
+#        .emacs.d -> ~/.vanillamacs.d
+#        .emacs -> ~/.vanillamacs
+# TODO Add vanilla-spacemacs for experimentation : since spacemacs manages its
+# own directory, I would only need to change the .spacemacs link and not the
+# .emacs.d link
+# NOTE In the spirit of emacs lisp, I have indented things like in lisp for fun.
+################################################################################
+emacs_spacemacs_or_vanilla(){ if [ -e ~/.emacs ] ; then echo "vanillamacs"
+                              else echo "spacemacs"; fi ; }
+
+emacs_clear_links(){ [ -L ~/.emacs.d ] && rm ~/.emacs.d
+                     [ -L ~/.emacs ] && rm ~/.emacs ; }
+
+emacs_spacemacs_mode(){ emacs_clear_links
+                        ln -s ~/.spacemacs.d ~/.emacs.d ; }
+
+emacs_vanilla_mode(){ emacs_clear_links
+                      ln -s ~/.vanillamacs.d ~/.emacs.d
+                      ln -s ~/.vanillamacs ~/.emacs ; }
+
+emacs_toggle_vanillamacs_spacemacs(){ case $(emacs_spacemacs_or_vanilla) in
+                                       "vanillamacs") emacs_spacemacs_mode ;;
+                                       "spacemacs")   emacs_vanilla_mode ;; esac ; }
+
+emacs_setup_vanillamacs_here(){ mkdir .vanillamacs.d
+                                ln -s $PWD/.vanillamacs.d ~/.vanillamacs.d ; }
+
+emacs_setup_spacemacs_here(){ mkdir .spacemacs.d
+                              ln -s $PWD/.spacemacs.d ~/.spacemacs.d ; }
+
