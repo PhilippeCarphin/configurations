@@ -432,16 +432,6 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (define-key evil-normal-state-map (kbd "C-a /") (lambda () (interactive) (split-window-right)))
   (define-key evil-normal-state-map (kbd "C-a -") (lambda () (interactive) (split-window-below)))
   )
-(defun surround-strings (start end start-string end-string)
-  (save-excursion (goto-char end)
-                  (insert end-string)
-                  (goto-char start)
-                  (insert start-string)))
-
-(defun org-make-code-block (lang start end)
-  (surround-strings start end
-                    (concat "#+BEGIN_SRC " lang "\n")
-                    "#+END_SRC\n"))
 
 (defun new-note (name)
   "Create a new org-mode notes file in standard location"
@@ -482,6 +472,15 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (yas-insert-snippet)
   (evil-insert-state))
 
+(defun surround-strings (start end start-string end-string)
+  (save-excursion (goto-char end)
+                  (insert end-string)
+                  (goto-char start)
+                  (insert start-string)))
+(defun org-make-code-block (lang start end)
+  (surround-strings start end
+                    (concat "#+BEGIN_SRC " lang "\n")
+                    "#+END_SRC\n"))
 (defun org-make-code-block-command (lang start end)
   (interactive (list (read-string "Enter a language : " "c") (region-beginning) (region-end)))
   (org-make-code-block lang start end))
