@@ -45,7 +45,10 @@ values."
           )
      osx
      html
-     colors
+     (colors :variables
+             colors-colorize-identifiers 'variables
+             colors-enable-nyan-cat-progress-bar (display-graphic-p)
+             )
      ;; I don't know if it was pip-installing flake8 or adding this variable
      ;; that gave me python syntax checking TODO : Find out
      (python :variables
