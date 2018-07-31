@@ -387,14 +387,14 @@ git_unsupported_message(){
 ################################################################################
 # Files:
 #    spacemacs:
-#        .spacemacs.d (not version controlled)
-#        .spacemacs -> .philconfig/spacemacs
+#        .my_spacemacs.d (not version controlled)
+#        .my_spacemacs -> .philconfig/spacemacs
 #    vanillamacs:
 #        .vanillamacs.d (not version controlled)
 #        .vanillamacs -> .philconfig/vanillamacs
 # Links: ~/.emacs, ~/.emacs.d
 #    Spacemacs:
-#        .emacs.d -> ~/.spacemacs.d
+#        .emacs.d -> ~/.my_spacemacs.d
 #        .spacemacs -> NO LINK: .spacemacs is ignored in vanilla mode
 #    Vanillamacs:
 #        .emacs.d -> ~/.vanillamacs.d
@@ -404,26 +404,24 @@ git_unsupported_message(){
 # .emacs.d link
 # NOTE In the spirit of emacs lisp, I have indented things like in lisp for fun.
 ################################################################################
-emacs_spacemacs_or_vanilla(){ if [ -e ~/.emacs ] ; then echo "vanillamacs"
+spacemacs_dir=~/.my_spacemacs.d
+spacemacs_file=~/.my_spacemacs
+vanillamacs_dir=~/.vanillamacs
+vanillamacs_file=~/.vanillamacs
+
+emacs_spacemacs_or_vanilla(){ if [ -L ~/.emacs ] ; then echo "vanillamacs"
                               else echo "spacemacs"; fi ; }
 
 emacs_clear_links(){ [ -L ~/.emacs.d ] && rm ~/.emacs.d
                      [ -L ~/.emacs ] && rm ~/.emacs ; }
 
 emacs_spacemacs_mode(){ emacs_clear_links
-                        ln -s ~/.spacemacs.d ~/.emacs.d ; }
+                        ln -s $spacemacs_dir ~/.emacs.d ; }
 
 emacs_vanilla_mode(){ emacs_clear_links
-                      ln -s ~/.vanillamacs.d ~/.emacs.d
-                      ln -s ~/.vanillamacs ~/.emacs ; }
+                      ln -s $vanillamacs_dir ~/.emacs.d
+                      ln -s $vanillamacs_file ~/.emacs ; }
 
 emacs_toggle_vanillamacs_spacemacs(){ case $(emacs_spacemacs_or_vanilla) in
                                        "vanillamacs") emacs_spacemacs_mode ;;
                                        "spacemacs")   emacs_vanilla_mode ;; esac ; }
-
-emacs_setup_vanillamacs_here(){ mkdir .vanillamacs.d
-                                ln -s $PWD/.vanillamacs.d ~/.vanillamacs.d ; }
-
-emacs_setup_spacemacs_here(){ mkdir .spacemacs.d
-                              ln -s $PWD/.spacemacs.d ~/.spacemacs.d ; }
-
