@@ -163,7 +163,7 @@ git_pwd() {
 ################################################################################
 at_cmc() {
     local username=$(whoami)
-    [ $username = afsmpca ] || [ $username = afsmphc ]
+    [ $username = afsmpca ] || [ $username = afsmphc ] || [ $username = phc001 ]
 }
 
 ################################################################################
