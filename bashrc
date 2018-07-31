@@ -86,9 +86,11 @@ bashrc_cmc_specifics(){
    cmc_check_git
    source ~/.profile
    if ! [ -e ~/.normal_mode ] ; then
-      exec zsh
-      true # This is needed for when I comment out the first line (bash
-           # doens't allow empty if blocks
+      if [[ $(cmc_network) == "ec" ]] ; then
+         exec zsh
+         true # This is needed for when I comment out the first line (bash
+              # doens't allow empty if blocks
+      fi
    else
       check_quota
       unset CDPATH
