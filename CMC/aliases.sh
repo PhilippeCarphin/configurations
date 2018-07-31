@@ -44,8 +44,7 @@ if [[ $(cmc_network) == "ec" ]] ; then
     alias emacs='/usr/bin/emacs -q'
     alias spacemacs=~/.local/bin/emacs-26.1
 elif [[ $(cmc_network) == "science" ]] ; then
-    echo "On science fresh start"
-    alias git='Do not use git on science network because it is too old'
+    echo "PHIL : On science fresh start"
     if [[ $(hostname) == *ppp* ]] ; then
        alias make='echo "$(tput setab 1)$(tput setaf 15)Do not run make on PPP$(tput sgr 0)"'
     fi
