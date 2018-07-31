@@ -90,6 +90,7 @@ bashrc_cmc_specifics(){
       true # This is needed for when I comment out the first line (bash
            # doens't allow empty if blocks
    else
+      check_quota
       unset CDPATH
    fi
    source $CONFIG_DIR/CMC/aliases.sh

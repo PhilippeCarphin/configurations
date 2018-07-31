@@ -15,6 +15,7 @@ if at_cmc ; then
     source ~/.zprofile # It doesn't get sourced because I do exec zsh from bashrc
     # source ~/.profile.d/jp-aliases.sh
     # source ~/.profile.d/jp-functions.sh
+    check_quota
 fi
 
 # Set name of the theme to load. Optionally, if you set this to "random"

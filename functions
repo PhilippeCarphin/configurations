@@ -425,3 +425,24 @@ emacs_vanilla_mode(){ emacs_clear_links
 emacs_toggle_vanillamacs_spacemacs(){ case $(emacs_spacemacs_or_vanilla) in
                                        "vanillamacs") emacs_spacemacs_mode ;;
                                        "spacemacs")   emacs_vanilla_mode ;; esac ; }
+
+################################################################################
+# Check how I'm doing quota wise
+################################################################################
+check_quota(){
+   local quota_line=$(ssh lightning quota | tail -1 | sed 's/^ *//' | sed 's/ \+/ /g')
+   local current_usage=$(cut -d ' ' -f 1 <<< $quota_line)
+   local quota_value=$(cut -d ' ' -f 2 <<< $quota_line)
+   local usage_difference=$(( $quota_value - $current_usage ))
+   local warning_value=50000
+   local severe_warning_value=10000
+   # echo "current_usage=$current_usage,  quota_value=$quota_value usage_difference=$usage_difference"
+   if (( $usage_difference < $severe_warning_value )) ; then
+      # white on red
+      echo "$(tput setaf 15)$(tput setab 1)Quota : Available home storage is under $severe_warning_value$(tput sgr 0)"
+      return 2
+   elif (( $usage_difference < $warning_value )) ; then
+      # black on yellow
+      echo "$(tput setaf 0)$(tput setab 11)Quota : Available home storage is under $warning_value$(tput sgr 0)"
+   fi
+}
