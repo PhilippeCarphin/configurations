@@ -20,6 +20,8 @@ sudo_replace_with_file(){
     sudo cp $my_file $original_file
 }
 
+source ~/.functions
+
 installGroup() {
     case $1 in
         utils)
@@ -92,9 +94,7 @@ installGroup() {
             replace_with_link $HOME/.spacemacs spacemacs
             ;;
         git)
-            if at_cmc ;    then replace_with_link $HOME/.gitconfig gitconfig_cmc ;
-            elif at_poly ; then replace_with_link $HOME/.gitconfig gitconfig_poly ;
-            else                replace_with_link $HOME/.gitconfig gitconfig ; fi
+            replace_with_link $HOME/.gitconfig gitconfig
             replace_with_link $HOME/.git-completion.bash git-completion.bash
             replace_with_link $HOME/.git-prompt.sh git-prompt.sh
             replace_with_link $HOME/.git-prompt-phil.sh git-prompt-phil.sh
