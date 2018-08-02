@@ -12,10 +12,6 @@ alias lprofile="source $rcfile"
 # If I skip the space with cd ..
 alias cd..='cd ..'
 
-# See disk usage: lists the sizes of the folders in the current
-# directory and sorts them by size
-alias dusage='du --max-depth=1 | sort -n'
-
 # Make gitk always show all branches
 alias gitk="gitk --all --select-commit=HEAD &"
 
@@ -51,12 +47,15 @@ if [ $(uname) = Linux ]; then
 	# ls always shows color
 	alias ls='ls --color'
 	alias open='gio open'
+  # See disk usage: lists the sizes of the folders in the current
+  # directory and sorts them by size
+  alias dusage='du --max-depth=1 -h | sort -h'
 elif [ $(uname) = Darwin ]; then
 	# echo "   Loading Darwin commands" 1>&2
 	# ls always shows color
 	alias ls='ls -G'
 	# Redefine dusage command for MAC
-	alias dusage='du -d 1 | sort -n'
+	alias dusage='du -d 1 -h | sort -h'
 fi
 
 alias setenv='source ./setenv'
