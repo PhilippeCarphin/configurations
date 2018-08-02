@@ -424,7 +424,8 @@ emacs_vanilla_mode(){ emacs_clear_links
 
 emacs_toggle_vanillamacs_spacemacs(){ case $(emacs_spacemacs_or_vanilla) in
                                        "vanillamacs") emacs_spacemacs_mode ;;
-                                       "spacemacs")   emacs_vanilla_mode ;; esac ; }
+                                       "spacemacs")   emacs_vanilla_mode ;; esac ;
+                                      emacs_spacemacs_or_vanilla ; }
 
 ################################################################################
 # Check how I'm doing quota wise
