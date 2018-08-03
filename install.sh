@@ -96,6 +96,71 @@ setup_vanillamacs(){
 
 source $installDir/functions
 
+unlink_file(){
+   [ -L $1 ] && rm -f $1
+   [ -e $1.bak -o -d $1.bak ] && mv $1.bak $1
+}
+
+unlink_group (){
+   case $1 in
+      cmc)
+         unlink_file $HOME/.profile
+         unlink_file $HOME/.profile.d
+         ;;
+      zsh)
+         unlink_file $HOME/.zprofile
+         unlink_file $HOME/.zshrc
+         unlink_file $HOME/.zshenv
+         unlink_file $HOME/.zsh_custom
+         ;;
+      fish)
+         unlink_file $HOME/.config/fish
+         ;;
+      bash)
+         unlink_file $HOME/.bashrc
+         unlink_file $HOME/.bash_profile
+         ;;
+      vim)
+         unlink_file $HOME/.vimrc
+         unlink_file $HOME/.ideavimrc
+         unlink_file $HOME/.vim/colors
+         unlink_file $HOME/.vim/indent
+         unlink_file $HOME/.vim/plugin
+         unlink_file $HOME/.vim/doc
+         unlink_file $HOME/.vim/autoload
+         unlink_file $HOME/.ycm_extra_conf.py
+         ;;
+      templates)
+         unlink_file $HOME/Templates
+         ;;
+      spacemacs)
+         unlink_file $HOME/.spacemacs
+         unlink_file $HOME/.spacemacs.d
+         unlink_file $HOME/.emacs.d/private
+         ;;
+      vanillamacs)
+         unlink_file $HOME/.emacs
+         ;;
+      git)
+         unlink_file $HOME/.gitconfig
+         unlink_file $HOME/.gitignore.global
+         unlink_file $HOME/.config/git
+         ;;
+      rsync)
+         unlink_file $HOME/.cvsignore
+         ;;
+      sublime)
+         unlink_file $HOME/.config/sublime-text-3
+         ;;
+      tmux)
+         unlink_file $HOME/.tmux.conf
+         ;;
+      wakatime)
+         unlink_file $HOME/.wakatime.cfg
+         ;;
+   esac
+}
+
 link_group(){
     case $1 in
         cmc)
@@ -192,6 +257,27 @@ USAGE: $( basename $0) group
 "
 }
 
+if [ "$1" = unlink ] ; then
+   if [ "$2" = full ] ; then
+      unlink_group zsh
+      unlink_group fish
+      unlink_group bash
+      unlink_group vim
+      unlink_group spacemacs
+      unlink_group git
+      unlink_group rsync
+      unlink_group templates
+      unlink_group wakatime
+      unlink_group tmux
+   elif [ "$2" != "" ] ; then
+      unlink_group $2
+   else
+      echo "Must specify a group for command unlink"
+      showUsage
+      exit 1
+   fi
+   exit 0
+fi
 
 if [ "$1" = full ] ; then
     at_cmc && installGroup cmc
