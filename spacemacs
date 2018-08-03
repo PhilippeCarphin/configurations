@@ -487,68 +487,22 @@ before packages are loaded. If you are unsure, you should try in setting them in
 (defun org-set-make-code-block-key ()
   (define-key evil-visual-state-map (kbd "C-o") 'org-make-code-block-command))
 
-(defun dotspacemacs/user-config ()
-  "Configuration function for user code.
-This function is called at the very end of Spacemacs initialization after
-layers configuration.
-This is the place where most of your configurations should be done. Unless it is
-explicitly specified that a variable should be set before a package is loaded,
-you should place your code here."
-  (setq-default markdown-open-command "chromium-browser")
-  (define-key evil-normal-state-map (kbd "SPC h s") 'hlt-highlight-symbol)
-  (define-key evil-normal-state-map (kbd "SPC h u") 'hlt-unhighlight-symbol)
-
+;; Stuff relating to org-publish
+(defun setup-org-publish ()
   (require 'ox-man)
   (require 'ox-md)
-  (setq-default scroll-margin 10)
-  (define-key evil-normal-state-map [mouse-8] 'previous-buffer)
-  (define-key evil-normal-state-map [mouse-9] 'next-buffer)
-
-  (set-window-resize-keys)
-
-  ;; TODO I tried to set this variable in the layers part but that didn't work
-  (setq-default org-default-notes-file "~/Dropbox/Notes/Notes_BUCKET/org-capture.org")
-  (bind-insert-mode-window-change-keys)
-
-  ;; This value is used when hard wrapping lines with M-x or automatically
-  (setq-default fill-column 80)
-
-  ;; I like automatic hard wrapping so this:
-  ;; ref : https://www.emacswiki.org/emacs/AutoFillMode
-  ;; See : http://blog.binchen.org/posts/easy-indentation-setup-in-emacs-for-web-development.html
-  (add-hook 'text-mode-hook 'turn-on-auto-fill)
-  (add-hook 'c-mode-common-hook 'c-mode-set-comment-indent-style)
-  ;; (setq-default comment-auto-fill-only-comments t)
-  (add-hook 'c-mode-hook (lambda () (c-set-style "linux")))
-
-  (add-hook 'org-mode-hook (lambda ()
-                             (setq-local evil-shift-width 4)
-                             (setq-local tab-width 4)
-                             (setq-local org-indent-indentation-per-level 4)))
-  (advise-org-global-cycle)
-  (add-hook 'org-mode-hook 'org-set-make-code-block-key)
-
-  ;; Typing 'jk' fast will exit inser-mode
-  (setq-default evil-escape-key-sequence "jk")
-  (setq-default evil-escape-delay 0.3)
-
-  ;; Automatically follow symlinks when they point to a version controlled
-  ;; source file.
-  (setq-default vc-follow-symlinks t)
-
-  ;; Stuff relating to org-publish
   (require 'ox-publish)
+  (setq-default markdown-open-command "chromium-browser")
   (setq org-publish-project-alist
-        '(
-          ("org-notes"
-          :base-directory "~/Dropbox/Notes/Notes_BUCKET/"
-          :base-extension "org"
-          :publishing-directory "~/Documents/Notes/published"
-          :recursive t
-          ;; :publishing-function org-html-publish-to-html
-          :publishing-function org-twbs-publish-to-html
-          :headline-levels 4
-          :auto-preamble t)
+        '(("org-notes"
+           :base-directory "~/Dropbox/Notes/Notes_BUCKET/"
+           :base-extension "org"
+           :publishing-directory "~/Documents/Notes/published"
+           :recursive t
+           ;; :publishing-function org-html-publish-to-html
+           :publishing-function org-twbs-publish-to-html
+           :headline-levels 4
+           :auto-preamble t)
           ("org-static"
            :base-directory "~/Documents/Notes/Notes_BUCKET"
            :base-extension "css\\/js\\/jpg"
@@ -556,8 +510,73 @@ you should place your code here."
            :recursive t
            :publishing-function org-publish-attachment)
           ("org"
-           :components ("org-notes" "org-static"))
-          ))
+           :components ("org-notes" "org-static")))
+        ))
+(defun configure-org-mode ()
+  (add-hook 'org-mode-hook (lambda ()
+                             (setq-local evil-shift-width 4)
+                             (setq-local tab-width 4)
+                             (setq-local org-indent-indentation-per-level 4)))
+  (advise-org-global-cycle)
+  (add-hook 'org-mode-hook 'org-set-make-code-block-key)
+  )
+
+(defun configure-c-mode ()
+  ;; I like automatic hard wrapping so this:
+  ;; ref : https://www.emacswiki.org/emacs/AutoFillMode
+  ;; See : http://blog.binchen.org/posts/easy-indentation-setup-in-emacs-for-web-development.html
+  (add-hook 'c-mode-common-hook 'c-mode-set-comment-indent-style)
+  ;; (setq-default comment-auto-fill-only-comments t)
+  (add-hook 'c-mode-hook (lambda () (c-set-style "linux")))
+  )
+
+(defun configure-evil-escape-sequence ()
+  ;; Typing 'jk' fast will exit inser-mode
+  (setq-default evil-escape-key-sequence "jk")
+  (setq-default evil-escape-delay 0.3)
+  (push 'visual evil-escape-excluded-states)
+  (push 'magit-status-mode evil-escape-excluded-major-modes)
+  (push 'magit-diff-mode evil-escape-excluded-major-modes)
+  )
+
+(defun dotspacemacs/user-config ()
+  "Configuration function for user code.
+This function is called at the very end of Spacemacs initialization after
+layers configuration.
+This is the place where most of your configurations should be done. Unless it is
+explicitly specified that a variable should be set before a package is loaded,
+you should place your code here."
+
+  (define-key evil-normal-state-map (kbd "SPC h s") 'hlt-highlight-symbol)
+  (define-key evil-normal-state-map (kbd "SPC h u") 'hlt-unhighlight-symbol)
+
+  (setq-default scroll-margin 10)
+
+  (define-key evil-normal-state-map [mouse-8] 'previous-buffer)
+  (define-key evil-normal-state-map [mouse-9] 'next-buffer)
+
+  (set-window-resize-keys)
+
+  (bind-insert-mode-window-change-keys)
+
+  ;; TODO I tried to set this variable in the layers part but that didn't work
+  (setq-default org-default-notes-file "~/Dropbox/Notes/Notes_BUCKET/org-capture.org")
+
+  ;; This value is used when hard wrapping lines with M-x or automatically
+  (setq-default fill-column 80)
+  (add-hook 'text-mode-hook 'turn-on-auto-fill)
+
+  (configure-c-mode)
+
+  (configure-org-mode)
+
+  (configure-evil-escape-sequence)
+
+  ;; Automatically follow symlinks when they point to a version controlled
+  ;; source file.
+  (setq-default vc-follow-symlinks t)
+
+  (setup-org-publish)
   ;; Use pipes for subprocess communication
   ;; This is because withoug this, in org-mode 'C-c C-e h' did not open
   ;; the exported file.  With this it does.
