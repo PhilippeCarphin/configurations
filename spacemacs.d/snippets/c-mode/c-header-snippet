@@ -1,0 +1,9 @@
+#key : c-header-snippet
+#name : Header template for documenting C functions
+#contributor : Philippe carphin
+# --
+/*******************************************************************************
+* Function $1
+* Arguments $2
+*******************************************************************************/
+c-header-snippet $0
