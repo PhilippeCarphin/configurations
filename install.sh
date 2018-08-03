@@ -23,8 +23,8 @@ sudo_replace_with_file(){
 ################################################################################
 # Clones the spacemacs directory at the specified location
 # Creates a links like so:
-# ~/.emacs.d --> ~/.my_spacemacs_dir --> # $SPACEMACS_DIR_LOCATION/.my_spacemacs_dir
-# ~/.my_spacemacs_dir/private --> .philconfig/.emacs.d/private
+# ~/.emacs.d --> ~/.my_spacemacs.d --> $SPACEMACS_DIR_LOCATION/.my_spacemacs.d
+# ~/.my_spacemacs.d/private --> .philconfig/.emacs.d/private
 # ~/.spacemacs --> .philconfig/spacemacs
 ################################################################################
 setup_spacemacs(){
@@ -38,27 +38,27 @@ setup_spacemacs(){
        return 1
    fi
 
-   my_spacemacs_dir=$SPACEMACS_DIR_LOCATION/.my_spacemacs_dir
+   my_spacemacs_dir=$SPACEMACS_DIR_LOCATION/.my_spacemacs.d
 
    if ! [ -d $my_spacemacs_dir ] ; then
       git clone https://github.com/syl20bnr/spacemacs $my_spacemacs_dir
    fi
 
-   if [[ $my_spacemacs_dir != ~/.my_spacemacs_dir ]] ; then
-      [ -L ~/.my_spacemacs_dir ] && rm ~/.my_spacemacs_dir
-      ln -s $my_spacemacs_dir ~/.my_spacemacs_dir
+   if [[ $my_spacemacs_dir != ~/.my_spacemacs.d ]] ; then
+      [ -L ~/.my_spacemacs.d ] && rm ~/.my_spacemacs.d
+      ln -s $my_spacemacs_dir ~/.my_spacemacs.d
    fi
 
    [ -L ~/.emacs.d ] && rm ~/.emacs.d
-   ln -s ~/.my_spacemacs_dir ~/.emacs.d
+   ln -s ~/.my_spacemacs.d ~/.emacs.d
 
-   replace_with_link $HOME/.my_spacemacs_dir/private emacs.d/private
+   replace_with_link $HOME/.my_spacemacs.d/private emacs.d/private
    replace_with_link $HOME/.spacemacs spacemacs
 }
 
 ################################################################################
 # Creates a links like so:
-# ~/.emacs.d --> ~/.my_vanillamacs_dir --> $VANILLAMACS_DIR_LOCATION
+# ~/.emacs.d --> ~/.my_vanillamacs.d --> # $VANILLAMACS_DIR_LOCATION/.my_vanillamacs.d
 # ~/.emacs --> ~/.my_vanillamacs --> .philconfig/vanillamacs
 ################################################################################
 setup_vanillamacs(){
@@ -73,6 +73,9 @@ setup_vanillamacs(){
    fi
 
    vanillamacs_dir=$VANILLAMACS_DIR_LOCATION/.my_vanillamacs.d
+   if ! [ -d $vanillamacs_dir ] ; then
+      mkdir $vanillamacs_dir
+   fi
 
    if [[ $vanillamacs_dir != ~/.my_vanillamacs.d ]] ; then
        [ -L ~/.my_vanillamacs.d ] && rm ~/.my_vanillamacs.d
