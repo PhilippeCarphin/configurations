@@ -123,12 +123,12 @@ bashrc_poly_specifics(){
 ################################################################################
 if [[ "$-" == *i* ]] ; then
 
-	source ~/.functions
-	source ~/.general-aliases
-	source ~/Templates/.template-completion.bash
-	source ~/.git-completion.bash
-	source ~/.git-prompt.sh
-	source ~/.git-prompt-phil.sh
+	source $CONFIG_DIR/functions
+	source $CONFIG_DIR/general-aliases
+	source $CONFIG_DIR/Templates/.template-completion.bash
+	source $CONFIG_DIR/git-completion.bash
+	source $CONFIG_DIR/git-prompt.sh
+	source $CONFIG_DIR/git-prompt-phil.sh
 	source $CONFIG_DIR/CMC/aliases.sh
 
 	bashrc_set_vim_keybindigs

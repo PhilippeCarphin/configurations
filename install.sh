@@ -19,6 +19,11 @@ sudo_replace_with_file(){
     fi
     sudo cp $my_file $original_file
 }
+if [ `uname` = Darwin ] ; then
+    installDir="$( cd "$( dirname $0 )" > /dev/null && pwd)"
+elif [ `uname` = Linux ] ; then
+    installDir="$( dirname "$( readlink -f "$0" )" )"
+fi
 
 ################################################################################
 # Clones the spacemacs directory at the specified location
@@ -89,14 +94,10 @@ setup_vanillamacs(){
    replace_with_link $HOME/.my_vanillamacs vanillamacs
 }
 
-source ~/.functions
+source $installDir/functions
 
-installGroup() {
+link_group(){
     case $1 in
-        utils)
-            mkdir -p ~/Documents/GitHub/
-            git clone https://github.com/PhilippeCarphin/utils ~/Documents/GitHub/utils
-            ;;
         cmc)
             replace_with_link $HOME/.profile CMC/profile
             replace_with_link $HOME/.profile.d CMC/profile.d
@@ -106,7 +107,6 @@ installGroup() {
             replace_with_link $HOME/.zshrc zshrc
             replace_with_link $HOME/.zshenv zshenv
             replace_with_link $HOME/.zsh_custom zsh_custom
-            git clone https://github.com/robbyrussell/oh-my-zsh ~/.oh-my-zsh
             ;;
         fish)
             replace_with_link $HOME/.config/fish config/fish
@@ -114,23 +114,6 @@ installGroup() {
         bash)
             replace_with_link $HOME/.bashrc bashrc
             replace_with_link $HOME/.bash_profile bash_profile
-            replace_with_link $HOME/.github-aliases github-aliases
-            replace_with_link $HOME/.functions functions
-            replace_with_link $HOME/.general-aliases general-aliases
-            replace_with_link $HOME/.envvars envvars
-            ;;
-        root-bashrc)
-            sudo_replace_with_file /root/.bashrc root_bashrc
-            ;;
-        root-zshrc)
-            sudo_replace_with_file /root/.zshrc root_zshrc
-            sudo cp -R $HOME/.oh-my-zsh /root/.oh-my-zsh
-            ;;
-        logging)
-            replace_with_link $HOME/.local/bin/SUDO SUDO
-            if [[ $(uname) == Darwin ]] ; then
-                replace_with_link $HOME/.local/bin/BREW BREW
-            fi
             ;;
         vim)
             replace_with_link $HOME/.vimrc vimrc
@@ -141,45 +124,31 @@ installGroup() {
             replace_with_link $HOME/.vim/doc vim/doc
             replace_with_link $HOME/.vim/autoload vim/autoload
             replace_with_link $HOME/.ycm_extra_conf.py ycm_extra_conf.py
-            # Note that the vundle stuff that goes in the fimrc file is already there
-            # in my  vimrc file.  Otherwise, one can use the vundle_install.sh
-            # from my tests repository (https://github.com/PhilippeCarphin/tests
-            # in the BASH_tests directory).
-            if [ ! -e $HOME/.vim/bundle/Vundle.vim ] ; then
-                git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-            fi
-            echo "I suggest that you run 'PluginInstall' in vim"
             ;;
         templates)
             replace_with_link $HOME/Templates Templates
-            if [ `uname` = Linux ] ; then
-                echo "$0 (group=templates) : killing nautilus"
-                killall nautilus # For templates to take effect.
-            fi
             ;;
         spacemacs)
-            setup_spacemacs
+            replace_with_link $HOME/.spacemacs spacemacs
+            replace_with_link $HOME/.spacemacs.d spacemacs.d
+            replace_with_link $HOME/.emacs.d/private emacs.d/private
             ;;
         vanillamacs)
-            setup_vanillamacs
+            replace_with_link $HOME/.emacs vanillamacs
             ;;
         git)
             replace_with_link $HOME/.gitconfig gitconfig
-            replace_with_link $HOME/.git-completion.bash git-completion.bash
-            replace_with_link $HOME/.git-prompt.sh git-prompt.sh
-            replace_with_link $HOME/.git-prompt-phil.sh git-prompt-phil.sh
             replace_with_link $HOME/.gitignore.global gitignore.global
             replace_with_link $HOME/.config/git git
+            ;;
+        rsync)
+            replace_with_link $HOME/.cvsignore gitignore.global
             ;;
         sublime)
             replace_with_link $HOME/.config/sublime-text-3 config/sublime-text-3
             ;;
         tmux)
             replace_with_link $HOME/.tmux.conf tmux.conf
-            ;;
-        bin)
-            ;;
-        nautilusScripts)
             ;;
         wakatime)
             replace_with_link $HOME/.wakatime.cfg wakatime.cfg
@@ -223,26 +192,21 @@ USAGE: $( basename $0) group
 "
 }
 
-# Get installDir from command line or link target.
-# not a 100% robust method, look at
-# http://stackoverflow.com/questions/59895/can-a-bash-script-tell-what-directory-its-stored-in
-# for more detail
-if [ `uname` = Darwin ] ; then
-    installDir="$( cd "$( dirname $0 )" && pwd)"
-elif [ `uname` = Linux ] ; then
-    installDir="$( dirname "$( readlink -f "$0" )" )"
-fi
 
 if [ "$1" = full ] ; then
-    installGroup bash
-    installGroup git
-    installGroup emacs
-    installGroup templates
-    installGroup tmux
     at_cmc && installGroup cmc
-    installGroup vim
+    link_group zsh
+    link_group fish
+    link_group bash
+    link_group vim
+    link_group spacemacs
+    link_group git
+    link_group rsync
+    link_group templates
+    link_group wakatime
+    link_group tmux
 elif [ "$1" != "" ] ; then
-    installGroup $1
+    link_group $1
 else
     echo Must specify one group or full
     showUsage

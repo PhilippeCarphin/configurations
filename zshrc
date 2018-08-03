@@ -6,9 +6,9 @@ unset PROMPT_COMMAND  # Because it does something to org-babel when zsh is launc
 export ZSH=$HOME/.oh-my-zsh
 export SHELL=zsh
 
-source ~/.functions
-source ~/.general-aliases
-source ~/.github-aliases
+source $CONFIG_DIR/functions
+source $CONFIG_DIR/general-aliases
+source $CONFIG_DIR/github-aliases
 
 if at_cmc ; then
     source $CONFIG_DIR/CMC/aliases.sh
