@@ -1,14 +1,17 @@
 #!/bin/bash
 # echo ".bash_profile START"
 
-PHILRC_BASH_PROFILE="bash_profile loaded at $(date)"
-
-source ~/.envvars
-
-if [ -z "$PHILRC_BASHRC" ]  ; then
-	# At Poly and on my Fedora computer, bashrc doesn't get sourced unless I
-	# source it myself from another script
-	source ~/.bashrc
+if [ -z $PHILRC_BASH_PROFILE ] ; then
+    # Acutal bash_profile
+    source ~/.envvars
+    PHILRC_BASH_PROFILE="bash_profile loaded at $(date)"
+    echo "$PHILRC_BASH_PROFILE" > philconfig-log
+else
+    # if bash_profile has already been sourced, then this file is most likely
+    # being sourced becasue TMUX has started a login shell.  In that case, we
+    # want to source our bashrc
+    source ~/.bashrc
+    return
 fi
 
 
