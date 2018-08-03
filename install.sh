@@ -145,7 +145,7 @@ installGroup() {
             if [ ! -e $HOME/.vim/bundle/Vundle.vim ] ; then
                 git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
             fi
-            vim +:PluginInstall # for the plugins managed by vundle to be installed.
+            echo "I suggest that you run 'PluginInstall' in vim"
             ;;
         templates)
             replace_with_link $HOME/Templates Templates
