@@ -20,6 +20,72 @@ sudo_replace_with_file(){
     sudo cp $my_file $original_file
 }
 
+################################################################################
+# Clones the spacemacs directory at the specified location
+# Creates a links like so:
+# ~/.emacs.d --> ~/.my_spacemacs_dir --> # $SPACEMACS_DIR_LOCATION/.my_spacemacs_dir
+# ~/.my_spacemacs_dir/private --> .philconfig/.emacs.d/private
+# ~/.spacemacs --> .philconfig/spacemacs
+################################################################################
+setup_spacemacs(){
+   if [ -z SPACEMACS_DIR_LOCATION ] ; then
+      echo "SPACEMACS_DIR_LOCATION must be set"
+      return 1
+   fi
+
+   if ! [ -d $SPACEMACS_DIR_LOCATION ] ; then
+       echo "SPACEMACS_DIR_LOCATION must be an existing directory"
+       return 1
+   fi
+
+   my_spacemacs_dir=$SPACEMACS_DIR_LOCATION/.my_spacemacs_dir
+
+   if ! [ -d $my_spacemacs_dir ] ; then
+      git clone https://github.com/syl20bnr/spacemacs $my_spacemacs_dir
+   fi
+
+   if [[ $my_spacemacs_dir != ~/.my_spacemacs_dir ]] ; then
+      [ -L ~/.my_spacemacs_dir ] && rm ~/.my_spacemacs_dir
+      ln -s $my_spacemacs_dir ~/.my_spacemacs_dir
+   fi
+
+   [ -L ~/.emacs.d ] && rm ~/.emacs.d
+   ln -s ~/.my_spacemacs_dir ~/.emacs.d
+
+   replace_with_link $HOME/.my_spacemacs_dir/private emacs.d/private
+   replace_with_link $HOME/.spacemacs spacemacs
+}
+
+################################################################################
+# Creates a links like so:
+# ~/.emacs.d --> ~/.my_vanillamacs_dir --> $VANILLAMACS_DIR_LOCATION
+# ~/.emacs --> ~/.my_vanillamacs --> .philconfig/vanillamacs
+################################################################################
+setup_vanillamacs(){
+   if [ -z $VANILLAMACS_DIR_LOCATION ] ; then
+       echo "VANILLAMACS_DIR_LOCATION must be set"
+       return 1
+   fi
+
+   if ! [ -d $VANILLAMACS_DIR_LOCATION ] ; then
+       echo "VANILLAMACS_DIR_LOCATION must be an existing directory"
+       return 1
+   fi
+
+   vanillamacs_dir=$VANILLAMACS_DIR_LOCATION/.my_vanillamacs.d
+
+   if [[ $vanillamacs_dir != ~/.my_vanillamacs.d ]] ; then
+       [ -L ~/.my_vanillamacs.d ] && rm ~/.my_vanillamacs.d
+       ln -s $vanillamacs_dir ~/.my_vanillamacs.d
+   fi
+
+   [ -L ~/.emacs.d ] && rm ~/.emacs.d
+   ln -s ~/.my_vanillamacs.d ~/.emacs.d
+   [ -L ~/.emacs ] && rm ~/.emacs
+   ln -s ~/.my_vanillamacs ~/.emacs
+   replace_with_link $HOME/.my_vanillamacs vanillamacs
+}
+
 source ~/.functions
 
 installGroup() {
@@ -88,10 +154,11 @@ installGroup() {
                 killall nautilus # For templates to take effect.
             fi
             ;;
-        emacs)
-            git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d
-            replace_with_link $HOME/.emacs.d/private emacs.d/private
-            replace_with_link $HOME/.spacemacs spacemacs
+        spacemacs)
+            setup_spacemacs
+            ;;
+        vanillamacs)
+            setup_vanillamacs
             ;;
         git)
             replace_with_link $HOME/.gitconfig gitconfig

@@ -406,7 +406,7 @@ git_unsupported_message(){
 ################################################################################
 spacemacs_dir=~/.my_spacemacs.d
 spacemacs_file=~/.my_spacemacs
-vanillamacs_dir=~/.vanillamacs
+vanillamacs_dir=~/.my_vanillamacs.d
 vanillamacs_file=~/.vanillamacs
 
 emacs_spacemacs_or_vanilla(){ if [ -L ~/.emacs ] ; then echo "vanillamacs"
@@ -419,7 +419,6 @@ emacs_spacemacs_mode(){ emacs_clear_links
                         ln -s $spacemacs_dir ~/.emacs.d ; }
 
 emacs_vanilla_mode(){ emacs_clear_links
-                      ln -s $vanillamacs_dir ~/.emacs.d
                       ln -s $vanillamacs_file ~/.emacs ; }
 
 emacs_toggle_vanillamacs_spacemacs(){ case $(emacs_spacemacs_or_vanilla) in
