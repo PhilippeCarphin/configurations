@@ -4,7 +4,7 @@
 if [ -z $PHILRC_BASH_PROFILE ] ; then
     # Acutal bash_profile
     source ~/.envvars
-    PHILRC_BASH_PROFILE="bash_profile loaded at $(date)"
+    PHILRC_BASH_PROFILE="bash_profile_loaded_at_$(date "+%Y-%m-%d_%H%M")"
     echo "$PHILRC_BASH_PROFILE" > philconfig-log
 else
     # if bash_profile has already been sourced, then this file is most likely

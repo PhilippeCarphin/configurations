@@ -3,7 +3,7 @@ if [ -e /etc/zprofile ] ; then
 fi
 source ~/.envvars
 
-export PHILRC_ZPROFILE=".zprofile sourced at $(date)"
+export PHILRC_ZPROFILE=".zprofile_sourced_at_$(date "+%Y-%m-%d_%H%M")"
 
 # Setting PATH for Python 3.7
 # The original version is saved in .zprofile.pysave

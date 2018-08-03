@@ -1,5 +1,5 @@
 #!/bin/bash
-PHILRC_BASHRC=".bashrc sourced at $(date)"
+PHILRC_BASHRC=".bashrc_sourced_at_$(date "+%Y-%m-%d_%H%M")"
 # echo ".bashrc START"
 
 # Source global definitions

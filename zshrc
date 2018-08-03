@@ -109,4 +109,4 @@ source $ZSH/oh-my-zsh.sh
 #
 source ~/.philconfig/local_file
 
-export PHILRC_ZSHRC=".zshrc sourced at $(date)"
+export PHILRC_ZSHRC=".zshrc_sourced_at_$(date "+%Y-%m-%d_%H%M")"
