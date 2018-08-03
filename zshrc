@@ -1,4 +1,6 @@
 unset PROMPT_COMMAND  # Because it does something to org-babel when zsh is launched CMC-style by doing 'exec zsh' from the bashrc file.
+export PHILCONFIG=$(dirname $(readlink ~/.zshrc))
+
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
