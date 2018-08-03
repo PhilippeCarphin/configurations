@@ -95,7 +95,7 @@ bashrc_cmc_specifics(){
       check_quota
       unset CDPATH
    fi
-   source $CONFIG_DIR/CMC/aliases.sh
+   source $PHILCONFIG/CMC/aliases.sh
    # source ~/.profile.d/jp-aliases.sh
    # source ~/.profile.d/jp-functions.sh
 }
@@ -123,13 +123,13 @@ bashrc_poly_specifics(){
 ################################################################################
 if [[ "$-" == *i* ]] ; then
 
-	source $CONFIG_DIR/functions
-	source $CONFIG_DIR/general-aliases
-	source $CONFIG_DIR/Templates/.template-completion.bash
-	source $CONFIG_DIR/git-completion.bash
-	source $CONFIG_DIR/git-prompt.sh
-	source $CONFIG_DIR/git-prompt-phil.sh
-	source $CONFIG_DIR/CMC/aliases.sh
+	source $PHILCONFIG/functions
+	source $PHILCONFIG/general-aliases
+	source $PHILCONFIG/Templates/.template-completion.bash
+	source $PHILCONFIG/git-completion.bash
+	source $PHILCONFIG/git-prompt.sh
+	source $PHILCONFIG/git-prompt-phil.sh
+	source $PHILCONFIG/CMC/aliases.sh
 
 	bashrc_set_vim_keybindigs
     bashrc_configure_prompt

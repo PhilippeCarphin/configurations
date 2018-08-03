@@ -175,4 +175,5 @@
   (push 'visual evil-escape-excluded-states)
   (push 'magit-status-mode evil-escape-excluded-major-modes)
   (push 'magit-diff-mode evil-escape-excluded-major-modes)
+  (push 'grep-mode evil-escape-excluded-major-modes)
   )

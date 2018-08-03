@@ -1,6 +1,5 @@
 #!/bin/sh
 # echo ".envvars START"
-export CONFIG_DIR=$(dirname $(readlink ~/.bashrc))
 
 # echo "initial LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
 MY_LD_LIBRARY_PATH=$MY_LD_LIBRARY_PATH:$HOME/.local/lib

@@ -6,12 +6,12 @@ unset PROMPT_COMMAND  # Because it does something to org-babel when zsh is launc
 export ZSH=$HOME/.oh-my-zsh
 export SHELL=zsh
 
-source $CONFIG_DIR/functions
-source $CONFIG_DIR/general-aliases
-source $CONFIG_DIR/github-aliases
+source $PHILCONFIG/functions
+source $PHILCONFIG/general-aliases
+source $PHILCONFIG/github-aliases
 
 if at_cmc ; then
-    source $CONFIG_DIR/CMC/aliases.sh
+    source $PHILCONFIG/CMC/aliases.sh
     source ~/.zprofile # It doesn't get sourced because I do exec zsh from bashrc
     # source ~/.profile.d/jp-aliases.sh
     # source ~/.profile.d/jp-functions.sh

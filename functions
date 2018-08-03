@@ -4,7 +4,7 @@
 ################################################################################
 pull_config(){
     # echo -n "Pulling philconfig configurations : "
-    pushd $CONFIG_DIR > /dev/null
+    pushd $PHILCONFIG > /dev/null
     git pull > /dev/null 2>&1
     pull_success=$?
     popd > /dev/null
@@ -263,7 +263,7 @@ vimff() {
 function profile() {
     echo "Edit philconfig"
     old_pwd=$PWD
-    cd $CONFIG_DIR
+    cd $PHILCONFIG
     files=""
     for arg in $@ ; do
         files="$files $(find ./* -name "*$arg*" | tr '\n' ' ')"
