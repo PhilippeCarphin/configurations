@@ -196,10 +196,11 @@ link_group(){
         spacemacs)
             replace_with_link $HOME/.spacemacs spacemacs
             replace_with_link $HOME/.spacemacs.d spacemacs.d
-            replace_with_link $HOME/.emacs.d/private emacs.d/private
-            ;;
-        vanillamacs)
-            replace_with_link $HOME/.emacs vanillamacs
+            if [ -d ~/.emacs.d ] ; then 
+               replace_with_link $HOME/.emacs.d/private emacs.d/private
+            else
+               echo "Group spacemacs : could not link $HOME/.emacs.d/private because $HOME/.emacs.d does not exist"
+            fi
             ;;
         git)
             replace_with_link $HOME/.gitconfig gitconfig
