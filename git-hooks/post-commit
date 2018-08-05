@@ -1,5 +1,6 @@
 #!/bin/bash
 
+source $PHILCONFIG/functions
 echo "$(tput setab 8)$(tput setaf 3)Philconfig post commit hook: auto push on commit$(tput sgr 0)"
 source ~/.functions
 if at_cmc ; then
