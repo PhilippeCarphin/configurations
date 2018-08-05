@@ -19,80 +19,12 @@ sudo_replace_with_file(){
     fi
     sudo cp $my_file $original_file
 }
+
 if [ `uname` = Darwin ] ; then
     installDir="$( cd "$( dirname $0 )" > /dev/null && pwd)"
 elif [ `uname` = Linux ] ; then
     installDir="$( dirname "$( readlink -f "$0" )" )"
 fi
-
-################################################################################
-# Clones the spacemacs directory at the specified location
-# Creates a links like so:
-# ~/.emacs.d --> ~/.my_spacemacs.d --> $SPACEMACS_DIR_LOCATION/.my_spacemacs.d
-# ~/.my_spacemacs.d/private --> .philconfig/.emacs.d/private
-# ~/.spacemacs --> .philconfig/spacemacs
-################################################################################
-setup_spacemacs(){
-   if [ -z SPACEMACS_DIR_LOCATION ] ; then
-      echo "SPACEMACS_DIR_LOCATION must be set"
-      return 1
-   fi
-
-   if ! [ -d $SPACEMACS_DIR_LOCATION ] ; then
-       echo "SPACEMACS_DIR_LOCATION must be an existing directory"
-       return 1
-   fi
-
-   my_spacemacs_dir=$SPACEMACS_DIR_LOCATION/.my_spacemacs.d
-
-   if ! [ -d $my_spacemacs_dir ] ; then
-      git clone https://github.com/syl20bnr/spacemacs $my_spacemacs_dir
-   fi
-
-   if [[ $my_spacemacs_dir != ~/.my_spacemacs.d ]] ; then
-      [ -L ~/.my_spacemacs.d ] && rm ~/.my_spacemacs.d
-      ln -s $my_spacemacs_dir ~/.my_spacemacs.d
-   fi
-
-   [ -L ~/.emacs.d ] && rm ~/.emacs.d
-   ln -s ~/.my_spacemacs.d ~/.emacs.d
-
-   replace_with_link $HOME/.my_spacemacs.d/private emacs.d/private
-   replace_with_link $HOME/.spacemacs spacemacs
-}
-
-################################################################################
-# Creates a links like so:
-# ~/.emacs.d --> ~/.my_vanillamacs.d --> # $VANILLAMACS_DIR_LOCATION/.my_vanillamacs.d
-# ~/.emacs --> ~/.my_vanillamacs --> .philconfig/vanillamacs
-################################################################################
-setup_vanillamacs(){
-   if [ -z $VANILLAMACS_DIR_LOCATION ] ; then
-       echo "VANILLAMACS_DIR_LOCATION must be set"
-       return 1
-   fi
-
-   if ! [ -d $VANILLAMACS_DIR_LOCATION ] ; then
-       echo "VANILLAMACS_DIR_LOCATION must be an existing directory"
-       return 1
-   fi
-
-   vanillamacs_dir=$VANILLAMACS_DIR_LOCATION/.my_vanillamacs.d
-   if ! [ -d $vanillamacs_dir ] ; then
-      mkdir $vanillamacs_dir
-   fi
-
-   if [[ $vanillamacs_dir != ~/.my_vanillamacs.d ]] ; then
-       [ -L ~/.my_vanillamacs.d ] && rm ~/.my_vanillamacs.d
-       ln -s $vanillamacs_dir ~/.my_vanillamacs.d
-   fi
-
-   [ -L ~/.emacs.d ] && rm ~/.emacs.d
-   ln -s ~/.my_vanillamacs.d ~/.emacs.d
-   [ -L ~/.emacs ] && rm ~/.emacs
-   ln -s ~/.my_vanillamacs ~/.emacs
-   replace_with_link $HOME/.my_vanillamacs vanillamacs
-}
 
 source $installDir/functions
 
@@ -101,202 +33,130 @@ unlink_file(){
    [ -e $1.bak -o -d $1.bak ] && mv $1.bak $1
 }
 
-unlink_group (){
-   case $1 in
-      cmc)
-         unlink_file $HOME/.profile
-         unlink_file $HOME/.profile.d
-         ;;
-      zsh)
-         unlink_file $HOME/.zprofile
-         unlink_file $HOME/.zshrc
-         unlink_file $HOME/.zshenv
-         unlink_file $HOME/.zsh_custom
-         ;;
-      fish)
-         unlink_file $HOME/.config/fish
-         ;;
-      bash)
-         unlink_file $HOME/.bashrc
-         unlink_file $HOME/.bash_profile
-         ;;
-      vim)
-         unlink_file $HOME/.vimrc
-         unlink_file $HOME/.ideavimrc
-         unlink_file $HOME/.vim/colors
-         unlink_file $HOME/.vim/indent
-         unlink_file $HOME/.vim/plugin
-         unlink_file $HOME/.vim/doc
-         unlink_file $HOME/.vim/autoload
-         unlink_file $HOME/.ycm_extra_conf.py
-         ;;
-      templates)
-         unlink_file $HOME/Templates
-         ;;
-      spacemacs)
-         unlink_file $HOME/.spacemacs
-         unlink_file $HOME/.spacemacs.d
-         unlink_file $HOME/.emacs.d/private
-         ;;
-      vanillamacs)
-         unlink_file $HOME/.emacs
-         ;;
-      git)
-         unlink_file $HOME/.gitconfig
-         unlink_file $HOME/.gitignore.global
-         unlink_file $HOME/.config/git
-         ;;
-      rsync)
-         unlink_file $HOME/.cvsignore
-         ;;
-      sublime)
-         unlink_file $HOME/.config/sublime-text-3
-         ;;
-      tmux)
-         unlink_file $HOME/.tmux.conf
-         ;;
-      wakatime)
-         unlink_file $HOME/.wakatime.cfg
-         ;;
-   esac
+link_or_unlink(){
+   if [[ $action == link ]] ; then
+      replace_with_link $1 $2
+   elif [[ $action == unlink ]] ; then
+      unlink_file $1
+   fi
 }
 
-link_group(){
+link_or_unlink_group(){
     case $1 in
-        cmc)
-            replace_with_link $HOME/.profile CMC/profile
-            replace_with_link $HOME/.profile.d CMC/profile.d
+        bash)
+            link_or_unlink $HOME/.bashrc bashrc
+            link_or_unlink $HOME/.bash_profile bash_profile
             ;;
-        zsh)
-            replace_with_link $HOME/.zprofile zprofile
-            replace_with_link $HOME/.zshrc zshrc
-            replace_with_link $HOME/.zshenv zshenv
-            replace_with_link $HOME/.zsh_custom zsh_custom
+        cmc)
+            link_or_unlink $HOME/.profile CMC/profile
+            link_or_unlink $HOME/.profile.d CMC/profile.d
             ;;
         fish)
-            replace_with_link $HOME/.config/fish config/fish
+            link_or_unlink $HOME/.config/fish config/fish
             ;;
-        bash)
-            replace_with_link $HOME/.bashrc bashrc
-            replace_with_link $HOME/.bash_profile bash_profile
+        git)
+            link_or_unlink $HOME/.gitconfig gitconfig
+            link_or_unlink $HOME/.gitignore.global gitignore.global
+            link_or_unlink $HOME/.config/git git
             ;;
-        vim)
-            replace_with_link $HOME/.vimrc vimrc
-            replace_with_link $HOME/.ideavimrc vimrc # Pycharm uses this
-            replace_with_link $HOME/.vim/colors vim/colors
-            replace_with_link $HOME/.vim/indent vim/indent
-            replace_with_link $HOME/.vim/plugin vim/plugin
-            replace_with_link $HOME/.vim/doc vim/doc
-            replace_with_link $HOME/.vim/autoload vim/autoload
-            replace_with_link $HOME/.ycm_extra_conf.py ycm_extra_conf.py
-            ;;
-        templates)
-            replace_with_link $HOME/Templates Templates
+        rsync)
+            link_or_unlink $HOME/.cvsignore gitignore.global
             ;;
         spacemacs)
-            replace_with_link $HOME/.spacemacs spacemacs
-            replace_with_link $HOME/.spacemacs.d spacemacs.d
+            link_or_unlink $HOME/.spacemacs spacemacs
+            link_or_unlink $HOME/.spacemacs.d spacemacs.d
             if [ -d ~/.emacs.d ] ; then 
-               replace_with_link $HOME/.emacs.d/private emacs.d/private
+               link_or_unlink $HOME/.emacs.d/private emacs.d/private
             else
                echo "Group spacemacs : could not link $HOME/.emacs.d/private because $HOME/.emacs.d does not exist"
             fi
             ;;
-        git)
-            replace_with_link $HOME/.gitconfig gitconfig
-            replace_with_link $HOME/.gitignore.global gitignore.global
-            replace_with_link $HOME/.config/git git
-            ;;
-        rsync)
-            replace_with_link $HOME/.cvsignore gitignore.global
-            ;;
         sublime)
-            replace_with_link $HOME/.config/sublime-text-3 config/sublime-text-3
+            link_or_unlink $HOME/.config/sublime-text-3 config/sublime-text-3
+            ;;
+        templates)
+            link_or_unlink $HOME/Templates Templates
             ;;
         tmux)
-            replace_with_link $HOME/.tmux.conf tmux.conf
+            link_or_unlink $HOME/.tmux.conf tmux.conf
+            ;;
+        vim)
+            link_or_unlink $HOME/.vimrc vimrc
+            link_or_unlink $HOME/.ideavimrc vimrc # Pycharm uses this
+            link_or_unlink $HOME/.vim/colors vim/colors
+            link_or_unlink $HOME/.vim/indent vim/indent
+            link_or_unlink $HOME/.vim/plugin vim/plugin
+            link_or_unlink $HOME/.vim/doc vim/doc
+            link_or_unlink $HOME/.vim/autoload vim/autoload
+            link_or_unlink $HOME/.ycm_extra_conf.py ycm_extra_conf.py
             ;;
         wakatime)
-            replace_with_link $HOME/.wakatime.cfg wakatime.cfg
+            link_or_unlink $HOME/.wakatime.cfg wakatime.cfg
+            ;;
+        zsh)
+            link_or_unlink $HOME/.zprofile zprofile
+            link_or_unlink $HOME/.zshrc zshrc
+            link_or_unlink $HOME/.zshenv zshenv
+            link_or_unlink $HOME/.zsh_custom zsh_custom
             ;;
         *)
             echo Invalid group $1
-            showUsage
+            show_usage
             ;;
     esac
 }
 
-showUsage()
+show_usage()
 {
     printf "
-USAGE: $( basename $0) group
-  
-    Installs the group of configuration and plugin files for the
+USAGE: $( basename $0) [link|unlink] group
+
+    Links or unlinks the group of configuration and plugin files for the
     following groups:
 
-        bash :
-              bashrc and bash_profile
+        cmc : .profile .profile.d
 
-        vim  :
-              vimrc, Vundle, non-vundle plugins colors and indents, and
-              runs vundleInstall
+        bash : .bashrc .bash_profile
 
-        templates : 
-              File creation templates for nautilus
-              right-click->new->...
+        zsh : .zshrc .zshenv .zprofile, .zsh_custom
 
-        git :
-              gitconfig file plus git-completion and git-prompt.  
+        vim  : .vimrc .ideavimrc .vim/{indent colors plugin doc autoload} .ycm_extra_conf.py
 
-        sublime :
-              ./config/sublime-text-3
+        templates : Templates directory
 
-        full :
-              Installs all the preceding groups
+        git : .gitconfig .config/git .gitignore.global
 
-              
+        emacs : .spacemacs and .spacemacs.d
+
+        tmux : .tmux.conf
+
+        sublime : .config/sublime-text-3
+
+        wakatime : .wakatime.cfg
+
+        full : links or unlinks all the preceding groups
+
 "
 }
 
-if [ "$1" = unlink ] ; then
-   if [ "$2" = full ] ; then
-      unlink_group zsh
-      unlink_group fish
-      unlink_group bash
-      unlink_group vim
-      unlink_group spacemacs
-      unlink_group git
-      unlink_group rsync
-      unlink_group templates
-      unlink_group wakatime
-      unlink_group tmux
-   elif [ "$2" != "" ] ; then
-      unlink_group $2
-   else
-      echo "Must specify a group for command unlink"
-      showUsage
-      exit 1
-   fi
-   exit 0
-fi
-
-if [ "$1" = full ] ; then
-    at_cmc && installGroup cmc
-    link_group zsh
-    link_group fish
-    link_group bash
-    link_group vim
-    link_group spacemacs
-    link_group git
-    link_group rsync
-    link_group templates
-    link_group wakatime
-    link_group tmux
-elif [ "$1" != "" ] ; then
-    link_group $1
+action=$1
+if [ "$2" == "full" ] ; then
+   link_or_unlink_group cmc
+   link_or_unlink_group bash
+   link_or_unlink_group fish
+   link_or_unlink_group git
+   link_or_unlink_group rsync
+   link_or_unlink_group spacemacs
+   link_or_unlink_group sublime
+   link_or_unlink_group templates
+   link_or_unlink_group tmux
+   link_or_unlink_group wakatime
+   link_or_unlink_group zsh
+elif ! [ -z $2 ] ; then
+   link_or_unlink_group $2
 else
-    echo Must specify one group or full
-    showUsage
+   echo "No group specified"
+   show_usage
 fi
 
 
