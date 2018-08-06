@@ -1,7 +1,7 @@
 #!/bin/bash
 replace_with_link(){
     original=$1
-    target=$installDir/$2
+    target=$this_dir/$2
     mkdir -p $(dirname $original)
     if [ -L $original ] ; then
         rm $original
@@ -21,12 +21,12 @@ sudo_replace_with_file(){
 }
 
 if [ `uname` = Darwin ] ; then
-    installDir="$( cd "$( dirname $0 )" > /dev/null && pwd)"
+    this_dir="$( cd "$( dirname $0 )" > /dev/null && pwd)"
 elif [ `uname` = Linux ] ; then
-    installDir="$( dirname "$( readlink -f "$0" )" )"
+    this_dir="$( dirname "$( readlink -f "$0" )" )"
 fi
 
-source $installDir/functions
+source $this_dir/FILES/functions
 
 unlink_file(){
    [ -L $1 ] && rm -f $1
