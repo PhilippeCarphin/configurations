@@ -170,11 +170,11 @@ at_cmc() {
 # 
 ################################################################################
 cmc_network(){
-    if [ -e ~/.network_is_ec ] ; then
-        echo "ec"
-    else
-        echo "science"
-    fi
+   if [ -e ~/.network_is_ec ] ; then
+      echo "ec"
+   elif [ -e ~/.network_is_science ] ; then
+      echo "science"
+   fi
 }
 
 ################################################################################
