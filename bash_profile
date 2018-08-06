@@ -4,7 +4,7 @@ $PHILCONFIG=$(cd -P $(dirname $(readlink ${BASH_SOURCE[0]})) > /dev/null && pwd)
 
 if [ -z $PHILRC_BASH_PROFILE ] ; then
     # Acutal bash_profile
-    $$PHILCONFIG/envvars
+    source $PHILCONFIG/FILES/envvars
     PHILRC_BASH_PROFILE="bash_profile_loaded_at_$(date "+%Y-%m-%d_%H%M")"
     echo "$PHILRC_BASH_PROFILE" > philconfig-log
 else

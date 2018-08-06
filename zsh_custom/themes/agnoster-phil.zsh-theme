@@ -30,7 +30,7 @@
 # A few utility functions to make it easy and re-usable to draw segmented prompts
 
 # This is to get the function git_time_since_commit() used in 
-source $PHILCONFIG/git-prompt-phil.sh
+source $PHILCONFIG/FILES/git-prompt-phil.sh
 
 CURRENT_BG='NONE'
 FG_COLOR='blue'

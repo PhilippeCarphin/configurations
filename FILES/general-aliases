@@ -34,7 +34,7 @@ alias pathpwd='export PATH=$PWD:$PATH'
 # Aliases for quick directories:
 alias github='cd ~/Documents/GitHub'
 
-source $PHILCONFIG/github-aliases
+source $PHILCONFIG/FILES/github-aliases
 alias new-repo='source new-repo.sh'
 
 # Opens the master PDF documenation for ATMega324PA assuming it is

@@ -8,9 +8,9 @@ export PHILCONFIG=$(dirname $(readlink ~/.zshrc))
 export ZSH=$HOME/.oh-my-zsh
 export SHELL=zsh
 
-source $PHILCONFIG/functions
-source $PHILCONFIG/general-aliases
-source $PHILCONFIG/github-aliases
+source $PHILCONFIG/FILES/functions
+source $PHILCONFIG/FILES/general-aliases
+source $PHILCONFIG/FILES/github-aliases
 
 if at_cmc ; then
     source $PHILCONFIG/CMC/aliases.sh
