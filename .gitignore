@@ -25,3 +25,4 @@ sublime-text-3/*
 *.log
 local_file
 __pycache__
+README.html
