@@ -2,6 +2,8 @@
 PHILRC_BASHRC=".bashrc_sourced_at_$(date "+%Y-%m-%d_%H%M")"
 # echo ".bashrc START"
 
+source $PHILCONFIG/FILES/initutils
+
 # Source global definitions
 if [ -f /etc/bashrc ]; then
 	. /etc/bashrc
