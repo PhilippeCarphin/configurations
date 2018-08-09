@@ -9,9 +9,9 @@ MY_LD_LIBRARY_PATH=$MY_LD_LIBRARY_PATH:/usr/local/cuda/lib
 export LD_LIBRARY_PATH="$MY_LD_LIBRARY_PATH:$LD_LIBRARY_PATH"
 
 THEANO_FLAGS=\
-device=cpu,\
-optimizer=fast_run,\
-exception_verbosity=high
+            device=cpu,\
+            optimizer=fast_run,\
+            exception_verbosity=high
 
 # echo "initial DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH"
 MY_DYLD_LIBRARY_PATH=$MY_DYLD_LIBRARY_PATH:$HOME/.local/lib

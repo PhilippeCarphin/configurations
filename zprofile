@@ -1,7 +1,7 @@
 export PHILCONFIG=$(cd $(dirname $(readlink ~/.zprofile)) > /dev/null && pwd)
 
 if [ -e /etc/zprofile ] ; then
-   source /etc/zprofile
+    source /etc/zprofile
 fi
 
 source $PHILCONFIG/FILES/envvars

@@ -29,16 +29,16 @@ fi
 source $this_dir/FILES/functions
 
 unlink_file(){
-   [ -L $1 ] && rm -f $1
-   [ -e $1.bak -o -d $1.bak ] && mv $1.bak $1
+    [ -L $1 ] && rm -f $1
+    [ -e $1.bak -o -d $1.bak ] && mv $1.bak $1
 }
 
 link_or_unlink(){
-   if [[ $action == link ]] ; then
-      replace_with_link $1 $2
-   elif [[ $action == unlink ]] ; then
-      unlink_file $1
-   fi
+    if [[ $action == link ]] ; then
+        replace_with_link $1 $2
+    elif [[ $action == unlink ]] ; then
+        unlink_file $1
+    fi
 }
 
 link_or_unlink_group(){
@@ -66,9 +66,9 @@ link_or_unlink_group(){
             link_or_unlink $HOME/.spacemacs spacemacs
             link_or_unlink $HOME/.spacemacs.d spacemacs.d
             if [ -d ~/.emacs.d ] ; then 
-               link_or_unlink $HOME/.emacs.d/private emacs.d/private
+                link_or_unlink $HOME/.emacs.d/private emacs.d/private
             else
-               echo "Group spacemacs : could not link $HOME/.emacs.d/private because $HOME/.emacs.d does not exist"
+                echo "Group spacemacs : could not link $HOME/.emacs.d/private because $HOME/.emacs.d does not exist"
             fi
             ;;
         sublime)
@@ -141,22 +141,22 @@ USAGE: $( basename $0) [link|unlink] group
 
 action=$1
 if [ "$2" == "full" ] ; then
-   link_or_unlink_group cmc
-   link_or_unlink_group bash
-   link_or_unlink_group fish
-   link_or_unlink_group git
-   link_or_unlink_group rsync
-   link_or_unlink_group spacemacs
-   link_or_unlink_group sublime
-   link_or_unlink_group templates
-   link_or_unlink_group tmux
-   link_or_unlink_group wakatime
-   link_or_unlink_group zsh
+    link_or_unlink_group cmc
+    link_or_unlink_group bash
+    link_or_unlink_group fish
+    link_or_unlink_group git
+    link_or_unlink_group rsync
+    link_or_unlink_group spacemacs
+    link_or_unlink_group sublime
+    link_or_unlink_group templates
+    link_or_unlink_group tmux
+    link_or_unlink_group wakatime
+    link_or_unlink_group zsh
 elif ! [ -z $2 ] ; then
-   link_or_unlink_group $2
+    link_or_unlink_group $2
 else
-   echo "No group specified"
-   show_usage
+    echo "No group specified"
+    show_usage
 fi
 
 

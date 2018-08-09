@@ -126,22 +126,22 @@ p_valgrind(){
 # Remove accents from a file in-place (note, only the accented characters that
 # would show up in the French language).
 ################################################################################
-   accents="âàäêèëéîïôöûùüÿçÂÀÄÊÈËÉÎÏÔÖÛÙÜŸÇ¨"
+accents="âàäêèëéîïôöûùüÿçÂÀÄÊÈËÉÎÏÔÖÛÙÜŸÇ¨"
 no_accents="aaaeeeeiioouuuycAAAEEEEIIOOUUUYC "
 fremove-accents () {
-	file=$1
-	if [ -z $file ] ; then
-	    echo "fremove-accents error: no file specified"
-	    return false
-	fi
+    file=$1
+    if [ -z $file ] ; then
+        echo "fremove-accents error: no file specified"
+        return false
+    fi
 
-	if ! [ -e $file -o -L $file ] ; then
-	    echo "fremove-accents error: file $file doesn't exist"
-	    return false
-	fi
+    if ! [ -e $file -o -L $file ] ; then
+        echo "fremove-accents error: file $file doesn't exist"
+        return false
+    fi
 
-	cp $file $file.bak
-	tr "$accents" "$no_accents" < $file > $file.removed_accents
+    cp $file $file.bak
+    tr "$accents" "$no_accents" < $file > $file.removed_accents
 }
 
 ################################################################################
@@ -162,11 +162,11 @@ git_pwd() {
 # 
 ################################################################################
 cmc_network(){
-   if [ -e ~/.network_is_ec ] ; then
-      echo "ec"
-   elif [ -e ~/.network_is_science ] ; then
-      echo "science"
-   fi
+    if [ -e ~/.network_is_ec ] ; then
+        echo "ec"
+    elif [ -e ~/.network_is_science ] ; then
+        echo "science"
+    fi
 }
 
 ################################################################################
@@ -246,7 +246,7 @@ vimf() {
 # 
 ################################################################################
 vimff() {
-   vim $(fuzzyfind "$1")
+    vim $(fuzzyfind "$1")
 }
 
 ################################################################################
@@ -277,48 +277,48 @@ fuzzyfind() {
 # 
 ################################################################################
 normal_mode() {
-   unset CDPATH
-	set +o vi
-   touch ~/.normal_mode
-   exec bash
+    unset CDPATH
+    set +o vi
+    touch ~/.normal_mode
+    exec bash
 }
 
 ################################################################################
 # 
 ################################################################################
 phil_mode(){
-   rm ~/.normal_mode
-   if which zsh 2>/dev/null ; then
-      exec zsh
-   else
-      exec bash
-   fi
+    rm ~/.normal_mode
+    if which zsh 2>/dev/null ; then
+        exec zsh
+    else
+        exec bash
+    fi
 }
 
 ################################################################################
 # 
 ################################################################################
 gitignore() {
-   # The name giti comes from tab completion:
-   # If you're in your repo's root, you have to type up to the second i for the
-   # comleter to complete with .gitignore because of the .git directory.
-   # Therefore giti has become strongly associated in my mind with the gitignore
-   # file.
-   local giti=$(git root)/.gitignore
-   if [ -z $1 ] ; then
-      vim $giti
-   else
-      echo $1 >> $giti
-   fi
-   git add $giti
-   git diff --staged $giti
+    # The name giti comes from tab completion:
+    # If you're in your repo's root, you have to type up to the second i for the
+    # comleter to complete with .gitignore because of the .git directory.
+    # Therefore giti has become strongly associated in my mind with the gitignore
+    # file.
+    local giti=$(git root)/.gitignore
+    if [ -z $1 ] ; then
+        vim $giti
+    else
+        echo $1 >> $giti
+    fi
+    git add $giti
+    git diff --staged $giti
 }
 
 ################################################################################
 # 
 ################################################################################
 pycharm(){
-   nohup pycharm $@ >/dev/null 2>&1 &
+    nohup pycharm $@ >/dev/null 2>&1 &
 }
 
 ################################################################################
@@ -415,27 +415,27 @@ emacs_vanilla_mode(){ emacs_clear_links
                       ln -s $vanillamacs_dir ~/.emacs.d ; }
 
 emacs_toggle_vanillamacs_spacemacs(){ case $(emacs_spacemacs_or_vanilla) in
-                                       "vanillamacs") emacs_spacemacs_mode ;;
-                                       "spacemacs")   emacs_vanilla_mode ;; esac ;
+                                          "vanillamacs") emacs_spacemacs_mode ;;
+                                          "spacemacs")   emacs_vanilla_mode ;; esac ;
                                       emacs_spacemacs_or_vanilla ; }
 
 ################################################################################
 # Check how I'm doing quota wise
 ################################################################################
 check_quota(){
-   local quota_line=$(ssh lightning quota | tail -1 | sed 's/^ *//' | sed 's/ \+/ /g')
-   local current_usage=$(cut -d ' ' -f 1 <<< $quota_line)
-   local quota_value=$(cut -d ' ' -f 2 <<< $quota_line)
-   local usage_difference=$(( $quota_value - $current_usage ))
-   local warning_value=50000
-   local severe_warning_value=10000
-   # echo "current_usage=$current_usage,  quota_value=$quota_value usage_difference=$usage_difference"
-   if (( $usage_difference < $severe_warning_value )) ; then
-      # white on red
-      echo "$(tput setaf 15)$(tput setab 1)Quota : Available home storage is under $severe_warning_value$(tput sgr 0)"
-      return 2
-   elif (( $usage_difference < $warning_value )) ; then
-      # black on yellow
-      echo "$(tput setaf 0)$(tput setab 11)Quota : Available home storage is under $warning_value$(tput sgr 0)"
-   fi
+    local quota_line=$(ssh lightning quota | tail -1 | sed 's/^ *//' | sed 's/ \+/ /g')
+    local current_usage=$(cut -d ' ' -f 1 <<< $quota_line)
+    local quota_value=$(cut -d ' ' -f 2 <<< $quota_line)
+    local usage_difference=$(( $quota_value - $current_usage ))
+    local warning_value=50000
+    local severe_warning_value=10000
+    # echo "current_usage=$current_usage,  quota_value=$quota_value usage_difference=$usage_difference"
+    if (( $usage_difference < $severe_warning_value )) ; then
+        # white on red
+        echo "$(tput setaf 15)$(tput setab 1)Quota : Available home storage is under $severe_warning_value$(tput sgr 0)"
+        return 2
+    elif (( $usage_difference < $warning_value )) ; then
+        # black on yellow
+        echo "$(tput setaf 0)$(tput setab 11)Quota : Available home storage is under $warning_value$(tput sgr 0)"
+    fi
 }

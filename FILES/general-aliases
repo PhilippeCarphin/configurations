@@ -2,9 +2,9 @@
 #
 # Allows me to open my rcfile quickly and reload it quickly
 if [[ "$SHELL" == zsh ]] && [ -z $BASH ] ; then
-	rcfile=$HOME/.zshrc
+    rcfile=$HOME/.zshrc
 else
-	rcfile=$HOME/.bashrc
+    rcfile=$HOME/.bashrc
 fi
 
 alias lprofile="source $rcfile"
@@ -43,10 +43,10 @@ alias docatmel='open ~/Documents/docatmel.pdf 2>/dev/null &'
 
 # OS specific commands
 if [ $(uname) = Linux ]; then
-   ls_color='--color'
-	alias open='gio open'
+    ls_color='--color'
+    alias open='gio open'
 elif [ $(uname) = Darwin ]; then
-   ls_color='-G'
+    ls_color='-G'
 fi
 alias ls="ls $ls_color -h"
 
