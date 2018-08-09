@@ -43,20 +43,14 @@ alias docatmel='open ~/Documents/docatmel.pdf 2>/dev/null &'
 
 # OS specific commands
 if [ $(uname) = Linux ]; then
-	# echo "   Loading Linux commands" 1>&2
    ls_color='--color'
 	alias open='gio open'
-  # See disk usage: lists the sizes of the folders in the current
-  # directory and sorts them by size
-  alias dusage='du --max-depth=1 -h | sort -h'
 elif [ $(uname) = Darwin ]; then
-	# echo "   Loading Darwin commands" 1>&2
-	# Redefine dusage command for MAC
-	alias dusage='du -d 1 -h | sort -h'
    ls_color='-G'
 fi
 alias ls="ls $ls_color -h"
 
+alias dusage="du -d 1 -h | sort -h"
 alias setenv='source ./setenv'
 alias my-ip='curl ipinfo.io/ip'
 alias show-log='cat ~/Documents/GitHub/flask_test/nohup.out'
