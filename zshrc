@@ -1,6 +1,11 @@
 unset PROMPT_COMMAND  # Because it does something to org-babel when zsh is launched CMC-style by doing 'exec zsh' from the bashrc file.
 export PHILCONFIG=$(dirname $(readlink ~/.zshrc))
 
+# This is for tramp.
+# Tramp needs the prompt to look a certain way because it uses a regex to find
+# it. Since it sets TERM=dumb, if that variable is true, then set the prompt to
+# '$ ' (and unset some options) and we're all set.
+[[ $TERM == "dumb" ]] && unsetopt zle && PS1='$ ' && return
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
