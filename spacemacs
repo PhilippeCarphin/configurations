@@ -389,6 +389,19 @@ you should place your code here."
   (setup-org-publish)
 
   (global-company-mode)
+
+  ;; This pertains to emacs --daemon.
+  ;; Running emacsclient -t causes problems with non-ASCII characters.
+  ;; é, à, è ... would be perceived by emacs as M-c and other things.
+  ;; this ref : https://emacs.stackexchange.com/a/19732/19972 gives
+  ;; exactly this (and points out that this is only ok if you know all
+  ;; your terminals will be utf8):
+  (add-hook 'after-make-frame-functions
+            (lambda (frame)
+              (with-selected-frame frame
+                (unless window-system
+                  (set-keyboard-coding-system 'utf-8)))))
+
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
