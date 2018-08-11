@@ -79,7 +79,25 @@
   "Open helm-find-files in a the notes directory"
   (interactive)
   (helm-find-files-1 "~/Dropbox/Notes/Notes_BUCKET/"))
-
+(defun github ()
+  "Open helm-find-files in a the notes directory"
+  (interactive)
+  (helm-find-files-1 "~/Documents/GitHub/"))
+(defun philconfig ()
+  "Open helm-find-files in a the notes directory"
+  (interactive)
+  (helm-find-files-1 "~/.philconfig"))
+(defun workspace ()
+  "Open helm-find-files in a the notes directory"
+  (interactive)
+  (helm-find-files-1 "~/workspace"))
+;; I have no idea what I'm doing.
+;; (defmacro make-quick-open-function (name directory)
+;;   (lambda (name directory) (defun name ()
+;;     (interactive)
+;;     helm-find-files directory)))
+;;
+;; (make-quick-open-function 'github "~/Documents/GitHub")
 (defun put-header ()
   (interactive)
   ;; Could have some better code to find the text in the line.
