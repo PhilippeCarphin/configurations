@@ -33,6 +33,8 @@ export PATH=$MY_PATH:$PATH
 
 export CDPATH=".:$HOME":$HOME/Documents:$HOME/Documents/GitHub
 
+export MANPATH="$HOME/.local/man:$MANPATH"
+
 LESS="$LESS -FX"                                                               # For git log to display without paging if output fits on one screen
 LESS="$LESS -R"                                                                # For less to have color
 export LESS
