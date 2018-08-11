@@ -75,6 +75,11 @@
   (evil-insert-state)
   (yas-insert-snippet "nn"))
 
+(defun notes ()
+  "Open helm-find-files in a the notes directory"
+  (interactive)
+  (helm-find-files-1 "~/Dropbox/Notes/Notes_BUCKET/"))
+
 (defun put-header ()
   (interactive)
   ;; Could have some better code to find the text in the line.
