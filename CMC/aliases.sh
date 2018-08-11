@@ -35,8 +35,8 @@ if [[ $(cmc_network) == "ec" ]] ; then
     alias pull_cmc_notes="rsync -av --cvs-exclude house:$CMC_NOTES_DIR/ $CMC_NOTES_DIR/"
 
     # No push_notes because I want to be really sure that I don't delete anything important.
-    alias pull_notes="rsync -av --cvs-exclude house:$NOTES_DIR/ $NOTES_DIR/"
-    alias push_notes="rsync -av --cvs-exclude $NOTES_DIR/ house:$NOTES_DIR/"
+    alias pull_notes="rsync -av --cvs-exclude house:$PHIL_NOTES_DIR/ $PHIL_NOTES_DIR/"
+    alias push_notes="rsync -av --cvs-exclude $PHIL_NOTES_DIR/ house:$PHIL_NOTES_DIR/"
 
     spi_path=/users/dor/afsm/pca/Documents/GitHub/SPI_PHIL/eer_SPI/
     alias spi_beta='export SPI_LIB=$SSM_DEV/workspace/libSPI_7.12.2_${ORDENV_PLAT}; export SPI_PATH=$spi_path'
