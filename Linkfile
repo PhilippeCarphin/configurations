@@ -1,0 +1,40 @@
+[bash]
+  $HOME/.bashrc bashrc
+  $HOME/.bash_profile bash_profile
+[cmc]
+  $HOME/.profile CMC/profile
+  $HOME/.profile.d CMC/profile.d
+[fish]
+  $HOME/.config/fish config/fish
+[git]
+  $HOME/.gitconfig gitconfig
+  $HOME/.gitignore.global gitignore.global
+  # $HOME/.config/git git
+[rsync]
+  $HOME/.cvsignore gitignore.global
+[spacemacs]
+  $HOME/.spacemacs spacemacs
+  $HOME/.spacemacs.d spacemacs.d
+  $HOME/.emacs.d/private emacs.d/private
+[sublime]
+  $HOME/.config/sublime-text-3 config/sublime-text-3
+[templates]
+  $HOME/Templates Templates
+[tmux]
+  $HOME/.tmux.conf tmux.conf
+[vim]
+  $HOME/.vimrc vimrc
+  $HOME/.ideavimrc vimrc # Pycharm uses this
+  $HOME/.vim/colors vim/colors
+  $HOME/.vim/indent vim/indent
+  $HOME/.vim/plugin vim/plugin
+  $HOME/.vim/doc vim/doc
+  $HOME/.vim/autoload vim/autoload
+  $HOME/.ycm_extra_conf.py ycm_extra_conf.py
+[wakatime]
+  $HOME/.wakatime.cfg wakatime.cfg
+[zhs]
+  $HOME/.zprofile zprofile
+  $HOME/.zshrc zshrc
+  $HOME/.zshenv zshenv
+  $HOME/.zsh_custom zsh_custom
