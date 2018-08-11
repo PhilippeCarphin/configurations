@@ -45,6 +45,6 @@ export FCEDIT=vim
 #if in tmux, export this I forget why
 ! [ -z "$TMUX" ] && export TERM=xterm-256color
 
-export NOTES_DIR="~/Dropbox/Notes/Notes_BUCKET"
+export NOTES_DIR="$HOME/Dropbox/Notes/Notes_BUCKET"
 
 # echo ".envvars END"
