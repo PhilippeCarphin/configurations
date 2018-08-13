@@ -200,3 +200,8 @@
   (push 'magit-diff-mode evil-escape-excluded-major-modes)
   (push 'grep-mode evil-escape-excluded-major-modes)
   )
+
+;; TODO Try to make this work
+;; (defun org-find-header (header)
+;;   (interactive (list (read-string "Enter a header : " "" nil "c")))
+;;   (evil-search (concat "\\\\*+ " header)))
