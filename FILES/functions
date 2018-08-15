@@ -439,3 +439,22 @@ check_quota(){
         echo "$(tput setaf 0)$(tput setab 11)Quota : Available home storage is under $warning_value$(tput sgr 0)"
     fi
 }
+
+color_ps1(){
+   restore_ps1
+   color=$1
+   if [ -z $color ] ; then
+      color=2
+   fi
+   export OLD_PS1="$PS1"
+   # export PS1="\[$(tput setaf $color)\]$PS1\[$(tput sgr 0)\]"
+   export PS1='\[$(tput setaf $(($RANDOM%15+1)))\]'"$PS1"'\[$(tput sgr 0)\]'
+}
+
+restore_ps1(){
+   if ! [ -z $OLD_PS1 ] ; then
+      export PS1=$OLD_PS1
+      unset OLD_PS1
+   fi
+}
+
