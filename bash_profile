@@ -9,7 +9,7 @@ if [ -z $PHILRC_BASH_PROFILE ] ; then
     source $PHILCONFIG/FILES/envvars
 
     # If ssh login shell that I would like to be interactive
-    if ! [ -z "$SSH_CLIENT" ] && ! [ -z "$SSH_TTY" ] ; then
+    if ! [ -z "$SSH_CLIENT" ] && ! [ -z "$SSH_TTY" ] && [ -z $PHILRC_BASHRC ]; then
        source ~/.bashrc
     fi
     export PHILRC_BASH_PROFILE="bash_profile_loaded_at_$(date "+%Y-%m-%d_%H%M")"

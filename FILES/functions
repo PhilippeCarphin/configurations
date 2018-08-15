@@ -458,3 +458,6 @@ restore_ps1(){
    fi
 }
 
+disable_git_prompt(){
+    export PHILRC_DISABLE_GIT_PROMPT=true
+}

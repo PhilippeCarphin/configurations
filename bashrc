@@ -41,11 +41,16 @@ make_ps1(){
     else
         pec="\[$(tput setaf 1)\] $previous_exit_code \[$reset_colors\]"
     fi
+
     prompt_start="\[$prompt_color\][$(whoami)@$(hostname) $(git_pwd)\[$reset_colors\]"
-    git_part="$(git_ps1_phil)"
-    if ! [ -z "$git_part" ] ; then
-        git_part=" $git_part\[$reset_colors\]"
+
+    if [ -z $PHILRC_DISABLE_GIT_PROMPT ] ; then
+        git_part="$(git_ps1_phil)"
+        if ! [ -z "$git_part" ] ; then
+            git_part=" $git_part\[$reset_colors\]"
+        fi
     fi
+
     last_part="\[$prompt_color\]] \$\[$reset_colors\] "
 
     PS1="$pec$prompt_start$git_part$last_part"
