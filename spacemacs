@@ -92,7 +92,8 @@ values."
                      spell-checking-enable-auto-dictionary t
                      spell-checking-enable-by-default nil
                      enable-flyspell-auto-completion t)
-     syntax-checking
+     (syntax-checking :variables
+                      syntax-checking-enable-by-default t)
      version-control
      )
    ;; List of additional packages that will be installed without being
@@ -402,6 +403,10 @@ you should place your code here."
               (with-selected-frame frame
                 (unless window-system
                   (set-keyboard-coding-system 'utf-8)))))
+
+  (define-key evil-normal-state-map (kbd "SPC n n") 'new-note)
+  (define-key evil-normal-state-map (kbd "C-c n") 'new-note)
+  (define-key evil-normal-state-map (kbd "é") 'evil-search-forward)
 
   )
 

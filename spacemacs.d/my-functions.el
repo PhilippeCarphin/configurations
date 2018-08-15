@@ -63,6 +63,10 @@
   (define-key evil-normal-state-map (kbd "C-a -") 'split-window-below)
   )
 
+(defun insert-date ()
+  (interactive)
+  (let ((timestamp (format-time-string "%Y-%m-%d")))
+    (insert timestamp)))
 
 (defun new-note (name)
   "Create a new org-mode notes file in standard location"
@@ -79,6 +83,10 @@
   "Open helm-find-files in a the notes directory"
   (interactive)
   (helm-find-files-1 "~/Dropbox/Notes/Notes_BUCKET/"))
+(defun wnotes ()
+  "Open helm-find-files in a the notes directory"
+  (interactive)
+  (helm-find-files-1 "~/Dropbox/Notes/CMC/CMC_Notes/"))
 (defun github ()
   "Open helm-find-files in a the notes directory"
   (interactive)
@@ -91,6 +99,14 @@
   "Open helm-find-files in a the notes directory"
   (interactive)
   (helm-find-files-1 "~/workspace"))
+(defun wmd ()
+  "Open helm-find-files in a the notes directory"
+  (interactive)
+  (find-file "~/Dropbox/Notes/Notes_BUCKET/wmd.org"))
+(defun wmdw ()
+  "Open helm-find-files in a the notes directory"
+  (interactive)
+  (find-file "~/Dropbox/Notes/CMC/CMC_Notes/wmd.org"))
 ;; I have no idea what I'm doing.
 ;; (defmacro make-quick-open-function (name directory)
 ;;   (lambda (name directory) (defun name ()
