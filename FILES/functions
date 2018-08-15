@@ -423,7 +423,7 @@ emacs_toggle_vanillamacs_spacemacs(){ case $(emacs_spacemacs_or_vanilla) in
 # Check how I'm doing quota wise
 ################################################################################
 check_quota(){
-    local quota_line=$(ssh lightning quota | tail -1 | sed 's/^ *//' | sed 's/ \+/ /g')
+    local quota_line=$(quota 2>/dev/null | tail -1 | sed 's/^ *//' | sed 's/ \+/ /g')
     local current_usage=$(cut -d ' ' -f 1 <<< $quota_line)
     local quota_value=$(cut -d ' ' -f 2 <<< $quota_line)
     local usage_difference=$(( $quota_value - $current_usage ))

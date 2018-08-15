@@ -14,7 +14,7 @@ if [[ $(cmc_network) == "ec" ]] ; then
     alias gospit="cd $SPI_DIR/LibTkGL/TclGeoEER/MetObsTest"
     alias gospoo="cd $SPOOKI_DIR"
     alias makespi='(cd $SPI_DIR/LibTkGL/ ; ./makeit -spi)'
-    alias quota='ssh lightning quota'
+    alias quota='quota 2>/dev/null'
     alias tmuxspi='tmux new-session \; source-file ~/spi-dev.tmux'
     alias tclsh='/ssm/net/cmoe/apps/libSPI_7.12.2_ubuntu-14.04-amd64-64/TCL/bin/tclsh8.6'
     alias wish='/ssm/net/isst/maestro/1.4.3-rc4/linux26-x86-64/bin/wish'
@@ -33,10 +33,13 @@ if [[ $(cmc_network) == "ec" ]] ; then
     # them here and not wonder if the variable has them.
     alias push_cmc_notes="rsync -av --cvs-exclude $CMC_NOTES_DIR/ house:$CMC_NOTES_DIR/"
     alias pull_cmc_notes="rsync -av --cvs-exclude house:$CMC_NOTES_DIR/ $CMC_NOTES_DIR/"
-
     # No push_notes because I want to be really sure that I don't delete anything important.
     alias pull_notes="rsync -av --cvs-exclude house:$PHIL_NOTES_DIR/ $PHIL_NOTES_DIR/"
     alias push_notes="rsync -av --cvs-exclude $PHIL_NOTES_DIR/ house:$PHIL_NOTES_DIR/"
+
+    alias geowork='cd ~/workspace/geomet-work'
+    alias geomet='cd ~/workspace/geomet-work/geomet'
+    alias geotest='cd ~/workspace/geomet-work/geomet/tests'
 
     spi_path=/users/dor/afsm/pca/Documents/GitHub/SPI_PHIL/eer_SPI/
     alias spi_beta='export SPI_LIB=$SSM_DEV/workspace/libSPI_7.12.2_${ORDENV_PLAT}; export SPI_PATH=$spi_path'
