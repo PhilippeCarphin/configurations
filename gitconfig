@@ -20,6 +20,7 @@
 	fs = sh -c 'git fetch && git diff --stat origin'
 	bad-files = ls-files -i --exclude-standard
 	purge-ignored = sh -c 'git rm --cached $(git ls-files "$(git rev-parse --show-toplevel)" -i --exclude-standard)'
+  push = sh -c 'git fetch && git push'
 [credential]
 	helper = cache --timeout 36000
 [url "https://github.com/PhilippeCarphin/"]
