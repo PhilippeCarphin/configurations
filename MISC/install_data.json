@@ -21,6 +21,7 @@
          "grub-customizer"
          "eclipse",
          "eclipse-cdt",
+         "xclip"
       ],
       "avr" : [
          "avr-gcc",
