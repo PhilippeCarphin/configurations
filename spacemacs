@@ -370,6 +370,7 @@ you should place your code here."
   (define-key evil-normal-state-map [mouse-9] 'next-buffer)
 
   (set-window-resize-keys)
+  (set-split-open-keys)
 
   (bind-insert-mode-window-change-keys)
 

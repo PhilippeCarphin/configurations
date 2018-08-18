@@ -28,14 +28,28 @@
 ;; TODO tailor these to be more useful
 ;; Could have 'C-a /' do a projectile-dired
 ;; But 'C-w /' could do something else
-(defun split-open ()
+(defun split-find ()
   (interactive)
   (split-window-below-and-focus)
-  (helm-recentf))
-(defun vsplit-open ()
+  (helm-find-files-1 "."))
+(defun split-buffers ()
+  (interactive)
+  (split-window-below-and-focus)
+  (helm-buffers-list))
+(defun vsplit-find ()
   (interactive)
   (split-window-right-and-focus)
-  (ido-dired))
+  (helm-find-files-1 "."))
+(defun vsplit-buffers ()
+  (interactive)
+  (split-window-right-and-focus)
+  (helm-buffers-list))
+(defun set-split-open-keys ()
+  (define-key evil-normal-state-map (kbd "SPC b -") 'split-buffers)
+  (define-key evil-normal-state-map (kbd "SPC b /") 'vsplit-buffers)
+  (define-key evil-normal-state-map (kbd "SPC f -") 'split-find)
+  (define-key evil-normal-state-map (kbd "SPC f /") 'vsplit-find)
+  )
 
 (defun custom-prefix-example ()
   "An example of defining a prefix"
