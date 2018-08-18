@@ -108,10 +108,17 @@
   (interactive)
   (find-file "~/Dropbox/Notes/CMC/CMC_Notes/wmd.org"))
 ;; I have no idea what I'm doing.
-;; (defmacro make-quick-open-function (name directory)
-;;   (lambda (name directory) (defun name ()
-;;     (interactive)
-;;     helm-find-files directory)))
+
+(defmacro make-quick-open-function (name directory)
+
+  (defun name ()
+  (interactive)
+  (find-file directory))
+
+  )
+
+(make-quick-open-function movies "~/Movies")
+
 ;;
 ;; (make-quick-open-function 'github "~/Documents/GitHub")
 (defun put-header ()
@@ -145,8 +152,19 @@
 (defun org-make-code-block-command (lang start end)
   (interactive (list (read-string "Enter a language (default C): " "" nil "c") (region-beginning) (region-end)))
   (org-make-code-block lang start end))
+(defun paste-between-strings (start-string end-string)
+  (save-excursion
+    (insert (concat start-string
+                    (car kill-ring)
+                    end-string))))
+(defun org-paste-code-block-command(lang)
+  (interactive (list (read-string "Enter a language (default C): " "" nil "c")))
+  (paste-between-strings (concat "#+BEGIN_SRC " lang "\n") "#+END_SRC\n")
+  )
 (defun org-set-make-code-block-key ()
-  (define-key evil-visual-state-map (kbd "C-o") 'org-make-code-block-command))
+  (define-key evil-visual-state-map (kbd "C-o") 'org-make-code-block-command)
+  (define-key evil-normal-state-map (kbd "C-o") 'org-paste-code-block-command)
+  )
 
 ;; Stuff relating to org-publish
 (defun setup-org-publish ()
