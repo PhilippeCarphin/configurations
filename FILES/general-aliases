@@ -49,6 +49,7 @@ elif [ $(uname) = Darwin ]; then
     ls_color='-G'
 fi
 alias ls="ls $ls_color -h"
+alias ln='ln -v'
 
 alias dusage="du -d 1 -h | sort -h"
 alias setenv='source ./setenv'
