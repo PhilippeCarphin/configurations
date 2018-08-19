@@ -93,48 +93,22 @@
   (evil-insert-state)
   (yas-insert-snippet "nn"))
 
-(defun notes ()
-  "Open helm-find-files in a the notes directory"
-  (interactive)
-  (helm-find-files-1 "~/Dropbox/Notes/Notes_BUCKET/"))
-(defun wnotes ()
-  "Open helm-find-files in a the notes directory"
-  (interactive)
-  (helm-find-files-1 "~/Dropbox/Notes/CMC/CMC_Notes/"))
-(defun github ()
-  "Open helm-find-files in a the notes directory"
-  (interactive)
-  (helm-find-files-1 "~/Documents/GitHub/"))
-(defun philconfig ()
-  "Open helm-find-files in a the notes directory"
-  (interactive)
-  (helm-find-files-1 "~/.philconfig"))
-(defun workspace ()
-  "Open helm-find-files in a the notes directory"
-  (interactive)
-  (helm-find-files-1 "~/workspace"))
-(defun wmd ()
-  "Open helm-find-files in a the notes directory"
-  (interactive)
-  (find-file "~/Dropbox/Notes/Notes_BUCKET/wmd.org"))
-(defun wmdw ()
-  "Open helm-find-files in a the notes directory"
-  (interactive)
-  (find-file "~/Dropbox/Notes/CMC/CMC_Notes/wmd.org"))
-;; I have no idea what I'm doing.
+(defmacro make-goto-function (name directory)
+  `(defun ,(intern name) ()
+     (interactive)
+     (helm-find-files-1 ,directory)))
+(make-goto-function "notes" "~/Dropbox/Notes/Notes_BUCKET")
+(make-goto-function "wnotes" "~/Dropbox/Notes/CMC/CMC_Notes/")
+(make-goto-function "github" "~/Documents/GitHub/")
+(make-goto-function "philconfig" "~/.philconfig")
+(make-goto-function "workspace" "~/workspace")
+(defmacro make-open-function (name file)
+  `(defun ,(intern name) ()
+     (interactive)
+     (find-file ,file)))
+(make-open-function "wmd" "~/Dropbox/Notes/Notes_BUCKET/wmd.org")
+(make-open-function "wmdw" "~/Dropbox/Notes/CMC/CMC_Notes/wmd.org")
 
-(defmacro make-quick-open-function (name directory)
-
-  (defun name ()
-  (interactive)
-  (find-file directory))
-
-  )
-
-(make-quick-open-function movies "~/Movies")
-
-;;
-;; (make-quick-open-function 'github "~/Documents/GitHub")
 (defun put-header ()
   (interactive)
   ;; Could have some better code to find the text in the line.
