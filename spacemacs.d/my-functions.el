@@ -134,11 +134,14 @@
                   (goto-char start)
                   (insert start-string)))
 (defun org-make-code-block (lang start end)
-  (surround-strings start end
+  (surround-strings start
+                    end
                     (concat "#+BEGIN_SRC " lang "\n")
                     "#+END_SRC\n"))
 (defun org-make-code-block-command (lang start end)
-  (interactive (list (read-string "Enter a language (default C): " "" nil "c") (region-beginning) (region-end)))
+  (interactive (list (read-string "Enter a language (default C): " "" nil "c")
+                     (region-beginning)
+                     (region-end)))
   (org-make-code-block lang start end))
 (defun paste-between-strings (start-string end-string)
   (save-excursion
