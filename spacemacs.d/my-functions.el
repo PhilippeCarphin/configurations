@@ -154,7 +154,7 @@
   )
 (defun org-set-make-code-block-key ()
   (define-key evil-visual-state-map (kbd "C-o") 'org-make-code-block-command)
-  (define-key evil-normal-state-map (kbd "C-o") 'org-paste-code-block-command)
+  ;; (define-key evil-normal-state-map (kbd "C-o") 'org-paste-code-block-command)
   )
 
 ;; Stuff relating to org-publish
