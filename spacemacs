@@ -411,6 +411,27 @@ you should place your code here."
   (define-key evil-normal-state-map (kbd "C-c n") 'new-note)
   (define-key evil-normal-state-map (kbd "é") 'evil-search-forward)
 
+(setq org-todo-keywords '(
+          (sequence "TODO" "WAITING" "VERIFY" "|" "DONE")
+          (sequence "GTD-IN(i)"
+                    "GTD-CLARIFY(c)"
+                    "GTD-PROJECT(p)"
+                    "GTD-SOMEDAY-MAYBE(s)"
+                    "GTD-ACTION(a)"
+                    "GTD-NEXT-ACTION(n)"
+                    "GTD-WAITING(w)"
+                    "|"
+                    "GTD-REFERENCE(r)"
+                    "GTD-DELEGATED(g)"
+                    "GTD-DONE(d)")
+          ;; (type "FRED" "DAVE" "JOHN" "|" "DONE")
+          ))
+  (setq org-enforce-todo-checkbox-dependencies t
+        org-enforce-todo-dependencies t)
+
+  (setq org-insert-heading-respect-content t)
+  (setq org-M-RET-may-split-line nil)
+
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
