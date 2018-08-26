@@ -33,7 +33,7 @@
   $HOME/.ycm_extra_conf.py        ycm_extra_conf.py
 [wakatime]
   $HOME/.wakatime.cfg             wakatime.cfg
-[zhs]
+[zsh]
   $HOME/.zprofile                 zprofile
   $HOME/.zshrc                    zshrc
   $HOME/.zshenv                   zshenv
