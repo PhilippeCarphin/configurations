@@ -79,7 +79,7 @@
 
 (defun insert-date ()
   (interactive)
-  (let ((timestamp (format-time-string "%Y-%m-%d")))
+  (let ((timestamp (format-time-string "[%Y-%m-%d %H:%M]")))
     (insert timestamp)))
 
 (defun new-note (name)

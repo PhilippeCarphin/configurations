@@ -433,6 +433,7 @@ you should place your code here."
   (setq org-insert-heading-respect-content t)
   (setq org-M-RET-may-split-line nil)
 
+  (define-key evil-insert-state-map (kbd "C-d") 'insert-date)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
