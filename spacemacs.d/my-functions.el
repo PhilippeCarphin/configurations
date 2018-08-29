@@ -92,6 +92,16 @@
   (org-mode)
   (evil-insert-state)
   (yas-insert-snippet "nn"))
+(defun new-mail (name)
+  "Create a new org-mode notes file in standard location"
+  (interactive
+   (let ((timestamp (format-time-string "%Y-%m-%d")))
+     (list (read-string (concat "New note name : (default " timestamp ") ") "" nil timestamp))))
+  (switch-to-buffer (concat "~/Dropbox/Notes/Notes_BUCKET/Email/email_" name ".org"))
+  (set-visited-file-name (concat "~/Dropbox/Notes/Notes_BUCKET/Email/email_" name ".org"))
+  (org-mode)
+  (evil-insert-state)
+  (yas-insert-snippet "nn"))
 
 (defmacro make-goto-function (name directory)
   `(defun ,(intern name) ()
