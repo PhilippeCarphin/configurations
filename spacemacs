@@ -427,7 +427,8 @@ you should place your code here."
           ;; (type "FRED" "DAVE" "JOHN" "|" "DONE")
           ))
   (setq org-enforce-todo-checkbox-dependencies t
-        org-enforce-todo-dependencies t)
+        org-enforce-todo-dependencies t
+        org-log-done 'note)
 
   (setq org-insert-heading-respect-content t)
   (setq org-M-RET-may-split-line nil)
@@ -435,7 +436,7 @@ you should place your code here."
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
-;; auto-generate custom variable definitions.
+;; auto-generate custom variable definiti wFons.
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
