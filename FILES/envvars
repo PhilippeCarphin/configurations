@@ -48,5 +48,6 @@ export FCEDIT=vim
 ! [ -z "$TMUX" ] && export TERM=xterm-256color
 
 export PHIL_NOTES_DIR="$HOME/Dropbox/Notes/Notes_BUCKET"
+export PHIL_GTD_DIR="$HOME/Dropbox/Notes/gtd"
 
 # echo ".envvars END"

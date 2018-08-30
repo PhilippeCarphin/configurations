@@ -40,8 +40,12 @@ values."
      vimscript
      javascript
      (org :variables
-          org-agenda-files '("~/Dropbox/Notes/Notes_BUCKET/")
-          org-directory "~/Dropbox/Notes/Notes_BUCKET/"
+          org-agenda-files '("~/Dropbox/Notes/")
+          org-directory "~/Dropbox/Notes/"
+          org-mobile-files '("~/Dropbox/Notes/CMC"
+                             "~/Dropbox/Notes/Email"
+                             "~/Dropbox/Notes/Notes_BUCKET"
+                             "~/Dropbox/Notes/gtd")
           org-mobile-inbox-for-pull "~/Dropbox/Notes/Notes_BUCKET/org-mobile-inbox.org"
           org-mobile-directory "~/Dropbox/Apps/MobileOrg/"
           )
