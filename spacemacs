@@ -437,6 +437,13 @@ you should place your code here."
   (setq org-insert-heading-respect-content t)
   (setq org-M-RET-may-split-line nil)
 
+  ;; (define-key magit-hunk-section-map (kbd "x")
+  ;;   (lambda () (interactive) (message "Piss-bucket")))
+  ;; (define-key magit-hunk-section-map (kbd "x") 'magit-discard-hunk)
+  ;; (add-hook magit-diff-mode-hook
+  ;;           (lambda ()
+  ;;             (define-key evil-normal-state-map (kbd "x")
+  ;;               '(lambda () (interactive) (message "piss-bucket")))))
   (define-key evil-insert-state-map (kbd "C-d") 'insert-date)
   )
 
