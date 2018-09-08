@@ -40,7 +40,7 @@ values."
      vimscript
      javascript
      (org :variables
-          org-agenda-files '("~/Dropbox/Notes/")
+          org-agenda-files '("~/Dropbox/Notes/gtd/")
           org-directory "~/Dropbox/Notes/"
           org-mobile-files '("~/Dropbox/Notes/CMC"
                              "~/Dropbox/Notes/Email"
