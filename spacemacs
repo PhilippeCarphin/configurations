@@ -378,9 +378,6 @@ you should place your code here."
 
   (bind-insert-mode-window-change-keys)
 
-  ;; TODO I tried to set this variable in the layers part but that didn't work
-  (setq-default org-default-notes-file "~/Dropbox/Notes/Notes_BUCKET/org-capture.org")
-
   ;; This value is used when hard wrapping lines with M-x or automatically
   (setq-default fill-column 80)
   (add-hook 'text-mode-hook 'turn-on-auto-fill)

@@ -213,6 +213,7 @@
                              (setq-local org-indent-indentation-per-level 4)))
   (advise-org-global-cycle)
   (add-hook 'org-mode-hook 'org-set-make-code-block-key)
+  (setq org-default-notes-file "~/Dropbox/Notes/gtd/GTD_InTray.org")
   )
 
 (defun c-mode-set-comment-indent-style ()
