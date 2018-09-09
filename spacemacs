@@ -434,6 +434,22 @@ you should place your code here."
   (setq org-insert-heading-respect-content t)
   (setq org-M-RET-may-split-line nil)
 
+  (setq org-capture-templates
+        '(("i" "GTD Input" entry (file+headline "~/Dropbox/Notes/gtd/GTD_InTray.org" "GTD Input Tray")
+           "* GTD-IN %?\n %i\n %a")
+          ("j" "Journal" entry (file+olp+datetree "~/org/journal.org")
+           "* %?\nEntered on %U\n  %i\n  %a")
+          ("a" "Action" entry (file+headline "~/Dropbox/Notes/gtd/GTD_NextActions.org" "Next Actions")
+           "* GTD-ACTION %?\n Created on %U\n")
+          ("p" "Project" entry (file+headline "~/Dropbox/Notes/gtd/GTD_ProjectList.org" "Current Projects")
+           "* GTD-PROJECT %?\n Created on %U\n")
+          ("r" "Reference" entry (file+headline "~/Dropbox/Notes/gtd/GTD_Reference.org" "New")
+           "* GTD-PROJECT %?\n Created on %U\n")
+          ("s" "Someday Maybe" entry (file+headline "~/Dropbox/Notes/gtd/GTD_SomedayMaybe.org" "Someday Maybe")
+           "* GTD-SOMEDAY_MAYBE %?\n Created on %U\n")
+          )
+        )
+
   ;; (define-key magit-hunk-section-map (kbd "x")
   ;;   (lambda () (interactive) (message "Piss-bucket")))
   ;; (define-key magit-hunk-section-map (kbd "x") 'magit-discard-hunk)
