@@ -41,13 +41,6 @@ values."
      javascript
      (org :variables
           org-agenda-files '("~/Dropbox/Notes/gtd/")
-          org-directory "~/Dropbox/Notes/"
-          org-mobile-files '("~/Dropbox/Notes/CMC"
-                             "~/Dropbox/Notes/Email"
-                             "~/Dropbox/Notes/Notes_BUCKET"
-                             "~/Dropbox/Notes/gtd")
-          org-mobile-inbox-for-pull "~/Dropbox/Notes/Notes_BUCKET/org-mobile-inbox.org"
-          org-mobile-directory "~/Dropbox/Apps/MobileOrg/"
           )
      osx
      html
@@ -408,8 +401,6 @@ you should place your code here."
                 (unless window-system
                   (set-keyboard-coding-system 'utf-8)))))
 
-  (define-key evil-normal-state-map (kbd "SPC n n") 'new-note)
-  (define-key evil-normal-state-map (kbd "C-c n") 'new-note)
   (define-key evil-normal-state-map (kbd "é") 'evil-search-forward)
 
 (setq org-todo-keywords '(
@@ -430,9 +421,6 @@ you should place your code here."
   (setq org-enforce-todo-checkbox-dependencies t
         org-enforce-todo-dependencies t
         org-log-done 'note)
-
-  (setq org-insert-heading-respect-content t)
-  (setq org-M-RET-may-split-line nil)
 
   (setq org-capture-templates
         '(("i" "GTD Input" entry (file+headline "~/Dropbox/Notes/gtd/GTD_InTray.org" "GTD Input Tray")
@@ -457,7 +445,7 @@ you should place your code here."
   ;;           (lambda ()
   ;;             (define-key evil-normal-state-map (kbd "x")
   ;;               '(lambda () (interactive) (message "piss-bucket")))))
-  (define-key evil-insert-state-map (kbd "C-d") 'insert-date)
+  (define-key evil-insert-state-map (kbd "C-d") (lambda () (interactive) (message "Use 'C-c .' to insert timestamps")))
   )
 
 ;; Do not write anything past this comment. This is where Emacs will

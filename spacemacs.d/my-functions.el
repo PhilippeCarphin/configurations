@@ -208,6 +208,17 @@
 (defun advise-org-global-cycle ()
   (advice-add 'org-global-cycle :after #'evil-scroll-line-to-center))
 (defun configure-org-mode ()
+  (setq org-directory "~/Dropbox/Notes/"
+        org-mobile-files '("~/Dropbox/Notes/CMC"
+                           "~/Dropbox/Notes/Email"
+                           "~/Dropbox/Notes/Notes_BUCKET"
+                           "~/Dropbox/Notes/gtd")
+        org-mobile-inbox-for-pull "~/Dropbox/Notes/Notes_BUCKET/org-mobile-inbox.org"
+        org-mobile-directory "~/Dropbox/Apps/MobileOrg/")
+  (setq org-insert-heading-respect-content t)
+  (setq org-M-RET-may-split-line nil)
+  (define-key evil-normal-state-map (kbd "SPC n n") 'new-note)
+  (define-key evil-normal-state-map (kbd "C-c n") 'new-note)
   (add-hook 'org-mode-hook (lambda ()
                              (setq-local evil-shift-width 4)
                              (setq-local tab-width 4)
