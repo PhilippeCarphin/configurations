@@ -39,9 +39,7 @@ values."
      go
      vimscript
      javascript
-     (org :variables
-          org-agenda-files '("~/Dropbox/Notes/gtd/")
-          )
+     org
      osx
      html
      (colors :variables
@@ -403,41 +401,6 @@ you should place your code here."
 
   (define-key evil-normal-state-map (kbd "é") 'evil-search-forward)
 
-(setq org-todo-keywords '(
-          (sequence "TODO" "WAITING" "VERIFY" "|" "DONE")
-          (sequence "GTD-IN(i)"
-                    "GTD-CLARIFY(c)"
-                    "GTD-PROJECT(p)"
-                    "GTD-SOMEDAY-MAYBE(s)"
-                    "GTD-ACTION(a)"
-                    "GTD-NEXT-ACTION(n)"
-                    "GTD-WAITING(w)"
-                    "|"
-                    "GTD-REFERENCE(r)"
-                    "GTD-DELEGATED(g)"
-                    "GTD-DONE(d)")
-          ;; (type "FRED" "DAVE" "JOHN" "|" "DONE")
-          ))
-  (setq org-enforce-todo-checkbox-dependencies t
-        org-enforce-todo-dependencies t
-        org-log-done 'note)
-
-  (setq org-capture-templates
-        '(("i" "GTD Input" entry (file+headline "~/Dropbox/Notes/gtd/GTD_InTray.org" "GTD Input Tray")
-           "* GTD-IN %?\n %i\n %a")
-          ("j" "Journal" entry (file+olp+datetree "~/org/journal.org")
-           "* %?\nEntered on %U\n  %i\n  %a")
-          ("a" "Action" entry (file+headline "~/Dropbox/Notes/gtd/GTD_NextActions.org" "Next Actions")
-           "* GTD-ACTION %?\n Created on %U\n")
-          ("p" "Project" entry (file+headline "~/Dropbox/Notes/gtd/GTD_ProjectList.org" "Current Projects")
-           "* GTD-PROJECT %?\n Created on %U\n")
-          ("r" "Reference" entry (file+headline "~/Dropbox/Notes/gtd/GTD_Reference.org" "New")
-           "* GTD-PROJECT %?\n Created on %U\n")
-          ("s" "Someday Maybe" entry (file+headline "~/Dropbox/Notes/gtd/GTD_SomedayMaybe.org" "Someday Maybe")
-           "* GTD-SOMEDAY_MAYBE %?\n Created on %U\n")
-          )
-        )
-
   ;; (define-key magit-hunk-section-map (kbd "x")
   ;;   (lambda () (interactive) (message "Piss-bucket")))
   ;; (define-key magit-hunk-section-map (kbd "x") 'magit-discard-hunk)
@@ -446,6 +409,8 @@ you should place your code here."
   ;;             (define-key evil-normal-state-map (kbd "x")
   ;;               '(lambda () (interactive) (message "piss-bucket")))))
   (define-key evil-insert-state-map (kbd "C-d") (lambda () (interactive) (message "Use 'C-c .' to insert timestamps")))
+
+  (configure-gtd)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will

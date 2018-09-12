@@ -109,8 +109,6 @@
      (helm-find-files-1 ,directory)))
 (make-goto-function "notes" "~/Dropbox/Notes/Notes_BUCKET/")
 (make-goto-function "wnotes" "~/Dropbox/Notes/CMC/Notes_BUCKET/")
-(make-goto-function "gtd" "~/Dropbox/Notes/gtd/")
-(make-goto-function "wgtd" "~/Dropbox/Notes/CMC/gtd/")
 (make-goto-function "github" "~/Documents/GitHub/")
 (make-goto-function "dropbox" "~/Dropbox")
 (make-goto-function "poly" "~/Dropbox/PolyMtl_AUT2018/")
@@ -257,3 +255,55 @@
 ;; (defun org-find-header (header)
 ;;   (interactive (list (read-string "Enter a header : " "" nil "c")))
 ;;   (evil-search (concat "\\\\*+ " header)))
+
+(defun configure-gtd ()
+  (setq org-agenda-files '("~/Dropbox/Notes/gtd/")
+        org-capture-templates '(("i" "GTD Input" entry (file+headline
+                                                        "~/Dropbox/Notes/gtd/GTD_InTray.org"
+                                                        "GTD Input Tray")
+                                 "* GTD-IN %?\n %i\n %a")
+                                ("a" "Action" entry (file+headline
+                                                     "~/Dropbox/Notes/gtd/GTD_NextActions.org"
+                                                     "Next Actions")
+                                 "* GTD-ACTION %?\n Created on %U\n")
+                                ("p" "Project" entry (file+headline
+                                                      "~/Dropbox/Notes/gtd/GTD_ProjectList.org"
+                                                      "Current Projects")
+                                 "* GTD-PROJECT %?\n Created on %U\n")
+                                ("r" "Reference" entry (file+headline
+                                                        "~/Dropbox/Notes/gtd/GTD_Reference.org"
+                                                        "New")
+                                 "* GTD-PROJECT %?\n Created on %U\n")
+                                ("s" "Someday Maybe" entry (file+headline
+                                                            "~/Dropbox/Notes/gtd/GTD_SomedayMaybe.org"
+                                                            "Someday Maybe")
+                                 "* GTD-SOMEDAY_MAYBE %?\n Created on %U\n")
+                                ("j" "Journal" entry (file+olp+datetree "~/Dropbox/Notes/gtd/journal.org")
+                                 "* %?\nEntered on %U\n  %i\n  %a"))
+        ;; TODO This should add the GTD keywords to org-todo-keywords rather than setting it.
+        org-todo-keywords '((sequence "TODO" "WAITING" "VERIFY" "|" "DONE")
+                            (sequence "GTD-IN(i)" "GTD-CLARIFY(c)" "GTD-PROJECT(p)"
+                                      "GTD-SOMEDAY-MAYBE(s)" "GTD-ACTION(a)" "GTD-NEXT-ACTION(n)"
+                                      "GTD-WAITING(w)" "|" "GTD-REFERENCE(r)" "GTD-DELEGATED(g)" "GTD-DONE(d)"))
+
+        org-enforce-todo-checkbox-dependencies t
+        org-enforce-todo-dependencies t
+        org-log-done 'note)
+
+  (define-prefix-command 'gtd)
+  (defun gtd-open-in-tray () (interactive) (find-file "~/Dropbox/Notes/gtd/GTD_InTray.org"))
+  (defun gtd-open-next-actions () (interactive) (find-file "~/Dropbox/Notes/gtd/GTD_NextActions.org"))
+  (defun gtd-open-projects-list () (interactive) (find-file "~/Dropbox/Notes/gtd/GTD_ProjectList.org"))
+  (defun gtd-open-references () (interactive) (find-file "~/Dropbox/Notes/gtd/GTD_Reference.org"))
+  (defun gtd-open-someday-maybe () (interactive) (find-file "~/Dropbox/Notes/gtd/GTD_SomedayMaybe.org"))
+  (defun gtd-open-tickler () (interactive) (find-file "~/Dropbox/Notes/gtd/GTD_Tickler.org"))
+  (defun gtd-dashboard () (interactive) (persp-load-state-from-file "gtd"))
+  (define-key gtd (kbd "d") 'gtd-dashboard)
+  (define-key gtd (kbd "i") 'gtd-open-in-tray)
+  (define-key gtd (kbd "p") 'gtd-open-projects-list)
+  (define-key gtd (kbd "s") 'gtd-open-someday-maybe)
+  (define-key gtd (kbd "a") 'gtd-open-next-actions)
+  (define-key gtd (kbd "r") 'gtd-open-references)
+  (define-key gtd (kbd "t") 'gtd-open-tickler)
+  (define-key evil-normal-state-map (kbd "SPC a g") 'gtd)
+  )
