@@ -257,7 +257,11 @@
 ;;   (evil-search (concat "\\\\*+ " header)))
 
 (defun configure-gtd ()
-  (setq org-agenda-files '("~/Dropbox/Notes/gtd/")
+  (setq org-agenda-custom-commands '(("o" "At Poly" tags-todo "at_poly"
+                                      ((org-agenda-overriding-header "At Poly")))
+                                     ("h" "At House" tags-todo "at_house"
+                                      ((org-agenda-overriding-header "At House"))))
+        org-agenda-files '("~/Dropbox/Notes/gtd/")
         org-capture-templates '(("i" "GTD Input" entry (file+headline
                                                         "~/Dropbox/Notes/gtd/GTD_InTray.org"
                                                         "GTD Input Tray")
