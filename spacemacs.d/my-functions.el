@@ -257,33 +257,29 @@
 ;;   (evil-search (concat "\\\\*+ " header)))
 
 (defun configure-gtd ()
+  (setq gtd-directory
+        (cond ((member (user-real-login-name) '("afsmpca")) "~/Dropbox/Notes/CMC/gtd/")
+              ((member (user-real-login-name) '("pcarphin" "phcarb")) "~/Dropbox/Notes/gtd/")))
+
+  (setq gtd-in-tray-file (concat gtd-directory "GTD_InTray.org")
+        gtd-next-actions-file (concat gtd-directory "GTD_NextActions.org")
+        gtd-project-list-file (concat gtd-directory "GTD_ProjectList.org")
+        gtd-reference-file (concat gtd-directory "GTD_Reference.org")
+        gtd-someday-maybe-file (concat gtd-directory "GTD_SomedayMaybe.org")
+        gtd-tickler-file (concat gtd-directory "GTD_Tickler.org")
+        gtd-journal-file (concat gtd-directory "GTD_Journal.org"))
+
   (setq org-agenda-custom-commands '(("o" "At Poly" tags-todo "at_poly"
                                       ((org-agenda-overriding-header "At Poly")))
                                      ("h" "At House" tags-todo "at_house"
                                       ((org-agenda-overriding-header "At House"))))
         org-agenda-files '("~/Dropbox/Notes/gtd/")
-        org-capture-templates '(("i" "GTD Input" entry (file+headline
-                                                        "~/Dropbox/Notes/gtd/GTD_InTray.org"
-                                                        "GTD Input Tray")
-                                 "* GTD-IN %?\n %i\n %a")
-                                ("a" "Action" entry (file+headline
-                                                     "~/Dropbox/Notes/gtd/GTD_NextActions.org"
-                                                     "Next Actions")
-                                 "* GTD-ACTION %?\n Created on %U\n")
-                                ("p" "Project" entry (file+headline
-                                                      "~/Dropbox/Notes/gtd/GTD_ProjectList.org"
-                                                      "Current Projects")
-                                 "* GTD-PROJECT %?\n Created on %U\n")
-                                ("r" "Reference" entry (file+headline
-                                                        "~/Dropbox/Notes/gtd/GTD_Reference.org"
-                                                        "New")
-                                 "* GTD-PROJECT %?\n Created on %U\n")
-                                ("s" "Someday Maybe" entry (file+headline
-                                                            "~/Dropbox/Notes/gtd/GTD_SomedayMaybe.org"
-                                                            "Someday Maybe")
-                                 "* GTD-SOMEDAY_MAYBE %?\n Created on %U\n")
-                                ("j" "Journal" entry (file+olp+datetree "~/Dropbox/Notes/gtd/journal.org")
-                                 "* %?\nEntered on %U\n  %i\n  %a"))
+        org-capture-templates '(("i" "GTD Input" entry (file+headline gtd-in-tray-file "GTD Input Tray") "* GTD-IN %?\n %i\n %a")
+                                ("a" "Action" entry (file+headline gtd-next-actions-file "Next Actions") "* GTD-ACTION %?\n Created on %U\n")
+                                ("p" "Project" entry (file+headline gtd-project-list-file "Current Projects") "* GTD-PROJECT %?\n Created on %U\n")
+                                ("r" "Reference" entry (file+headline gtd-reference-file "New") "* GTD-PROJECT %?\n Created on %U\n")
+                                ("s" "Someday Maybe" entry (file+headline gtd-someday-maybe-file "Someday Maybe") "* GTD-SOMEDAY_MAYBE %?\n Created on %U\n")
+                                ("j" "Journal" entry (file+olp+datetree gtd-journal-file) "* %?\nEntered on %U\n  %i\n  %a"))
         ;; TODO This should add the GTD keywords to org-todo-keywords rather than setting it.
         org-todo-keywords '((sequence "TODO" "WAITING" "VERIFY" "|" "DONE")
                             (sequence "GTD-IN(i)" "GTD-CLARIFY(c)" "GTD-PROJECT(p)"
@@ -295,19 +291,22 @@
         org-log-done 'note)
 
   (define-prefix-command 'gtd)
-  (defun gtd-open-in-tray () (interactive) (find-file "~/Dropbox/Notes/gtd/GTD_InTray.org"))
-  (defun gtd-open-next-actions () (interactive) (find-file "~/Dropbox/Notes/gtd/GTD_NextActions.org"))
-  (defun gtd-open-projects-list () (interactive) (find-file "~/Dropbox/Notes/gtd/GTD_ProjectList.org"))
-  (defun gtd-open-references () (interactive) (find-file "~/Dropbox/Notes/gtd/GTD_Reference.org"))
-  (defun gtd-open-someday-maybe () (interactive) (find-file "~/Dropbox/Notes/gtd/GTD_SomedayMaybe.org"))
-  (defun gtd-open-tickler () (interactive) (find-file "~/Dropbox/Notes/gtd/GTD_Tickler.org"))
+  (defun gtd-open-in-tray () (interactive) (find-file gtd-in-tray-file))
+  (defun gtd-open-next-actions () (interactive) (find-file gtd-next-actions-file))
+  (defun gtd-open-projects-list () (interactive) (find-file gtd-project-list-file))
+  (defun gtd-open-references () (interactive) (find-file gtd-reference-file))
+  (defun gtd-open-someday-maybe () (interactive) (find-file gtd-someday-maybe-file))
+  (defun gtd-open-tickler () (interactive) (find-file gtd-tickler-file))
+  (defun gtd-open-journal () (interactive) (find-file gtd-journal-file))
   (defun gtd-dashboard () (interactive) (persp-load-state-from-file "gtd"))
   (define-key gtd (kbd "d") 'gtd-dashboard)
   (define-key gtd (kbd "i") 'gtd-open-in-tray)
+  (define-key gtd (kbd "j") 'gtd-open-in-tray)
   (define-key gtd (kbd "p") 'gtd-open-projects-list)
   (define-key gtd (kbd "s") 'gtd-open-someday-maybe)
   (define-key gtd (kbd "a") 'gtd-open-next-actions)
   (define-key gtd (kbd "r") 'gtd-open-references)
   (define-key gtd (kbd "t") 'gtd-open-tickler)
+  (define-key gtd (kbd "j") 'gtd-open-journal)
   (define-key evil-normal-state-map (kbd "SPC a g") 'gtd)
   )
