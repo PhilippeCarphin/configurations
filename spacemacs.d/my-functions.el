@@ -119,7 +119,7 @@
      (interactive)
      (find-file ,file)))
 (make-open-function "wmd" "~/Dropbox/Notes/Notes_BUCKET/wmd.org")
-(make-open-function "wmdw" "~/Dropbox/Notes/CMC/wmd.org")
+(make-open-function "wmdw" "~/Dropbox/Notes/CMC/Notes_BUCKET/wmd.org")
 (make-open-function "mnotes" "~/Dropbox/PartageAvecPhil/Notes_Phil.org")
 
 (defun put-header ()
