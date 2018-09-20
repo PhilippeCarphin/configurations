@@ -354,7 +354,9 @@ explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
   (load-file "~/.spacemacs.d/my-functions.el")
 
+  ;; TODO Not sure if both are needed but I have to get work done
   (global-visual-line-mode 1)
+  (spacemacs/toggle-visual-line-navigation-on)
 
   (define-key evil-normal-state-map (kbd "SPC h s") 'hlt-highlight-symbol)
   (define-key evil-normal-state-map (kbd "SPC h u") 'hlt-unhighlight-symbol)
