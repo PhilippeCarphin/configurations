@@ -249,6 +249,7 @@
   (push 'magit-status-mode evil-escape-excluded-major-modes)
   (push 'magit-diff-mode evil-escape-excluded-major-modes)
   (push 'grep-mode evil-escape-excluded-major-modes)
+  (push 'neotree-mode evil-escape-excluded-major-modes)
   )
 
 ;; TODO Try to make this work
