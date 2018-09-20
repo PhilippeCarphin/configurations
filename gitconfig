@@ -56,7 +56,7 @@
 	trustExitCode = true
 [core]
 	excludesfile = ~/.gitignore.global
-	editor = vim
+	editor = ec -t
 [gui]
 	fontui = -family \".SF NS Text\" -size 18 -weight normal -slant roman -underline 0 -overstrike 0
 	fontdiff = -family \"DejaVu Sans Mono\" -size 16 -weight normal -slant roman -underline 0 -overstrike 0
