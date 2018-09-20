@@ -411,6 +411,9 @@ you should place your code here."
   (define-key evil-insert-state-map (kbd "C-d") (lambda () (interactive) (message "Use 'C-c .' to insert timestamps")))
 
   (configure-gtd)
+
+  (setq avy-timer 5)
+  (define-key evil-normal-state-map (kbd "SPC j k") 'avy-goto-char-timer)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
