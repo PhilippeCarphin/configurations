@@ -302,7 +302,6 @@
   (defun gtd-dashboard () (interactive) (persp-load-state-from-file "gtd"))
   (define-key gtd (kbd "d") 'gtd-dashboard)
   (define-key gtd (kbd "i") 'gtd-open-in-tray)
-  (define-key gtd (kbd "j") 'gtd-open-in-tray)
   (define-key gtd (kbd "p") 'gtd-open-projects-list)
   (define-key gtd (kbd "s") 'gtd-open-someday-maybe)
   (define-key gtd (kbd "a") 'gtd-open-next-actions)
