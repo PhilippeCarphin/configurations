@@ -275,12 +275,14 @@
                                      ("h" "At House" tags-todo "at_house"
                                       ((org-agenda-overriding-header "At House"))))
         org-agenda-files '("~/Dropbox/Notes/gtd/")
-        org-capture-templates '(("i" "GTD Input" entry (file+headline gtd-in-tray-file "GTD Input Tray") "* GTD-IN %?\n %i\n %a")
-                                ("a" "Action" entry (file+headline gtd-next-actions-file "Next Actions") "* GTD-ACTION %?\n Created on %U\n")
-                                ("p" "Project" entry (file+headline gtd-project-list-file "Current Projects") "* GTD-PROJECT %?\n Created on %U\n")
-                                ("r" "Reference" entry (file+headline gtd-reference-file "New") "* GTD-PROJECT %?\n Created on %U\n")
-                                ("s" "Someday Maybe" entry (file+headline gtd-someday-maybe-file "Someday Maybe") "* GTD-SOMEDAY_MAYBE %?\n Created on %U\n")
-                                ("j" "Journal" entry (file+olp+datetree gtd-journal-file) "* %?\nEntered on %U\n  %i\n  %a"))
+        org-capture-templates '(("i" "GTD Input" entry (file+headline gtd-in-tray-file "GTD Input Tray") "* GTD-IN %?\n %i\n %a" :kill-buffer t)
+                                ("a" "Action" entry (file+headline gtd-next-actions-file "Next Actions") "* GTD-ACTION %?\n Created on %U\n" :kill-buffer t)
+                                ("p" "Project" entry (file+headline gtd-project-list-file "Current Projects") "* GTD-PROJECT %?\n Created on %U\n" :kill-buffer t)
+                                ("r" "Reference" entry (file+headline gtd-reference-file "New") "* GTD-PROJECT %?\n Created on %U\n" :kill-buffer t)
+                                ("s" "Someday Maybe" entry (file+headline gtd-someday-maybe-file "Someday Maybe") "* GTD-SOMEDAY_MAYBE %?\n Created on %U\n" :kill-buffer t)
+                                ("j" "Journal" entry (file+olp+datetree gtd-journal-file ) "* %?\nEntered on %U\n  %i\n  %a" :kill-buffer t))
+                                ;; Note that you can make the datetree be filed  under another heading
+                                ;;("j" "Journal" entry (file+olp+datetree gtd-journal-file "A LEVEL 1 HEADING" "A LEVEL 2 HEADING" ...) ... ))
         ;; TODO This should add the GTD keywords to org-todo-keywords rather than setting it.
         org-todo-keywords '((sequence "TODO" "WAITING" "VERIFY" "|" "DONE")
                             (sequence "GTD-IN(i)" "GTD-CLARIFY(c)" "GTD-PROJECT(p)"
