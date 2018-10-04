@@ -281,7 +281,7 @@
                                 ("p" "Project" entry (file+headline gtd-project-list-file "Current Projects") "* GTD-PROJECT %?\n Created on %U\n")
                                 ("r" "Reference" entry (file+headline gtd-reference-file "New") "* GTD-PROJECT %?\n Created on %U\n")
                                 ("s" "Someday Maybe" entry (file+headline gtd-someday-maybe-file "Someday Maybe") "* GTD-SOMEDAY_MAYBE %?\n Created on %U\n")
-                                ("j" "Journal" entry (file+olp+datetree gtd-journal-file) "* %?\nEntered on %U\n  %i\n  %a"))
+                                ("j" "Journal" entry (file+olp+datetree gtd-journal-file) "* %U  %?"))
         ;; TODO This should add the GTD keywords to org-todo-keywords rather than setting it.
         org-todo-keywords '((sequence "TODO" "WAITING" "VERIFY" "|" "DONE")
                             (sequence "GTD-IN(i)" "GTD-CLARIFY(c)" "GTD-PROJECT(p)"
