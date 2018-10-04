@@ -251,6 +251,7 @@
   (push 'grep-mode evil-escape-excluded-major-modes)
   (push 'neotree-mode evil-escape-excluded-major-modes)
   (push 'help-mode evil-escape-excluded-major-modes)
+  (push 'spacemacs-buffer-mode evil-escape-excluded-major-modes)
   )
 
 ;; TODO Try to make this work
