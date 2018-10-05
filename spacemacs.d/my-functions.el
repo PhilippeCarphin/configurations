@@ -270,10 +270,13 @@
         gtd-tickler-file (concat gtd-directory "GTD_Tickler.org")
         gtd-journal-file (concat gtd-directory "GTD_Journal.org"))
 
-  (setq org-agenda-custom-commands '(("o" "At Poly" tags-todo "at_poly"
+  (setq org-agenda-custom-commands '(("p" "At Poly" tags-todo "at_poly"
                                       ((org-agenda-overriding-header "At Poly")))
                                      ("h" "At House" tags-todo "at_house"
-                                      ((org-agenda-overriding-header "At House"))))
+                                      ((org-agenda-overriding-header "At House")))
+                                     ("o" "Out and about" tags-todo "at_out"
+                                      ((org-agenda-overriding-header "Out and about actions")))
+                                     )
         org-agenda-files '("~/Dropbox/Notes/gtd/")
         org-capture-templates '(("i" "GTD Input" entry (file+headline gtd-in-tray-file "GTD Input Tray") "* GTD-IN %?\n %i\n %a" :kill-buffer t)
                                 ("a" "Action" entry (file+headline gtd-next-actions-file "Next Actions") "* GTD-ACTION %?\n Created on %U\n" :kill-buffer t)
