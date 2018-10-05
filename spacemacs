@@ -355,6 +355,7 @@ you should place your code here."
   (load-file "~/.spacemacs.d/my-functions.el")
 
   (global-visual-line-mode 1)
+  (spacemacs/toggle-visual-line-navigation-on)
 
   (define-key evil-normal-state-map (kbd "SPC h s") 'hlt-highlight-symbol)
   (define-key evil-normal-state-map (kbd "SPC h u") 'hlt-unhighlight-symbol)
