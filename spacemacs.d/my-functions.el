@@ -297,6 +297,11 @@
         org-enforce-todo-dependencies t
         org-log-done 'note)
 
+  (setq org-refile-targets '(("~/Dropbox/Notes/gtd/GTD_Tickler.org" :maxlevel . 3)
+                             (gtd-project-list-file :maxlevel . 3)
+                             (gtd-next-actions-file :maxlevel . 3)
+                             ))
+
   (define-prefix-command 'gtd)
   (defun gtd-open-in-tray () (interactive) (find-file gtd-in-tray-file))
   (defun gtd-open-next-actions () (interactive) (find-file gtd-next-actions-file))
