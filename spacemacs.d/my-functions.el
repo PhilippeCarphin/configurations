@@ -261,6 +261,13 @@
 ;;   (interactive (list (read-string "Enter a header : " "" nil "c")))
 ;;   (evil-search (concat "\\\\*+ " header)))
 
+(defun configure-wmd ()
+  (setq wmd-file
+        (cond ((member (user-real-login-name) '("afsmpca")) "~/Dropbox/Notes/CMC/Notes_BUCKET/wmd.org")
+              ((member (user-real-login-name) '("pcarphin" "phcarb")) "~/Dropbox/Notes/Notes_BUCKET/wmd.org"))))
+(configure-wmd)
+
+(visit-file-modtime wmd-file)
 (defun configure-gtd ()
   (setq gtd-directory
         (cond ((member (user-real-login-name) '("afsmpca")) "~/Dropbox/Notes/CMC/gtd/")
@@ -315,6 +322,8 @@
   (defun gtd-open-tickler () (interactive) (find-file gtd-tickler-file))
   (defun gtd-open-journal () (interactive) (find-file gtd-journal-file))
   (defun gtd-dashboard () (interactive) (persp-load-state-from-file "gtd"))
+  (defun gtd-open-wmd-file () (interactive) (find-file wmd-file))
+
   (define-key gtd (kbd "d") 'gtd-dashboard)
   (define-key gtd (kbd "i") 'gtd-open-in-tray)
   (define-key gtd (kbd "p") 'gtd-open-projects-list)
@@ -323,5 +332,6 @@
   (define-key gtd (kbd "r") 'gtd-open-references)
   (define-key gtd (kbd "t") 'gtd-open-tickler)
   (define-key gtd (kbd "j") 'gtd-open-journal)
+  (define-key gtd (kbd "w") 'gtd-open-wmd-file)
   (define-key evil-normal-state-map (kbd "SPC a g") 'gtd)
   )
