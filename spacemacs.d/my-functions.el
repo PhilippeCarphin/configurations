@@ -11,6 +11,10 @@
 (defun maybe-kill-all-buffers ()
   (interactive)
   (mapc 'maybe-kill-buffer (delq (current-buffer) (buffer-list))))
+(defun kill-invisible-buffers ()
+  (interactive)
+  (dolist (buf (buffer-list))
+    (unless (get-buffer-window buf 'visible) (maybe-kill-buffer buf))))
 
 (setq-default phil-window-resize-step-size 4)
 (defun set-window-resize-keys ()
