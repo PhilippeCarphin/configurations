@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # echo "~/.profile START"
 
 poutine_science(){
@@ -8,8 +10,18 @@ poutine_science(){
    ### environment setup - env
    export EC_ATOMIC_PROFILE_VERSION=1.5-beta
 }
+
+hot_chicken_pyspooki(){
+    export PHIL_PYSPOOKI_CONTAINER=~/hall1_phil/spooki/
+    export PHIL_PYSPOOKI_BUILD_DIR=$PHIL_PYSPOOKI_CONTAINER/build
+    echo "$(tput setab 2)Sourcing things for PySpooki$(tput sgr 0)"
+    source $PHIL_PYSPOOKI_CONTAINER/SETUP_ubuntu-14.04-amd64-64
+    PWD=$PHIL_PYSPOOKI_BUILD_DIR source $PHIL_PYSPOOKI_CONTAINER/py_spooki_env_setup.sh
+}
+
 if [[ $(cmc_network) == "science" ]] ; then
    poutine_science
+   hot_chicken_pyspooki
 fi
 
 # echo "~/.profile END"
