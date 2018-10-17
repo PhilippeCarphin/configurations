@@ -352,7 +352,6 @@ nil are ignored."
               ((member (user-real-login-name) '("pcarphin" "phcarb")) "~/Dropbox/Notes/Notes_BUCKET/wmd.org"))))
 (configure-wmd)
 
-(visit-file-modtime wmd-file)
 (defun configure-gtd ()
   (setq gtd-directory
         (cond ((member (user-real-login-name) '("afsmpca")) "~/Dropbox/Notes/CMC/gtd/")
