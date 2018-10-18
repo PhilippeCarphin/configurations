@@ -6,7 +6,7 @@ open_cmc() {
 
 if [[ $(cmc_network) == "ec" ]] ; then
     export SPI_DIR="~/Documents/GitHub/SPI_PHIL"
-    export SPOOKI_DIR="~/Documents/GitHub/SPOOKI_PHIL"
+    export SPOOKI_DIR="~/workspace/spooki/"
     export SPOOKI_TMPDIR="/tmp/$(whoami)/$$"
     CMC_NOTES_DIR="~/Dropbox/Notes/CMC/"
     alias gospi="cd $SPI_DIR"
