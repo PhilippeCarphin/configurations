@@ -419,3 +419,10 @@ nil are ignored."
   (define-key gtd (kbd "w") 'gtd-open-wmd-file)
   (define-key evil-normal-state-map (kbd "SPC a g") 'gtd)
   )
+
+(defun can-osx-extra-mappings ()
+  (defun can-osx-insert-forward-slash ()
+    (interactive)
+    (insert "/"))
+  (define-key evil-insert-state-map (kbd "M-é") 'can-osx-insert-forward-slash))
+(can-osx-extra-mappings)
