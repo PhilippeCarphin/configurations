@@ -256,6 +256,7 @@
   (push 'neotree-mode evil-escape-excluded-major-modes)
   (push 'help-mode evil-escape-excluded-major-modes)
   (push 'spacemacs-buffer-mode evil-escape-excluded-major-modes)
+  (push 'org-agenda-mode evil-escape-excluded-major-modes)
   )
 
 ;; The two next functions are to allow me to do this:
