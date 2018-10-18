@@ -217,7 +217,7 @@
                            "~/Dropbox/Notes/gtd")
         org-mobile-inbox-for-pull "~/Dropbox/Notes/Notes_BUCKET/org-mobile-inbox.org"
         org-mobile-directory "~/Dropbox/Apps/MobileOrg/")
-  (setq org-insert-heading-respect-content t)
+  (setq org-insert-heading-respect-content nil)
   (setq org-M-RET-may-split-line nil)
   (define-key evil-normal-state-map (kbd "SPC n n") 'new-note)
   (define-key evil-normal-state-map (kbd "C-c n") 'new-note)
