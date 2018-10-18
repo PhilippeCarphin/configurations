@@ -427,3 +427,9 @@ nil are ignored."
     (insert "/"))
   (define-key evil-insert-state-map (kbd "M-é") 'can-osx-insert-forward-slash))
 (can-osx-extra-mappings)
+
+(defun can-extra-mappings ()
+  (define-key evil-normal-state-map (kbd "é") 'evil-search-forward)
+  (define-key evil-normal-state-map (kbd "SPC w é") 'split-window-right)
+  )
+(can-extra-mappings)
