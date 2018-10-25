@@ -373,7 +373,7 @@ nil are ignored."
                                      ("o" "Out and about" tags-todo "at_out"
                                       ((org-agenda-overriding-header "Out and about actions")))
                                      )
-        org-agenda-files '("~/Dropbox/Notes/gtd/")
+        org-agenda-files '("~/Dropbox/Notes/gtd/" "~/Dropbox/Notes/CMC/gtd")
         org-capture-templates '(("i" "GTD Input" entry (file+headline gtd-in-tray-file "GTD Input Tray") "* GTD-IN %?\n %i\n %a" :kill-buffer t)
                                 ("a" "Action" entry (file+headline gtd-next-actions-file "Next Actions") "* GTD-ACTION %?\n Created on %U\n" :kill-buffer t)
                                 ("p" "Project" entry (file+headline gtd-project-list-file "Current Projects") "* GTD-PROJECT %?\n Created on %U\n" :kill-buffer t)
