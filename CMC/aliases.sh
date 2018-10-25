@@ -13,6 +13,7 @@ if [[ $(cmc_network) == "ec" ]] ; then
     alias gospic="cd $SPI_DIR/LibTkGL/TclGeoEER/generic"
     alias gospit="cd $SPI_DIR/LibTkGL/TclGeoEER/MetObsTest"
     alias gospoo="cd $SPOOKI_DIR"
+    alias buildspoo="cd ~/hall1_phil/spooki/build"
     alias makespi='(cd $SPI_DIR/LibTkGL/ ; ./makeit -spi)'
     alias quota='quota 2>/dev/null'
     alias tmuxspi='tmux new-session \; source-file ~/spi-dev.tmux'
@@ -34,7 +35,7 @@ if [[ $(cmc_network) == "ec" ]] ; then
     alias push_cmc_notes="rsync -av --cvs-exclude $CMC_NOTES_DIR/ house:$CMC_NOTES_DIR/"
     alias pull_cmc_notes="rsync -av --cvs-exclude house:$CMC_NOTES_DIR/ $CMC_NOTES_DIR/"
     # No push_notes because I want to be really sure that I don't delete anything important.
-    alias pull_notes="rsync -av --cvs-exclude house:$PHIL_NOTES_DIR/ $PHIL_NOTES_DIR/"
+    alias pull_notes="rsync -av --cvs-exclude apt:/Users/pcarphin/Dropbox/Notes/Notes_BUCKET/ $HOME/Dropbox/Notes/Notes_BUCKET/"
     # alias push_notes="rsync -av --cvs-exclude $PHIL_NOTES_DIR/ house:$PHIL_NOTES_DIR/"
 
     alias pull_gtd="rsync -av --cvs-exclude house:$PHIL_GTD_DIR/ $PHIL_GTD_DIR/"
