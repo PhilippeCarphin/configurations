@@ -18,8 +18,8 @@ if [[ $(cmc_network) == "ec" ]] ; then
     alias tmuxspi='tmux new-session \; source-file ~/spi-dev.tmux'
     alias tclsh='/ssm/net/cmoe/apps/libSPI_7.12.2_ubuntu-14.04-amd64-64/TCL/bin/tclsh8.6'
     alias wish='/ssm/net/isst/maestro/1.4.3-rc4/linux26-x86-64/bin/wish'
-    alias runxp='nohup rdesktop -g 840x525 eccmcwts3 -d ECQUEBEC -u CarphinP &'
-    alias runxp-big='nohup rdesktop -g 1280x950 eccmcwts3 -d ECQUEBEC -u CarphinP &'
+    alias runxp='echo "$(tput setab 3)No \"$\" or \"#\" after password$(tput sgr 0)" && nohup rdesktop -g 840x525 eccmcwts3 -d ECQUEBEC -u CarphinP &'
+    alias runxp-big='echo "$(tput setab 3)No \"$\" or \"#\" after password$(tput sgr 0)" && nohup rdesktop -g 1280x950 eccmcwts3 -d ECQUEBEC -u CarphinP &'
     alias open=open_cmc
     fs3=/fs/cetus3/fs3/cmd/s/afsm/pca
     alias fs3='cd $fs3'
