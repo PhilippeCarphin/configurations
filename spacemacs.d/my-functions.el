@@ -377,7 +377,7 @@ nil are ignored."
         org-capture-templates '(("i" "GTD Input" entry (file+headline gtd-in-tray-file "GTD Input Tray") "* GTD-IN %?\n %i\n %a" :kill-buffer t)
                                 ("a" "Action" entry (file+headline gtd-next-actions-file "Next Actions") "* GTD-ACTION %?\n Created on %U\n" :kill-buffer t)
                                 ("p" "Project" entry (file+headline gtd-project-list-file "Current Projects") "* GTD-PROJECT %?\n Created on %U\n" :kill-buffer t)
-                                ("r" "Reference" entry (file+headline gtd-reference-file "New") "* GTD-PROJECT %?\n Created on %U\n" :kill-buffer t)
+                                ("r" "Reference" entry (file+headline gtd-reference-file "New") "* GTD-REFERENCE %?\n Created on %U\n" :kill-buffer t)
                                 ("s" "Someday Maybe" entry (file+headline gtd-someday-maybe-file "Someday Maybe") "* GTD-SOMEDAY_MAYBE %?\n Created on %U\n" :kill-buffer t)
                                 ("j" "Journal" entry (file+olp+datetree gtd-journal-file) "* %U  %?" :kill-buffer t)
                                 ("t" "Tickler" entry (file+olp+datetree gtd-tickler-file ) "* %?\nEntered on %U\n  %i\n  %a" :kill-buffer t :time-prompt t))
