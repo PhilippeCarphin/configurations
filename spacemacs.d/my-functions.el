@@ -427,7 +427,12 @@ nil are ignored."
   (defun can-osx-insert-forward-slash ()
     (interactive)
     (insert "/"))
-  (define-key evil-insert-state-map (kbd "M-é") 'can-osx-insert-forward-slash))
+  (defun can-osx-insert-backslash ()
+    (interactive)
+    (insert "\\"))
+  (define-key evil-insert-state-map (kbd "M-é") 'can-osx-insert-forward-slash)
+  (define-key evil-insert-state-map (kbd "M-à") 'can-osx-insert-backslash)
+  )
 (can-osx-extra-mappings)
 
 (defun can-extra-mappings ()
