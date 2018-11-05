@@ -209,7 +209,7 @@
   )
 (defun advise-org-global-cycle ()
   (advice-add 'org-global-cycle :after #'evil-scroll-line-to-center)
-  (advice-add 'org-global-cycle :after #'beginning-of-line)
+  ;; (advice-add 'org-global-cycle :after #'beginning-of-line)
   )
 (defun configure-org-mode ()
   (setq org-directory "~/Dropbox/Notes/"
