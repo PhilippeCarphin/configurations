@@ -356,70 +356,50 @@ explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
   (load-file "~/.spacemacs.d/my-functions.el")
 
-  (setq org-pretty-entities t)
+  ;; Must be called first
+  (determine-environment)
+
+  ;; Calling all configuration functions.
+  (configure-wmd)
+  (determine-environment)
+  (can-osx-extra-mappings)
+  (can-extra-mappings)
+  (set-window-resize-keys)
+  (set-split-open-keys)
+  (bind-insert-mode-window-change-keys)
+  (configure-c-mode)
+  (configure-org-mode)
+  (configure-evil-escape-sequence)
+  (setup-org-publish)
+  (fix-terminal-daemon-special-chars)
+  (configure-gtd)
+
 
   ;; TODO Not sure if both are needed but I have to get work done
   (global-visual-line-mode 1)
   (spacemacs/toggle-visual-line-navigation-on)
 
-  (define-key evil-normal-state-map (kbd "SPC h s") 'hlt-highlight-symbol)
-  (define-key evil-normal-state-map (kbd "SPC h u") 'hlt-unhighlight-symbol)
-
-  (setq-default scroll-margin 10)
-
-  (define-key evil-normal-state-map [mouse-8] 'previous-buffer)
-  (define-key evil-normal-state-map [mouse-9] 'next-buffer)
-
-  (set-window-resize-keys)
-  (set-split-open-keys)
-
-  (bind-insert-mode-window-change-keys)
 
   ;; This value is used when hard wrapping lines with M-x or automatically
   (setq-default fill-column 80)
+
+  ;; REally cool
+  (setq-default scroll-margin 10)
+
+
+  ;; text-mode seems to be one of the only places where I want auto-fill but it's not available.
   (add-hook 'text-mode-hook 'turn-on-auto-fill)
 
-  (configure-c-mode)
-
-  (configure-org-mode)
-
-  (configure-evil-escape-sequence)
 
   ;; Automatically follow symlinks when they point to a version controlled
   ;; source file.
   (setq-default vc-follow-symlinks t)
 
-  (setup-org-publish)
-
   (global-company-mode)
-
-  ;; This pertains to emacs --daemon.
-  ;; Running emacsclient -t causes problems with non-ASCII characters.
-  ;; é, à, è ... would be perceived by emacs as M-c and other things.
-  ;; this ref : https://emacs.stackexchange.com/a/19732/19972 gives
-  ;; exactly this (and points out that this is only ok if you know all
-  ;; your terminals will be utf8):
-  (add-hook 'after-make-frame-functions
-            (lambda (frame)
-              (with-selected-frame frame
-                (unless window-system
-                  (set-keyboard-coding-system 'utf-8)))))
-
-  (define-key evil-normal-state-map (kbd "é") 'evil-search-forward)
-
-  ;; (define-key magit-hunk-section-map (kbd "x")
-  ;;   (lambda () (interactive) (message "Piss-bucket")))
-  ;; (define-key magit-hunk-section-map (kbd "x") 'magit-discard-hunk)
-  ;; (add-hook magit-diff-mode-hook
-  ;;           (lambda ()
-  ;;             (define-key evil-normal-state-map (kbd "x")
-  ;;               '(lambda () (interactive) (message "piss-bucket")))))
-  (define-key evil-insert-state-map (kbd "C-d") (lambda () (interactive) (message "Use 'C-c .' to insert timestamps")))
-
-  (configure-gtd)
 
   (setq avy-timer 5)
   (define-key evil-normal-state-map (kbd "SPC j k") 'avy-goto-char-timer)
+
   )
 
 ;; Do not write anything past this comment. This is where Emacs will

@@ -81,11 +81,6 @@
   (define-key evil-normal-state-map (kbd "C-a -") 'split-window-below)
   )
 
-(defun insert-date ()
-  (interactive)
-  (let ((timestamp (format-time-string "[%Y-%m-%d %H:%M]")))
-    (insert timestamp)))
-
 (defun new-note (name)
   "Create a new org-mode notes file in standard location"
   (interactive
@@ -100,7 +95,10 @@
   "Create a new org-mode notes file in standard location"
   (interactive
    (let ((timestamp (format-time-string "%Y-%m-%d")))
-     (list (read-string (concat "New note name : (default " timestamp ") ") "" nil timestamp))))
+     (list
+      (read-string
+       (concat "New note name : (default " timestamp ") ")
+       "" nil timestamp))))
   (switch-to-buffer (concat "~/Dropbox/Notes/Email/email_" name ".org"))
   (set-visited-file-name (concat "~/Dropbox/Notes/Email/email_" name ".org"))
   (org-mode)
@@ -230,6 +228,10 @@
   (advise-org-global-cycle)
   (add-hook 'org-mode-hook 'org-set-make-code-block-key)
   (setq org-default-notes-file "~/Dropbox/Notes/gtd/GTD_InTray.org")
+
+  ;; Use org-pretty-entities unless I'm at CMC.
+  (unless (equal (symbol-value 'phil-env) 'cmc)
+    (setq org-pretty-entities t))
   )
 
 (defun c-mode-set-comment-indent-style ()
@@ -353,7 +355,11 @@ nil are ignored."
   (setq wmd-file
         (cond ((member (user-real-login-name) '("afsmpca")) "~/Dropbox/Notes/CMC/Notes_BUCKET/wmd.org")
               ((member (user-real-login-name) '("pcarphin" "phcarb")) "~/Dropbox/Notes/Notes_BUCKET/wmd.org"))))
-(configure-wmd)
+
+(defun determine-environment ()
+  (setq phil-env
+        (cond ((member (user-real-login-name) '("afsmpca")) 'cmc)
+              ((member (user-real-login-name) '("pcarphin" "phcarb")) 'personal))))
 
 (defun configure-gtd ()
   (setq gtd-directory
@@ -433,10 +439,41 @@ nil are ignored."
   (define-key evil-insert-state-map (kbd "M-é") 'can-osx-insert-forward-slash)
   (define-key evil-insert-state-map (kbd "M-à") 'can-osx-insert-backslash)
   )
-(can-osx-extra-mappings)
 
 (defun can-extra-mappings ()
   (define-key evil-normal-state-map (kbd "é") 'evil-search-forward)
   (define-key evil-normal-state-map (kbd "SPC w é") 'split-window-right)
   )
-(can-extra-mappings)
+
+(defun misc-extra-keys ()
+
+  (define-key evil-normal-state-map (kbd "SPC h s") 'hlt-highlight-symbol)
+  (define-key evil-normal-state-map (kbd "SPC h u") 'hlt-unhighlight-symbol)
+  (define-key evil-normal-state-map [mouse-8] 'previous-buffer)
+  (define-key evil-normal-state-map [mouse-9] 'next-buffer)
+  (define-key evil-normal-state-map (kbd "é") 'evil-search-forward)
+
+
+  )
+
+(defun fix-terminal-daemon-special-chars ()
+  ;; This pertains to emacs --daemon.
+  ;; Running emacsclient -t causes problems with non-ASCII characters.
+  ;; é, à, è ... would be perceived by emacs as M-c and other things.
+  ;; this ref : https://emacs.stackexchange.com/a/19732/19972 gives
+  ;; exactly this (and points out that this is only ok if you know all
+  ;; your terminals will be utf8):
+  (add-hook 'after-make-frame-functions
+            (lambda (frame)
+              (with-selected-frame frame
+                (unless window-system
+                  (set-keyboard-coding-system 'utf-8)))))
+  )
+
+;; (define-key magit-hunk-section-map (kbd "x")
+;;   (lambda () (interactive) (message "Piss-bucket")))
+;; (define-key magit-hunk-section-map (kbd "x") 'magit-discard-hunk)
+;; (add-hook magit-diff-mode-hook
+;;           (lambda ()
+;;             (define-key evil-normal-state-map (kbd "x")
+;;               '(lambda () (interactive) (message "piss-bucket")))))
