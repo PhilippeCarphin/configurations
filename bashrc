@@ -97,6 +97,7 @@ bashrc_cmc_specifics(){
     # This file must be sourced by bash before zsh is launched
     cmc_check_git
     source ~/.profile
+    complete -o default . source
     if ! [ -e ~/.normal_mode ] ; then
         if [[ $(cmc_network) == "ec" ]] ; then
             exec zsh
