@@ -33,6 +33,7 @@ values."
    dotspacemacs-configuration-layers
    '(
      themes-megapack
+     common-lisp
      shell-scripts
      markdown
      twitter

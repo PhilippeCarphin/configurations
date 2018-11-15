@@ -143,6 +143,7 @@
   (yas-insert-snippet)
   (evil-insert-state))
 
+
 (defun surround-strings (start end start-string end-string)
   (save-excursion (goto-char end)
                   (insert end-string)
@@ -205,10 +206,13 @@
   ;; See comments on the answer that gives this line.
   (setq process-connection-type nil)
   )
+
 (defun advise-org-global-cycle ()
-  (advice-add 'org-global-cycle :after #'evil-scroll-line-to-center)
-  ;; (advice-add 'org-global-cycle :after #'beginning-of-line)
-  )
+  (defun org-post-global-cycle (dummy-arg)
+    (interactive (list "dummy arg value"))
+    (call-interactively 'evil-scroll-line-to-center)
+    )
+  (advice-add 'org-global-cycle :after #'org-post-global-cycle))
 (defun configure-org-mode ()
   (setq org-directory "~/Dropbox/Notes/"
         org-mobile-files '("~/Dropbox/Notes/CMC"
