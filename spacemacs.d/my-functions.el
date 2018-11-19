@@ -159,6 +159,9 @@
                      (region-beginning)
                      (region-end)))
   (org-make-code-block lang start end))
+(defun french-quote (start end)
+  (interactive (list (region-beginning) (region-end)))
+  (surround-strings start end "«" "»"))
 (defun paste-between-strings (start-string end-string)
   (save-excursion
     (insert (concat start-string
