@@ -263,7 +263,9 @@
   ;; See : http://blog.binchen.org/posts/easy-indentation-setup-in-emacs-for-web-development.html
   (add-hook 'c-mode-common-hook 'c-mode-set-comment-indent-style)
   ;; (setq-default comment-auto-fill-only-comments t)
-  (add-hook 'c-mode-hook (lambda () (c-set-style "linux"))))
+  (add-hook 'c-mode-hook (lambda () (c-set-style "linux")))
+  (add-hook 'c++-mode-hook (lambda () (c-set-style "awk")))
+  )
 
 (defun configure-evil-escape-sequence ()
   ;; Typing 'jk' fast will exit inser-mode
