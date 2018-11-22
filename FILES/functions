@@ -331,8 +331,9 @@ cmc_check_git(){
 
     if [ $major -lt 2 ] ; then
         git_stoneage_message $gv
-    elif [ $major -eq 2 ] && [ $minor -lt 13 ] ; then
-        git_unsupported_message $gv
+    elif [ $major -eq 2 ] && [ $minor -lt 18 ] ; then
+        true
+        # git_old_but_supported_message $gv
     fi
 }
 
@@ -349,9 +350,9 @@ git_stoneage_message(){
 ################################################################################
 # 
 ################################################################################
-git_unsupported_message(){
+git_old_but_supported_message(){
     local gv=$1
-    echo "$(tput setab 11)$(tput setaf 0)You are using a version of git ($gv) that is no longer supported$(tput sgr 0)"
+    echo "$(tput setab 11)$(tput setaf 0)You are using a version of git ($gv) that is old but still supported$(tput sgr 0)"
     echo "Maybe someday, we'll have a version of git that is still supported"
 }
 
