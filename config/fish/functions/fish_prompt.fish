@@ -1,1 +1,1 @@
-/home/pcarphin/.local/share/omf/themes/agnoster/fish_prompt.fish
+/fs/cetus3/fs3/cmd/s/afsm/pca/.local/share/omf/themes/agnoster/fish_prompt.fish

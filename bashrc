@@ -100,9 +100,7 @@ bashrc_cmc_specifics(){
     complete -o default . source
     if ! [ -e ~/.normal_mode ] ; then
         if [[ $(cmc_network) == "ec" ]] ; then
-            exec zsh
-            true # This is needed for when I comment out the first line (bash
-            # doens't allow empty if blocks
+            exec fish
         fi
     else
         check_quota

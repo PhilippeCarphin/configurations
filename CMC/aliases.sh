@@ -4,6 +4,12 @@ open_cmc() {
    nohup dolphin $to_open > /dev/null 2>&1 &
 }
 
+function ts(){
+    if [ -e ./toScience ] ; then
+        ./toScience phc001
+    fi
+}
+
 if [[ $(cmc_network) == "ec" ]] ; then
     export SPI_DIR="~/Documents/GitHub/SPI_PHIL"
     export SPOOKI_DIR="~/workspace/spooki/"
@@ -22,7 +28,7 @@ if [[ $(cmc_network) == "ec" ]] ; then
     alias runxp='echo "$(tput setab 3)No \"$\" or \"#\" after password$(tput sgr 0)" && nohup rdesktop -g 840x525 eccmcwts3 -d ECQUEBEC -u CarphinP &'
     alias runxp-big='echo "$(tput setab 3)No \"$\" or \"#\" after password$(tput sgr 0)" && nohup rdesktop -g 1280x950 eccmcwts3 -d ECQUEBEC -u CarphinP &'
     alias open=open_cmc
-    fs3=/fs/cetus3/fs3/cmd/s/afsm/pca
+    export fs3=/fs/cetus3/fs3/cmd/s/afsm/pca
     alias fs3='cd $fs3'
     alias spireconf='cd $SPI_DIR/LibTkGL/TclGeoEER ; /usr/bin/autoconf2.50 || echo "spireconf failed" ; cd - >/dev/null'
     alias bash_back="sed 's/\\(exec zsh\\)/# \\1/' < ~/.bashrc > ~/.philconfig/brc ; mv ~/.philconfig/brc ~/.philconfig/bashrc"

@@ -50,5 +50,7 @@ export FCEDIT=vim
 
 export PHIL_NOTES_DIR="$HOME/Dropbox/Notes/Notes_BUCKET"
 export PHIL_GTD_DIR="$HOME/Dropbox/Notes/gtd"
+export PHIL_CMC_SCIENCE_USER="phc001"
+export PHIL_CMC_EC_USER="afsmpca"
 
 # echo ".envvars END"
