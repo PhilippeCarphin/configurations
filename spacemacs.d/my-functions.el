@@ -9,7 +9,7 @@
   (message "Hello World"))
 
 ;; ref : https://www.emacswiki.org/emacs/KillingBuffers#toc2
-(setq not-to-kill-buffer-list '("*scratch*" "#emacs" "*Messages*" "irc.freenode.net:6667"))
+(setq not-to-kill-buffer-list '("*scratch*" "#emacs" "*Messages*" "irc.freenode.net:6667" "recentf"))
 (defun maybe-kill-buffer (buffer)
   (when (not (member (buffer-name buffer) not-to-kill-buffer-list))
     (kill-buffer buffer)))
