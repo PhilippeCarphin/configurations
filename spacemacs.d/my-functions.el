@@ -109,7 +109,12 @@
   `(defun ,(intern name) ()
      (interactive)
      (helm-find-files-1 ,directory)))
-(make-goto-function "notes" "~/Dropbox/Notes/Notes_BUCKET/")
+
+(setq notes_dir
+      (if (equal (symbol-value 'phil-env) 'personal)
+          "/ssh:localhost:/Users/pcarphin/Dropbox/Notes/Notes_BUCKET/"
+        "~/Dropbox/Notes/Notes_BUCKET/"))
+(make-goto-function "notes" notes_dir)
 (make-goto-function "wnotes" "~/Dropbox/Notes/CMC/Notes_BUCKET/")
 (make-goto-function "github" "~/Documents/GitHub/")
 (make-goto-function "dropbox" "~/Dropbox")
