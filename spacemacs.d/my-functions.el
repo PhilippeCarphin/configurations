@@ -1,3 +1,8 @@
+(defun determine-environment ()
+  (setq phil-env
+        (cond ((member (user-real-login-name) '("afsmpca")) 'cmc)
+              ((member (user-real-login-name) '("pcarphin" "phcarb")) 'personal))))
+(determine-environment)
 (defun say-hello ()
   "Example of an interactive function"
   (interactive)
@@ -111,7 +116,7 @@
      (helm-find-files-1 ,directory)))
 
 (setq notes_dir
-      (if (equal (symbol-value 'phil-env) 'personal)
+      (if (equal (symbol-value 'phil-env) 'cmc)
           "/ssh:localhost:/Users/pcarphin/Dropbox/Notes/Notes_BUCKET/"
         "~/Dropbox/Notes/Notes_BUCKET/"))
 (make-goto-function "notes" notes_dir)
@@ -368,10 +373,6 @@ nil are ignored."
         (cond ((member (user-real-login-name) '("afsmpca")) "~/Dropbox/Notes/CMC/Notes_BUCKET/wmd.org")
               ((member (user-real-login-name) '("pcarphin" "phcarb")) "~/Dropbox/Notes/Notes_BUCKET/wmd.org"))))
 
-(defun determine-environment ()
-  (setq phil-env
-        (cond ((member (user-real-login-name) '("afsmpca")) 'cmc)
-              ((member (user-real-login-name) '("pcarphin" "phcarb")) 'personal))))
 
 (defun configure-gtd ()
   (setq gtd-directory
