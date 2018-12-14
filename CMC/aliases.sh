@@ -26,7 +26,6 @@ if [[ $(cmc_network) == "ec" ]] ; then
     alias fs3='cd $fs3'
     alias spireconf='cd $SPI_DIR/LibTkGL/TclGeoEER ; /usr/bin/autoconf2.50 || echo "spireconf failed" ; cd - >/dev/null'
     alias bash_back="sed 's/\\(exec zsh\\)/# \\1/' < ~/.bashrc > ~/.philconfig/brc ; mv ~/.philconfig/brc ~/.philconfig/bashrc"
-    alias zsh_back="sed 's/\\(# \\)*\\(exec zsh\\)/\\2/' < ~/.bashrc > ~/.philconfig/brc ; mv ~/.philconfig/brc ~/.philconfig/bashrc"
 
     # Here it is important that there be forward slashes at the end.  This
     # changes what rsync will do.  To be sure in case I forget and remove
