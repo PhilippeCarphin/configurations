@@ -5,3 +5,7 @@ set -q XDG_DATA_HOME
 
 # Load Oh My Fish configuration.
 source $OMF_PATH/init.fish
+
+set -x PHIL_CONFIG $HOME/.philconfig
+
+source $PHIL_CONFIG/envvars.fish
