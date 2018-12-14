@@ -138,6 +138,7 @@ if [[ "$-" == *i* ]] ; then
 
     source $PHILCONFIG/FILES/functions
     source $PHILCONFIG/FILES/general-aliases
+    source $PHILCONFIG/FILES/github-aliases
     source $PHILCONFIG/Templates/.template-completion.bash
     source $PHILCONFIG/FILES/git-completion.bash
     source $PHILCONFIG/FILES/git-prompt.sh
