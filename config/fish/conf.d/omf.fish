@@ -8,4 +8,6 @@ source $OMF_PATH/init.fish
 
 set -x PHIL_CONFIG $HOME/.philconfig
 
+alias my-ip 'curl ipinfo.io/ip'
+
 source $PHIL_CONFIG/envvars.fish
