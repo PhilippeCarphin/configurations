@@ -2,21 +2,28 @@
 
 # echo "~/.profile START"
 
+eval_and_print(){
+   echo $(tput setaf 2)$1$(tput sgr 0)
+   eval $1
+}
+
 poutine_science(){
-   export ORDENV_SITE_PROFILE=20180130
-   export ORDENV_GROUP_PROFILE=eccc/cmc/1.5
-   export ORDENV_COMM_PROFILE=eccc/20180130
-   source /fs/ssm/main/env/ordenv-boot-20170103.sh
+   echo $(tput setab 2)Starting ordenv$(tput sgr 0)
+   eval_and_print "export ORDENV_SITE_PROFILE=20180130"
+   eval_and_print "export ORDENV_GROUP_PROFILE=eccc/cmc/1.5"
+   eval_and_print "export ORDENV_COMM_PROFILE=eccc/20180130"
+   eval_and_print "source /fs/ssm/main/env/ordenv-boot-20170103.sh"
    ### environment setup - env
-   export EC_ATOMIC_PROFILE_VERSION=1.5-beta
+   eval_and_print "export EC_ATOMIC_PROFILE_VERSION=1.5-beta"
+   echo $(tput setab 2)END Ordenv stuff$(tput sgr 0)
 }
 
 hot_chicken_pyspooki(){
-    export PHIL_PYSPOOKI_CONTAINER=~/hall1_phil/spooki/
-    export PHIL_PYSPOOKI_BUILD_DIR=$PHIL_PYSPOOKI_CONTAINER/build
-    echo "$(tput setab 2)Sourcing things for PySpooki$(tput sgr 0)"
-    echo "$(tput setaf 2)Sourcing $PHIL_PYSPOOKI_CONTAINER/SETUP_ubuntu-14.04-amd64-64$(tput sgr 0)"
-    source $PHIL_PYSPOOKI_CONTAINER/SETUP_ubuntu-14.04-amd64-64
+    echo "$(tput setab 2)Sourcing things for BUILDING PySpooki$(tput sgr 0)"
+    eval_and_print "export PHIL_PYSPOOKI_CONTAINER=~/hall1_phil/spooki/"
+    eval_and_print "export PHIL_PYSPOOKI_BUILD_DIR=$PHIL_PYSPOOKI_CONTAINER/build"
+    eval_and_print "export PHIL_PYSPOOKI_SRC_DIR=~/workspace/spooki/"
+    eval_and_print "source $PHIL_PYSPOOKI_SRC_DIR/SETUP_ubuntu-14.04-amd64-64"
     echo "$(tput setab 2)END pyspooki stuff$(tput sgr 0)"
 }
 
