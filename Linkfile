@@ -21,8 +21,9 @@
 [templates]
   $HOME/Templates                 Templates
 [tmux]
-  $HOME/.tmux.conf                .tmux/.tmux.conf
-  $HOME/.tmux.conf.local          .tmux/.tmux.conf.local
+  # $HOME/.tmux.conf                .tmux/.tmux.conf
+  # $HOME/.tmux.conf.local          .tmux/.tmux.conf.local
+  $HOME/.tmux.conf                tmux.conf
 [vim]
   $HOME/.vimrc                    vimrc
   $HOME/.ideavimrc                vimrc # Pycharm uses this
