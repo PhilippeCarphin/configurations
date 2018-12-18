@@ -115,11 +115,11 @@
      (interactive)
      (helm-find-files-1 ,directory)))
 
-(setq notes_dir
+(setq notes-dir
       (if (equal (symbol-value 'phil-env) 'cmc)
-          "/ssh:localhost:/Users/pcarphin/Dropbox/Notes/Notes_BUCKET/"
+          "/ssh:apt:/Users/pcarphin/Dropbox/Notes/Notes_BUCKET/"
         "~/Dropbox/Notes/Notes_BUCKET/"))
-(make-goto-function "notes" notes_dir)
+(make-goto-function "notes" notes-dir)
 (make-goto-function "wnotes" "~/Dropbox/Notes/CMC/Notes_BUCKET/")
 (make-goto-function "github" "~/Documents/GitHub/")
 (make-goto-function "dropbox" "~/Dropbox")
