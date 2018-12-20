@@ -99,9 +99,7 @@ bashrc_cmc_specifics(){
     source ~/.profile
     complete -o default . source
     if ! [ -e ~/.normal_mode ] ; then
-        if [[ $(cmc_network) == "ec" ]] ; then
-            exec fish
-        fi
+        exec fish
     else
         check_quota
         unset CDPATH
