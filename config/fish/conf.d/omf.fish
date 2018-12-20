@@ -28,4 +28,14 @@ function profile
     fish
 end
 
+function realpath
+    if [ -n $argv[1] ]
+        set input_path $PWD
+    else
+        set input_path $argv[1]
+    end
+
+    python -c "import os,sys; print(os.path.realpath(sys.argv[1]))" $input_path
+end
+
 source $PHIL_CONFIG/envvars.fish
