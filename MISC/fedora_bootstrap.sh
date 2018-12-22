@@ -5,19 +5,22 @@ function main(){
     mkdir -p $GITHUB
     backup_originals
 
+    setup_link_pwd
+    setup_philconfig
+
     cd ~/.philconfig
     link-pwd link --group git
     link-pwd link --group tmux
     link-pwd link --group fish
     link-pwd link --group bash
 
-    setup_link_pwd
-    setup_philconfig
     setup_utils
-    setup_vim
+    setup_vim_and_ycm
     setup_emacs
     setup_fish
     setup_zsh
+
+    setup_ssh
 
     exec fish
 }
@@ -40,7 +43,6 @@ function setup_link_pwd(){
 }
 
 
-
 function setup_philconfig(){
     git clone https://github.com/philippecarphin/configurations ~/.philconfig
     ln -s ~/.philconfig/MISC/git-hooks/post-commit ~/.philconfig/.git/hooks/post-commit
@@ -54,7 +56,7 @@ function setup_utils(){
 }
 
 
-function setup_vim(){
+function setup_vim_and_ycm(){
     sudo dnf install vim
     mkdir -p ~/.vim/bundle
     git clone https://github.com/VundleVim/Vundle.vim ~/.vim/bundle/Vundle.vim
@@ -94,6 +96,11 @@ function setup_zsh(){
     git clone https://github.com/robbyrussell/oh-my-zsh ~/.oh-my-zsh
     touch local_file
     link-pwd link --group zsh
+}
+
+function setup_ssh(){
+    sudo systemctl enable sshd.service
+    sudo systemctl start sshd.service
 }
 
 main
