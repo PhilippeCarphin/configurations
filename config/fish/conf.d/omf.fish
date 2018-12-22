@@ -1,3 +1,7 @@
+if [ $TERM = 'dumb' ]
+    exec bash
+end
+
 set -x fish_greeting (date)
 
 # Path to Oh My Fish install.
