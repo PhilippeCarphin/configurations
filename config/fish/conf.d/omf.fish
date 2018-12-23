@@ -29,7 +29,15 @@ end
 function profile
     set profile_files ~/.philconfig/config/fish/conf.d/omf.fish ~/.philconfig/envvars.fish
     emacsclient -t $profile_files
-    fish
+    exec fish
+end
+
+function github
+    cd ~/Documents/GitHub
+end
+
+function grep
+    command grep -n --color $argv
 end
 
 function realpath
@@ -42,4 +50,4 @@ function realpath
     python -c "import os,sys; print(os.path.realpath(sys.argv[1]))" $input_path
 end
 
-source $PHIL_CONFIG/envvars.fish
+source $PHILCONFIG/envvars.fish
