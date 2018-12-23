@@ -15,6 +15,33 @@ if [ -f /etc/bashrc ]; then
 fi
 
 ################################################################################
+# Checks for interactive shell.  The following will only be done if the shell is
+# an interactive session.  Otherwise these things should not be done.
+################################################################################
+function main(){
+    if [[ "$-" == *i* ]] ; then
+
+        source $PHILCONFIG/FILES/functions
+        source $PHILCONFIG/FILES/general-aliases
+        source $PHILCONFIG/FILES/github-aliases
+        source $PHILCONFIG/Templates/.template-completion.bash
+        source $PHILCONFIG/FILES/git-completion.bash
+        source $PHILCONFIG/FILES/git-prompt.sh
+        source $PHILCONFIG/FILES/git-prompt-phil.sh
+        source $PHILCONFIG/CMC/aliases.sh
+
+        bashrc_set_vim_keybindigs
+        bashrc_configure_prompt
+        bashrc_configure_history
+
+        if    at_cmc ; then bashrc_cmc_specifics
+        elif at_poly ; then bashrc_poly_specifics
+        fi
+
+    fi
+}
+
+################################################################################
 # Echoes a shortened version of host name when at polytechnique
 ################################################################################
 short_host(){
@@ -126,30 +153,12 @@ bashrc_poly_specifics(){
     exec fish
 }
 
-################################################################################
-# Checks for interactive shell.  The following will only be done if the shell is
-# an interactive session.  Otherwise these things should not be done.
-################################################################################
-if [[ "$-" == *i* ]] ; then
+function fuckface(){
+    true
+}
 
-    source $PHILCONFIG/FILES/functions
-    source $PHILCONFIG/FILES/general-aliases
-    source $PHILCONFIG/FILES/github-aliases
-    source $PHILCONFIG/Templates/.template-completion.bash
-    source $PHILCONFIG/FILES/git-completion.bash
-    source $PHILCONFIG/FILES/git-prompt.sh
-    source $PHILCONFIG/FILES/git-prompt-phil.sh
-    source $PHILCONFIG/CMC/aliases.sh
 
-    bashrc_set_vim_keybindigs
-    bashrc_configure_prompt
-    bashrc_configure_history
-
-    if    at_cmc ; then bashrc_cmc_specifics
-    elif at_poly ; then bashrc_poly_specifics
-    fi
-
-fi
+main
 
 BASHRC_LOADED=true
 # echo ".bashrc END"
