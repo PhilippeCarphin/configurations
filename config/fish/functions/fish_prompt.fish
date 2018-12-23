@@ -1,1 +1,0 @@
-/home/pcarphin/.local/share/omf/themes/agnoster/fish_prompt.fish
