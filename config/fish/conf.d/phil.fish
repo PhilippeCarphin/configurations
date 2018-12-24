@@ -1,1 +1,0 @@
-echo "phil.fish loaded"
