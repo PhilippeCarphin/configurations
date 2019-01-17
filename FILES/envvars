@@ -3,9 +3,14 @@
 
 # echo "initial LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
 MY_LD_LIBRARY_PATH=$MY_LD_LIBRARY_PATH:$HOME/.local/lib
+MY_LD_LIBRARY_PATH=$MY_LD_LIBRARY_PATH:$HOME/.local/gcc/lib/gcc
+MY_LD_LIBRARY_PATH=$MY_LD_LIBRARY_PATH:$HOME/.local/gcc/lib64
 MY_LD_LIBRARY_PATH=$MY_LD_LIBRARY_PATH:$HOME/.local/openblas/lib/
 MY_LD_LIBRARY_PATH=$MY_LD_LIBRARY_PATH:$HOME/.local/libgit2/lib
 MY_LD_LIBRARY_PATH=$MY_LD_LIBRARY_PATH:/usr/local/cuda/lib
+MY_LD_LIBRARY_PATH=$MY_LD_LIBRARY_PATH:/fs/cetus3/fs3/cmd/s/afsm/pca/.local/mpfr/lib
+MY_LD_LIBRARY_PATH=$MY_LD_LIBRARY_PATH:/fs/cetus3/fs3/cmd/s/afsm/pca/.local/mpc/lib
+MY_LD_LIBRARY_PATH=$MY_LD_LIBRARY_PATH:/fs/cetus3/fs3/cmd/s/afsm/pca/.local/gmp/lib
 export LD_LIBRARY_PATH="$MY_LD_LIBRARY_PATH:$LD_LIBRARY_PATH"
 
 THEANO_FLAGS=\
