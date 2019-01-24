@@ -41,3 +41,7 @@ function realpath
 
     python -c "import os,sys; print(os.path.realpath(sys.argv[1]))" $input_path
 end
+
+function serve-pwd
+    browser-sync start -s -f . --no-notify --host 0.0.0.0 --port 9000
+end
