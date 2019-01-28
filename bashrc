@@ -36,7 +36,10 @@ function main(){
 
         if    at_cmc ; then bashrc_cmc_specifics
         elif at_poly ; then bashrc_poly_specifics
+        elif [[ $(uname) == Darwin ]] ; then bashrc_osx_specifics
         fi
+
+
 
     fi
 }
@@ -150,6 +153,10 @@ bashrc_set_vim_keybindigs(){
 # 
 ################################################################################
 bashrc_poly_specifics(){
+    exec fish
+}
+
+bashrc_osx_specifics(){
     exec fish
 }
 
