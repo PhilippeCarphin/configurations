@@ -10,11 +10,11 @@ eval_and_print(){
 poutine_science(){
    echo $(tput setab 2)Starting ordenv$(tput sgr 0)
    eval_and_print "export ORDENV_SITE_PROFILE=20180130"
-   eval_and_print "export ORDENV_GROUP_PROFILE=eccc/cmc/1.5"
+   eval_and_print "export ORDENV_GROUP_PROFILE=eccc/cmc/1.6"
    eval_and_print "export ORDENV_COMM_PROFILE=eccc/20180130"
-   eval_and_print "source /fs/ssm/main/env/ordenv-boot-20170103.sh"
+   eval_and_print "source /fs/ssm/main/env/ordenv-boot-20180430.sh"
    ### environment setup - env
-   eval_and_print "export EC_ATOMIC_PROFILE_VERSION=1.5-beta"
+   eval_and_print "export EC_ATOMIC_PROFILE_VERSION=1.6"
    echo $(tput setab 2)END Ordenv stuff$(tput sgr 0)
 }
 
@@ -24,6 +24,10 @@ hot_chicken_pyspooki(){
     eval_and_print "export PHIL_PYSPOOKI_BUILD_DIR=$PHIL_PYSPOOKI_CONTAINER/build"
     eval_and_print "export PHIL_PYSPOOKI_SRC_DIR=~/workspace/spooki/"
     eval_and_print "source $PHIL_PYSPOOKI_SRC_DIR/SETUP_ubuntu-14.04-amd64-64"
+    source ~/hall1_phil/spooki/build/export_env_var
+
+    # . s.ssmuse.dot ENV/d/modelutils/modelutils_1.3.2
+    # . ssmuse-sh -d hpcs/201402/00-test/base -d hpcs/201402/00-test/intel13sp1 -d rpn/env/00-test
     echo "$(tput setab 2)END pyspooki stuff$(tput sgr 0)"
 }
 
