@@ -492,3 +492,13 @@ nil are ignored."
 ;;           (lambda ()
 ;;             (define-key evil-normal-state-map (kbd "x")
 ;;               '(lambda () (interactive) (message "piss-bucket")))))
+
+(defun org-capture-terminal-command (open-file)
+  (when open-file
+    (setq current-prefix-arg '(4))
+    )
+  (let ((capture-frame (make-frame)))
+    (spacemacs/switch-to-scratch-buffer)
+    (call-interactively 'org-capture)
+    (message "Terminal capture command called")
+    ))
