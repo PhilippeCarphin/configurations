@@ -180,10 +180,10 @@ values."
    dotspacemacs-default-font '("Menlo"
                                ;; Note: the size will not take effect if the
                                ;; font is not found
-                               :size 18.0
+                               :size 25.0
                                :weight normal
                                :width normal
-                               :powerline-scale 1.1)
+                               :powerline-scale 0.9)
    ;; The leader key
    dotspacemacs-leader-key "SPC"
    ;; The key used for Emacs commands (M-x) (after pressing on the leader key).
