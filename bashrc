@@ -38,6 +38,8 @@ function main(){
         elif at_poly ; then bashrc_poly_specifics
         elif [[ $(uname) == Darwin ]] ; then bashrc_osx_specifics
         fi
+        bashrc_exec_fish_unless_normal
+        bashrc_exec_fish_unless_normal
 
 
 
@@ -128,12 +130,12 @@ bashrc_cmc_specifics(){
     cmc_check_git
     source ~/.profile
     complete -o default . source
-    if ! [ -e ~/.normal_mode ] ; then
-        exec fish
-    else
-        check_quota
-        unset CDPATH
-    fi
+    check_quota
+    unset CDPATH
+
+    bashrc_exec_fish_unless_normal
+
+    # What follows this will not happen unless we are in normal mode
     source $PHILCONFIG/CMC/aliases.sh
     # source ~/.profile.d/jp-aliases.sh
     # source ~/.profile.d/jp-functions.sh
@@ -153,11 +155,17 @@ bashrc_set_vim_keybindigs(){
 # 
 ################################################################################
 bashrc_poly_specifics(){
-    exec fish
+    bashrc_exec_fish_unless_normal
 }
 
 bashrc_osx_specifics(){
-    exec fish
+    bashrc_exec_fish_unless_normal
+}
+
+bashrc_exec_fish_unless_normal(){
+    if ! [ -e ~/.normal_mode ] ; then
+        exec fish
+    fi
 }
 
 function fuckface(){
