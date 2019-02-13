@@ -32,6 +32,7 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
+     (osx :variables osx-use-option-as-meta nil)
      typescript
      react
      csv
@@ -46,7 +47,6 @@ values."
      javascript
      (org :variables
           org-enable-bootstrap-support t)
-     osx
      html
      (colors :variables
              colors-colorize-identifiers 'variables
@@ -360,6 +360,7 @@ explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
   (load-file "~/.spacemacs.d/my-functions.el")
 
+  (setq-default mac-right-option-modifier nil)
   ;; Calling all configuration functions.
   (configure-wmd)
   (can-osx-extra-mappings)
