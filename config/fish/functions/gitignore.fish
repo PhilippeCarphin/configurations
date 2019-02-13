@@ -1,6 +1,6 @@
 function gitignore
 
-    set -l git_root (git rev-parse --show-top-level)
+    set -l git_root (git rev-parse --show-toplevel)
     set -l ignore_string ""
 
     if [ "$argv[1]" = -d ]
