@@ -360,9 +360,6 @@ explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
   (load-file "~/.spacemacs.d/my-functions.el")
 
-  (setq explicit-shell-file-name "/bin/bash")
-  (setq shell-file-name "bash")
-
   ;; Calling all configuration functions.
   (configure-wmd)
   (can-osx-extra-mappings)
