@@ -70,3 +70,9 @@ export PATH
 PATH="/Library/Frameworks/Python.framework/Versions/3.7/bin:${PATH}"
 export PATH
 # echo ".envvars END"
+
+# Suggested by homebrew after installing Ipython on my imac <2019-02-09 Sat> 
+# export PATH="/usr/local/opt/sqlite/bin:$PATH"
+# export LDFLAGS="-L/usr/local/opt/sqlite/lib"
+# export CPPFLAGS="-I/usr/local/opt/sqlite/include"
+# export PKG_CONFIG_PATH="/usr/local/opt/sqlite/lib/pkgconfig"
