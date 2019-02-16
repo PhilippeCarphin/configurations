@@ -360,6 +360,9 @@ explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
   (load-file "~/.spacemacs.d/my-functions.el")
 
+  ;; TODO I wanted to do this to make doing qq to be like C-g
+  ;; (key-chord-mode 1)
+  ;; (key-chord-define evil-normal-state-map "qq" 'evil-escape)
   (setq sp-autoescape-string-quote nil)
   (setq-default mac-right-option-modifier nil)
   ;; Calling all configuration functions.
