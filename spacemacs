@@ -360,6 +360,7 @@ explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
   (load-file "~/.spacemacs.d/my-functions.el")
 
+  (setq sp-autoescape-string-quote nil)
   (setq-default mac-right-option-modifier nil)
   ;; Calling all configuration functions.
   (configure-wmd)
