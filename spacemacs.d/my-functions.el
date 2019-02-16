@@ -9,10 +9,14 @@
   (message "Hello World"))
 
 ;; ref : https://www.emacswiki.org/emacs/KillingBuffers#toc2
-(setq not-to-kill-buffer-list '("*scratch*" "#emacs" "*Messages*" "irc.freenode.net:6667" "recentf"))
+(setq not-to-kill-buffer-list '("#emacs" "irc.freenode.net:6667" "recentf"))
 (defun maybe-kill-buffer (buffer)
-  (when (not (member (buffer-name buffer) not-to-kill-buffer-list))
-    (kill-buffer buffer)))
+  (let ((bname (buffer-name buffer)))
+    (unless (or (member bname not-to-kill-buffer-list)
+                (get-buffer-window buffer 'visible)
+                (cl-search "*" bname)
+                (cl-search "magit" bname))
+      (kill-buffer-ask buffer))))
 (defun maybe-kill-all-buffers ()
   (interactive)
   (mapc 'maybe-kill-buffer (delq (current-buffer) (buffer-list))))
