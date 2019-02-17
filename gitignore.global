@@ -6,7 +6,6 @@
 *.swm
 .DS_Store
 .vim-build.sh
-__pycache__
 # -- Emacs temp files
 .#*
 \#*
