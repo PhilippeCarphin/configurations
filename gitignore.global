@@ -10,3 +10,5 @@
 .#*
 \#*
 .nfs*
+.focustree.json
+.idea/
