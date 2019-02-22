@@ -12,3 +12,4 @@
 .nfs*
 .focustree.json
 .idea/
+*.focus.json
