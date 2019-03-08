@@ -32,9 +32,13 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
+<<<<<<< HEAD
      (osx :variables osx-use-option-as-meta nil)
      typescript
      react
+=======
+     ruby
+>>>>>>> cmc
      csv
      themes-megapack
      common-lisp

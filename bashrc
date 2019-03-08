@@ -173,6 +173,8 @@ function fuckface(){
 }
 
 
+source $PHILCONFIG/FILES/envvars
+
 main
 
 BASHRC_LOADED=true

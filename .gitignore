@@ -26,3 +26,5 @@ sublime-text-3/*
 local_file
 __pycache__
 README.html
+config/fish/conf.d/theme
+config/fish/fish_variables
