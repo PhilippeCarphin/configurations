@@ -129,7 +129,6 @@ bashrc_cmc_specifics(){
     source ~/.profile
     complete -o default . source
     if ! [ -e ~/.normal_mode ] ; then
-        source $PHILCONFIG/FILES/envvars
         exec fish
     else
         check_quota
@@ -165,6 +164,8 @@ function fuckface(){
     true
 }
 
+
+source $PHILCONFIG/FILES/envvars
 
 main
 

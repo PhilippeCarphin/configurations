@@ -3,7 +3,6 @@
 export PHILCONFIG=$(cd -P $(dirname $(readlink ${BASH_SOURCE[0]})) > /dev/null && pwd)
 
 source $PHILCONFIG/FILES/initutils
-echo "\$PHILCONFIG = $PHILCONFIG"
 
 
 if [ -z $PHILRC_BASH_PROFILE ] ; then
