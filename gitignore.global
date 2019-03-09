@@ -13,3 +13,4 @@
 .focustree.json
 .idea/
 *.focus.json
+.*.restore
