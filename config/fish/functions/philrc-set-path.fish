@@ -1,4 +1,4 @@
-# Defined in /tmp/afsmpca/fish.iwJvMA/philrc-set-path.fish @ line 2
+# Defined in /Users/pcarphin/.config/fish/functions/philrc-set-path.fish @ line 2
 function philrc-set-path
 	set -l option $argv[1]
    switch $option
