@@ -1,7 +1,3 @@
-if [ $TERM = 'dumb' ]
-    exec bash
-end
-
 set -x fish_greeting (date)
 
 set profile_files ~/.config/fish/conf.d/omf.fish ~/.philconfig/envvars.fish
