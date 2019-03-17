@@ -41,12 +41,19 @@ export DYLD_LIBRARY_PATH=$MY_DYLD_LIBRARY_PATH:$DYLD_LIBRARY_PATH
 #    PATH=$MY_PATH:$PHILRC_SYSTEM_PATH
 #    PATH=$MY_PATH
 PHILRC_SYSTEM_PATH=$PATH
-PHILRC_MY_PATH=$PHILRC_MY_PATH:$HOME/.linuxbrew/Homebrew/bin  # The savior
-PHILRC_MY_PATH=$PHILRC_MY_PATH:$HOME/.local/bin               # Locally installed programs
-PHILRC_MY_PATH=$PHILRC_MY_PATH:/bin                           # I'm setting these myself
-PHILRC_MY_PATH=$PHILRC_MY_PATH:/usr/bin                       #   who's gonna stop me
-PHILRC_MY_PATH=$PHILRC_MY_PATH:/usr/sbin                      #   path
-PHILRC_MY_PATH=$PHILRC_MY_PATH:/usr/local/bin
+linuxbrew_dir=$HOME/.linuxbrew/Homebrew/bin
+if [ -d $linuxbrew_dir ] ; then
+    PHILRC_MY_PATH=${PHILRC_MY_PATH:+${PHILRC_MY_PATH}:}$linuxbrew_dir
+fi
+# Note about the ${XX:+${XX}:}  this expands to nothing if XX is empty variable
+# it expands to "${XX}:" if XX is not empty variable
+PHILRC_MY_PATH=${PHILRC_MY_PATH:+${PHILRC_MY_PATH}:}$HOME/.local/bin               # Locally installed programs
+PHILRC_MY_PATH=${PHILRC_MY_PATH:+${PHILRC_MY_PATH}:}/usr/local/bin
+PHILRC_MY_PATH=${PHILRC_MY_PATH:+${PHILRC_MY_PATH}:}/usr/bin
+PHILRC_MY_PATH=${PHILRC_MY_PATH:+${PHILRC_MY_PATH}:}/usr/sbin
+PHILRC_MY_PATH=${PHILRC_MY_PATH:+${PHILRC_MY_PATH}:}/bin
+export PHILRC_MY_PATH
+export PHILRC_SYSTEM_PATH
 export PATH=$PHILRC_MY_PATH
 
 export CDPATH=".:$HOME":$HOME/Documents:$HOME/Documents/GitHub
