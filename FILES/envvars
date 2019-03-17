@@ -96,6 +96,16 @@ export PHIL_CMC_EC_USER="afsmpca"
 # export PATH
 
 export TMPDIR=/tmp/afsmpca
+######### Output at the end of running the pyenv installer script ##############
+# WARNING: seems you still have not added 'pyenv' to the load path.
+#
+# # Load pyenv automatically by adding
+# # the following to ~/.bashrc:
+#
+# export PATH="/Users/pcarphin/.pyenv/bin:$PATH"
+# eval "$(pyenv init -)"
+# eval "$(pyenv virtualenv-init -)"
+################################################################################
 # echo ".envvars END"
 
 # Suggested by homebrew after installing Ipython on my imac <2019-02-09 Sat> 
