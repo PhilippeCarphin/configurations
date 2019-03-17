@@ -2,6 +2,8 @@ set -x fish_greeting (date)
 
 set profile_files ~/.config/fish/conf.d/omf.fish ~/.philconfig/envvars.fish
 
+# status --is-interactive; and source (pyenv init -|psub)
+
 function my-ip -d "Prints public ip"
     curl ipinfo.io/ip
 end
