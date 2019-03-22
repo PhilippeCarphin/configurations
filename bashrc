@@ -130,7 +130,11 @@ bashrc_cmc_specifics(){
     cmc_check_git
     source ~/.profile
     complete -o default . source
-    check_quota
+
+    if [[ $(cmc_network) == "ec" ]] ; then
+        check_quota
+    fi
+
     unset CDPATH
 
     bashrc_exec_fish_unless_normal
