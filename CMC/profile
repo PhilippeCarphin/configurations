@@ -32,8 +32,10 @@ hot_chicken_pyspooki(){
 }
 
 if [[ $(cmc_network) == "science" ]] ; then
+   echo "$(tput setab 2)Doing CMC science network specific stuff$(tput sgr 0)"
    poutine_science
    hot_chicken_pyspooki
+   echo "$(tput setab 2)Done CMC science network specific stuff$(tput sgr 0)"
 fi
 
 # echo "~/.profile END"
