@@ -540,3 +540,7 @@ If the entry has no timestamp, org-read-date will prompt the user for a date "
         ))
     )
   )
+
+(defun org-refile-tickler ()
+  (interactive)
+  (org-refile-to-datetree gtd-tickler-file))
