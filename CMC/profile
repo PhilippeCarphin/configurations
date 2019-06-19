@@ -24,7 +24,9 @@ hot_chicken_pyspooki(){
     eval_and_print "export PHIL_PYSPOOKI_BUILD_DIR=$PHIL_PYSPOOKI_CONTAINER/build"
     eval_and_print "export PHIL_PYSPOOKI_SRC_DIR=~/workspace/spooki/"
     eval_and_print "source $PHIL_PYSPOOKI_SRC_DIR/SETUP_ubuntu-14.04-amd64-64"
-    source ~/hall1_phil/spooki/build/export_env_var
+    eval_and_print "export SPOOKI_TMPDIR=$TMPDIR/spooki"
+    eval_and_print "mkdir -p $SPOOKI_TMPDIR"
+    eval_and_print "source ~/hall1_phil/spooki/build/export_env_var"
 
     # . s.ssmuse.dot ENV/d/modelutils/modelutils_1.3.2
     # . ssmuse-sh -d hpcs/201402/00-test/base -d hpcs/201402/00-test/intel13sp1 -d rpn/env/00-test
