@@ -7,6 +7,8 @@ source $PHILCONFIG/FILES/initutils
 
 if [ -z $PHILRC_BASH_PROFILE ] ; then
     # Acutal bash_profile
+    sshfs phc001@ppp1:/fs/site1/dev/eccc/cmd/s/phc001/spooki/build ~/ppp1/spooki/build
+    sshfs phc001@ppp1:/fs/home/fs1/eccc/cmd/cmds/phc001/workspace/spooki ~/ppp1/spooki/source
 
     # If ssh login shell that I would like to be interactive
     # if ! [ -z "$SSH_CLIENT" ] && ! [ -z "$SSH_TTY" ] && [ -z $PHILRC_BASHRC ]; then
