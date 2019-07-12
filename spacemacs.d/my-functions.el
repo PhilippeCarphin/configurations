@@ -250,9 +250,8 @@
   (add-hook 'org-mode-hook 'org-set-make-code-block-key)
   (setq org-default-notes-file "~/Dropbox/Notes/gtd/GTD_InTray.org")
 
-  ;; Use org-pretty-entities unless I'm at CMC.
-  (unless (equal (symbol-value 'phil-env) 'cmc)
-    (setq org-pretty-entities t))
+  (setq org-pretty-entities t)
+
   )
 
 (defun c-mode-set-comment-indent-style ()
