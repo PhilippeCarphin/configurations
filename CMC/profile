@@ -1,13 +1,15 @@
 #!/bin/bash
 
 # echo "~/.profile START"
+source $PHILCONFIG/FILES/initutils
+source $PHILCONFIG/FILES/functions
 
 eval_and_print(){
    echo $(tput setaf 2)$1$(tput sgr 0)
    eval $1
 }
 
-poutine_science(){
+setup_ordenv(){
    echo $(tput setab 2)Starting ordenv$(tput sgr 0)
    eval_and_print "export ORDENV_SITE_PROFILE=20180130"
    eval_and_print "export ORDENV_GROUP_PROFILE=eccc/cmc/1.6"
@@ -18,27 +20,14 @@ poutine_science(){
    echo $(tput setab 2)END Ordenv stuff$(tput sgr 0)
 }
 
-hot_chicken_pyspooki(){
-    echo "$(tput setab 2)Sourcing things for BUILDING PySpooki$(tput sgr 0)"
-    eval_and_print "export PHIL_PYSPOOKI_CONTAINER=~/hall1_phil/spooki/"
-    eval_and_print "export PHIL_PYSPOOKI_BUILD_DIR=$PHIL_PYSPOOKI_CONTAINER/build"
-    eval_and_print "export PHIL_PYSPOOKI_SRC_DIR=~/workspace/spooki/"
-    eval_and_print "source $PHIL_PYSPOOKI_SRC_DIR/SETUP_ubuntu-14.04-amd64-64"
-    eval_and_print "export SPOOKI_TMPDIR=$TMPDIR/spooki"
-    eval_and_print "mkdir -p $SPOOKI_TMPDIR"
-    eval_and_print "source ~/hall1_phil/spooki/build/export_env_var"
-
-    # . s.ssmuse.dot ENV/d/modelutils/modelutils_1.3.2
-    # . ssmuse-sh -d hpcs/201402/00-test/base -d hpcs/201402/00-test/intel13sp1 -d rpn/env/00-test
-    echo "$(tput setab 2)END pyspooki stuff$(tput sgr 0)"
-}
-
 if [[ $(cmc_network) == "science" ]] ; then
    if [[ $(hostname) != eccc* ]] ; then
-      echo "$(tput setab 2)Doing CMC science network specific stuff$(tput sgr 0)"
-      poutine_science
-      hot_chicken_pyspooki
-      echo "$(tput setab 2)Done CMC science network specific stuff$(tput sgr 0)"
+      setup_ordenv
+      source ~/workspace/spooki/SETUP_ubuntu-14.04-amd64-64
+   else
+      # setup_ordenv
+      export CXX=/usr/bin/g++
+      true
    fi
 fi
 

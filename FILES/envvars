@@ -102,7 +102,7 @@ export PHIL_CMC_EC_USER="afsmpca"
 # PATH="/Library/Frameworks/Python.framework/Versions/3.7/bin:${PATH}"
 # export PATH
 
-export TMPDIR=/tmp/afsmpca
+export TMPDIR=/tmp/$(whoami)
 ######### Output at the end of running the pyenv installer script ##############
 # WARNING: seems you still have not added 'pyenv' to the load path.
 #
