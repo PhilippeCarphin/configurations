@@ -1,4 +1,5 @@
 unset PROMPT_COMMAND  # Because it does something to org-babel when zsh is launched CMC-style by doing 'exec zsh' from the bashrc file.
+export PHILRC_ZSHRC=".zshrc_sourced_at_$(date "+%Y-%m-%d_%H%M")"
 export PHILCONFIG=$(dirname $(readlink ~/.zshrc))
 
 # This is for tramp.
@@ -117,4 +118,7 @@ fi
 
 source ~/.philconfig/local_file
 
-export PHILRC_ZSHRC=".zshrc_sourced_at_$(date "+%Y-%m-%d_%H%M")"
+if ! [ -e ~/.normal_mode ] ; then
+    exec fish
+fi
+
