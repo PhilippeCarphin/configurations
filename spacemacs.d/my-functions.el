@@ -20,6 +20,10 @@
 (defun maybe-kill-all-buffers ()
   (interactive)
   (mapc 'maybe-kill-buffer (delq (current-buffer) (buffer-list))))
+(defun almost-quit-emacs ()
+  (interactive)
+  (mapc 'maybe-kill-buffer (buffer-list))
+  (delete-frame))
 (defun kill-invisible-buffers ()
   (interactive)
   (dolist (buf (buffer-list))
@@ -250,9 +254,8 @@
   (add-hook 'org-mode-hook 'org-set-make-code-block-key)
   (setq org-default-notes-file "~/Dropbox/Notes/gtd/GTD_InTray.org")
 
-  ;; Use org-pretty-entities unless I'm at CMC.
-  (unless (equal (symbol-value 'phil-env) 'cmc)
-    (setq org-pretty-entities t))
+  (setq org-pretty-entities t)
+
   )
 
 (defun c-mode-set-comment-indent-style ()
@@ -407,7 +410,7 @@ nil are ignored."
                                 ("r" "Reference" entry (file+headline gtd-reference-file "New") "* GTD-REFERENCE %?\n Created on %U\n" :kill-buffer t)
                                 ("s" "Someday Maybe" entry (file+headline gtd-someday-maybe-file "Someday Maybe") "* GTD-SOMEDAY_MAYBE %?\n Created on %U\n" :kill-buffer t)
                                 ("j" "Journal" entry (file+olp+datetree gtd-journal-file) "* %U  %?" :kill-buffer t)
-                                ("t" "Tickler" entry (file+olp+datetree gtd-tickler-file ) "* %?\nEntered on %U\n  %i\n  %a" :kill-buffer t :time-prompt t))
+                                ("t" "Tickler" entry (file+datetree+prompt gtd-tickler-file ) "*  %?" :kill-buffer t ))
                                 ;; Note that you can make the datetree be filed  under another heading
                                 ;;("j" "Journal" entry (file+olp+datetree gtd-journal-file "A LEVEL 1 HEADING" "A LEVEL 2 HEADING" ...) ... ))
         ;; TODO This should add the GTD keywords to org-todo-keywords rather than setting it.
@@ -513,3 +516,34 @@ nil are ignored."
     (call-interactively 'org-capture)
     (message "Terminal capture command called")
     ))
+
+;; FROM https://emacs.stackexchange.com/a/10762/19972
+;; Except I changed the thing for choosing the current date to use org-read-date.
+(defun org-refile-to-datetree (&optional file)
+  "Refile a subtree to a datetree corresponding to it's timestamp.
+
+If the entry has no timestamp, org-read-date will prompt the user for a date "
+  (interactive "f")
+  (let* ((datetree-date (or (org-entry-get nil "TIMESTAMP" t)
+                            (org-read-date)))
+         (date (org-date-to-gregorian datetree-date))
+         )
+    (save-excursion
+      (with-current-buffer (current-buffer)
+        (org-cut-subtree)
+        (if file (find-file file))
+        (org-datetree-find-date-create date)
+        (org-narrow-to-subtree)
+        (show-subtree)
+        (org-end-of-subtree t)
+        (newline)
+        (goto-char (point-max))
+        (org-paste-subtree 4)
+        (widen)
+        ))
+    )
+  )
+
+(defun org-refile-tickler ()
+  (interactive)
+  (org-refile-to-datetree gtd-tickler-file))

@@ -53,8 +53,8 @@ if [[ $(cmc_network) == "ec" ]] ; then
     spi_path=/users/dor/afsm/pca/Documents/GitHub/SPI_PHIL/eer_SPI/
     alias spi_beta='export SPI_LIB=$SSM_DEV/workspace/libSPI_7.12.2_${ORDENV_PLAT}; export SPI_PATH=$spi_path'
     alias spi++='spi_beta; $SPI_PATH/bin/SPI'
-    alias emacs='/usr/bin/emacs -q'
-    alias spacemacs=~/.local/bin/emacs-26.1
+    # alias emacs='/usr/bin/emacs -q'
+    # alias spacemacs=~/.local/bin/emacs-26.1
 elif [[ $(cmc_network) == "science" ]] ; then
     if [[ $(hostname) == *ppp* ]] ; then
        alias make='echo "$(tput setab 1)$(tput setaf 15)Do not run make on PPP$(tput sgr 0)"'
