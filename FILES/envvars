@@ -67,18 +67,27 @@ LESS="$LESS -FX"                                                               #
 LESS="$LESS -R"                                                                # For less to have color
 export LESS
 
-if [ $(hostname) != kano ]; then
+if [ "$(hostname)" != kano ]; then
    export LANG=en_US.UTF-8
    export LC_ALL=en_US.UTF-8
 fi
 
 export TZ='America/Toronto'
-export LC_COLLATE=C                                                            # Makes ls sortint case sensitive
+# Makes ls sortint case sensitive
+export LC_COLLATE=C
+# Change that horrible blue color on the default ls settings for macOS's ls
+if [ "$(uname)" = Darwin ] ; then
+    # The string is formed by two letter pairs [fg,bg] where the order
+    # determines the setting they affect [directory][symlink][socket][pipe]
+    # ... and well explained in =man ls=.
+    export LSCOLORS=dxfxcxdxbxegedabagacad
+fi
+
 export EDITOR=vim                                                              # Set editor as vim for most things
 export FCEDIT=vim
 
 #if in tmux, export this I forget why
-! [ -z "$TMUX" ] && export TERM=xterm-256color
+[ -z "$TMUX" ] || export TERM=xterm-256color
 
 export PHIL_NOTES_DIR="$HOME/Dropbox/Notes/Notes_BUCKET"
 export PHIL_GTD_DIR="$HOME/Dropbox/Notes/gtd"
