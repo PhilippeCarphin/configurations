@@ -232,6 +232,15 @@
   (defun org-post-global-cycle (dummy-arg)
     (interactive (list "dummy arg value"))
     (call-interactively 'evil-scroll-line-to-center)
+    ;; Although it doesn't go to the beginning of the line
+    ;; it does what I want which is to allow me to do shift-tab,
+    ;; then when I press TAB again, it expands the toplevel section.
+    ;; so I can do SHIFT-TAB, TAB.
+    ;; THis is somethign I was doing a lot: wanting to do SHIFT-TAB, TAB
+    ;; to see the toplevel subsection but I would have to do
+    ;; SHIFT-TAB, k, j, TAB otherwise, it would bring me back where I was
+    ;; which I don't like.
+    (call-interactively 'beginning-of-line)
     )
   (advice-add 'org-global-cycle :after #'org-post-global-cycle))
 (defun configure-org-mode ()
