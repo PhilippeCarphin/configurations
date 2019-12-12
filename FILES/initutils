@@ -1,16 +1,14 @@
 phil_env(){
-    local user=$(whoami)
-    local hostname=$(hostname)
-    ! [ -z $1 ] && user=$1
-    ! [ -z $2 ] && hostname=$2
     local pe=""
-    case $user in
+    case $(whoami) in
         pcarphin)
             pe=home
             ;;
         afsmpca|afsr005)
             pe="cmc:ec"
-            [[ $hostname == geomet-dev* ]] && pe=geomet:$pe
+            if [[ $(hostname) == geomet-dev* ]] ; then
+                pe=geomet:$pe
+            fi
             ;;
         spspt900|phc001)
             pe=cmc:science
@@ -23,7 +21,10 @@ phil_env(){
 
 at_cmc(){
     local pe=$PHIL_ENV
-    ! [ -z $1 ] && pe=$1
+    if ! [ -z $1 ] ; then
+       pe=$1
+    fi
+
     echo $pe | grep cmc 1>/dev/null 2>&1
 }
 

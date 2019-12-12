@@ -384,8 +384,8 @@ vanillamacs_file=~/.my_vanillamacs
 emacs_spacemacs_or_vanilla(){ if [ -L ~/.emacs ] ; then echo "vanillamacs"
                               else echo "spacemacs"; fi ; }
 
-emacs_clear_links(){ [ -L ~/.emacs.d ] && rm ~/.emacs.d
-                     [ -L ~/.emacs ] && rm ~/.emacs ; }
+emacs_clear_links(){ if [ -L ~/.emacs.d ] ; then  rm ~/.emacs.d ; fi
+                     if [ -L ~/.emacs ] ; then rm ~/.emacs ; fi }
 
 emacs_spacemacs_mode(){ emacs_clear_links
                         ln -s $spacemacs_dir ~/.emacs.d ; }

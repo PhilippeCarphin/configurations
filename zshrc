@@ -6,7 +6,12 @@ export PHILCONFIG=$(dirname $(readlink ~/.zshrc))
 # Tramp needs the prompt to look a certain way because it uses a regex to find
 # it. Since it sets TERM=dumb, if that variable is true, then set the prompt to
 # '$ ' (and unset some options) and we're all set.
-[[ $TERM == "dumb" ]] && unsetopt zle && PS1='$ ' && return
+if [[ $TERM == "dumb" ]] ; then
+    unsetopt zle
+    PS1='$ '
+    return 0
+fi
+
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 

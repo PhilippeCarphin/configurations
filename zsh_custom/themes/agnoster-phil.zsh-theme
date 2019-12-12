@@ -59,12 +59,12 @@ prompt_segment() {
     local bg_in=$1
     local fg_in=$2
     if [[ $(whoami) == afsmpca ]] ; then
-        [[ $fg_in == yellow ]] && fg_in=11
-        [[ $bg_in == yellow ]] && bg_in=11
+        if [[ $fg_in == yellow ]] ; then fg_in=11 ; fi
+        if [[ $bg_in == yellow ]] ; then bg_in=11 ; fi
     fi
     local bg fg
-    [[ -n $bg_in ]] && bg="%K{$bg_in}" || bg="%k"
-    [[ -n $fg_in ]] && fg="%F{$fg_in}" || fg="%f"
+    if [[ -n $bg_in ]] ; then bg="%K{$bg_in}" ; else bg="%k" ; fi
+    if [[ -n $fg_in ]] ; then fg="%F{$fg_in}" ; else fg="%f" ; fi
     if [[ $CURRENT_BG != 'NONE' && $1 != $CURRENT_BG ]]; then
         echo -n " %{$bg%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR%{$fg%} "
     else
@@ -72,7 +72,9 @@ prompt_segment() {
     fi
     # Current bg will be previous bg for next call
     CURRENT_BG=$bg_in
-    [[ -n $3 ]] && echo -n $3
+    if [[ -n $3 ]] ; then
+        echo -n $3
+    fi
 }
 
 # End the prompt, closing any open segments
@@ -257,11 +259,11 @@ prompt_virtualenv() {
 prompt_status() {
     local symbols
     symbols=()
-    [[ $RETVAL -ne 0 ]] && symbols+="%{%F{red}%}✘"
-    [[ $UID -eq 0 ]] && symbols+="%{%F{yellow}%}⚡"
-    [[ $(jobs -l | wc -l) -gt 0 ]] && symbols+="%{%F{cyan}%}⚙"
+    if [[ $RETVAL -ne 0 ]] ; then symbols+="%{%F{red}%}✘" ; fi
+    if [[ $UID -eq 0 ]] ; then symbols+="%{%F{yellow}%}⚡" ; fi
+    if [[ $(jobs -l | wc -l) -gt 0 ]] ; then symbols+="%{%F{cyan}%}⚙" ; fi
 
-    [[ -n "$symbols" ]] && prompt_segment black default "$symbols"
+    if [[ -n "$symbols" ]] ; then prompt_segment black default "$symbols" ; fi
 }
 
 ## Main prompt

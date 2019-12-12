@@ -29,8 +29,8 @@ fi
 source $this_dir/FILES/functions
 
 unlink_file(){
-    [ -L $1 ] && rm -f $1
-    [ -e $1.bak -o -d $1.bak ] && mv $1.bak $1
+    if [ -L $1 ] ; then  rm -f $1 ; fi
+    if [ -e $1.bak -o -d $1.bak ] ; then  mv $1.bak $1 ; fi
 }
 
 link_or_unlink(){
