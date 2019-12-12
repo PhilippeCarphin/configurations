@@ -4,7 +4,11 @@ PHILRC_BASHRC=".bashrc_sourced_at_$(date "+%Y-%m-%d_%H%M")"
 # Tramp needs the prompt to look a certain way because it uses a regex to find
 # it. Since it sets TERM=dumb, if that variable is true, then set the prompt to
 # '$ ' (and unset some options) and we're all set.
-[[ $TERM == "dumb" ]] && unset PROMPT_COMMAND && PS1='$ ' && return
+if [[ $TERM == "dumb" ]] ; then
+   unset PROMPT_COMMAND
+   PS1='$ '
+   return
+fi
 # echo ".bashrc START"
 
 source $PHILCONFIG/FILES/initutils
