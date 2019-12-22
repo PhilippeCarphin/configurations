@@ -87,7 +87,10 @@ export EDITOR=vim                                                              #
 export FCEDIT=vim
 
 #if in tmux, export this I forget why
-[ -z "$TMUX" ] || export TERM=xterm-256color
+if [ -n "$TMUX" ] ; then
+    export TERM=xterm-256color
+fi
+
 
 export PHIL_NOTES_DIR="$HOME/Dropbox/Notes/Notes_BUCKET"
 export PHIL_GTD_DIR="$HOME/Dropbox/Notes/gtd"
