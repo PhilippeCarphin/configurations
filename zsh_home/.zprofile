@@ -1,4 +1,4 @@
-export PHILCONFIG=$(cd $(dirname $(readlink ~/.zprofile)) > /dev/null && pwd)
+export PHILCONFIG=$HOME/.philconfig
 
 if [ -e /etc/zprofile ] ; then
     source /etc/zprofile

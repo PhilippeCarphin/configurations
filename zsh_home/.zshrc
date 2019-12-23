@@ -1,6 +1,6 @@
 unset PROMPT_COMMAND  # Because it does something to org-babel when zsh is launched CMC-style by doing 'exec zsh' from the bashrc file.
 export PHILRC_ZSHRC=".zshrc_sourced_at_$(date "+%Y-%m-%d_%H%M")"
-export PHILCONFIG=$(dirname $(readlink ~/.zshrc))
+export PHILCONFIG=$HOME/.philconfig
 
 # This is for tramp.
 # Tramp needs the prompt to look a certain way because it uses a regex to find
