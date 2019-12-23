@@ -27,8 +27,10 @@ install_philconfig_group(){
     stow -v -t $HOME -d ${this_dir} -S ${1}_home
 }
 
-install_philconfig_group zsh
-install_philconfig_group vim
-install_philconfig_group fish
-install_philconfig_group git
+# install_philconfig_group zsh
+# install_philconfig_group vim
+# install_philconfig_group fish
+# install_philconfig_group git
+# install_philconfig_group emacs
+install_philconfig_group bash
 
