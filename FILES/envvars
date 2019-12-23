@@ -1,13 +1,16 @@
 #!/bin/sh
-# echo ".envvars START"
+# echo ".envvars START" >&2
 
 
-if [ -z $ENVVARS_LOADED ] ; then
-    echo "Loading environment variables"
-    export ENVVARS_LOADED=true
-else
+if [ -n "${PHILRC_ENVVARS_LOADED}" ] ; then
     return
+    echo "DOUBLE SOURCING of .envvars" >&2
+    true
 fi
+
+export GOPATH=$HOME/.local/phil_gopath
+
+# echo "\~/.philconfig/FILES/envvars : GOPATH=$GOPATH"
 
 # echo "initial LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
 MY_LD_LIBRARY_PATH=$MY_LD_LIBRARY_PATH:$HOME/.local/lib
@@ -97,6 +100,8 @@ export PHIL_GTD_DIR="$HOME/Dropbox/Notes/gtd"
 export PHIL_CMC_SCIENCE_USER="phc001"
 export PHIL_CMC_EC_USER="afsmpca"
 
+export PHILRC_ENVVARS_LOADED="true"
+
 # Added by /Applications/Python 3.7/Update ...
 
 # Setting PATH for Python 3.7
@@ -113,8 +118,6 @@ export PHIL_CMC_EC_USER="afsmpca"
 # The original version is saved in .bash_profile.pysave
 # PATH="/Library/Frameworks/Python.framework/Versions/3.7/bin:${PATH}"
 # export PATH
-
-export GOPATH=$HOME/.local/phil_gopath
 ######### Output at the end of running the pyenv installer script ##############
 # WARNING: seems you still have not added 'pyenv' to the load path.
 #

@@ -12,6 +12,11 @@ if [[ $TERM == "dumb" ]] ; then
     return 0
 fi
 
+# echo "SOURCING ~/.zshrc" >&2
+
+# echo "... ~/.zshrc sourcing PHILCONFIG/FILES/envvars" >&2
+source $PHILCONFIG/FILES/envvars
+
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
