@@ -17,6 +17,9 @@ fi
 # echo "... ~/.zshrc sourcing PHILCONFIG/FILES/envvars" >&2
 source $PHILCONFIG/FILES/envvars
 
+if ! [ -e ~/.normal_mode ] ; then
+    exec fish
+fi
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
@@ -128,7 +131,4 @@ fi
 
 source ~/.philconfig/local_file
 
-if ! [ -e ~/.normal_mode ] ; then
-    exec fish
-fi
 
