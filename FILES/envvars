@@ -8,7 +8,7 @@ if [ -n "${PHILRC_ENVVARS_LOADED}" ] ; then
     true
 fi
 
-export GOPATH=$HOME/.local/phil_gopath
+export GOPATH=$HOME/go
 
 # echo "\~/.philconfig/FILES/envvars : GOPATH=$GOPATH"
 
