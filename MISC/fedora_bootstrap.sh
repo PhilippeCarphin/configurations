@@ -94,7 +94,6 @@ function setup_zsh(){
     cd ~/.philconfig
     sudo dnf install -y zsh
     git clone https://github.com/robbyrussell/oh-my-zsh ~/.oh-my-zsh
-    touch local_file
     link-pwd link --group zsh
 }
 

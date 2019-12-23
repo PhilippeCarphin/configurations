@@ -129,6 +129,5 @@ if at_cmc ; then
     check_quota
 fi
 
-source ~/.philconfig/local_file
 
 
