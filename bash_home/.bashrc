@@ -48,7 +48,6 @@ function main(){
 
         source ~/.profile
 
-
     fi
 }
 
@@ -137,9 +136,9 @@ bashrc_cmc_specifics(){
     source ~/.profile
     complete -o default . source
 
-    if [[ $(cmc_network) == "ec" ]] ; then
-        check_quota
-    fi
+    # if [[ $(cmc_network) == "ec" ]] ; then
+    #     check_quota
+    # fi
 
     unset CDPATH
 

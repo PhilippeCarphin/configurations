@@ -487,3 +487,25 @@ philrc-set-path()
 
     export PATH=$new_path
 }
+
+mount_ppp(){
+    mkdir -p ~/ppp1/spooki/build
+    mkdir -p ~/ppp1/spooki/source
+    sshfs phc001@ppp1:/fs/site1/dev/eccc/cmd/s/phc001/spooki/build ~/ppp1/spooki/build
+    sshfs phc001@ppp1:/fs/home/fs1/eccc/cmd/cmds/phc001/workspace/spooki ~/ppp1/spooki/source
+    mkdir -p ~/ppp2/spooki/build
+    mkdir -p ~/ppp2/spooki/source
+    sshfs phc001@ppp2:/fs/site1/dev/eccc/cmd/s/phc001/spooki/build ~/ppp2/spooki/build
+    sshfs phc001@ppp2:/fs/home/fs1/eccc/cmd/cmds/phc001/workspace/spooki ~/ppp2/spooki/source
+
+    mkdir -p ~/ppp4/spooki/source
+    sshfs phc001@ppp4:/fs/homeu1/eccc/cmd/cmds/phc001/workspace/spooki ~/ppp4/spooki/source
+}
+
+mount_ppp_info_dir(){
+    local ppp4_home=/fs/homeu1/eccc/cmd/cmds/phc001
+    local ppp1_home=/fs/home/fs1/eccc/cmd/cmds/phc001/
+
+    sshfs phc001@ppp4:${ppp4_home}/node_info ~/ppp4/node_info
+    sshfs phc001@ppp1:${ppp1_home}/node_info ~/ppp1/node_info
+}
