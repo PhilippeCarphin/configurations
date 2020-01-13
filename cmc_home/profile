@@ -1,96 +1,144 @@
-#!/bin/bash
+if [ -f ~/.profile_debug ] ; then
+   alias verbose=true
+else
+   alias verbose=false
+fi
 
-# echo "~/.profile START"
-# source ~/.ord-functions-phil.sh
-# if [ -e $HOME/site4_phil/tmpdir ] ; then
-#    export TMPDIR=~/site4_phil/tmpdir
-# fi
-
-eval_and_print(){
-   echo $(tput setaf 2)$1$(tput sgr 0)
-   eval $1
+function _p.message(){
+   echo $(tput setaf 3)$@$(tput sgr0)
 }
 
-setup_ordenv_ppp4(){
-   ### environment setup - start
-   export ORDENV_SITE_PROFILE=20190617-test
-   export ORDENV_COMM_PROFILE=eccc/20190617-test
-   export ORDENV_GROUP_PROFILE=eccc/cmc/1.7-beta.3
-   . /fs/ssm/main/env/ordenv-boot-20190617-test.sh
-
-   ### environment setup - env
-   #export EC_SHORTCUT_PATH=/fs/ssm:/fs/ssm/eccc:/fs/ssm/eccc/mrd
-   export EC_ATOMIC_PROFILE_VERSION=1.7-beta.3
-}
-
-setup_ordenv_ppp4_17beta4(){
-   # ref /fs/ssm/eccc/mrd/ordenv/profile/1.7-beta.4
-   ### environment setup - start
-   export ORDENV_SITE_PROFILE=20190617-test
-   export ORDENV_COMM_PROFILE=eccc/20190617-test
-   export ORDENV_GROUP_PROFILE=eccc/cmc/1.7-beta.4
-   . /fs/ssm/main/env/ordenv-boot-20190617-test.sh
-
-   ### environment setup - env
-   #export EC_SHORTCUT_PATH=/fs/ssm:/fs/ssm/eccc:/fs/ssm/eccc/mrd
-   export EC_ATOMIC_PROFILE_VERSION=1.7-beta.4
-}
-
-poutine_science(){
-   echo $(tput setab 2)Starting ordenv$(tput sgr 0)
-   eval_and_print "export ORDENV_SITE_PROFILE=20180130"
-   eval_and_print "export ORDENV_GROUP_PROFILE=eccc/cmc/1.6"
-   eval_and_print "export ORDENV_COMM_PROFILE=eccc/20180130"
-   eval_and_print "source /fs/ssm/main/env/ordenv-boot-20180430.sh"
-   ### environment setup - env
-   eval_and_print "export EC_ATOMIC_PROFILE_VERSION=1.6"
-   echo $(tput setab 2)END Ordenv stuff$(tput sgr 0)
-}
-
-hot_chicken_pyspooki(){
-    echo "$(tput setab 2)Sourcing things for BUILDING PySpooki$(tput sgr 0)"
-    eval_and_print "export PHIL_PYSPOOKI_CONTAINER=~/hall1_phil/spooki/"
-    eval_and_print "export PHIL_PYSPOOKI_BUILD_DIR=$PHIL_PYSPOOKI_CONTAINER/build"
-    eval_and_print "export PHIL_PYSPOOKI_SRC_DIR=~/workspace/spooki/"
-    eval_and_print "source $PHIL_PYSPOOKI_SRC_DIR/SETUP_ubuntu-14.04-amd64-64"
-    eval_and_print "export SPOOKI_TMPDIR=$TMPDIR/spooki"
-    eval_and_print "mkdir -p $SPOOKI_TMPDIR"
-    eval_and_print "source ~/hall1_phil/spooki/build/export_env_var"
-
-    # . s.ssmuse.dot ENV/d/modelutils/modelutils_1.3.2
-    # . ssmuse-sh -d hpcs/201402/00-test/base -d hpcs/201402/00-test/intel13sp1 -d rpn/env/00-test
-    echo "$(tput setab 2)END pyspooki stuff$(tput sgr 0)"
-}
-
-if [[ -e ~/.je_suis_ppp1_ou_ppp2 ]] ; then
-   # Je suis sur ppp1 ou ppp2
-   if [[ $(hostname) != eccc* ]] ; then
-      # Je suis sur un compute node de ppp1 ou ppp2
-      # echo "$(tput setab 2)Doing CMC science network specific stuff$(tput sgr 0)"
-      # poutine_science
-      # hot_chicken_pyspooki
-      # echo "$(tput setab 2)Done CMC science network specific stuff$(tput sgr 0)"
-      true
+function _p.do_maybe_redirect(){
+   _p.message $@ ...
+   if verbose ; then
+      eval $@
+   else
+      eval $@ > /dev/null 2>&1
    fi
-fi
+   _p.message DONE: $@
+}
 
-if [[ -e ~/.je_suis_ppp3_ou_ppp4 ]] ; then
-   setup_ordenv_ppp34
-fi
+main(){
+   # p
+   alias ls='ls --color'
+   alias gg='git gui &'
+   true
+}
 
-# if [[ -e ~/je_suis_ppp4 ]] ; then
-#    source ~/workspace/spooki/spooki_ppp4_dev_setup.sh
-# fi
-# setup_ordenv_ppp4_17beta4
-# source ~/workspace/spooki/SETUP_ubuntu-18.04-amd64-64
+gitk(){
+   # Doing with 'sh -c' is so that it doesn't use the function
+   sh -c "gitk --all $@" &
+}
 
-setup_ordenv_ppp34(){
+
+_p.restore_source_autocomplete(){
+    complete -o default . source
+}
+
+p.clearjobs(){
+    _p.require_ordenv
+    for j in $(jobst | grep phc001 | cut -d '|' -f 1) ; do
+        jobdel $j
+    done
+}
+
+
+p(){
+   echo "${USER} .profile START"
+   p.ordenv
+   p.write_node_hostname
+   p.setup_spooki
+   p.use_vscode
+   # p.setup_spi
+   echo "${USER} .profile END"
+}
+
+_p.set_aliases(){
+   alias gitk='gitk --all &'
+   alias cmake-release='cmake -DCMAKE_BUILD_TYPE=Release -DSPOOKI_MINOR_VERSION=1 -DSPOOKI_MAJOR_VERSION=1 -DSPOOKI_PATCH_LEVEL=0 ~/workspace/spooki'
+}
+
+p.use_rpn_py(){
+   source r.load.dot eccc/mrd/rpn/MIG/ENV/x/rpnpy/2.1-u1.rc7 >/dev/null 2>&1
+}
+
+p.ordenv(){
    export ORDENV_SITE_PROFILE=20190814
    export ORDENV_COMM_PROFILE=eccc/20191002
-   export ORDENV_GROUP_PROFILE=eccc/cmc/1.7
-   . /fs/ssm/main/env/ordenv-boot-20190814.sh
+   export ORDENV_GROUP_PROFILE=eccc/cmc/1.8
+   _p.do_maybe_redirect . /fs/ssm/main/env/ordenv-boot-20190814.sh
+   # _p.restore_source_autocomplete
+   # trap "echo 'Thanks ordenv but I\`m good, the tmpdir is gonna clear itself'" EXIT
 }
 
+p.write_node_hostname(){
+   if [[ $(hostname) = cs4be* ]] ; then
+      hostname > ~/node_info/node_host_4.txt
+   elif [[ $(hostname) = cs3be* ]] ; then
+      hostname > ~/node_info/node_host_3.txt
+   fi
+}
 
+p.setup_spooki(){
+    p.ordenv
+    export SPOOKI_COMP=intel
+    local env_vars_file=~/site4/spooki/build-site/export_env_var
+    if [ -f $env_vars_file ] ; then
+       _p.do_maybe_redirect source $env_vars_file
+    else
+       _p.message "p.setup_spooki : No such file : $env_vars_file"
+       _p.do_maybe_redirect source ~/workspace/spooki/SETUP_ubuntu-18.04-amd64-64
+    fi
+}
 
-# echo "~/.profile END"
+p.setup_spi_compiler(){
+   _p.do_maybe_redirect . ssmuse-sh -x comm/eccc/all/opt/intelcomp/intelpsxe-cluster-19.0.3.199 -x hpco/exp/openmpi/openmpi-3.1.2--hpcx-2.4.0-mofed-4.6--intel-19.0.3.199 -x hpco/exp/openmpi-setup/openmpi-setup-0.2 >/dev/null 2>&1
+}
+
+p.setup_spi_dependencies(){
+   _p.do_maybe_redirect source ssmuse-sh -x eccc/mrd/rpn/libs/19.4
+   _p.do_maybe_redirect source ssmuse-sh -x eccc/mrd/rpn/vgrid/6.4.4
+   _p.do_maybe_redirect source ssmuse-sh -x eccc/cmd/cmds/ext/20191015
+}
+
+p.setup_spi(){
+   export SSM_DEV=$HOME/site4_phil/spi/build
+   mkdir -p $SSM_DEV
+      
+   setup_spi_compiler
+   setup_spi_dependencies
+}
+
+p.use_vscode(){
+   _p.do_maybe_redirect source ssmuse-sh -x /fs/ssm/eccc/cmd/cmds/apps/vscode/1.38
+}
+
+p.g2cm(){
+    p.ordenv
+    ~/.local/bin/g2cm $@
+}
+
+p.clion(){
+    p.setup_spooki
+    ~/.local/bin/clion $@
+}
+
+p.pycharm(){
+    ~/.local/bin/pycharm $@
+}
+
+_p.require_ordenv(){
+    if [ -z "${ORDENV_SETUP}" ] ; then
+        p.ordenv
+    fi
+}
+
+p.myjobs(){
+    _p.require_ordenv
+    jobst | grep ${USER}
+}
+
+    
+
+main
+
