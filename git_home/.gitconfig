@@ -13,7 +13,7 @@
 	logl = log --oneline --decorate --graph -15
 	logp = log -p
 	pm = push origin master
-	gui = !sh -c '/usr/local/git/libexec/git-core/git-gui'
+   gg = !git gui &
 	pwd = rev-parse --show-prefix
 	root = rev-parse --show-toplevel
 	ds = diff --stat
@@ -58,7 +58,7 @@
 	trustExitCode = true
 [core]
 	excludesfile = ~/.gitignore.global
-	editor = ec -t
+	editor = vim
 	pager = less
 [gui]
 	fontui = -family \".SF NS Text\" -size 18 -weight normal -slant roman -underline 0 -overstrike 0
