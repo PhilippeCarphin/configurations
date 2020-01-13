@@ -1,17 +1,19 @@
-#!/bin/zsh
-set -u
+#!/bin/bash
+#set -u
 set -o errexit
 echoerr(){
     echo $@ >&2
 }
 
 main(){
-    if [ -v 1 ] ; then
-        install_philconfig_group $1
-    else
-        echoerr "Groups to install" >&2
+    if [ -z "${1}" ] ; then
+	echo "\$1 = $1"
+        echoerr "ERROR: Need 1 argument: Group to install. Possible values :" >&2
         ls | grep _home | sed 's/^/- /' | sed 's/_home//' >&2
+	return 1
     fi
+
+    install_philconfig_group $1
 }
 readlink_f(){
     python3 -c 'import os, sys; print(os.path.realpath(sys.argv[1]))' $1
@@ -27,7 +29,7 @@ fi
 this_dir=$(dirname ${this_file})
 
 install_philconfig_group(){
-    if ! [ -v 1 ] ; then
+    if [ -z "${1}" ] ; then
         echo "$0 ERROR : function install_philconfig_group requires one argument" >&2
         return 1
     fi

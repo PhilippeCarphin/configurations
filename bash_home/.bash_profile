@@ -1,6 +1,6 @@
 #!/bin/bash
 # echo ".bash_profile START"
-export PHILCONFIG=$(cd -P $(dirname $(readlink ${BASH_SOURCE[0]})) > /dev/null && pwd)
+export PHILCONFIG=$(cd -P $(dirname $(readlink ${BASH_SOURCE[0]}))/.. > /dev/null && pwd)
 
 source $PHILCONFIG/FILES/initutils
 

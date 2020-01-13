@@ -11,12 +11,12 @@ if [[ $TERM == "dumb" ]] ; then
 fi
 # echo ".bashrc START"
 
-source $PHILCONFIG/FILES/initutils
+# source $HOME/.philconfig/FILES/initutils
 
 # Source global definitions
-if [ -f /etc/bashrc ]; then
-    . /etc/bashrc
-fi
+# if [ -f /etc/bashrc ]; then
+#     . /etc/bashrc
+# fi
 
 ################################################################################
 # Checks for interactive shell.  The following will only be done if the shell is
@@ -25,26 +25,28 @@ fi
 function main(){
     if [[ "$-" == *i* ]] ; then
 
-        source $PHILCONFIG/FILES/functions
-        source $PHILCONFIG/FILES/general-aliases
-        source $PHILCONFIG/FILES/github-aliases
-        source $PHILCONFIG/Templates/.template-completion.bash
-        source $PHILCONFIG/FILES/git-completion.bash
-        source $PHILCONFIG/FILES/git-prompt.sh
-        source $PHILCONFIG/FILES/git-prompt-phil.sh
-        source $PHILCONFIG/CMC/aliases.sh
+        # source $HOME/.philconfig/FILES/envvars
+        # source $PHILCONFIG/FILES/functions
+        # source $PHILCONFIG/FILES/general-aliases
+        # source $PHILCONFIG/FILES/github-aliases
+        # source $PHILCONFIG/Templates/.template-completion.bash
+        # source $PHILCONFIG/FILES/git-completion.bash
+        # source $PHILCONFIG/FILES/git-prompt.sh
+        # source $PHILCONFIG/FILES/git-prompt-phil.sh
+        # source $PHILCONFIG/CMC/aliases.sh
 
-        bashrc_set_vim_keybindigs
-        bashrc_configure_prompt
-        bashrc_configure_history
+        # bashrc_set_vim_keybindigs
+        # bashrc_configure_prompt
+        # bashrc_configure_history
 
-        if    at_cmc ; then bashrc_cmc_specifics
-        elif at_poly ; then bashrc_poly_specifics
-        elif [[ $(uname) == Darwin ]] ; then bashrc_osx_specifics
-        fi
-        bashrc_exec_fish_unless_normal
-        bashrc_exec_fish_unless_normal
+        # if    at_cmc ; then bashrc_cmc_specifics
+        # elif at_poly ; then bashrc_poly_specifics
+        # elif [[ $(uname) == Darwin ]] ; then bashrc_osx_specifics
+        # fi
+        # bashrc_exec_fish_unless_normal
+        # bashrc_exec_fish_unless_normal
 
+        source ~/.profile
 
 
     fi
@@ -181,7 +183,6 @@ function fuckface(){
 }
 
 
-source $PHILCONFIG/FILES/envvars
 
 main
 
