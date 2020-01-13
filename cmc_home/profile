@@ -22,6 +22,7 @@ main(){
    # p
    alias ls='ls --color'
    alias gg='git gui &'
+   export PATH=$HOME/.linuxbrew/bin${PATH:+:${PATH}}
    true
 }
 
