@@ -19,14 +19,12 @@ function _p.do_maybe_redirect(){
 }
 
 main(){
-   # p
-   alias ls='ls --color'
-   alias gg='git gui &'
+    _p.set_aliases
    export PATH=$HOME/.linuxbrew/bin${PATH:+:${PATH}}
    true
 }
 
-gitk(){
+gitk_all(){
    # Doing with 'sh -c' is so that it doesn't use the function
    sh -c "gitk --all $@" &
 }
@@ -44,18 +42,10 @@ p.clearjobs(){
 }
 
 
-p(){
-   echo "${USER} .profile START"
-   p.ordenv
-   p.write_node_hostname
-   p.setup_spooki
-   p.use_vscode
-   # p.setup_spi
-   echo "${USER} .profile END"
-}
-
 _p.set_aliases(){
-   alias gitk='gitk --all &'
+   alias ls='ls --color'
+   alias gg='git gui &'
+   alias gitk=gitk_all
    alias cmake-release='cmake -DCMAKE_BUILD_TYPE=Release -DSPOOKI_MINOR_VERSION=1 -DSPOOKI_MAJOR_VERSION=1 -DSPOOKI_PATCH_LEVEL=0 ~/workspace/spooki'
 }
 
@@ -82,7 +72,7 @@ p.write_node_hostname(){
 p.setup_spooki(){
     p.ordenv
     export SPOOKI_COMP=intel
-    local env_vars_file=~/site4/spooki/build-site/export_env_var
+    local env_vars_file=~/site4/spooki/cmake-build-release/export_env_var
     if [ -f $env_vars_file ] ; then
        _p.do_maybe_redirect source $env_vars_file
     else
