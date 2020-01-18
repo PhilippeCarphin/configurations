@@ -41,7 +41,7 @@ install_philconfig_group(){
     fi
 
     # Make the $HOME look like ${this_dir}/${1}_home
-    stow -v -t $HOME -d ${this_dir} -S ${1}_home
+    stow -v -t $HOME -d ${this_dir} -S ${1}_home --dotfiles
 }
 
 main $@
