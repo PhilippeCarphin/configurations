@@ -72,17 +72,11 @@ get_and_source $git_completion_url $git_completion_file
 
 
 echo "
-# Define colors for making prompt string.
-# Vous pouvez changer les couleurs en changeant les nombres
-green='\[\$(tput setaf 2)\]'
-yellow='\[\$(tput setaf 3)\]'
-purple='\[\$(tput setaf 5)\]'
-blue='\[\$(tput setaf 4)\]'
-no_color='\[\$(tput sgr 0)\]'
 export GIT_PS1_SHOWCOLORHINTS=true
 export GIT_PS1_SHOWDIRTYSTATE=true
 export GIT_PS1_SHOWUNTRACKEDFILES=true
 export PROMPT_COMMAND='__git_ps1 \"\u@\h:\w\" \" \\\$ \"'
+# utiliser \w au lieu de \W pour avoir juste un nom de dossier
 " >> $output_file
 
 echo "$(tput setaf 5)See $output_file for things to add to your ~/.bashrc$(tput sgr 0)"
