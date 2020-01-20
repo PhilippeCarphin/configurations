@@ -44,11 +44,12 @@ get_and_source(){
 	# Abort if the file already exists
 	if [ -e ~/$target_file -o -L ~/$target_file ]; then
 		echo "$target_file already present in home, not downloading"
-		echo "Moving ./$downloaded_file to ~/$target_file"
-		mv $downloaded_file ~/$target_file
 	else
 		echo "Downloading $downloaded_file from $file_url"
 		wget $file_url 1>/dev/null 2>&1
+
+		echo "Moving ./$downloaded_file to ~/$target_file"
+		mv $downloaded_file ~/$target_file
 	fi
 
 	echo "source ~/$target_file" >> $output_file
