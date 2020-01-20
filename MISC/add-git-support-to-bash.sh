@@ -46,7 +46,7 @@ get_and_source(){
 		echo "$target_file already present in home, not downloading"
 	else
 		echo "Downloading $downloaded_file from $file_url"
-		wget $file_url 1>/dev/null 2>&1
+		wget $file_url
 
 		echo "Moving ./$downloaded_file to ~/$target_file"
 		mv $downloaded_file ~/$target_file
