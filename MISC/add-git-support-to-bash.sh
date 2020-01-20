@@ -1,7 +1,6 @@
 #!/bin/bash
-
-# Message from Phil, for people that are new to git and bash, this may seem
-# confusing to you, but I encourage you to look at the commands and try to
+# Message from Phil, for people that are new to git and bash, this may seem # #
+# confusing to you, but I encourage you to look at the commands and try to # #
 # understand what is happening.
 
 # The weirdest thing is the [ -e ... -o -L ] and what that does is that in [ ],
@@ -55,6 +54,7 @@ get_and_source(){
 	echo "source ~/$target_file" >> $output_file
 }
 output_file='./stuff_to_add_to_bashrc'
+echo '# Stuff to add to your bashrc' > $output_file
 
 # git-prompt.sh will allow us to display the current branch in the prompt string
 # by using the function __git_ps1
@@ -79,6 +79,10 @@ yellow='\[\$(tput setaf 3)\]'
 purple='\[\$(tput setaf 5)\]'
 blue='\[\$(tput setaf 4)\]'
 no_color='\[\$(tput sgr 0)\]'
-PS1=\$green'[\u@\h \W'\$yellow'\$(__git_ps1 \" (%s)\")'\$green'] \\$ '\$no_color" > output_file
+export GIT_PS1_SHOWCOLORHINTS=true
+export GIT_PS1_SHOWDIRTYSTATE=true
+export GIT_PS1_SHOWUNTRACKEDFILES=true
+export PROMPT_COMMAND='__git_ps1 \"\u@\h:\w\" \" \\\$ \"'
+" >> $output_file
 
 echo "$(tput setaf 5)See $output_file for things to add to your ~/.bashrc$(tput sgr 0)"
