@@ -43,19 +43,17 @@ get_and_source(){
 
 	# Abort if the file already exists
 	if [ -e ~/$target_file -o -L ~/$target_file ]; then
-		echo "$target_file already present in home"
-		return
+		echo "$target_file already present in home, not downloading"
+		echo "Moving ./$downloaded_file to ~/$target_file"
+		mv $downloaded_file ~/$target_file
+	else
+		echo "Downloading $downloaded_file from $file_url"
+		wget $file_url 1>/dev/null 2>&1
 	fi
 
-	echo "Downloading $downloaded_file from $file_url"
-	wget $file_url 1>/dev/null 2>&1
-
-	echo "Moving ./$downloaded_file to ~/$target_file"
-	mv $downloaded_file ~/$target_file
-
-	echo "Adding 'source ~/$target_file' to ~/.bashrc"
-	echo "source ~/$target_file" >> ~/.bashrc
+	echo "source ~/$target_file" >> $output_file
 }
+output_file='./stuff_to_add_to_bashrc'
 
 # git-prompt.sh will allow us to display the current branch in the prompt string
 # by using the function __git_ps1
@@ -85,11 +83,11 @@ PS1=\$green'[\u@\h \W'\$yellow'\$(__git_ps1 \" (%s)\")'\$green'] \\$ '\$no_color
 
 echo "$(tput setaf 2)Setting up prompt string$(tput sgr 0)"
 if ! grep Phil_PS1 ~/.bashrc >/dev/null 2>&1 ; then
-	echo "Adding Phil_colors to ~/.bashrc"
-	echo "$phil_colors" >> ~/.bashrc
+	echo "Adding Phil_colors to $output_file"
+	echo "$phil_colors" >> $output_file
 else
 	echo "prompt string already setup"
 fi
 
-echo "$(tput setaf 5)run the command 'source ~/.bashrc' or restart your your terminal.$(tput sgr 0)
+echo "$(tput setaf 5)See $output_file for things to add to your ~/.bashrc$(tput sgr 0)
 "
