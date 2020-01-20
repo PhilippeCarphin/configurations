@@ -1,32 +1,4 @@
 #!/bin/bash
-# Message from Phil, for people that are new to git and bash, this may seem # #
-# confusing to you, but I encourage you to look at the commands and try to # #
-# understand what is happening.
-
-# The weirdest thing is the [ -e ... -o -L ] and what that does is that in [ ],
-# it is a test and it reads like this :
-# " -e (is a file) file -o (or) -L (is a link) file"
-# so basically, this checks if the file exists whether it's a regular file or a
-# link.
-
-# The rest of the commands are self documented by an echo statement right before
-# it.  You should look up what the >> operator does. HINT: google 'bash io
-# redirection'
-
-# The last tricky thing is the use of grep. The grep command takes a string as
-# first argument and then a list of files.  It outputs the lines that contain
-# the string.  And $(cmd) "captures" the output of grep.  The test says "If the
-# output of the grep command is empty".  The grep command is super useful to
-# search through code and other files because it also supports regular
-# expressions.
-
-# Also note that function arguments don't show up in the declaration.  That's
-# they are all strings and bash is very loose.  But functions can take arguments
-# and when they do, we access them in the function using $1, $2, ...
-
-# To make code more readable, I always assign these arguments to variables with
-# better names.  This makes the code of the function more readable and also
-# documents the functions interface (i.e. what arguments it expects).
 
 ################################################################################
 # If the file exists, nothing is done, otherwise, wget is used to download the
