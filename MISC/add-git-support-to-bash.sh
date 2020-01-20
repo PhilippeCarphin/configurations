@@ -69,26 +69,16 @@ git_completion_url=https://raw.githubusercontent.com/git/git/master/contrib/comp
 git_completion_file=.git-completion.bash
 get_and_source $git_completion_url $git_completion_file
 
-# This next part appends the content of the variable phil_colors to the bashrc
-# with a check that it has not already been done.
-phil_colors="
+
+
+echo "
 # Define colors for making prompt string.
-# Phil_PS1
 # Vous pouvez changer les couleurs en changeant les nombres
 green='\[\$(tput setaf 2)\]'
 yellow='\[\$(tput setaf 3)\]'
 purple='\[\$(tput setaf 5)\]'
 blue='\[\$(tput setaf 4)\]'
 no_color='\[\$(tput sgr 0)\]'
-PS1=\$green'[\u@\h \W'\$yellow'\$(__git_ps1 \" (%s)\")'\$green'] \\$ '\$no_color"
+PS1=\$green'[\u@\h \W'\$yellow'\$(__git_ps1 \" (%s)\")'\$green'] \\$ '\$no_color" > output_file
 
-echo "$(tput setaf 2)Setting up prompt string$(tput sgr 0)"
-if ! grep Phil_PS1 ~/.bashrc >/dev/null 2>&1 ; then
-	echo "Adding Phil_colors to $output_file"
-	echo "$phil_colors" >> $output_file
-else
-	echo "prompt string already setup"
-fi
-
-echo "$(tput setaf 5)See $output_file for things to add to your ~/.bashrc$(tput sgr 0)
-"
+echo "$(tput setaf 5)See $output_file for things to add to your ~/.bashrc$(tput sgr 0)"
