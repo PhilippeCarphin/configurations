@@ -1,6 +1,6 @@
 #!/bin/bash
 # echo ".bash_profile START"
-export PHILCONFIG=$(cd -P $(dirname $(readlink ${BASH_SOURCE[0]}))/.. > /dev/null && pwd)
+export PHILCONFIG=$HOME/.philconfig
 
 source $PHILCONFIG/FILES/initutils
 
@@ -40,6 +40,7 @@ if [ -z $PHILRC_BASH_PROFILE ] ; then
     # If ssh login shell that I would like to be interactive
     # if ! [ -z "$SSH_CLIENT" ] && ! [ -z "$SSH_TTY" ] && [ -z $PHILRC_BASHRC ]; then
     # TEMPORARY SOLUTION: ALWAYS SOURCE BASHRC, (anyway it contains a check that the shell is interactive)
+    source ~/.philconfig/FILES/envvars
     if true ; then
        source ~/.bashrc
     fi
