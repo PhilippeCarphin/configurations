@@ -2,8 +2,4 @@
 
 source $PHILCONFIG/FILES/initutils
 echo "$(tput setab 8)$(tput setaf 3)Philconfig post commit hook: auto push on commit$(tput sgr 0)"
-if at_cmc ; then
-   git push origin cmc ;
-else
-   git push origin master
-fi
+git push origin master
