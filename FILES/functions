@@ -438,10 +438,6 @@ restore_ps1(){
    fi
 }
 
-disable_git_prompt(){
-    export PHILRC_DISABLE_GIT_PROMPT=true
-}
-
 ################################################################################
 # Follow symbolic links until a non-link has been found.
 # This finds the current directory of the file while resolving symlinks

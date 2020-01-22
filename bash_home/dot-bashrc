@@ -44,7 +44,7 @@ function main(){
         # elif at_poly ; then bashrc_poly_specifics
         # elif [[ $(uname) == Darwin ]] ; then bashrc_osx_specifics
         # fi
-        bashrc_exec_fish_unless_normal
+        # bashrc_exec_fish_unless_normal
 
         if [ -f ~/.profile ] ; then source ~/.profile ; fi
 
@@ -81,11 +81,9 @@ make_ps1(){
 
     prompt_start="\[$prompt_color\][$(whoami)@$(hostname) $(git_pwd)\[$reset_colors\]"
 
-    if [ -z $PHILRC_DISABLE_GIT_PROMPT ] ; then
-        git_part="$(git_ps1_phil)"
-        if ! [ -z "$git_part" ] ; then
-            git_part=" $git_part\[$reset_colors\]"
-        fi
+    git_part="$(git_ps1_phil)"
+    if ! [ -z "$git_part" ] ; then
+        git_part=" $git_part\[$reset_colors\]"
     fi
 
     last_part="\[$prompt_color\]] \$\[$reset_colors\] "
