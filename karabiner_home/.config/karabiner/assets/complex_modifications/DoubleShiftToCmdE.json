@@ -1,0 +1,29 @@
+{
+  "title": "Languages",
+  "rules": [
+    {
+      "description": "left_shift + right_shift to Command + e",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "left_shift",
+            "modifiers": {
+              "mandatory": [
+                "right_shift"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "e",
+              "modifiers": [
+                "right_command"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
