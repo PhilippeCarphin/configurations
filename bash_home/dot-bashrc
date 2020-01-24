@@ -138,8 +138,6 @@ bashrc_cmc_specifics(){
     #     check_quota
     # fi
 
-    unset CDPATH
-
     bashrc_exec_fish_unless_normal
 
     # What follows this will not happen unless we are in normal mode

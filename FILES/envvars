@@ -55,8 +55,6 @@ export PHILRC_MY_PATH
 export PHILRC_SYSTEM_PATH
 export PATH="$PHILRC_SYSTEM_PATH:$PHILRC_MY_PATH"
 
-export CDPATH=".:$HOME":$HOME/Documents:$HOME/Documents/GitHub
-
 export MANPATH="$HOME/.local/man:$MANPATH"
 
 LESS="$LESS -FX"                                                               # For git log to display without paging if output fits on one screen
