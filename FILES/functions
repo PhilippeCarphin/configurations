@@ -462,28 +462,6 @@ follow_links()
     echo $file
 }
 
-philrc-set-path()
-{
-    option=$1
-    new_path=""
-    case $option in
-        all)
-            new_path=${PHILRC_MY_PATH}:${PHILRC_SYSTEM_PATH}
-            ;;
-        phil)
-            new_path=${PHILRC_MY_PATH}
-            ;;
-        system)
-            new_path=${PHILRC_SYSTEM_PATH}
-            ;;
-        *)
-            echo Unknown option : $option
-            return 1
-    esac
-
-    export PATH=$new_path
-}
-
 mount_ppp(){
     mkdir -p ~/ppp1/spooki/build
     mkdir -p ~/ppp1/spooki/source

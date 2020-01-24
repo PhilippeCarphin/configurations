@@ -36,31 +36,24 @@ MY_DYLD_LIBRARY_PATH=$MY_DYLD_LIBRARY_PATH:$HOME/.local/lib
 # MY_DYLD_LIBRARY_PATH=$MY_DYLD_LIBRARY_PATH:/Developer/NVIDIA/CUDA-8.0/lib
 export DYLD_LIBRARY_PATH=$MY_DYLD_LIBRARY_PATH:$DYLD_LIBRARY_PATH
 
-
-# For my own education, I will set my PATH entirely here, but this is kind of
-# dumb because the initial value of PATH is different on various systems.
-# However, I will have a function to toggle between
-#    PATH=$PHILRC_SYSTEM_PATH,
-#    PATH=$MY_PATH:$PHILRC_SYSTEM_PATH
-#    PATH=$MY_PATH
 PHILRC_SYSTEM_PATH=$PATH
 
 linuxbrew_dir=$(cd -P $HOME/.linuxbrew/Homebrew 2>/dev/null && pwd)
 if [ -e "$linuxbrew_dir" ] && [ -d "$linuxbrew_dir" ] ; then
-    PHILRC_MY_PATH=${PHILRC_MY_PATH:+${PHILRC_MY_PATH}:}$linuxbrew_dir/bin
-    PHILRC_MY_PATH=${PHILRC_MY_PATH:+${PHILRC_MY_PATH}:}$linuxbrew_dir/sbin
+    PHILRC_MY_PATH="\
+$linuxbrew_dir/bin:\
+$linuxbrew_dir/sbin"
 fi
 
-PHILRC_MY_PATH=${PHILRC_MY_PATH:+${PHILRC_MY_PATH}:}$HOME/.local/bin               # Locally installed programs
-PHILRC_MY_PATH=${PHILRC_MY_PATH:+${PHILRC_MY_PATH}:}/usr/local/bin
-PHILRC_MY_PATH=${PHILRC_MY_PATH:+${PHILRC_MY_PATH}:}/bin
-PHILRC_MY_PATH=${PHILRC_MY_PATH:+${PHILRC_MY_PATH}:}/usr/bin
-# Note about the ${XX:+${XX}:}  this expands to nothing if XX is empty variable
-# it expands to "${XX}:" if XX is not empty variable
-PHILRC_MY_PATH=${PHILRC_MY_PATH:+${PHILRC_MY_PATH}:}/usr/sbin
+PHILRC_MY_PATH="\
+/bin:\
+/usr/bin:\
+/usr/local/bin:\
+$HOME/.local/bin"
+
 export PHILRC_MY_PATH
 export PHILRC_SYSTEM_PATH
-export PATH=$PHILRC_MY_PATH
+export PATH="$PHILRC_SYSTEM_PATH:$PHILRC_MY_PATH"
 
 export CDPATH=".:$HOME":$HOME/Documents:$HOME/Documents/GitHub
 
