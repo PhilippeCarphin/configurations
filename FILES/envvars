@@ -49,6 +49,7 @@ PHILRC_MY_PATH="\
 /bin:\
 /usr/bin:\
 /usr/local/bin:\
+/Users/pcarphin/Library/Python/3.8/bin:\
 $HOME/.local/bin"
 
 export PHILRC_MY_PATH
