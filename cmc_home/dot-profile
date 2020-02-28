@@ -57,7 +57,7 @@ p.ordenv(){
    export ORDENV_SITE_PROFILE=20190814
    export ORDENV_COMM_PROFILE=eccc/20191002
    export ORDENV_GROUP_PROFILE=eccc/cmc/1.8
-   _p.do_maybe_redirect . /fs/ssm/main/env/ordenv-boot-20190814.sh
+   _p.do_maybe_redirect . /fs/ssm/main/env/ordenv-boot-20200204.sh
    _p.restore_source_autocomplete
 }
 
