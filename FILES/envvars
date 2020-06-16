@@ -25,16 +25,10 @@ MY_LD_LIBRARY_PATH=$MY_LD_LIBRARY_PATH:/fs/cetus3/fs3/cmd/s/afsm/pca/.local/mpc/
 MY_LD_LIBRARY_PATH=$MY_LD_LIBRARY_PATH:/fs/cetus3/fs3/cmd/s/afsm/pca/.local/gmp/lib
 export LD_LIBRARY_PATH="$MY_LD_LIBRARY_PATH:$LD_LIBRARY_PATH"
 
-# THEANO_FLAGS=\
-            # device=cpu,\
-            # optimizer=fast_run,\
-            # exception_verbosity=high
-
-# echo "initial DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH"
-MY_DYLD_LIBRARY_PATH=$MY_DYLD_LIBRARY_PATH:$HOME/.local/lib
-# MY_DYLD_LIBRARY_PATH=$MY_DYLD_LIBRARY_PATH:$HOME/.local/openblas/lib
-# MY_DYLD_LIBRARY_PATH=$MY_DYLD_LIBRARY_PATH:/Developer/NVIDIA/CUDA-8.0/lib
-export DYLD_LIBRARY_PATH=$MY_DYLD_LIBRARY_PATH:$DYLD_LIBRARY_PATH
+if [[ "$(uname)" == Darwin ]] ; then
+    MY_DYLD_LIBRARY_PATH=$MY_DYLD_LIBRARY_PATH:$HOME/.local/lib
+    export DYLD_LIBRARY_PATH=$MY_DYLD_LIBRARY_PATH:$DYLD_LIBRARY_PATH
+fi
 
 PHILRC_SYSTEM_PATH=$PATH
 
@@ -43,6 +37,8 @@ if [ -e "$linuxbrew_dir" ] && [ -d "$linuxbrew_dir" ] ; then
     PHILRC_MY_PATH="\
 $linuxbrew_dir/bin:\
 $linuxbrew_dir/sbin"
+else
+    echo "LINUXBREW DIR DOES NOT EXIST"
 fi
 
 PHILRC_MY_PATH="\
@@ -50,7 +46,7 @@ PHILRC_MY_PATH="\
 /usr/bin:\
 /usr/local/bin:\
 /Users/pcarphin/Library/Python/3.8/bin:\
-$HOME/.local/bin"
+$HOME/.local/bin${PHILRC_MY_PATH:+:${PHILRC_MY_PATH}}"
 
 export PHILRC_MY_PATH
 export PHILRC_SYSTEM_PATH
@@ -62,14 +58,14 @@ LESS="$LESS -FX"                                                               #
 LESS="$LESS -R"                                                                # For less to have color
 export LESS
 
-if [ "$(hostname)" != kano ]; then
-   export LANG=en_US.UTF-8
-   export LC_ALL=en_US.UTF-8
-fi
+# if [ "$(hostname)" != sequoia ]; then
+#    export LANG=en_US.UTF-8
+#    export LC_ALL=en_US.UTF-8
+# fi
 
-export TZ='America/Toronto'
+# export TZ='America/Toronto'
 # Makes ls sortint case sensitive
-export LC_COLLATE=C
+# export LC_COLLATE=C
 # Change that horrible blue color on the default ls settings for macOS's ls
 if [ "$(uname)" = Darwin ] ; then
     # The string is formed by two letter pairs [fg,bg] where the order

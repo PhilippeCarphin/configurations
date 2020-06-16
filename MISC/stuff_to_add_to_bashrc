@@ -1,0 +1,9 @@
+# Stuff to add to your bashrc
+source ~/.git-prompt.sh
+source ~/.git-completion.bash
+
+export GIT_PS1_SHOWCOLORHINTS=true
+export GIT_PS1_SHOWDIRTYSTATE=true
+export GIT_PS1_SHOWUNTRACKEDFILES=true
+export PROMPT_COMMAND='__git_ps1 "\u@\h:\w" " \$ "'
+

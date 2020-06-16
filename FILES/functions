@@ -293,9 +293,10 @@ gitignore() {
     # Therefore giti has become strongly associated in my mind with the gitignore
     # file.
     local giti=$(git root)/.gitignore
-    if [ -z $1 ] ; then
+    if [ -z "$1" ] ; then
         vim $giti
     else
+        echo '$1' = $1
         echo $1 >> $giti
     fi
     git add $giti

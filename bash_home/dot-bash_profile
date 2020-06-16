@@ -1,30 +1,12 @@
 #!/bin/bash
-# echo ".bash_profile START"
+# echo ".bash_profile START" >&2
 export PHILCONFIG=$HOME/.philconfig
 
 source $PHILCONFIG/FILES/initutils
 
-if [ -z $PHILRC_BASH_PROFILE ] ; then
-    # Acutal bash_profile
-    if [ $(hostname) = kano ] ; then
-       # mount_ppp
-       true
-    fi
+source ~/.philconfig/FILES/envvars
 
-    # If ssh login shell that I would like to be interactive
-    # if ! [ -z "$SSH_CLIENT" ] && ! [ -z "$SSH_TTY" ] && [ -z $PHILRC_BASHRC ]; then
-    # TEMPORARY SOLUTION: ALWAYS SOURCE BASHRC, (anyway it contains a check that the shell is interactive)
-    source ~/.philconfig/FILES/envvars
-    if true ; then
-       source ~/.bashrc
-    fi
-else
-    # if bash_profile has already been sourced, then this file is most likely
-    # being sourced becasue TMUX has started a login shell.  In that case, we
-    # want to source our bashrc
-    source ~/.bashrc
-    return
-fi
+source ~/.bashrc
 
 export PHILRC_BASH_PROFILE="bash_profile_loaded_at_$(date "+%Y-%m-%d_%H%M")"
-# echo ".bash_profile END"
+# echo ".bash_profile END" >&2
