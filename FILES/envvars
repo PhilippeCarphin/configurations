@@ -41,12 +41,15 @@ else
     echo "LINUXBREW DIR DOES NOT EXIST"
 fi
 
+
+# python_bin=/Users/pcarphin/Library/Python/3.8/bin
+python_bin=/Users/pcarphin/anaconda/bin
 PHILRC_MY_PATH="\
 /bin:\
 /usr/bin:\
 /usr/local/bin:\
-/Users/pcarphin/Library/Python/3.8/bin:\
-$HOME/.local/bin${PHILRC_MY_PATH:+:${PHILRC_MY_PATH}}"
+$python_bin:\
+$HOME/.local/bin"
 
 export PHILRC_MY_PATH
 export PHILRC_SYSTEM_PATH
