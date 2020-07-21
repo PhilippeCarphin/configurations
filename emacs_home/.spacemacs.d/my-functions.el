@@ -561,3 +561,8 @@ If the entry has no timestamp, org-read-date will prompt the user for a date "
   (let ((inhibit-read-only t))
     (ansi-color-apply-on-region (point-min) (point-max))))
 (add-to-list 'auto-mode-alist '("\\.log\\'" . display-ansi-colors))
+(defun setup-visual-line-navigation ()
+  (cl-loop for state-map in (list evil-motion-state-map evil-visual-state-map)
+           do (define-key state-map (kbd "j") 'evil-next-visual-line)
+           do (define-key state-map (kbd "k") 'evil-previous-visual-line)))
+(setup-visual-line-navigation)
