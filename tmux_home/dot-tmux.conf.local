@@ -296,7 +296,4 @@ set -g status-position bottom
 bind / split-window -h
 bind - split-window -v
 
-set -g default-command "env -i TERM=$TERM DISPLAY=$DISPLAY USER=$USER PWD=$PWD HOME=$HOME /bin/bash --login"
-
-
-
+# set -g default-command "env -i HOME=$HOME LOGNAME=$LOGNAME USER=$USER TERM=$TERM DISPLAY=$DISPLAY /bin/bash -l"
