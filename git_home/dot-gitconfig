@@ -10,7 +10,8 @@
 	# st = !sh  -c 'git status && git diff --stat'
 	st = status
 	s = status
-	logl = log --oneline --decorate --graph -15
+	logl = log --oneline --decorate --graph
+	logla = log --oneline --decorate --graph --all
 	logp = log -p
 	pm = push origin master
    gg = !git gui &
