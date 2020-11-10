@@ -1,0 +1,12 @@
+#!/bin/bash
+
+if [[ $TERM == "dumb" ]] ; then
+	unset PROMPT_COMMAND
+	PS1='$ '
+	return
+fi
+
+# echo "SOURCING bashrc $(date)" >&2
+if [ -e ~/.profile ] ; then
+    source ~/.profile
+fi
