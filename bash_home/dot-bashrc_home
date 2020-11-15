@@ -1,0 +1,54 @@
+#!/bin/bash
+PHILRC_BASHRC=".bashrc_sourced_at_$(date "+%Y-%m-%d_%H%M")"
+# This is for tramp.
+# Tramp needs the prompt to look a certain way because it uses a regex to find
+# it. Since it sets TERM=dumb, if that variable is true, then set the prompt to
+# '$ ' (and unset some options) and we're all set.
+if [[ $TERM == "dumb" ]] ; then
+   unset PROMPT_COMMAND
+   PS1='$ '
+   return
+fi
+# echo ".bashrc START"
+
+source $HOME/.philconfig/FILES/initutils
+PHILCONFIG=$HOME/.philconfig
+
+
+################################################################################
+# main function called at the bottom of this script after all functions
+# have been defined
+################################################################################
+function main(){
+    if bashrc_shell_is_interactive ; then
+        source $PHILCONFIG/FILES/git-prompt-phil.sh
+        bashrc_set_vim_keybindigs
+        bashrc_configure_history
+    fi
+}
+
+################################################################################
+#
+################################################################################
+bashrc_configure_history(){
+
+    # Make history infinite.
+    export HISTFILESIZE=
+    export HISTSIZE=
+}
+
+bashrc_set_vim_keybindigs(){
+    # Make bash behave a bit like vim.
+    if ! [ -e ~/.normal_mode ] ; then
+        set -o vi
+    fi
+}
+
+bashrc_shell_is_interactive(){
+    [[ "$-" == *i* ]]
+}
+
+main
+
+BASHRC_LOADED=true
+# echo ".bashrc END"

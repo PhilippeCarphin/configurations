@@ -43,3 +43,9 @@ end
 function serve-pwd
     browser-sync start -s -f . --no-notify --host 0.0.0.0 --port 9000
 end
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+eval /Users/pcarphin/miniconda3/bin/conda "shell.fish" "hook" $argv | source
+# <<< conda initialize <<<
+

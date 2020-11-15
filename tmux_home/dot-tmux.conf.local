@@ -294,6 +294,18 @@ bind C-a send-prefix
 set -g status-position bottom
 
 bind / split-window -h
+bind é split-window -h
 bind - split-window -v
 
 # set -g default-command "env -i HOME=$HOME LOGNAME=$LOGNAME USER=$USER TERM=$TERM DISPLAY=$DISPLAY /bin/bash -l"
+# bind -T copy-mode-vi Enter send-keys -X copy-pipe-and-cancel "pbcopy"
+bind -T copy-mode-vi Enter send-keys -X copy-pipe-and-cancel “reattach-to-user-namespace pbcopy”
+# bind F set -g default-command 'xonsh'
+
+# My PATH doesn't seem to get set right with the conda_setup thing
+# if I don't have a "default-command" set.  Even though it should
+# be this already because my system shell is zsh, however the paths
+# don't come out the same if I don't have it.  Without this, the conda
+# path ends up at the end, and with this it ends up at the start.
+# And Only in TMUX.
+set -g default-command /bin/zsh

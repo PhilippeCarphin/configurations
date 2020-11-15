@@ -1,0 +1,6 @@
+#!/bin/bash
+# echo ".bash_profile START"
+export PHILCONFIG=$HOME/.philconfig
+
+export PHILRC_BASH_PROFILE="bash_profile_loaded_at_$(date "+%Y-%m-%d_%H%M")"
+# echo ".bash_profile END"
