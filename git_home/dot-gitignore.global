@@ -1,0 +1,19 @@
+# vim swap files
+.DS_Store
+*.swo
+*.swp
+*.swn
+*.swm
+.DS_Store
+.vim-build.sh
+# -- Emacs temp files
+.#*
+\#*
+.nfs*
+.focustree.json
+.idea/
+*.focus.json
+.*.restore
+.focustree.*.json
+plugins/paths_of_real_plugin_sources.txt
+build
