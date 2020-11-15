@@ -1,0 +1,6 @@
+
+if [[ "$-" == *i* ]] ; then
+    if ! [ -e ~/.normal_mode ] ; then
+        exec fish
+    fi
+fi
