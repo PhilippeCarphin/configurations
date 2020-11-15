@@ -183,3 +183,68 @@ function git_ps1_phil(){
 		    echo "\[$fg_color\]($_git_ps1_phil_branch)$_git_ps1_phil_untracked$time_since_last_commit\[$(tput sgr 0)\]"
 	  fi
 }
+################################################################################
+# If inside git repo, shows only the directory relative to the the repo root
+# otherwise shows full pwd.
+################################################################################
+git_pwd() {
+    if [[ $(git rev-parse --is-inside-work-tree 2>/dev/null) == true ]] ; then
+        repo_dir=$(git rev-parse --show-toplevel 2>/dev/null)
+        outer=$(basename $repo_dir)
+        inner=$(git rev-parse --show-prefix 2>/dev/null)
+        echo "${outer}/${inner}"
+    else
+        echo '\w'
+    fi
+}
+
+################################################################################
+# Different way of making PS1.  We rewrite PS1 right before it is to be
+# displayed.  This is way more simple since we don't have to deal with all the
+# weird ways that escaping characters can make our life difficult.
+################################################################################
+make_ps1(){
+    previous_exit_code=$?
+    if [[ $previous_exit_code == 0 ]] ; then
+        pec="\[$green\] 0 \[$reset_colors\]"
+    else
+        pec="\[$(tput setaf 1)\] $previous_exit_code \[$reset_colors\]"
+    fi
+
+    prompt_start="\[$prompt_color\][$(whoami)@$(hostname) $(git_pwd)\[$reset_colors\]"
+
+    git_part="$(git_ps1_phil)"
+    if ! [ -z "$git_part" ] ; then
+        git_part=" $git_part\[$reset_colors\]"
+    fi
+
+    last_part="\[$prompt_color\]] \$\[$reset_colors\] "
+
+    PS1="$pec$prompt_start$git_part$last_part"
+}
+
+################################################################################
+# 
+################################################################################
+bashrc_configure_prompt(){
+    export PROMPT_COMMAND=make_ps1
+    # Define colors for making prompt string.
+    orange=$(tput setaf 208)
+    green=$(tput setaf 2)
+    yellow=$(at_cmc && tput setaf 11 || tput setaf 3)
+    purple=$(tput setaf 5)
+    blue=$(tput setaf 4)
+    red=$(tput setaf 9)
+    reset_colors=$(tput sgr 0)
+
+    # define variables for prompt colors
+    prompt_color=$purple
+
+    GIT_PS1_PHIL_HEADLESS_COLOR=$red
+    GIT_PS1_PHIL_DIRTY_COLOR=$orange
+    GIT_PS1_PHIL_CLEAN_COLOR=$green
+
+    PS2='\[$purple\] > \[$reset_colors\]'
+}
+
+bashrc_configure_prompt
