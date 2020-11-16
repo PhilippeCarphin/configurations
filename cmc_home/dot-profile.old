@@ -1,0 +1,176 @@
+if [[ $TERM == "dumb" ]] ; then
+	unset PROMPT_COMMAND
+	PS1='$ '
+	return
+fi
+
+main(){
+   _p.set_aliases
+   # export PATH=$HOME/.local/bin${PATH:+:${PATH}}
+   unset ORDENV_SETUP
+   # p.ordenv
+   # p.use_linuxbrew
+   # p.setup_spooki
+   p.use_local
+   if [[ "$-" == *i* ]] ; then
+           source ~/.git-prompt-phil.sh
+   fi
+   true # To allow me to comment out everything
+}
+
+function p.whosthere(){
+	for u in $(who | sort | cut -d ' ' -f 1 | uniq) ; do
+		pinky $u | tail -n 1
+	done
+}
+
+function p.use_audrey_spooki(){
+	_p.require_ordenv
+	source ~aug000/build_spooki/build2/setup_spooki_dev_environment.sh
+}
+
+function p.rm_spooki_build(){
+	rm -rf ~/spooki-build/*
+}
+
+function p.use_local(){
+   export PATH=$HOME/.local/bin${PATH:+:${PATH}}
+}
+
+function p.use_linuxbrew(){
+   export LD_LIBRARY_PATH=$HOME/.local/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+   export PATH=$HOME/.linuxbrew/bin${PATH:+:${PATH}}
+}
+
+function p.use_jobsubi(){
+	_p.require_ordenv
+	. ssmuse-sh -x hpco/exp/jobsubi/jobsubi-0.3
+}
+
+function _p.do_maybe_redirect(){
+   if true ; then
+      eval $@
+   else
+      eval $@ > /dev/null 2>&1
+   fi
+}
+
+
+
+gitk_all(){
+   # Doing with 'sh -c' is so that it doesn't use the function
+   sh -c "gitk --all $@" &
+}
+
+
+_p.restore_source_autocomplete(){
+    complete -o default . source
+}
+
+p.clearjobs(){
+    _p.require_ordenv
+    for j in $(jobst | grep $USER | cut -d '|' -f 1) ; do
+        while jobdel ${j} > /dev/null 2>&1
+        do
+            echo "Killing job '${j}'"
+            sleep 3
+        done
+        echo ""
+        echo "Job '${j}' successfully killed."
+    done
+}
+
+
+_p.set_aliases(){
+   alias ls='ls --color'
+   alias gg='git gui &'
+   alias gitk=gitk_all
+   alias cmake-release='cmake -DCMAKE_BUILD_TYPE=Release -DSPOOKI_MINOR_VERSION=1 -DSPOOKI_MAJOR_VERSION=1 -DSPOOKI_PATCH_LEVEL=0 ~/workspace/spooki'
+   alias dusage='du --max-depth=1 -h | sort -h'
+}
+
+p.use_rpn_py(){
+   source r.load.dot eccc/mrd/rpn/MIG/ENV/x/rpnpy/2.1-u1.rc7 >/dev/null 2>&1
+}
+
+p.ordenv(){
+    export ORDENV_SITE_PROFILE=20191220
+    export ORDENV_COMM_PROFILE=eccc/20200409
+    export ORDENV_GROUP_PROFILE=eccc/cmc/1.9.3
+    . /fs/ssm/main/env/ordenv-boot-20200204.sh
+
+    export EC_ATOMIC_PROFILE_VERSION=1.11.0
+    . /fs/ssm/eccc/mrd/ordenv/profile/check_profile
+    # trap "echo 'Thanks ordenv but I\`m good, the tmpdir is gonna clear itself'" EXIT
+}
+
+p.write_node_hostname(){
+   if [[ $(hostname) = cs4be* ]] ; then
+      hostname > ~/node_info/node_host_4.txt
+   elif [[ $(hostname) = cs3be* ]] ; then
+      hostname > ~/node_info/node_host_3.txt
+   fi
+}
+
+
+p.setup_spi_compiler(){
+   . ssmuse-sh -x comm/eccc/all/opt/intelcomp/intelpsxe-cluster-19.0.3.199 -x hpco/exp/openmpi/openmpi-3.1.2--hpcx-2.4.0-mofed-4.6--intel-19.0.3.199 -x hpco/exp/openmpi-setup/openmpi-setup-0.2 
+}
+
+p.setup_spi_dependencies(){
+   source ssmuse-sh -x eccc/mrd/rpn/libs/19.4
+   source ssmuse-sh -x eccc/mrd/rpn/vgrid/6.4.4
+   source ssmuse-sh -x eccc/cmd/cmds/ext/20191015
+}
+
+p.setup_spi(){
+   export SSM_DEV=$HOME/site4_phil/spi/build
+   mkdir -p $SSM_DEV
+      
+   p.setup_spi_compiler
+   p.setup_spi_dependencies
+}
+
+p.use_vscode(){
+    _p.require_ordenv
+   _p.do_maybe_redirect source ssmuse-sh -x /fs/ssm/eccc/cmd/cmds/apps/vscode/1.38
+}
+
+p.g2cm(){
+    _p.require_ordenv
+    ~/.local/bin/g2cm $@
+}
+
+p.use_cmp_tools(){
+    _p.require_ordenv
+    . ssmuse-sh -x hpco/exp/intelpsxe-cluster-19.0.3.199
+}
+
+_p.require_ordenv(){
+    if [ -z "${ORDENV_SETUP}" ] ; then
+        p.ordenv
+    fi
+}
+
+p.myjobs(){
+    _p.require_ordenv
+    jobst | grep ${USER} -n
+}
+
+p.to-desktop(){
+    rsync -rv $1 apt:~/Desktop/
+}
+p.coverage-html(){
+    python3 -m coverage html "$@"
+}
+
+p.voir(){
+    voir -iment "$@" | grep -v '\*'
+}
+
+main
+
+export PHILRC_PROFILE="profile_loaded_at_$(date "+%Y-%m-%d_%H%M")"
+# Attempt to get rid of BASH_FUNC TRASH!
+# env --unset=BASH_FUNC_switchml%% --unset=BASH_FUNC --unset=BASH_FUNC_module%% --unset=BASH_FUNC__moduleraw%%
+
