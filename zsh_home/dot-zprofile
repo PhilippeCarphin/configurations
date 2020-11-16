@@ -1,0 +1,4 @@
+
+export PHILRC_ZPROFILE_SOURCED="$(date)"
+
+source $HOME/.philconfig/environment/path.sh
