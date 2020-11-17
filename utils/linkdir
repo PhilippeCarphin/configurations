@@ -1,0 +1,11 @@
+#!/bin/bash
+
+link=$1
+target=$(python3 -c 'import os,sys; print(os.path.realpath(sys.argv[1]))' "$link")
+# echo "link=$link, target=$target" >&2
+
+cd -P $(dirname $target) && pwd
+
+
+
+

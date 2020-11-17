@@ -1,0 +1,15 @@
+#!/bin/bash
+
+prog=$1
+if ! possible_link=$(which $prog) ; then
+    echo "Command $prog not found" >&2
+    exit 1
+fi
+target=$(python3 -c 'import os,sys; print(os.path.realpath(sys.argv[1]))' "$possible_link")
+# echo "link=$link, target=$target" >&2
+
+cd -P $(dirname $target) && pwd
+
+
+
+

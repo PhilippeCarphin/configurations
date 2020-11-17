@@ -1,0 +1,8 @@
+#!/bin/bash
+
+platform=$(uname)
+if [[ $platform == Darwin ]] ; then
+    du -d 1 -h | sort -h
+else
+    du --max-depth=1 -h | sort -h
+fi

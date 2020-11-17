@@ -1,0 +1,10 @@
+#!/bin/bash
+
+if ! prog=$(which $1) ; then
+    exit 1
+fi
+
+
+
+cd $(dirname $prog)
+vim $(basename $prog)
