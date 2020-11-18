@@ -5,14 +5,38 @@ if [[ $TERM == "dumb" ]] ; then
 	PS1='$ '
 	return
 fi
+
 main(){
-    p.ordenv
+    # p.ordenv
     if [[ "$-" == *i* ]] ; then
         source ~/.git-prompt-phil.sh
     fi
 }
 
-source $HOME/.philconfig/cmc_home/cmc_utils/p.setup_spooki.def.sh
-source $HOME/.philconfig/cmc_home/cmc_utils/p.ordenv.def.sh
+alias domconda='source /home/ords/mrd/rpndat/dja001/python_miniconda3/envs/domutils_dev/bin/activate'
+alias ls='ls --color=auto'
+alias grep='grep --color'
+
+export PATH=$HOME/.philconfig/utils${PATH:+:$PATH}
+export PATH=$HOME/.local/bin${PATH:+:$PATH}
+
+# source $HOME/.philconfig/cmc_home/cmc_utils/p.setup_spooki.def.sh
+# source $HOME/.philconfig/cmc_home/cmc_utils/p.ordenv.def.sh
 
 main
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/home/ords/mrd/rpndat/dja001/python_miniconda3/envs/domutils_dev/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/home/ords/mrd/rpndat/dja001/python_miniconda3/envs/domutils_dev/etc/profile.d/conda.sh" ]; then
+        . "/home/ords/mrd/rpndat/dja001/python_miniconda3/envs/domutils_dev/etc/profile.d/conda.sh"
+    else
+        export PATH="/home/ords/mrd/rpndat/dja001/python_miniconda3/envs/domutils_dev/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
