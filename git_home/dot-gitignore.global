@@ -17,3 +17,4 @@
 .focustree.*.json
 plugins/paths_of_real_plugin_sources.txt
 build
+.vscode
