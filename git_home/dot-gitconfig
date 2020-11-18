@@ -10,6 +10,7 @@
 	st = status
 	s = status
 	logl = log --oneline --decorate --graph --all
+	ignore = !sh -c 'echo \"$@\" >> $(git rev-parse --show-toplevel)/.gitignore' --args
 
 [credential]
 	helper = cache --timeout 36000
