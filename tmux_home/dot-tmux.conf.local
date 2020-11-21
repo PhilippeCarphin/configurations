@@ -308,4 +308,4 @@ bind -T copy-mode-vi Enter send-keys -X copy-pipe-and-cancel “reattach-to-user
 # don't come out the same if I don't have it.  Without this, the conda
 # path ends up at the end, and with this it ends up at the start.
 # And Only in TMUX.
-set -g default-command /bin/zsh
+# set -g default-command /bin/zsh

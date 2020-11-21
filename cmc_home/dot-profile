@@ -10,6 +10,8 @@ main(){
     # p.ordenv
     if [[ "$-" == *i* ]] ; then
         source ~/.git-prompt-phil.sh
+        # last_finger
+        timezones
     fi
 }
 
@@ -19,24 +21,50 @@ alias grep='grep --color'
 
 export PATH=$HOME/.philconfig/utils${PATH:+:$PATH}
 export PATH=$HOME/.local/bin${PATH:+:$PATH}
+export TZ=America/Toronto
 
-# source $HOME/.philconfig/cmc_home/cmc_utils/p.setup_spooki.def.sh
-# source $HOME/.philconfig/cmc_home/cmc_utils/p.ordenv.def.sh
+source $HOME/.philconfig/cmc_home/cmc_utils/p.setup_spooki.def.sh
+source $HOME/.philconfig/cmc_home/cmc_utils/p.ordenv.def.sh
+source $HOME/.philconfig/cmc_home/cmc_utils/p.g2cm.def.sh
+source $HOME/.philconfig/cmc_home/cmc_utils/p.myjobs.def.sh
+# source $HOME/.philconfig/cmc_home/cmd_utils/conda_setup.sh
+function base-env(){
+    ssh localhost env | grep -v '^SSH\|^PWD'
+    echo "SSH_CONNECTION=\"$SSH_CONNECTION\""
+    echo "SSH_CLIENT=\"$SSH_CLIENT\""
+    echo "PWD=$PWD"
+    echo "TERM=$TERM"
+    echo "DISPLAY=$DISPLAY"
+    # ssh localhost env | sed 's/^\(SSH.*\)=\(.*\)/\1="\2"/'
+}
+
+function use-pofile(){
+    local username=$1
+    (eval cd ~$username
+    eval env -i "$(base-env)" HOME=~$username PWD=~$username bash -l 
+    )
+}
+
+function last_finger(){
+
+    # stat --format="Last finger on me %x" -t ~/.plan
+    # All this because the above prints '.123412341234 +0000'
+    # for the time and because I didn't want to use ls
+    # to get the access time of a file.
+    last_finger_timestamp=$(stat --format=%X ~/.plan)
+    last_finger_date=$(TZ=America/Toronto date --date=@$last_finger_timestamp '+%Y-%m-%d %T (%z)' )
+    echo "Last finger on me : ${last_finger_date}"
+
+}
+
+function timezones(){
+    # Learn time offset from UTC
+    TZ=America/Edmonton date '+Now Edmonton %Y-%m-%d %T %z'
+    TZ=America/Montreal date '+Now Montreal %Y-%m-%d %T %z'
+    TZ=UTC date              '+Now UTC      %Y-%m-%d %T   %Z'
+    echo "TZ=$TZ"
+}
+
 
 main
-
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/ords/mrd/rpndat/dja001/python_miniconda3/envs/domutils_dev/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/home/ords/mrd/rpndat/dja001/python_miniconda3/envs/domutils_dev/etc/profile.d/conda.sh" ]; then
-        . "/home/ords/mrd/rpndat/dja001/python_miniconda3/envs/domutils_dev/etc/profile.d/conda.sh"
-    else
-        export PATH="/home/ords/mrd/rpndat/dja001/python_miniconda3/envs/domutils_dev/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
 

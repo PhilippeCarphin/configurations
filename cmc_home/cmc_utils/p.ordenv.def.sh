@@ -9,3 +9,9 @@ p.ordenv(){
     export EC_ATOMIC_PROFILE_VERSION=1.11.0
     . /fs/ssm/eccc/mrd/ordenv/profile/check_profile
 }
+
+_p.require_ordenv(){
+    if [ -z "$ORDENV_SETUP" ] ; then
+        p.ordenv
+    fi
+}
