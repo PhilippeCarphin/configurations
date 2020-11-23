@@ -59,10 +59,14 @@ function last_finger(){
 
 function timezones(){
     # Learn time offset from UTC
-    TZ=America/Edmonton date '+Now Edmonton %Y-%m-%d %T %z'
-    TZ=America/Montreal date '+Now Montreal %Y-%m-%d %T %z'
-    TZ=UTC date              '+Now UTC      %Y-%m-%d %T   %Z'
-    echo "TZ=$TZ"
+    local rand=$((RANDOM % 5))
+    case $rand in
+        0) TZ=America/Edmonton date  '+Edmonton  %Y-%m-%d %T %z' ;;
+        4) TZ=America/Vancouver date '+Vancouver %Y-%m-%d %T %z' ;;
+        1) TZ=America/Montreal date  '+Montreal  %Y-%m-%d %T %z' ;;
+        2) TZ=UTC date               '+UTC       %Y-%m-%d %T   %Z' ;;
+        3) TZ=Europe/Paris date      '+Paris     %Y-%m-%d %T %z' ;;
+    esac
 }
 
 
