@@ -24,7 +24,7 @@
 [core]
 	excludesfile = ~/.gitignore.global
 	editor = vim
-	pager = less
+    pager = less -FX
 
 [gui]
 	fontui = -family \".SF NS Text\" -size 18 -weight normal -slant roman -underline 0 -overstrike 0
