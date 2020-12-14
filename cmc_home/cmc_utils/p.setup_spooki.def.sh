@@ -1,5 +1,6 @@
 
 p.setup_spooki(){
+    source ~/.philconfig/cmc_home/cmc_utils/p.ordenv.def.sh
     p.ordenv
     local setup_file=~/spooki-build/setup_spooki_dev_environment.sh
     if [ -f $setup_file ] ; then

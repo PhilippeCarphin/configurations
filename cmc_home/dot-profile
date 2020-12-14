@@ -7,26 +7,36 @@ if [[ $TERM == "dumb" ]] ; then
 fi
 
 main(){
-    # p.ordenv
     if [[ "$-" == *i* ]] ; then
         source ~/.git-prompt-phil.sh
-        # last_finger
-        timezones
+        # THE MOST IMPORTANT !!!
+        alias gitk='gitk --all &'
     fi
 }
 
+main
+
+
+
+alias gotos='cd $GOPATH/src/gitlab.science.gc.ca'
+alias gotog='cd $GOPATH/src/gitlab.com'
+alias gotogh='cd $GOPATH/src/github.com'
 alias domconda='source /home/ords/mrd/rpndat/dja001/python_miniconda3/envs/domutils_dev/bin/activate'
 alias ls='ls --color=auto'
 alias grep='grep --color'
+alias gs='cd ~/go/src/gitlab.science.gc.ca/ ; pwd'
+alias gc='cd ~/go/src/gitlab.com/ ; pwd'
 
 export PATH=$HOME/.philconfig/utils${PATH:+:$PATH}
 export PATH=$HOME/.local/bin${PATH:+:$PATH}
 export TZ=America/Toronto
+export HISTSIZE=
+export HISTFILESIZE=
 
 source $HOME/.philconfig/cmc_home/cmc_utils/p.setup_spooki.def.sh
 source $HOME/.philconfig/cmc_home/cmc_utils/p.ordenv.def.sh
 source $HOME/.philconfig/cmc_home/cmc_utils/p.g2cm.def.sh
-source $HOME/.philconfig/cmc_home/cmc_utils/p.myjobs.def.sh
+# source $HOME/.philconfig/cmc_home/cmc_utils/p.myjobs.def.sh
 # source $HOME/.philconfig/cmc_home/cmd_utils/conda_setup.sh
 function base-env(){
     ssh localhost env | grep -v '^SSH\|^PWD'
@@ -41,8 +51,13 @@ function base-env(){
 function use-pofile(){
     local username=$1
     (eval cd ~$username
-    eval env -i "$(base-env)" HOME=~$username PWD=~$username bash -l 
+    eval env -i "$(base-env)" HOME=~$username PWD=~$username bash -l
     )
+}
+
+function p.use_linuxbrew(){
+   export LD_LIBRARY_PATH=$HOME/.local/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+   export PATH=$HOME/.linuxbrew/bin${PATH:+:${PATH}}
 }
 
 function last_finger(){
@@ -69,6 +84,45 @@ function timezones(){
     esac
 }
 
+alias gitk=gitk_all
+gitk_all(){
+   \gitk --all $@ &
+}
+
+p.use-rpnpy(){
+    _p.require_ordenv
+    . r.load.dot eccc/mrd/rpn/MIG/ENV/migdep/5.1.1 \
+                     eccc/mrd/rpn/MIG/ENV/rpnpy/2.1.2
+}
+
+function p.use-conda(){
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/home/phc001/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/home/phc001/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/phc001/miniconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/home/phc001/miniconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+}
 
 main
+
+
+# pip bash completion start
+_pip_completion()
+{
+    COMPREPLY=( $( COMP_WORDS="${COMP_WORDS[*]}" \
+                   COMP_CWORD=$COMP_CWORD \
+                   PIP_AUTO_COMPLETE=1 $1 ) )
+}
+complete -o default -F _pip_completion pip
+complete -o default -F _pip_completion pip3
+# pip bash completion end
 
