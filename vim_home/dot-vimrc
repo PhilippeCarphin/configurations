@@ -22,7 +22,7 @@ Plugin 'https://github.com/steffanc/cscopemaps.vim'
 
 Plugin 'Valloric/YouCompleteMe'
 
-Plugin 'Lokaltog/vim-powerline'
+" Plugin 'Lokaltog/vim-powerline'
 
 Plugin 'https://github.com/scrooloose/nerdtree'
 
@@ -64,32 +64,6 @@ set encoding=utf-8
    autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 " End nerdtree
 
-" ===================== CSCOPE ==============================
-" Cscope seems to work without any of this but they must do something useful and
-" besides, I found them on the vim wiki, so it's probably quite standard.  I
-" only use the 'csf' abbreviation which I modified from the wiki to
-" automatically add the 'g' because I use it in vim to jump to definition.  The
-" other possible letters correspond to the options in command line cscope.
-" The set ... command is what causes cscope database to be created when I start
-" I don't know what else it does.
-" As for the command -nargs ... I don't know what it does and it causes an error
-" message to be printed when I sourse my vimrc within vim because it says that
-" the command I'm trying to define already exists.  So I'm commenting it out.
-" http://vim.wikia.com/wiki/VimTip1638
-if has('cscope')
-  set cscopetag cscopeverbose
-  if has('quickfix')
-    set cscopequickfix=s-,c-,d-,i-,t-,e-
-  endif
-  cnoreabbrev csa cs add
-  cnoreabbrev csf cs find g
-  cnoreabbrev csk cs kill
-  cnoreabbrev csr cs reset
-  cnoreabbrev css cs show
-  cnoreabbrev csh cs help
-  " command -nargs=0 Cscope cs add $VIMSRC/src/cscope.out $VIMSRC/src
-endif
-
 " From the 'vim as a C/C++ IDE'
 " http://www.alexeyshmalko.com/2014/using-vim-as-c-cpp-ide/
 set exrc "Allows automatic sourcing of project specific vimrc
@@ -120,7 +94,8 @@ set autoindent
 set wrap
 " set linebreak
 set nolist
-set textwidth=80
+" Set to 80 to make the text auto wrap as you type
+set textwidth=0
 set wrapmargin=0
 
 set scrolloff=5
@@ -142,7 +117,7 @@ set t_Co=256
 colorscheme molokai
 set foldnestmax=1
 set colorcolumn=80
-set clipboard=unnamed
+" set clipboard=unnamed
  " if v:version >= 704
  "     set breakindent
  " endif

@@ -1,0 +1,11 @@
+if [[ "$TERM" == dumb ]] ; then
+    unset PROMPT_COMMAND
+    PS1="$ "
+    return
+fi
+if ! [[ $- == *i* ]] ; then
+    return
+fi
+
+export PATH=${PATH:+$PATH:}~/.philconfig/utils
+
