@@ -127,3 +127,18 @@ complete -o default -F _pip_completion pip
 complete -o default -F _pip_completion pip3
 # pip bash completion end
 
+function build-libgeoref(){
+    if ! cd ~/workspace/libgeoref ; then
+        echo "Could not CD to libgeoref directory"
+        return 1
+    fi
+    (echo "export SSM_DEV=\$HOME/ssmdev" ; cat profile.sh ./makeit.sh) \
+        | ~/bin/jobrun \
+            --memory 160G \
+            --tmpfs 10G \
+            --cpus 10 \
+            --chunk 1 \
+            -vv \
+            --keep-tmp-files true \
+            --wallclock=200
+}
