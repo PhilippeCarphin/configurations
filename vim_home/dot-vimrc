@@ -1,57 +1,23 @@
-"====================== BEGIN VUNDLE ========================
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
+"====================== BEGIN VUNDLE ========================
+" https://github.com/VundleVim/Vundle.vim
+" git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
-
-" alternatively, pass a path where Vundle should install plugins
-" call vundle#begin('~/some/path/here')
-
-" let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
-
 " Extra plugins to add with vundle go here
-" Plugin 'wakatime/vim-wakatime'
 Plugin 'nelstrom/vim-markdown-folding'
-
 Plugin 'jceb/vim-orgmode'
-
-Plugin 'https://github.com/steffanc/cscopemaps.vim'
-
-Plugin 'Valloric/YouCompleteMe'
-
 Plugin 'Lokaltog/vim-powerline'
-
 Plugin 'https://github.com/scrooloose/nerdtree'
-
 Plugin 'tpope/vim-fugitive.git'
-
-Plugin 'hari-rangarajan/CCTree'
-
-Plugin 'wikitopian/hardmode'
-" :call HardMode()
-" :call EasyMode()
-
-" Plugin to highlight trailing whitespace and provides a function to clear
-" whitespace in the whole file or a range.
 Plugin 'ntpeters/vim-better-whitespace'
-
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
-" To ignore plugin indent changes, instead use:
-"filetype plugin on
-"
-" Brief help
-" :PluginList          - list configured plugins
-" :PluginInstall(!)    - install (update) plugins
-" :PluginSearch(!) foo - search (or refresh cache first) for foo
-" :PluginClean(!)      - confirm (or auto-approve) removal of unused plugins
-"
-" see :h vundle for more details or wiki for FAQ
-" Put your non-Plugin stuff after this line
 "======================= END VUNDLE =========================
 
 " For vim-powerline
@@ -59,93 +25,40 @@ set laststatus=2
 set t_Co=256
 set encoding=utf-8
 
-" Nerdtree
-   autocmd StdinReadPre * let s:std_in=1
-   autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-" End nerdtree
-
-" ===================== CSCOPE ==============================
-" Cscope seems to work without any of this but they must do something useful and
-" besides, I found them on the vim wiki, so it's probably quite standard.  I
-" only use the 'csf' abbreviation which I modified from the wiki to
-" automatically add the 'g' because I use it in vim to jump to definition.  The
-" other possible letters correspond to the options in command line cscope.
-" The set ... command is what causes cscope database to be created when I start
-" I don't know what else it does.
-" As for the command -nargs ... I don't know what it does and it causes an error
-" message to be printed when I sourse my vimrc within vim because it says that
-" the command I'm trying to define already exists.  So I'm commenting it out.
-" http://vim.wikia.com/wiki/VimTip1638
-if has('cscope')
-  set cscopetag cscopeverbose
-  if has('quickfix')
-    set cscopequickfix=s-,c-,d-,i-,t-,e-
-  endif
-  cnoreabbrev csa cs add
-  cnoreabbrev csf cs find g
-  cnoreabbrev csk cs kill
-  cnoreabbrev csr cs reset
-  cnoreabbrev css cs show
-  cnoreabbrev csh cs help
-  " command -nargs=0 Cscope cs add $VIMSRC/src/cscope.out $VIMSRC/src
-endif
-
-" From the 'vim as a C/C++ IDE'
-" http://www.alexeyshmalko.com/2014/using-vim-as-c-cpp-ide/
-set exrc "Allows automatic sourcing of project specific vimrc
-set secure "Fixes security hole caused by previous command.
-
-" ================
-" http://stackoverflow.com/questions/234564/tab-key-4-spaces-and-auto-indent-after-curly-braces-in-vim/21323445#21323445
-if has("autocmd")
-    " Use filetype detection and file-based automatic indenting.
-    filetype plugin indent on
-    " Use actual tab chars in Makefiles.
-    autocmd FileType make set tabstop=8 shiftwidth=8 softtabstop=0 noexpandtab
-endif
-
-" For everything else, use a tab width of 4 space chars.
-set tabstop=4       " The width of a TAB is set to 4.
-                    " Still it is a \t. It is just that
-                    " Vim will interpret it to be having
-                    " a width of 4.
+" ===== TAB Behavior
+set tabstop=4       " Display width of \t character
 set shiftwidth=4    " Indents will have a width of 4.
 set softtabstop=4   " Sets the number of columns for a TAB.
 set expandtab       " Expand TABs to spaces.
+" Use different rules for makefiles and go
+" http://stackoverflow.com/questions/234564/tab-key-4-spaces-and-auto-indent-after-curly-braces-in-vim/21323445#21323445
+filetype plugin indent on
+autocmd FileType make set tabstop=8 shiftwidth=8 softtabstop=0 noexpandtab
+autocmd FileType go set tabstop=9 shiftwidth=9 softtabstop=0 noexpandtab
 " ===============
 
 set autoindent
-" hi Tab gui=underline guifg=blue ctermbg=blue
-" Wrapping
 set wrap
-" set linebreak
-set nolist
+set nolist " Show or don't show invisible chars like tabs and newlines
 set textwidth=80
 set wrapmargin=0
-
 set scrolloff=5
-
 set hlsearch
-
 set number
 syntax on
+
 " Display incomplete commands at the right
 set showcmd
-" Usual backspace behavior
-set backspace=indent,eol,start
-" Non-retarded backspace behavior
-set backspace=2
-" Note: probably only one of the two preceding commands is necessary.
+
+set backspace=indent,eol,start " Usual backspace behavior
+set backspace=2 " Non-retarded backspace behavior
+" Note: I don't know which of the preceding two lines is the right one
 
 " To enable 256 colors in vim, put this your .vimrc before setting the colorscheme:
 set t_Co=256
 colorscheme molokai
 set foldnestmax=1
 set colorcolumn=80
-set clipboard=unnamed
- " if v:version >= 704
- "     set breakindent
- " endif
 
 " Remember position in file
 if has("autocmd")
@@ -153,12 +66,6 @@ if has("autocmd")
 endif
 
 inoremap jk <ESC>
-nnoremap <C-b> :wa:!clear;FILE=% make
-inoremap <C-b> <ESC>:wa:!makeli
-
-cnoremap vr split ~/.vimrc
-cnoremap sv source ~/.vimrc
-command! Now r!TZ=America/New_York date
 
 nnoremap <Up> <C-y>k
 nnoremap <Down> <C-e>j
@@ -170,27 +77,4 @@ inoremap <Down> <ESC>:echoerr "The clouded mind sees nothing"<CR>
 inoremap <Left> <ESC>:echoerr "Your mind is weak."<CR>
 inoremap <Right> <ESC>:echoerr "The clouded mind sees nothing"<CR>
 
-command! Notes tabe ~/Desktop/Notes/Daily_Notes/today.txt
-nnoremap U yyp^v$r=
-
-"  Redo line breaks for a paragraph
-nnoremap <C-j> {jV}kJgqgq
-vnoremap <C-j> Jgqgq
-
-" Make a C-style header that I like so much
-nnoremap <C-h> O/79a*yypxjkA/ko
-nnoremap <C-g> 0f(bywk:r ~/Documents/GitHub/utils/misc/cmc_header.c<CR>/Nom<CR>$a <<ESC>pA><ESC>
-
-"  For when I try to open a file like I was in a terminal but I forgot that I'm
-"  in vim.
-nnoremap vim :tabe
-cnoremap vim tabe
-
-:inoremap <C-u> yyp^v$r-o
-:inoremap <C-U> yyp^v$r=o
-
-nnoremap <SPACE>w <C-w>
-
-let g:ycm_confirm_extra_conf = 0
-let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
 :let g:org_todo_keywords=['TODO', 'GTD-IN', 'GTD-ACTION', 'GTD-PROJECT', 'GTD-NEXT-ACTION', 'GTD-WAITING', 'GTD-SOMEDAY-MAYBE', 'FEEDBACK', 'VERIFY', '|', 'DONE', 'GTD-DONE', 'GTD-REFERENCE', 'GTD-DELEGATED']
