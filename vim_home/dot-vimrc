@@ -20,11 +20,6 @@ call vundle#end()            " required
 filetype plugin indent on    " required
 "======================= END VUNDLE =========================
 
-" For vim-powerline
-set laststatus=2
-set t_Co=256
-set encoding=utf-8
-
 " ===== TAB Behavior
 set tabstop=4       " Display width of \t character
 set shiftwidth=4    " Indents will have a width of 4.
@@ -34,36 +29,33 @@ set expandtab       " Expand TABs to spaces.
 " http://stackoverflow.com/questions/234564/tab-key-4-spaces-and-auto-indent-after-curly-braces-in-vim/21323445#21323445
 filetype plugin indent on
 autocmd FileType make set tabstop=8 shiftwidth=8 softtabstop=0 noexpandtab
-autocmd FileType go set tabstop=9 shiftwidth=9 softtabstop=0 noexpandtab
-" ===============
+autocmd FileType go set tabstop=8 shiftwidth=8 softtabstop=0 noexpandtab
 
+" ===== wrapping
 set autoindent
 set wrap
-set nolist " Show or don't show invisible chars like tabs and newlines
 set textwidth=80
 set wrapmargin=0
-set scrolloff=5
-set hlsearch
-set number
-syntax on
-
-" Display incomplete commands at the right
-set showcmd
-
-set backspace=indent,eol,start " Usual backspace behavior
-set backspace=2 " Non-retarded backspace behavior
-" Note: I don't know which of the preceding two lines is the right one
-
-" To enable 256 colors in vim, put this your .vimrc before setting the colorscheme:
-set t_Co=256
-colorscheme molokai
-set foldnestmax=1
 set colorcolumn=80
 
+" ===== MISC
+set scrolloff=5
+set nolist " Show or don't show invisible chars like tabs and newlines
+set hlsearch
+set number
+set showcmd " Display incomplete commands at the right
+set backspace=indent,eol,start " Usual backspace behavior
+set foldnestmax=1
+set encoding=utf-8
+
+" ===== Color and powerline
+syntax on
+set t_Co=256 " Apparently this has to be set before setting the color scheme
+set laststatus=2 " For vim-powerline
+colorscheme molokai
+
 " Remember position in file
-if has("autocmd")
-  au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal!  g'\"" | endif
-endif
+autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal!  g'\"" | endif
 
 inoremap jk <ESC>
 
