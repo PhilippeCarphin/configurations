@@ -63,8 +63,8 @@ tmux_conf_theme_focused_pane_bg='#0087d7'               # light blue
 tmux_conf_theme_pane_border_style=fat
 
 # pane borders colours:
-tmux_conf_theme_pane_border='#444444'                   # gray
-tmux_conf_theme_pane_active_border='#00afff'            # light blue
+tmux_conf_theme_pane_border='#000044'                   # gray
+tmux_conf_theme_pane_active_border='#2020ff'            # light blue
 
 # pane indicator colours
 tmux_conf_theme_pane_indicator='#00afff'                # light blue
@@ -108,8 +108,8 @@ tmux_conf_theme_terminal_title='#h ❐ #S ● #I #W'
 #     - #{hostname_ssh}
 #     - #{username}
 #     - #{username_ssh}
-tmux_conf_theme_window_status_fg='#8a8a8a'              # light gray
-tmux_conf_theme_window_status_bg='#080808'              # dark gray
+tmux_conf_theme_window_status_fg='#00008a'              # light gray
+tmux_conf_theme_window_status_bg='#000008'              # dark gray
 tmux_conf_theme_window_status_attr='none'
 tmux_conf_theme_window_status_format='#I #W'
 #tmux_conf_theme_window_status_format='#{circled_window_index} #W'
@@ -124,7 +124,7 @@ tmux_conf_theme_window_status_format='#I #W'
 #     - #{username}
 #     - #{username_ssh}
 tmux_conf_theme_window_status_current_fg='#000000'      # black
-tmux_conf_theme_window_status_current_bg='#00afff'      # light blue
+tmux_conf_theme_window_status_current_bg='#2020ff'      # light blue
 tmux_conf_theme_window_status_current_attr='bold'
 tmux_conf_theme_window_status_current_format='#I #W'
 #tmux_conf_theme_window_status_current_format='#{circled_window_index} #W'
@@ -183,12 +183,12 @@ tmux_conf_theme_status_right='#{prefix}#{pairing}#{synchronized} #{?battery_stat
 
 # status left style
 tmux_conf_theme_status_left_fg='#000000,#e4e4e4,#e4e4e4'  # black, white , white
-tmux_conf_theme_status_left_bg='#ffff00,#ff00af,#00afff'  # yellow, pink, white blue
+tmux_conf_theme_status_left_bg='#0000ff,#2020af,#3030ff'  # yellow, pink, white blue
 tmux_conf_theme_status_left_attr='bold,none,none'
 
 # status right style
 tmux_conf_theme_status_right_fg='#8a8a8a,#e4e4e4,#000000' # light gray, white, black
-tmux_conf_theme_status_right_bg='#080808,#d70000,#e4e4e4' # dark gray, red, white
+tmux_conf_theme_status_right_bg='#080808,#0000d7,#2020f4' # dark gray, red, white
 tmux_conf_theme_status_right_attr='none,none,bold'
 
 # pairing indicator
@@ -296,10 +296,10 @@ set -g status-position bottom
 bind / split-window -h
 bind é split-window -h
 bind - split-window -v
-
+set -g default-command 'reattach-to-user-namespace $SHELL --login'
 # set -g default-command "env -i HOME=$HOME LOGNAME=$LOGNAME USER=$USER TERM=$TERM DISPLAY=$DISPLAY /bin/bash -l"
 # bind -T copy-mode-vi Enter send-keys -X copy-pipe-and-cancel "pbcopy"
-bind -T copy-mode-vi Enter send-keys -X copy-pipe-and-cancel “reattach-to-user-namespace pbcopy”
+# bind -T copy-mode-vi Enter send-keys -X copy-pipe-and-cancel “reattach-to-user-namespace pbcopy”
 # bind F set -g default-command 'xonsh'
 
 # My PATH doesn't seem to get set right with the conda_setup thing
@@ -308,4 +308,4 @@ bind -T copy-mode-vi Enter send-keys -X copy-pipe-and-cancel “reattach-to-user
 # don't come out the same if I don't have it.  Without this, the conda
 # path ends up at the end, and with this it ends up at the start.
 # And Only in TMUX.
-set -g default-command /bin/zsh
+# set -g default-command /usr/local/bin/fish
