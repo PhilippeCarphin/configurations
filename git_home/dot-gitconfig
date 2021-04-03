@@ -35,3 +35,7 @@
 
 [status]
 	submoduleSummary = true
+[submodule]
+	recurse = true
+[init]
+	defaultBranch = main
