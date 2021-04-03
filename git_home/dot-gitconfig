@@ -40,3 +40,6 @@
 	recurse = true
 [init]
 	defaultBranch = main
+
+[url "git@gitlab.science.gc.ca"]
+	insteadOf = https://gitlab.science.gc.ca/
