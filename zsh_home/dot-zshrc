@@ -1,3 +1,5 @@
+#!/bin/zsh
+
 if [[ "$TERM" == "dumb" ]] ; then
   unsetopt zle
   unsetopt prompt_cr
@@ -19,7 +21,7 @@ fi
 export LSCOLORS=ExGxBxDxCxEgEdxbxgxcxd
 export CLICOLOR=true
 
-export PATH=$HOME/.local/bin:$HOME/fs/bin:/opt/homebrew/bin:$PATH
+source ~/.philconfig/environment/path.sh
 
 if [[ "$-" == *i* ]] ; then
     if ! [ -e ~/.normal_mode ] ; then
@@ -27,3 +29,18 @@ if [[ "$-" == *i* ]] ; then
     fi
 fi
 
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+# __conda_setup="$('/Users/pcarphin/miniforge3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+# if [ $? -eq 0 ]; then
+#     eval "$__conda_setup"
+# else
+#     if [ -f "/Users/pcarphin/miniforge3/etc/profile.d/conda.sh" ]; then
+#         . "/Users/pcarphin/miniforge3/etc/profile.d/conda.sh"
+#     else
+#         export PATH="/Users/pcarphin/miniforge3/bin:$PATH"
+#     fi
+# fi
+# unset __conda_setup
+# <<< conda initialize <<<
