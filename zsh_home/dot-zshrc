@@ -1,22 +1,29 @@
+if [[ "$TERM" == "dumb" ]] ; then
+  unsetopt zle
+  unsetopt prompt_cr
+  unsetopt prompt_subst
+  if whence -w precmd >/dev/null; then
+      unfunction precmd
+  fi
+  if whence -w preexec >/dev/null; then
+      unfunction preexec
+  fi
+  PS1='$ '
+  return
+fi
+
+
+# From https://fish-users.narkive.com/qmgw3G37/ls-colors-with-fish
+# set -Ux LSCOLORS Exfxcxdxbxegedabagacad
+# From https://apple.stackexchange.com/a/33679
+export LSCOLORS=ExGxBxDxCxEgEdxbxgxcxd
+export CLICOLOR=true
+
+export PATH=$HOME/.local/bin:$HOME/fs/bin:/opt/homebrew/bin:$PATH
 
 if [[ "$-" == *i* ]] ; then
     if ! [ -e ~/.normal_mode ] ; then
         exec fish
     fi
 fi
-
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/Users/pcarphin/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/Users/pcarphin/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/Users/pcarphin/miniconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/Users/pcarphin/miniconda3/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
 
