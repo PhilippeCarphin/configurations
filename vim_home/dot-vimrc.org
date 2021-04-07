@@ -1,12 +1,10 @@
 #+PROPERTY: header-args:vimrc :tangle ~/.vimrc :results none
 
 * How this file works
-** The vimrc file
-Create the vimrc file by doing =C-c C-v C-t= (=org-babel-tangle=).
-** Plugins
-*** Vim 8 plugin support
 
-*** Do these clones
+Tangle this file using =C-c C-v C-t= to produce =~/.vimrc= and clone the repos
+in the plugins section.  With vim 8+, there is no need to do any more than to
+clone vim plugins in =~/.vim/pack/*/start= for the plugin to be loaded on start.
 
 #+begin_src shell :results output :exports both
 mkdir -p ~/.vim/pack/vendor/start/
@@ -20,21 +18,8 @@ git clone https://github.com/tomasr/molokai 2>&1
 git clone https://github.com/nelstrom/vim-markdown-folding 2>&1 || true
 #+end_src
 
-#+RESULTS:
-: Cloning into 'vim-orgmode'...
-: Cloning into 'nerdtree'...
-: Cloning into 'powerline'...
-: Cloning into 'vim-better-whitespace'...
-: Cloning into 'vim-fugitive'...
-: Cloning into 'molokai'...
-: Cloning into 'vim-markdown-folding'...
-
 Use =C-c C-c= on this block (=org-babel-execute-src-block=) in Emacs
 
-** Modifying the vimrc
-
-I use this file as the source of my vimrc, that doesn't mean that is the way to
-go for everyone.
 * Be iMproved
 
 #+begin_src vimrc
@@ -84,7 +69,7 @@ set encoding=utf-8
 syntax on
 set t_Co=256 " Apparently this has to be set before setting the color scheme
 set laststatus=2 " For vim-powerline
-" colorscheme molokai " Requires https://github.com/
+colorscheme molokai " Requires https://github.com/tomasr/molokai
 #+end_src
 
 * Remember position in file
