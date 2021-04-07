@@ -1,24 +1,5 @@
+#+TITLE: THis
 #+PROPERTY: header-args:vimrc :tangle ~/.vimrc :results none
-
-* How this file works
-
-Tangle this file using =C-c C-v C-t= to produce =~/.vimrc= and clone the repos
-in the plugins section.  With vim 8+, there is no need to do any more than to
-clone vim plugins in =~/.vim/pack/*/start= for the plugin to be loaded on start.
-
-#+begin_src shell :results output :exports both
-mkdir -p ~/.vim/pack/vendor/start/
-cd ~/.vim/pack/vendor/start/
-git clone https://github.com/jceb/vim-orgmode 2>&1
-git clone https://github.com/scrooloose/nerdtree 2>&1
-git clone https://github.com/powerline/powerline 2>&1
-git clone https://github.com/ntpeters/vim-better-whitespace 2>&1
-git clone https://github.com/tpope/vim-fugitive 2>&1
-git clone https://github.com/tomasr/molokai 2>&1
-git clone https://github.com/nelstrom/vim-markdown-folding 2>&1 || true
-#+end_src
-
-Use =C-c C-c= on this block (=org-babel-execute-src-block=) in Emacs
 
 * Be iMproved
 
@@ -116,3 +97,27 @@ inoremap <Right> <ESC>:echoerr "The clouded mind sees nothing"<CR>
 #+begin_src vimrc
 :let g:org_todo_keywords=['TODO', 'GTD-IN', 'GTD-ACTION', 'GTD-PROJECT', 'GTD-NEXT-ACTION', 'GTD-WAITING', 'GTD-SOMEDAY-MAYBE', 'FEEDBACK', 'VERIFY', '|', 'DONE', 'GTD-DONE', 'GTD-REFERENCE', 'GTD-DELEGATED']
 #+end_src
+* How this file works
+
+*NOTE* The file cannot be named anything that contains =vimrc= otherwise vim
+will open it as a vimrc instead of opening it as an orgmode file.
+
+Tangle this file using =C-c C-v C-t= to produce =~/.vimrc= and clone the repos
+in the plugins section.  With vim 8+, there is no need to do any more than to
+clone vim plugins in =~/.vim/pack/*/start= for the plugin to be loaded on start.
+
+#+begin_src shell :results output :exports both
+mkdir -p ~/.vim/pack/vendor/start/
+cd ~/.vim/pack/vendor/start/
+git clone https://github.com/jceb/vim-orgmode 2>&1
+git clone https://github.com/scrooloose/nerdtree 2>&1
+git clone https://github.com/powerline/powerline 2>&1
+git clone https://github.com/ntpeters/vim-better-whitespace 2>&1
+git clone https://github.com/tpope/vim-fugitive 2>&1
+git clone https://github.com/tomasr/molokai 2>&1
+git clone https://github.com/nelstrom/vim-markdown-folding 2>&1 || true
+#+end_src
+
+Use =C-c C-c= on this block (=org-babel-execute-src-block=) in Emacs
+
+
