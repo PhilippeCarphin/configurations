@@ -1,4 +1,4 @@
-#+TITLE: THis
+#+TITLE: Vimrc file
 #+PROPERTY: header-args:vimrc :tangle ~/.vimrc :results none
 
 * Be iMproved
