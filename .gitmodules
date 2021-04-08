@@ -1,3 +1,6 @@
 [submodule "emacs_home/dot-emacs.d"]
 	path = emacs_home/dot-emacs.d
 	url = https://github.com/philippecarphin/emacs.d
+[submodule "vim_home/dot-vim"]
+	path = vim_home/dot-vim
+	url = https://github.com/philippecarphin/dot-vim
