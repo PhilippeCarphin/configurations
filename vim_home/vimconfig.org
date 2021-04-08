@@ -108,14 +108,16 @@ clone vim plugins in =~/.vim/pack/*/start= for the plugin to be loaded on start.
 
 #+begin_src shell :results output :exports both
 mkdir -p ~/.vim/pack/vendor/start/
-cd ~/.vim/pack/vendor/start/
-git clone https://github.com/jceb/vim-orgmode 2>&1
-git clone https://github.com/scrooloose/nerdtree 2>&1
-git clone https://github.com/powerline/powerline 2>&1
-git clone https://github.com/ntpeters/vim-better-whitespace 2>&1
-git clone https://github.com/tpope/vim-fugitive 2>&1
-git clone https://github.com/tomasr/molokai 2>&1
-git clone https://github.com/nelstrom/vim-markdown-folding 2>&1 || true
+cd ~/.vim
+git init
+cd ./pack/vendor/start/
+git submodule add https://github.com/jceb/vim-orgmode 2>&1
+git submodule add https://github.com/scrooloose/nerdtree 2>&1
+git submodule add https://github.com/powerline/powerline 2>&1
+git submodule add https://github.com/ntpeters/vim-better-whitespace 2>&1
+git submodule add https://github.com/tpope/vim-fugitive 2>&1
+git submodule add https://github.com/tomasr/molokai 2>&1
+git submodule add https://github.com/nelstrom/vim-markdown-folding 2>&1 || true
 #+end_src
 
 Use =C-c C-c= on this block (=org-babel-execute-src-block=) in Emacs
