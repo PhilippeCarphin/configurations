@@ -10,7 +10,7 @@ fi
 main(){
     export GONOSUMDB=gitlab.science.gc.ca
     export SSM_DEV=$HOME/ssmdev
-    # p.ordenv
+    p.ordenv
     # p.use-maestro
     if [[ "$-" == *i* ]] ; then
         # p.use_linuxbrew
@@ -25,6 +25,35 @@ main(){
 
 
 
+function prepend(){
+
+cat <<-EOF
+    export ORDENV_SITE_PROFILE=20191220
+    export ORDENV_COMM_PROFILE=eccc/20200409
+    export ORDENV_GROUP_PROFILE=eccc/cmc/1.9.3
+    . /fs/ssm/main/env/ordenv-boot-20200204.sh
+
+    export EC_ATOMIC_PROFILE_VERSION=1.11.0
+    . /fs/ssm/eccc/mrd/ordenv/profile/check_profile
+
+    . r.load.dot rpn/code-tools/1.5.1
+EOF
+
+echo "$1"
+}
+
+function run(){
+    prepend "$1" | $HOME/go/bin/ord_run -c 4 -cm 16G -tmpfs 8G
+}
+
+function runbig(){
+    prepend "$1" | $HOME/go/bin/ord_run -c 40 -cm 160G -tmpfs 80G
+}
+
+
+
+alias rr='$HOME/go/bin/ord_run -c 40 -cm 160G -tmpfs 80G'
+alias r='$HOME/go/bin/ord_run -c 4 -cm 16G -tmpfs 8G'
 alias gotos='cd $GOPATH/src/gitlab.science.gc.ca'
 alias gotog='cd $GOPATH/src/gitlab.com'
 alias gotogh='cd $GOPATH/src/github.com'
@@ -36,6 +65,7 @@ alias gc='cd ~/go/src/gitlab.com/ ; pwd'
 
 export PATH=$HOME/.philconfig/utils${PATH:+:$PATH}
 export PATH=$HOME/.local/bin${PATH:+:$PATH}
+export PATH=$HOME/go/bin${PATH:+:$PATH}
 export TZ=America/Toronto
 export HISTSIZE=
 export HISTFILESIZE=
