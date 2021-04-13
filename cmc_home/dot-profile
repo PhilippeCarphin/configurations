@@ -1,4 +1,5 @@
 #!/bin/bash
+# echo "Sourcing ~/.profile"
 
 if [[ $TERM == "dumb" ]] ; then
 	unset PROMPT_COMMAND
@@ -7,15 +8,20 @@ if [[ $TERM == "dumb" ]] ; then
 fi
 
 main(){
+    export GONOSUMDB=gitlab.science.gc.ca
     export SSM_DEV=$HOME/ssmdev
+    # p.ordenv
+    # p.use-maestro
     if [[ "$-" == *i* ]] ; then
-        source ~/.git-prompt-phil.sh
+        # p.use_linuxbrew
+        source ~/.git-prompt.sh
+        source ~/go/src/gitlab.science.gc.ca/phc001/ord_run/cmd/ord_run/ord_soumet-completion.bash
+        source /home/phc001/ci-admin-bundle/completions/gitlab-runner-completions.bash
         # THE MOST IMPORTANT !!!
         alias gitk='gitk --all &'
     fi
 }
 
-main
 
 
 
@@ -23,7 +29,7 @@ alias gotos='cd $GOPATH/src/gitlab.science.gc.ca'
 alias gotog='cd $GOPATH/src/gitlab.com'
 alias gotogh='cd $GOPATH/src/github.com'
 alias domconda='source /home/ords/mrd/rpndat/dja001/python_miniconda3/envs/domutils_dev/bin/activate'
-alias ls='ls --color=auto'
+alias ls='ls --color=auto -h'
 alias grep='grep --color'
 alias gs='cd ~/go/src/gitlab.science.gc.ca/ ; pwd'
 alias gc='cd ~/go/src/gitlab.com/ ; pwd'
@@ -33,6 +39,7 @@ export PATH=$HOME/.local/bin${PATH:+:$PATH}
 export TZ=America/Toronto
 export HISTSIZE=
 export HISTFILESIZE=
+export HISTIGNORE="rm -rf *"
 
 source $HOME/.philconfig/cmc_home/cmc_utils/p.setup_spooki.def.sh
 source $HOME/.philconfig/cmc_home/cmc_utils/p.ordenv.def.sh
@@ -58,6 +65,7 @@ function use-pofile(){
 
 function p.use_linuxbrew(){
    export LD_LIBRARY_PATH=$HOME/.local/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+   export LD_LIBRARY_PATH=$HOME/.linuxbrew/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
    export PATH=$HOME/.linuxbrew/bin${PATH:+:${PATH}}
 }
 
@@ -113,9 +121,6 @@ unset __conda_setup
 # <<< conda initialize <<<
 }
 
-main
-
-
 # pip bash completion start
 _pip_completion()
 {
@@ -142,3 +147,40 @@ function build-libgeoref(){
             --keep-tmp-files true \
             --wallclock=200
 }
+
+function whichl(){
+    which $(readlink -f $1)
+}
+
+function p.use-maestro(){
+    _p.require_ordenv
+    . ssmuse-sh -d eccc/cmo/isst/maestro/1.7.0
+    alias xflow-pwd='SEQ_EXP_HOME=$PWD xflow'
+}
+function p.use-fstpy(){
+
+    . r.load.dot eccc/mrd/rpn/MIG/ENV/migdep/5.1.1 eccc/mrd/rpn/MIG/ENV/rpnpy/2.1.2
+
+    fstpy_packages_dir=/fs/site4/eccc/cmd/w/sbf000/fstpy-beta/ubuntu-18.04-skylake-64/lib/packages
+    export PYTHONPATH=$fstpy_packages_dir:$PYTHONPATH
+
+}
+
+
+main
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/home/phc001/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/home/phc001/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/phc001/miniconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/home/phc001/miniconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
