@@ -1,5 +1,4 @@
 #!/bin/bash
-# echo "Sourcing ~/.profile"
 
 if [[ $TERM == "dumb" ]] ; then
 	unset PROMPT_COMMAND
@@ -7,10 +6,19 @@ if [[ $TERM == "dumb" ]] ; then
 	return
 fi
 
+if [[ "${CI_CONTEXT}" != "" ]] ; then
+    echo "THIS IS THE CI_CONTEXT"
+    unset PROMPT_COMMAND
+    exit
+    PS1='$'
+    return
+fi
+echo "HELLO"
+
 main(){
     export GONOSUMDB=gitlab.science.gc.ca
     export SSM_DEV=$HOME/ssmdev
-    p.ordenv
+    # p.ordenv
     # p.use-maestro
     if [[ "$-" == *i* ]] ; then
         # p.use_linuxbrew
@@ -52,8 +60,8 @@ function runbig(){
 
 
 
-alias rr='$HOME/go/bin/ord_run -c 40 -cm 160G -tmpfs 80G'
-alias r='$HOME/go/bin/ord_run -c 4 -cm 16G -tmpfs 8G'
+alias rr='$HOME/go/bin/ord_run -c 40 -cm 160G -tmpfs 10G -t 600 -shell /bin/bash'
+alias r='$HOME/go/bin/ord_run -c 4 -cm 16G -tmpfs 5G -t 3600 -shell /bin/bash'
 alias gotos='cd $GOPATH/src/gitlab.science.gc.ca'
 alias gotog='cd $GOPATH/src/gitlab.com'
 alias gotogh='cd $GOPATH/src/github.com'
@@ -202,15 +210,16 @@ main
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
 __conda_setup="$('/home/phc001/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/home/phc001/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/home/phc001/miniconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/home/phc001/miniconda3/bin:$PATH"
-    fi
-fi
-unset __conda_setup
+alias conda_setup='eval "$__conda_setup"'
+# if [ $? -eq 0 ]; then
+#     eval "$__conda_setup"
+# else
+#     if [ -f "/home/phc001/miniconda3/etc/profile.d/conda.sh" ]; then
+#         . "/home/phc001/miniconda3/etc/profile.d/conda.sh"
+#     else
+#         export PATH="/home/phc001/miniconda3/bin:$PATH"
+#     fi
+# fi
+# unset __conda_setup
 # <<< conda initialize <<<
 
