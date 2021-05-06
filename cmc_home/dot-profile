@@ -13,15 +13,17 @@ if [[ "${CI_CONTEXT}" != "" ]] ; then
     PS1='$'
     return
 fi
-echo "HELLO"
 
 main(){
     export GONOSUMDB=gitlab.science.gc.ca
     export SSM_DEV=$HOME/ssmdev
     # p.ordenv
     # p.use-maestro
+    export PATH=$HOME/go/bin${PATH:+:$PATH}
     if [[ "$-" == *i* ]] ; then
         # p.use_linuxbrew
+        export PATH=$HOME/.philconfig/utils${PATH:+:$PATH}
+        # export PATH=$HOME/.local/bin${PATH:+:$PATH}
         source ~/.git-prompt.sh
         source ~/go/src/gitlab.science.gc.ca/phc001/ord_run/cmd/ord_run/ord_soumet-completion.bash
         source /home/phc001/ci-admin-bundle/completions/gitlab-runner-completions.bash
@@ -50,6 +52,21 @@ EOF
 echo "$1"
 }
 
+function p.use-cmake(){
+    _p.require_ordenv
+    . ssmuse-sh -d /fs/ssm/main/opt/cmake/cmake-3.16.4
+    local cmake_gui="$(which cmake-gui)"
+    if [[ "${cmake_gui}" == /usr/bin/cmake-gui ]] ; then
+        alias cmake-gui='echo "PROTECTION: cmake gui is ${cmake_gui}"'
+    fi
+}
+
+function p.use-my-cmake(){
+    _p.require_ordenv
+    . ssmuse-sh -d /home/phc001/site4/ssm/cmake.ssmd
+    unalias cmake-gui >/dev/null 2>&1 || true
+}
+
 function run(){
     prepend "$1" | $HOME/go/bin/ord_run -c 4 -cm 16G -tmpfs 8G
 }
@@ -71,9 +88,6 @@ alias grep='grep --color'
 alias gs='cd ~/go/src/gitlab.science.gc.ca/ ; pwd'
 alias gc='cd ~/go/src/gitlab.com/ ; pwd'
 
-export PATH=$HOME/.philconfig/utils${PATH:+:$PATH}
-export PATH=$HOME/.local/bin${PATH:+:$PATH}
-export PATH=$HOME/go/bin${PATH:+:$PATH}
 export TZ=America/Toronto
 export HISTSIZE=
 export HISTFILESIZE=
@@ -160,14 +174,14 @@ unset __conda_setup
 }
 
 # pip bash completion start
-_pip_completion()
-{
-    COMPREPLY=( $( COMP_WORDS="${COMP_WORDS[*]}" \
-                   COMP_CWORD=$COMP_CWORD \
-                   PIP_AUTO_COMPLETE=1 $1 ) )
-}
-complete -o default -F _pip_completion pip
-complete -o default -F _pip_completion pip3
+# _pip_completion()
+# {
+#     COMPREPLY=( $( COMP_WORDS="${COMP_WORDS[*]}" \
+#                    COMP_CWORD=$COMP_CWORD \
+#                    PIP_AUTO_COMPLETE=1 $1 ) )
+# }
+#complete -o default -F _pip_completion pip
+#complete -o default -F _pip_completion pip3
 # pip bash completion end
 
 function build-libgeoref(){
