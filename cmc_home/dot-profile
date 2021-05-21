@@ -19,11 +19,11 @@ main(){
     export SSM_DEV=$HOME/ssmdev
     # p.ordenv
     # p.use-maestro
-    export PATH=$HOME/go/bin${PATH:+:$PATH}
+    export PATH=$HOME/bin:$HOME/go/bin:${PATH:+:$PATH}
     if [[ "$-" == *i* ]] ; then
         # p.use_linuxbrew
         export PATH=$HOME/.philconfig/utils${PATH:+:$PATH}
-        # export PATH=$HOME/.local/bin${PATH:+:$PATH}
+        export PATH=$HOME/.local/bin${PATH:+:$PATH}
         source ~/.git-prompt.sh
         source ~/go/src/gitlab.science.gc.ca/phc001/ord_run/cmd/ord_run/ord_soumet-completion.bash
         source /home/phc001/ci-admin-bundle/completions/gitlab-runner-completions.bash
@@ -32,7 +32,15 @@ main(){
     fi
 }
 
-
+function build-libgeoref(){
+  echo 'export CLICOLOR_FORCE=true
+export GEOCOMP=intel
+. /fs/ssm/eccc/mrd/ordenv/profile/1.13.0
+source ../SETUP.sh
+cmake .. -DCMAKE_INSTALL_PREFIX=$PWD/install-site
+make -j $(nproc)
+make install' | $HOME/go/bin/ord_run -c 40 -cm 160G -tmpfs 10G -t 600
+}
 
 
 function prepend(){
@@ -184,21 +192,21 @@ unset __conda_setup
 #complete -o default -F _pip_completion pip3
 # pip bash completion end
 
-function build-libgeoref(){
-    if ! cd ~/workspace/libgeoref ; then
-        echo "Could not CD to libgeoref directory"
-        return 1
-    fi
-    (echo "export SSM_DEV=\$HOME/ssmdev" ; cat profile.sh ./makeit.sh) \
-        | ~/bin/jobrun \
-            --memory 160G \
-            --tmpfs 10G \
-            --cpus 10 \
-            --chunk 1 \
-            -vv \
-            --keep-tmp-files true \
-            --wallclock=200
-}
+# function build-libgeoref(){
+#     if ! cd ~/workspace/libgeoref ; then
+#         echo "Could not CD to libgeoref directory"
+#         return 1
+#     fi
+#     (echo "export SSM_DEV=\$HOME/ssmdev" ; cat profile.sh ./makeit.sh) \
+#         | ~/bin/jobrun \
+#             --memory 160G \
+#             --tmpfs 10G \
+#             --cpus 10 \
+#             --chunk 1 \
+#             -vv \
+#             --keep-tmp-files true \
+#             --wallclock=200
+# }
 
 function whichl(){
     which $(readlink -f $1)
@@ -216,6 +224,10 @@ function p.use-fstpy(){
     fstpy_packages_dir=/fs/site4/eccc/cmd/w/sbf000/fstpy-beta/ubuntu-18.04-skylake-64/lib/packages
     export PYTHONPATH=$fstpy_packages_dir:$PYTHONPATH
 
+}
+
+function p.ud(){
+    export DISPLAY="$(tmux show-env | sed -n 's/^DISPLAY=//p')"
 }
 
 

@@ -285,14 +285,17 @@ set -g status-keys vi
 set -g mode-keys vi
 
 # replace C-b by C-a instead of using both prefixes
+# Set prefix to C-a
 set -gu prefix2
 unbind C-a
 unbind C-b
 set -g prefix C-a
+
+# Make it so that pressing C-a a second time sends C-a to the underlying program.
 bind C-a send-prefix
 
 # move status line to top
-set -g status-position bottom
+# set -g status-position top
 
 bind / split-window -h
 bind é split-window -h
@@ -303,10 +306,22 @@ bind - split-window -v
 bind -T copy-mode-vi Enter send-keys -X copy-pipe-and-cancel “reattach-to-user-namespace pbcopy”
 # bind F set -g default-command 'xonsh'
 
-# My PATH doesn't seem to get set right with the conda_setup thing
-# if I don't have a "default-command" set.  Even though it should
-# be this already because my system shell is zsh, however the paths
-# don't come out the same if I don't have it.  Without this, the conda
-# path ends up at the end, and with this it ends up at the start.
-# And Only in TMUX.
-set -g default-command "/bin/bash -l"
+# set -g default-command "/bin/bash -l"
+# set -g default-command "env -i /bin/bash -l"
+# set -g default-command "ssh localhost"
+# set -g default-command "env -i DISPLAY=$DISPLAY HOME=$HOME LANG=$LANG LOGNAME=$LOGNAME USER=$USER /bin/bash -l"
+set -g default-command '\
+    env -i \
+        DISPLAY=$DISPLAY \
+        HOME=$HOME \
+        LANG=$LANG \
+        LC_TERMINAL=$LC_TERMINAL \
+        LC_TERMINAL_VERSION=$LC_TERMINAL_VERSION \
+        LOGNAME=$LOGNAME \
+        SHELL=$SHELL \
+        SSH_CLIENT="$SSH_CLIENT" \
+        SSH_CONNECTION="$SSH_CONNECTION" \
+        TERM=$TERM \
+        TMUX=$TMUX \
+        USER=$USER \
+    /bin/bash -l'
