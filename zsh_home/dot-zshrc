@@ -25,7 +25,7 @@ source ~/.philconfig/environment/path.sh
 
 if [[ "$-" == *i* ]] ; then
     if ! [ -e ~/.normal_mode ] ; then
-        exec fish
+        exec fish $@
     fi
 fi
 
