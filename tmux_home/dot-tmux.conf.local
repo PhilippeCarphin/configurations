@@ -318,6 +318,7 @@ set -g default-command '\
         LC_TERMINAL=$LC_TERMINAL \
         LC_TERMINAL_VERSION=$LC_TERMINAL_VERSION \
         LOGNAME=$LOGNAME \
+        MAIL=$MAIL \
         SHELL=$SHELL \
         SSH_CLIENT="$SSH_CLIENT" \
         SSH_CONNECTION="$SSH_CONNECTION" \

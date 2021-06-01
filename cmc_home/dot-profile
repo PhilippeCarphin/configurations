@@ -17,6 +17,7 @@ fi
 main(){
     export GONOSUMDB=gitlab.science.gc.ca
     export SSM_DEV=$HOME/ssmdev
+    export CLICOLOR_FORCE="YES, GEEZ I'll ask you if I DON'T want it"
     # p.ordenv
     # p.use-maestro
     export PATH=$HOME/bin:$HOME/go/bin:${PATH:+:$PATH}
@@ -25,11 +26,17 @@ main(){
         export PATH=$HOME/.philconfig/utils${PATH:+:$PATH}
         export PATH=$HOME/.local/bin${PATH:+:$PATH}
         source ~/.git-prompt.sh
+        source ~/.repos_completion.bash
         source ~/go/src/gitlab.science.gc.ca/phc001/ord_run/cmd/ord_run/ord_soumet-completion.bash
         source /home/phc001/ci-admin-bundle/completions/gitlab-runner-completions.bash
         # THE MOST IMPORTANT !!!
         alias gitk='gitk --all &'
     fi
+}
+
+function p.use-git(){
+    _p.require_ordenv
+    . ssmuse-sh -d /fs/ssm/main/opt/git/git-2.30.2
 }
 
 function build-libgeoref(){
@@ -91,7 +98,7 @@ alias gotos='cd $GOPATH/src/gitlab.science.gc.ca'
 alias gotog='cd $GOPATH/src/gitlab.com'
 alias gotogh='cd $GOPATH/src/github.com'
 alias domconda='source /home/ords/mrd/rpndat/dja001/python_miniconda3/envs/domutils_dev/bin/activate'
-alias ls='ls --color=auto -h'
+alias ls='ls --color -h'
 alias grep='grep --color'
 alias gs='cd ~/go/src/gitlab.science.gc.ca/ ; pwd'
 alias gc='cd ~/go/src/gitlab.com/ ; pwd'
