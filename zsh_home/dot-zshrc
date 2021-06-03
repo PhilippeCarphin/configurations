@@ -20,6 +20,7 @@ fi
 # From https://apple.stackexchange.com/a/33679
 export LSCOLORS=ExGxBxDxCxEgEdxbxgxcxd
 export CLICOLOR=true
+export CLICOLOR_FORCE=true
 
 source ~/.philconfig/environment/path.sh
 
@@ -27,6 +28,11 @@ if [[ "$-" == *i* ]] ; then
     if ! [ -e ~/.normal_mode ] ; then
         exec fish $@
     fi
+    autoload -U compinit
+    compinit
+    alias n='nnn -dhQex'
+    source ~/.repos_completion.zsh
+    source ~/.git-prompt.sh
 fi
 
 

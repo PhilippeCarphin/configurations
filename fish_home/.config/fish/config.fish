@@ -5,6 +5,6 @@
 set -x LSCOLORS ExGxBxDxCxEgEdxbxgxcxd
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-# eval /Users/pcarphin/miniconda3/bin/conda "shell.fish" "hook" $argv | source
+# eval /Users/pcarphin/miniforge3/bin/conda "shell.fish" "hook" $argv | source
 # <<< conda initialize <<<
-
+alias n='nnn -dHQex'

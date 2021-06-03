@@ -296,7 +296,6 @@ set -g status-position bottom
 bind / split-window -h
 bind é split-window -h
 bind - split-window -v
-# set -g default-command 'reattach-to-user-namespace $SHELL --login'
 # set -g default-command "env -i HOME=$HOME LOGNAME=$LOGNAME USER=$USER TERM=$TERM DISPLAY=$DISPLAY /bin/bash -l"
 # bind -T copy-mode-vi Enter send-keys -X copy-pipe-and-cancel "pbcopy"
 # bind -T copy-mode-vi Enter send-keys -X copy-pipe-and-cancel “reattach-to-user-namespace pbcopy”
