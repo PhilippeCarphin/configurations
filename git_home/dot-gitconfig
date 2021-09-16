@@ -21,7 +21,7 @@
 [core]
 	excludesfile = ~/.gitignore.global
 	editor = vim
-    pager = less -FX
+	pager = diff-so-fancy | less --tabs=4 -RFX
 
 [gui]
 	fontui = -family \".SF NS Text\" -size 18 -weight normal -slant roman -underline 0 -overstrike 0
@@ -32,4 +32,9 @@
 
 # [http "https://gitlab.science.gc.ca/"]
 #        proxy = socks5h://127.0.0.1:8080
+[pretty]
+	ol = %C(yellow)%h%C(reset) %C(normal)%s%C(reset) %C(dim white)%an%C(reset) %C(dim blue)(%ad)%C(reset) %C(auto)%d%C(reset)
+	# like 'ol', but with additional full hash at the end (used by 'logv')
 
+[submodule]
+	recurse = true

@@ -9,34 +9,79 @@ fi
 if [[ "${CI_CONTEXT}" != "" ]] ; then
     echo "THIS IS THE CI_CONTEXT"
     unset PROMPT_COMMAND
-    exit
     PS1='$'
     return
 fi
 
 main(){
+    export STOW_DIR=$HOME/SPACK
+    export PACKAGE_DIR=$HOME/Cellar
+    export GITLAB_RUNNER_SCIENCE_ORDSOUMET_KEEP_FILES='yas'
     export GONOSUMDB=gitlab.science.gc.ca
     export SSM_DEV=$HOME/ssmdev
     export CLICOLOR_FORCE="YES, GEEZ I'll ask you if I DON'T want it"
     # p.ordenv
     # p.use-maestro
-    export PATH=$HOME/bin:$HOME/go/bin:${PATH:+:$PATH}
+    export PATH=/home/phc001/site4/go/bin:$HOME/bin:$HOME/go/bin:${PATH:+:$PATH}
     if [[ "$-" == *i* ]] ; then
+        # Remove that thing where it looks for Ubuntu packages if a command is not found
+        unset command_not_found_handle
+        for f in $(env -i ls $HOME/fs1/etc/bash_completion.d) ; do source $HOME/fs1/etc/bash_completion.d/$f ; done
         # p.use_linuxbrew
+        source $HOME/Repositories/gitlab.com/philippecarphin/stow-completion/stow_completion.bash
+        # source $HOME/Repositories/gitlab.science.gc.ca/RPN-SI/ec-git-tools/share/ec-git-tools/git-prompt-with-setup.sh
+        source $HOME/.philconfig/cmc_home/cmc_utils/p.setup_spooki.def.sh
+        source $HOME/.philconfig/cmc_home/cmc_utils/p.ordenv.def.sh
+        source $HOME/.philconfig/cmc_home/cmc_utils/p.g2cm.def.sh
+        # source $HOME/.philconfig/cmc_home/cmc_utils/p.myjobs.def.sh
+        # source $HOME/.philconfig/cmc_home/cmd_utils/conda_setup.sh
+        export GIT_PS1_PROMPT_COLOR="\033[1;35m"
+        # ec-git-prompt
+        source ~/git-prompt-new-config.sh
         export PATH=$HOME/.philconfig/utils${PATH:+:$PATH}
         export PATH=$HOME/.local/bin${PATH:+:$PATH}
-        source ~/.git-prompt.sh
-        source ~/.repos_completion.bash
-        source ~/go/src/gitlab.science.gc.ca/phc001/ord_run/cmd/ord_run/ord_soumet-completion.bash
-        source /home/phc001/ci-admin-bundle/completions/gitlab-runner-completions.bash
+        export PATH=$HOME/go/bin${PATH:+:$PATH}
+        export PATH=$HOME/bin${PATH:+:$PATH}
+        export PATH=$HOME/site4/go_1.16.4_linux_amd64/bin${PATH:+:$PATH}
+        export STOW_DIR=$HOME/fs1
+        export PACKAGE_DIR=$STOW_DIR/Cellar
+        export PATH=$STOW_DIR/bin${PATH:+:$PATH}
+        export PATH=$HOME/fs1/bin${PATH:+:$PATH}
+        export PATH=$HOME/fs2/bin${PATH:+:$PATH}
+        # export PATH=$STOW_DIR/Cellar/stow_2.3.1_linux_amd64/bin${PATH:+:$PATH}
+        # source ~/.git-prompt.sh
+        # source ~/go/src/gitlab.science.gc.ca/phc001/ord_run/cmd/ord_run/ord_soumet-completion.bash
+        source /home/phc001/.gitlab-runner/ci-admin-bundle/completions/gitlab-runner-completions.bash
         # THE MOST IMPORTANT !!!
         alias gitk='gitk --all &'
+        alias rr='$HOME/go/bin/ord_run -c 40 -cm 160G -tmpfs 10G -t 600 -shell /bin/bash'
+        alias r='$HOME/go/bin/ord_run -c 4 -cm 16G -tmpfs 5G -t 3600 -shell /bin/bash'
+        alias gotos='cd $GOPATH/src/gitlab.science.gc.ca'
+        alias gotog='cd $GOPATH/src/gitlab.com'
+        alias gotogh='cd $GOPATH/src/github.com'
+        alias domconda='source /home/ords/mrd/rpndat/dja001/python_miniconda3/envs/domutils_dev/bin/activate'
+        alias ls='ls --color -h'
+        alias tree='tree -C'
+        alias grep='grep --color'
+        alias gs='cd ~/go/src/gitlab.science.gc.ca/ ; pwd'
+        alias gc='cd ~/go/src/gitlab.com/ ; pwd'
+
+        export TZ=America/Toronto
+        export HISTSIZE=
+        export HISTFILESIZE=
+        export HISTIGNORE="rm -rf *"
     fi
+
 }
 
 function p.use-git(){
     _p.require_ordenv
     . ssmuse-sh -d /fs/ssm/main/opt/git/git-2.30.2
+}
+
+function p.use-intel(){
+    _p.require_ordenv
+    . ssmuse-sh -x hpco/exp/intelpsxe-cluster-19.0.3.199
 }
 
 function build-libgeoref(){
@@ -47,24 +92,6 @@ source ../SETUP.sh
 cmake .. -DCMAKE_INSTALL_PREFIX=$PWD/install-site
 make -j $(nproc)
 make install' | $HOME/go/bin/ord_run -c 40 -cm 160G -tmpfs 10G -t 600
-}
-
-
-function prepend(){
-
-cat <<-EOF
-    export ORDENV_SITE_PROFILE=20191220
-    export ORDENV_COMM_PROFILE=eccc/20200409
-    export ORDENV_GROUP_PROFILE=eccc/cmc/1.9.3
-    . /fs/ssm/main/env/ordenv-boot-20200204.sh
-
-    export EC_ATOMIC_PROFILE_VERSION=1.11.0
-    . /fs/ssm/eccc/mrd/ordenv/profile/check_profile
-
-    . r.load.dot rpn/code-tools/1.5.1
-EOF
-
-echo "$1"
 }
 
 function p.use-cmake(){
@@ -82,37 +109,30 @@ function p.use-my-cmake(){
     unalias cmake-gui >/dev/null 2>&1 || true
 }
 
+function prepend_ordenv(){
+    cat <<-EOF
+    export ORDENV_SITE_PROFILE=20191220
+    export ORDENV_COMM_PROFILE=eccc/20200409
+    export ORDENV_GROUP_PROFILE=eccc/cmc/1.9.3
+    . /fs/ssm/main/env/ordenv-boot-20200204.sh
+
+    export EC_ATOMIC_PROFILE_VERSION=1.11.0
+    . /fs/ssm/eccc/mrd/ordenv/profile/check_profile
+
+    . r.load.dot rpn/code-tools/1.5.1
+EOF
+
+    echo "$1"
+}
+
 function run(){
-    prepend "$1" | $HOME/go/bin/ord_run -c 4 -cm 16G -tmpfs 8G
+    prepend_ordenv "$1" | $HOME/go/bin/ord_run -c 4 -cm 16G -tmpfs 8G
 }
 
 function runbig(){
-    prepend "$1" | $HOME/go/bin/ord_run -c 40 -cm 160G -tmpfs 80G
+    prepend_ordenv "$1" | $HOME/go/bin/ord_run -c 40 -cm 160G -tmpfs 80G
 }
 
-
-
-alias rr='$HOME/go/bin/ord_run -c 40 -cm 160G -tmpfs 10G -t 600 -shell /bin/bash'
-alias r='$HOME/go/bin/ord_run -c 4 -cm 16G -tmpfs 5G -t 3600 -shell /bin/bash'
-alias gotos='cd $GOPATH/src/gitlab.science.gc.ca'
-alias gotog='cd $GOPATH/src/gitlab.com'
-alias gotogh='cd $GOPATH/src/github.com'
-alias domconda='source /home/ords/mrd/rpndat/dja001/python_miniconda3/envs/domutils_dev/bin/activate'
-alias ls='ls --color -h'
-alias grep='grep --color'
-alias gs='cd ~/go/src/gitlab.science.gc.ca/ ; pwd'
-alias gc='cd ~/go/src/gitlab.com/ ; pwd'
-
-export TZ=America/Toronto
-export HISTSIZE=
-export HISTFILESIZE=
-export HISTIGNORE="rm -rf *"
-
-source $HOME/.philconfig/cmc_home/cmc_utils/p.setup_spooki.def.sh
-source $HOME/.philconfig/cmc_home/cmc_utils/p.ordenv.def.sh
-source $HOME/.philconfig/cmc_home/cmc_utils/p.g2cm.def.sh
-# source $HOME/.philconfig/cmc_home/cmc_utils/p.myjobs.def.sh
-# source $HOME/.philconfig/cmc_home/cmd_utils/conda_setup.sh
 function base-env(){
     ssh localhost env | grep -v '^SSH\|^PWD'
     echo "SSH_CONNECTION=\"$SSH_CONNECTION\""
@@ -123,7 +143,7 @@ function base-env(){
     # ssh localhost env | sed 's/^\(SSH.*\)=\(.*\)/\1="\2"/'
 }
 
-function use-pofile(){
+function use-profile(){
     local username=$1
     (eval cd ~$username
     eval env -i "$(base-env)" HOME=~$username PWD=~$username bash -l
@@ -172,20 +192,20 @@ p.use-rpnpy(){
 }
 
 function p.use-conda(){
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/phc001/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/home/phc001/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/home/phc001/miniconda3/etc/profile.d/conda.sh"
+    # >>> conda initialize >>>
+    # !! Contents within this block are managed by 'conda init' !!
+    __conda_setup="$('/home/phc001/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+    if [ $? -eq 0 ]; then
+        eval "$__conda_setup"
     else
-        export PATH="/home/phc001/miniconda3/bin:$PATH"
+        if [ -f "/home/phc001/miniconda3/etc/profile.d/conda.sh" ]; then
+            . "/home/phc001/miniconda3/etc/profile.d/conda.sh"
+        else
+            export PATH="/home/phc001/miniconda3/bin:$PATH"
+        fi
     fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
+    unset __conda_setup
+    # <<< conda initialize <<<
 }
 
 # pip bash completion start
@@ -224,6 +244,7 @@ function p.use-maestro(){
     . ssmuse-sh -d eccc/cmo/isst/maestro/1.7.0
     alias xflow-pwd='SEQ_EXP_HOME=$PWD xflow'
 }
+
 function p.use-fstpy(){
 
     . r.load.dot eccc/mrd/rpn/MIG/ENV/migdep/5.1.1 eccc/mrd/rpn/MIG/ENV/rpnpy/2.1.2
@@ -237,22 +258,52 @@ function p.ud(){
     export DISPLAY="$(tmux show-env | sed -n 's/^DISPLAY=//p')"
 }
 
+orgman(){
+    pandoc --standalone -f org -t man $1 | /usr/bin/man -l -
+}
+
+p.setup-intel(){
+    source /home/sici000/ci-admin-bundle/environments/eccc-setup-intel-19.0.3.199-20210614.sh
+}
+p.setup-gnu(){
+    source /home/sici000/ci-admin-bundle/environments/eccc-setup-gnu.sh
+}
+
+function configure_git_ps1_vars(){
+    GIT_PS1_SHOWDIRTYSTATE=true
+    GIT_PS1_SHOWUNTRACKEDFILES=true
+    GIT_PS1_SHOWUPSTREAM="auto"
+    # Only works if using PROMPT_COMMAND
+    GIT_PS1_SHOWCOLORHINTS=true
+}
+function too_simple_git_ps1_setup(){
+    configure_git_ps1_vars
+    unset PROMPT_COMMAND
+    PS1='\u@\h:\w$(__git_ps1 " (%s)")\$ '
+}
+
+function simple_git_ps1_setup(){
+    configure_git_ps1_vars
+    PROMPT_COMMAND='__git_ps1 "\u@\h:\w\" "\\\$ "'
+}
+
+function color_git_ps1(){
+    # \[...\] is necessary for the width of the prompt to be correctly computed
+    # so that the line wraps correctly.
+    configure_git_ps1_vars
+    color="\[\033[35m\]"
+    nocolor="\[\033[0m\]"
+    __git_ps1 "${color}\u@\h:$(git_pwd)${nocolor}" "${color}\\\$${nocolor} "
+}
+
+function color_git_ps1_setup(){
+    configure_git_ps1_vars
+    PROMPT_COMMAND=color_git_ps1
+    # PROMPT_COMMAND=__git_ps1 "\[\033[35m\]\u@\h:$(git_pwd)\[\033[0m\]" "\[\033[35m\]\\\$\[\033[0m\] "
+}
+
+
+
+source ~/.ssh/ssh_functions.sh
 
 main
-
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/phc001/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-alias conda_setup='eval "$__conda_setup"'
-# if [ $? -eq 0 ]; then
-#     eval "$__conda_setup"
-# else
-#     if [ -f "/home/phc001/miniconda3/etc/profile.d/conda.sh" ]; then
-#         . "/home/phc001/miniconda3/etc/profile.d/conda.sh"
-#     else
-#         export PATH="/home/phc001/miniconda3/bin:$PATH"
-#     fi
-# fi
-# unset __conda_setup
-# <<< conda initialize <<<
-
