@@ -37,7 +37,9 @@ main(){
         # source $HOME/.philconfig/cmc_home/cmd_utils/conda_setup.sh
         export GIT_PS1_PROMPT_COLOR="\033[1;35m"
         # ec-git-prompt
-        source ~/git-prompt-new-config.sh
+        PS0="Remember PS0
+"
+        source ~/simple_git_ps1.sh
         export PATH=$HOME/.philconfig/utils${PATH:+:$PATH}
         export PATH=$HOME/.local/bin${PATH:+:$PATH}
         export PATH=$HOME/go/bin${PATH:+:$PATH}
