@@ -8,3 +8,5 @@ set -x LSCOLORS ExGxBxDxCxEgEdxbxgxcxd
 # eval /Users/pcarphin/miniforge3/bin/conda "shell.fish" "hook" $argv | source
 # <<< conda initialize <<<
 alias n='nnn -dHQex'
+
+set fish_greeting
