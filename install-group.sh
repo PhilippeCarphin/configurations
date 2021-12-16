@@ -46,9 +46,9 @@ install_philconfig_group(){
 }
 
 function ensure-stow(){
-    if which stow ; then
-        return
-    fi
+    # if which stow ; then
+    #     return
+    # fi
 
     if [ -e stow/bin/stow ] ; then
         export PATH=$PWD/stow/bin:${PATH}

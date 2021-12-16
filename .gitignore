@@ -28,3 +28,5 @@ __pycache__
 README.html
 config/fish/conf.d/theme
 config/fish/fish_variables
+stow-completion
+stow
