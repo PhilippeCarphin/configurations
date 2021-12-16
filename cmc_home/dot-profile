@@ -1,35 +1,17 @@
 #!/bin/bash
-
 if [[ $TERM == "dumb" ]] ; then
 	unset PROMPT_COMMAND
 	PS1='$ '
 	return
 fi
 
-if [[ "${CI_CONTEXT}" != "" ]] ; then
-    echo "THIS IS THE CI_CONTEXT"
-    unset PROMPT_COMMAND
-    PS1='$'
-    return
-fi
-
 main(){
-    # source ~for000/.profile
-    # main_interactive
-    # return
-    export PACKAGE_DIR=$HOME/Cellar
+    export STOW_DIR=$HOME/fs1
+    export PACKAGE_DIR=$STOW_DIR/Cellar
     export GITLAB_RUNNER_SCIENCE_ORDSOUMET_KEEP_FILES='yas'
     export GONOSUMDB=gitlab.science.gc.ca
-    export SSM_DEV=$HOME/ssmdev
-    # Risky: Used because it is the absolute only way to get CMake to show colors
-    # in non-tty contexts, but it forces colors where they might not be wanted 
-    # for example with `ls`: if you have `for f in $(ls somedir)`, then $f will
-    # have color codes, so you have to do `for f in $(env -i ls)`, 
-    # export CLICOLOR_FORCE="YES, GEEZ I'll ask you if I DON'T want it"
     source $HOME/.philconfig/cmc_home/cmc_utils/p.ordenv.def.sh
-    # p.ordenv
-    # p.use-maestro
-    # export PATH=/home/phc001/site4/go/bin:$HOME/bin:$HOME/go/bin:${PATH:+:$PATH}
+    export PATH=$STOW_DIR/bin:/home/phc001/site4/go/bin:$HOME/bin:$HOME/go/bin:$HOME/.local/bin${PATH:+:$PATH}
     if [[ "$-" == *i* ]] ; then
         main_interactive
     fi
@@ -49,46 +31,21 @@ function main_interactive(){
         cat ~phc001/alert
     fi
 
-    export STOW_DIR=$HOME/fs1
-    for f in $(env -i ls $HOME/fs1/etc/bash_completion.d) ; do source $HOME/fs1/etc/bash_completion.d/$f ; done
-    # # p.use_linuxbrew
-    # source $HOME/Repositories/gitlab.com/philippecarphin/stow-completion/stow_completion.bash
+    source $HOME/.ssh/ssh_functions.sh
     source $HOME/ssm_completion.bash
-    # # source $HOME/Repositories/gitlab.science.gc.ca/RPN-SI/ec-git-tools/share/ec-git-tools/git-prompt-with-setup.sh
-    source $HOME/.philconfig/cmc_home/cmc_utils/p.setup_spooki.def.sh
-    source $HOME/.philconfig/cmc_home/cmc_utils/p.ordenv.def.sh
-    source $HOME/.philconfig/cmc_home/cmc_utils/p.g2cm.def.sh
     source $HOME/_ssmuse.sh
-    # source $HOME/.philconfig/cmc_home/cmc_utils/p.myjobs.def.sh
-    # source $HOME/.philconfig/cmc_home/cmd_utils/conda_setup.sh
-    export GIT_PS1_PROMPT_COLOR="\033[1;35m"
     source ~/.simple_git_ps1_example.sh
-    export PATH=$HOME/.philconfig/utils${PATH:+:$PATH}
-    export PATH=$HOME/.local/bin${PATH:+:$PATH}
-    export PATH=$HOME/go/bin${PATH:+:$PATH}
-    export PATH=$HOME/bin${PATH:+:$PATH}
-    export PATH=$HOME/site4/go_1.16.4_linux_amd64/bin${PATH:+:$PATH}
-    export PACKAGE_DIR=$STOW_DIR/Cellar
-    export PATH=$STOW_DIR/bin${PATH:+:$PATH}
-    export PATH=$HOME/fs1/bin${PATH:+:$PATH}
-    export PATH=$HOME/fs2/bin${PATH:+:$PATH}
-    export PATH=$STOW_DIR/Cellar/stow_2.3.1_linux_amd64/bin${PATH:+:$PATH}
-    # source ~/.git-prompt.sh
     source ~/go/src/gitlab.science.gc.ca/phc001/ord_run/cmd/ord_run/ord_soumet-completion.bash
     source /home/phc001/.gitlab-runner/ci-admin-bundle/completions/gitlab-runner-completions.bash
-    # THE MOST IMPORTANT !!!
-    alias gitk='gitk --all &'
-    alias rr='$HOME/go/bin/ord_run -c 40 -cm 160G -tmpfs 10G -t 600 -shell /bin/bash'
-    alias r='$HOME/go/bin/ord_run -c 4 -cm 16G -tmpfs 5G -t 3600 -shell /bin/bash'
-    alias gotos='cd $GOPATH/src/gitlab.science.gc.ca'
-    alias gotog='cd $GOPATH/src/gitlab.com'
-    alias gotogh='cd $GOPATH/src/github.com'
-    alias domconda='source /home/ords/mrd/rpndat/dja001/python_miniconda3/envs/domutils_dev/bin/activate'
+
+    for f in $(env -i ls $HOME/fs1/etc/bash_completion.d) ; do
+        source $HOME/fs1/etc/bash_completion.d/$f
+    done
+
     alias ls='ls --color -h'
-    alias tree='tree -C'
     alias grep='grep --color'
-    alias gs='cd ~/go/src/gitlab.science.gc.ca/ ; pwd'
-    alias gc='cd ~/go/src/gitlab.com/ ; pwd'
+    alias tree='tree -C'
+    alias gitk=gitk_all
 
     export TZ=America/Toronto
     export HISTSIZE=
@@ -96,43 +53,23 @@ function main_interactive(){
     export HISTIGNORE="rm -rf *"
 }
 
-function p.use-git(){
-    _p.require_ordenv
-    . ssmuse-sh -d /fs/ssm/main/opt/git/git-2.30.2
+gitk_all(){
+   command gitk --all $@ &
 }
 
-function p.use-intel(){
-    _p.require_ordenv
-    . ssmuse-sh -x hpco/exp/intelpsxe-cluster-19.0.3.199
+function orgman(){
+    pandoc --standalone -f org -t man $1 | /usr/bin/man -l -
 }
 
-function build-libgeoref(){
-  echo 'export CLICOLOR_FORCE=true
-export GEOCOMP=intel
-. /fs/ssm/eccc/mrd/ordenv/profile/1.13.0
-source ../SETUP.sh
-cmake .. -DCMAKE_INSTALL_PREFIX=$PWD/install-site
-make -j $(nproc)
-make install' | $HOME/go/bin/ord_run -c 40 -cm 160G -tmpfs 10G -t 600
+function p.setup-intel(){
+    source ~sici000/ci-env/latest/ubuntu-18.04-amd-64/intel-19.0.3.199.sh
+}
+function p.setup-gnu(){
+    source ~sici000/ci-env/latest/ubuntu-18.04-amd-64/gnu-9.3.0.sh
 }
 
-function p.use-cmake(){
-    _p.require_ordenv
-    . ssmuse-sh -d /fs/ssm/main/opt/cmake/cmake-3.16.4
-    local cmake_gui="$(which cmake-gui)"
-    if [[ "${cmake_gui}" == /usr/bin/cmake-gui ]] ; then
-        alias cmake-gui='echo "PROTECTION: cmake gui is ${cmake_gui}"'
-    fi
-}
-
-function p.use-my-cmake(){
-    _p.require_ordenv
-    . ssmuse-sh -d /home/phc001/site4/ssm/cmake.ssmd
-    unalias cmake-gui >/dev/null 2>&1 || true
-}
-
-function prepend_ordenv(){
-    cat <<-EOF
+function p.ordenv()
+{
     export ORDENV_SITE_PROFILE=20191220
     export ORDENV_COMM_PROFILE=eccc/20200409
     export ORDENV_GROUP_PROFILE=eccc/cmc/1.9.3
@@ -140,182 +77,38 @@ function prepend_ordenv(){
 
     export EC_ATOMIC_PROFILE_VERSION=1.11.0
     . /fs/ssm/eccc/mrd/ordenv/profile/check_profile
-
-    . r.load.dot rpn/code-tools/1.5.1
-EOF
-
-    echo "$1"
 }
 
-function run(){
-    prepend_ordenv "$1" | $HOME/go/bin/ord_run -c 4 -cm 16G -tmpfs 8G
+function _p.require_ordenv()
+{
+    if [ -z "$ORDENV_SETUP" ] ; then
+        p.ordenv
+    fi
 }
 
-function runbig(){
-    prepend_ordenv "$1" | $HOME/go/bin/ord_run -c 40 -cm 160G -tmpfs 80G
-}
-
-function base-env(){
-    ssh localhost env | grep -v '^SSH\|^PWD'
-    echo "SSH_CONNECTION=\"$SSH_CONNECTION\""
-    echo "SSH_CLIENT=\"$SSH_CLIENT\""
-    echo "TERM=$TERM"
-    # ssh localhost env | sed 's/^\(SSH.*\)=\(.*\)/\1="\2"/'
-}
-
-function use-profile(){
-    local username=$1
-    (eval cd ~$username
-        eval env -i \
-            TERM=$TERM \
-            LC_TERMINAL=$LC_TERMINAL \
-            LC_TERMINAL_VERSION=$LC_TERMINAL_VERSION \
-            HOME=~$username \
-            PWD=~$username \
-            bash -l
+function p.myjobs()
+{
+    (
+        _p.require_ordenv
+        jobst | grep ${USER} -n
+        exec 1>/dev/null
     )
 }
 
-function p.use_linuxbrew(){
-   export LD_LIBRARY_PATH=$HOME/.local/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
-   export LD_LIBRARY_PATH=$HOME/.linuxbrew/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
-   export PATH=$HOME/.linuxbrew/bin${PATH:+:${PATH}}
+function p.clearjobs()
+{
+    (
+        _p.require_ordenv
+        for jobid in $(jobst -u $USER | grep $USER | cut -d '|' -f 1) ; do
+            while jobdel ${jobid} > /dev/null 2>&1
+            do
+                echo "Killing job '${jobid}'"
+                sleep 3
+            done
+            echo ""
+            echo "Job '${jobid}' successfully killed."
+        done
+    )
 }
-
-function last_finger(){
-
-    # stat --format="Last finger on me %x" -t ~/.plan
-    # All this because the above prints '.123412341234 +0000'
-    # for the time and because I didn't want to use ls
-    # to get the access time of a file.
-    last_finger_timestamp=$(stat --format=%X ~/.plan)
-    last_finger_date=$(TZ=America/Toronto date --date=@$last_finger_timestamp '+%Y-%m-%d %T (%z)' )
-    echo "Last finger on me : ${last_finger_date}"
-
-}
-
-function timezones(){
-    # Learn time offset from UTC
-    local rand=$((RANDOM % 5))
-    case $rand in
-        0) TZ=America/Edmonton date  '+Edmonton  %Y-%m-%d %T %z' ;;
-        4) TZ=America/Vancouver date '+Vancouver %Y-%m-%d %T %z' ;;
-        1) TZ=America/Montreal date  '+Montreal  %Y-%m-%d %T %z' ;;
-        2) TZ=UTC date               '+UTC       %Y-%m-%d %T   %Z' ;;
-        3) TZ=Europe/Paris date      '+Paris     %Y-%m-%d %T %z' ;;
-    esac
-}
-
-alias gitk=gitk_all
-gitk_all(){
-   \gitk --all $@ &
-}
-
-p.use-rpnpy(){
-    _p.require_ordenv
-    . r.load.dot eccc/mrd/rpn/MIG/ENV/migdep/5.1.1 \
-                     eccc/mrd/rpn/MIG/ENV/rpnpy/2.1.2
-}
-
-function p.use-conda(){
-    # >>> conda initialize >>>
-    # !! Contents within this block are managed by 'conda init' !!
-    __conda_setup="$('/home/phc001/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-    if [ $? -eq 0 ]; then
-        eval "$__conda_setup"
-    else
-        if [ -f "/home/phc001/miniconda3/etc/profile.d/conda.sh" ]; then
-            . "/home/phc001/miniconda3/etc/profile.d/conda.sh"
-        else
-            export PATH="/home/phc001/miniconda3/bin:$PATH"
-        fi
-    fi
-    unset __conda_setup
-    # <<< conda initialize <<<
-}
-
-# pip bash completion start
-# _pip_completion()
-# {
-#     COMPREPLY=( $( COMP_WORDS="${COMP_WORDS[*]}" \
-#                    COMP_CWORD=$COMP_CWORD \
-#                    PIP_AUTO_COMPLETE=1 $1 ) )
-# }
-#complete -o default -F _pip_completion pip
-#complete -o default -F _pip_completion pip3
-# pip bash completion end
-
-# function build-libgeoref(){
-#     if ! cd ~/workspace/libgeoref ; then
-#         echo "Could not CD to libgeoref directory"
-#         return 1
-#     fi
-#     (echo "export SSM_DEV=\$HOME/ssmdev" ; cat profile.sh ./makeit.sh) \
-#         | ~/bin/jobrun \
-#             --memory 160G \
-#             --tmpfs 10G \
-#             --cpus 10 \
-#             --chunk 1 \
-#             -vv \
-#             --keep-tmp-files true \
-#             --wallclock=200
-# }
-
-function whichl(){
-    which $(readlink -f $1)
-}
-
-function p.use-maestro(){
-    _p.require_ordenv
-    . ssmuse-sh -d eccc/cmo/isst/maestro/1.7.0
-    alias xflow-pwd='SEQ_EXP_HOME=$PWD xflow'
-}
-
-function p.use-fstpy(){
-
-    . r.load.dot eccc/mrd/rpn/MIG/ENV/migdep/5.1.1 eccc/mrd/rpn/MIG/ENV/rpnpy/2.1.2
-
-    fstpy_packages_dir=/fs/site4/eccc/cmd/w/sbf000/fstpy-beta/ubuntu-18.04-skylake-64/lib/packages
-    export PYTHONPATH=$fstpy_packages_dir:$PYTHONPATH
-
-}
-
-function p.ud(){
-    export DISPLAY="$(tmux show-env | sed -n 's/^DISPLAY=//p')"
-}
-
-orgman(){
-    pandoc --standalone -f org -t man $1 | /usr/bin/man -l -
-}
-
-p.setup-intel(){
-    source ~sici000/ci-env/latest/ubuntu-18.04-amd-64/intel-19.0.3.199.sh
-}
-p.setup-gnu(){
-    source /home/sici000/ci-admin-bundle/environments/eccc-setup-gnu.sh
-}
-
-function configure_git_ps1_vars(){
-    GIT_PS1_SHOWDIRTYSTATE=true
-    GIT_PS1_SHOWUNTRACKEDFILES=true
-    GIT_PS1_SHOWUPSTREAM="auto"
-    # Only works if using PROMPT_COMMAND
-    GIT_PS1_SHOWCOLORHINTS=true
-}
-
-function w(){
-    curl wttr.in/montreal 2>/dev/null | head -n 7
-}
-
-function ww(){
-    curl wttr.in/montreal 2>/dev/null | head -n 17
-}
-
-function www(){
-    curl wttr.in/montreal 2>/dev/null
-}
-
-
-source ~/.ssh/ssh_functions.sh
 
 main
