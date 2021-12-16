@@ -1,0 +1,1 @@
+/home/phc001/.philconfig/bash_home/dot-git-prompt-phil.sh
