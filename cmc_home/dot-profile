@@ -31,7 +31,7 @@ function main_interactive(){
     fi
 
     source $HOME/.ssh/ssh_functions.sh
-    source $HOME/simple_git_ps1_example.sh
+    source $HOME/.simple_git_ps1_example.sh
 
     for f in $(env -i ls $HOME/.bash_completion.d) ; do
         source $HOME/.bash_completion.d/$f
