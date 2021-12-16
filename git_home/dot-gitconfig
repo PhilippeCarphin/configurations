@@ -26,15 +26,19 @@
 [gui]
 	fontui = -family \".SF NS Text\" -size 18 -weight normal -slant roman -underline 0 -overstrike 0
 	fontdiff = -family \"DejaVu Sans Mono\" -size 16 -weight normal -slant roman -underline 0 -overstrike 0
-
-[status]
-	submoduleSummary = true
-
 # [http "https://gitlab.science.gc.ca/"]
 #        proxy = socks5h://127.0.0.1:8080
+
 [pretty]
 	ol = %C(yellow)%h%C(reset) %C(normal)%s%C(reset) %C(dim white)%an%C(reset) %C(dim blue)(%ad)%C(reset) %C(auto)%d%C(reset)
 	# like 'ol', but with additional full hash at the end (used by 'logv')
 
+[status]
+	submoduleSummary = true
+
 [submodule]
 	recurse = true
+
+
+
+

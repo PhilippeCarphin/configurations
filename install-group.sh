@@ -6,6 +6,7 @@ echoerr(){
 }
 
 main(){
+    ensure-stow
     if [ -z "${1}" ] ; then
 	echo "\$1 = $1"
         echoerr "ERROR: Need 1 argument: Group to install. Possible values :" >&2
@@ -41,7 +42,22 @@ install_philconfig_group(){
     fi
 
     # Make the $HOME look like ${this_dir}/${1}_home
-    stow -v -t $HOME -d ${this_dir} -S ${1}_home --dotfiles
+    stow -v -t $PWD/.. -d ${this_dir} -S ${1}_home --dotfiles
+}
+
+function ensure-stow(){
+    if which stow ; then
+        return
+    fi
+
+    if [ -e stow/bin/stow ] ; then
+        export PATH=$PWD/stow/bin:${PATH}
+        return
+    fi
+
+    git clone https://gitlab.com/philippecarphin/stow-completion
+    make PREFIX=$PWD/stow -C stow-completion install-stow
+    export PATH=$PWD/stow/bin:${PATH}
 }
 
 main $@

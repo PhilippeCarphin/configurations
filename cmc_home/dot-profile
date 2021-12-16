@@ -14,66 +14,86 @@ if [[ "${CI_CONTEXT}" != "" ]] ; then
 fi
 
 main(){
-    export STOW_DIR=$HOME/SPACK
+    # source ~for000/.profile
+    # main_interactive
+    # return
     export PACKAGE_DIR=$HOME/Cellar
     export GITLAB_RUNNER_SCIENCE_ORDSOUMET_KEEP_FILES='yas'
     export GONOSUMDB=gitlab.science.gc.ca
     export SSM_DEV=$HOME/ssmdev
-    export CLICOLOR_FORCE="YES, GEEZ I'll ask you if I DON'T want it"
+    # Risky: Used because it is the absolute only way to get CMake to show colors
+    # in non-tty contexts, but it forces colors where they might not be wanted 
+    # for example with `ls`: if you have `for f in $(ls somedir)`, then $f will
+    # have color codes, so you have to do `for f in $(env -i ls)`, 
+    # export CLICOLOR_FORCE="YES, GEEZ I'll ask you if I DON'T want it"
+    source $HOME/.philconfig/cmc_home/cmc_utils/p.ordenv.def.sh
     # p.ordenv
     # p.use-maestro
-    export PATH=/home/phc001/site4/go/bin:$HOME/bin:$HOME/go/bin:${PATH:+:$PATH}
+    # export PATH=/home/phc001/site4/go/bin:$HOME/bin:$HOME/go/bin:${PATH:+:$PATH}
     if [[ "$-" == *i* ]] ; then
-        # Remove that thing where it looks for Ubuntu packages if a command is not found
-        unset command_not_found_handle
-        for f in $(env -i ls $HOME/fs1/etc/bash_completion.d) ; do source $HOME/fs1/etc/bash_completion.d/$f ; done
-        # p.use_linuxbrew
-        source $HOME/Repositories/gitlab.com/philippecarphin/stow-completion/stow_completion.bash
-        # source $HOME/Repositories/gitlab.science.gc.ca/RPN-SI/ec-git-tools/share/ec-git-tools/git-prompt-with-setup.sh
-        source $HOME/.philconfig/cmc_home/cmc_utils/p.setup_spooki.def.sh
-        source $HOME/.philconfig/cmc_home/cmc_utils/p.ordenv.def.sh
-        source $HOME/.philconfig/cmc_home/cmc_utils/p.g2cm.def.sh
-        # source $HOME/.philconfig/cmc_home/cmc_utils/p.myjobs.def.sh
-        # source $HOME/.philconfig/cmc_home/cmd_utils/conda_setup.sh
-        export GIT_PS1_PROMPT_COLOR="\033[1;35m"
-        # ec-git-prompt
-        PS0="Remember PS0
-"
-        source ~/simple_git_ps1.sh
-        export PATH=$HOME/.philconfig/utils${PATH:+:$PATH}
-        export PATH=$HOME/.local/bin${PATH:+:$PATH}
-        export PATH=$HOME/go/bin${PATH:+:$PATH}
-        export PATH=$HOME/bin${PATH:+:$PATH}
-        export PATH=$HOME/site4/go_1.16.4_linux_amd64/bin${PATH:+:$PATH}
-        export STOW_DIR=$HOME/fs1
-        export PACKAGE_DIR=$STOW_DIR/Cellar
-        export PATH=$STOW_DIR/bin${PATH:+:$PATH}
-        export PATH=$HOME/fs1/bin${PATH:+:$PATH}
-        export PATH=$HOME/fs2/bin${PATH:+:$PATH}
-        # export PATH=$STOW_DIR/Cellar/stow_2.3.1_linux_amd64/bin${PATH:+:$PATH}
-        # source ~/.git-prompt.sh
-        # source ~/go/src/gitlab.science.gc.ca/phc001/ord_run/cmd/ord_run/ord_soumet-completion.bash
-        source /home/phc001/.gitlab-runner/ci-admin-bundle/completions/gitlab-runner-completions.bash
-        # THE MOST IMPORTANT !!!
-        alias gitk='gitk --all &'
-        alias rr='$HOME/go/bin/ord_run -c 40 -cm 160G -tmpfs 10G -t 600 -shell /bin/bash'
-        alias r='$HOME/go/bin/ord_run -c 4 -cm 16G -tmpfs 5G -t 3600 -shell /bin/bash'
-        alias gotos='cd $GOPATH/src/gitlab.science.gc.ca'
-        alias gotog='cd $GOPATH/src/gitlab.com'
-        alias gotogh='cd $GOPATH/src/github.com'
-        alias domconda='source /home/ords/mrd/rpndat/dja001/python_miniconda3/envs/domutils_dev/bin/activate'
-        alias ls='ls --color -h'
-        alias tree='tree -C'
-        alias grep='grep --color'
-        alias gs='cd ~/go/src/gitlab.science.gc.ca/ ; pwd'
-        alias gc='cd ~/go/src/gitlab.com/ ; pwd'
-
-        export TZ=America/Toronto
-        export HISTSIZE=
-        export HISTFILESIZE=
-        export HISTIGNORE="rm -rf *"
+        main_interactive
     fi
 
+}
+
+function main_interactive(){
+    # Remove that thing where it looks for Ubuntu packages if a command is not found
+    unset command_not_found_handle
+    if [ -e ~sici000/alert ] ; then
+        printf "\033[1;31m Alert from sici000\n"
+        cat ~sici000/alert
+    fi
+
+    if [ -e ~phc001/alert ] ; then
+        printf "\033[1;31m Alert from phc001\n"
+        cat ~phc001/alert
+    fi
+
+    export STOW_DIR=$HOME/fs1
+    for f in $(env -i ls $HOME/fs1/etc/bash_completion.d) ; do source $HOME/fs1/etc/bash_completion.d/$f ; done
+    # # p.use_linuxbrew
+    # source $HOME/Repositories/gitlab.com/philippecarphin/stow-completion/stow_completion.bash
+    source $HOME/ssm_completion.bash
+    # # source $HOME/Repositories/gitlab.science.gc.ca/RPN-SI/ec-git-tools/share/ec-git-tools/git-prompt-with-setup.sh
+    source $HOME/.philconfig/cmc_home/cmc_utils/p.setup_spooki.def.sh
+    source $HOME/.philconfig/cmc_home/cmc_utils/p.ordenv.def.sh
+    source $HOME/.philconfig/cmc_home/cmc_utils/p.g2cm.def.sh
+    source $HOME/_ssmuse.sh
+    # source $HOME/.philconfig/cmc_home/cmc_utils/p.myjobs.def.sh
+    # source $HOME/.philconfig/cmc_home/cmd_utils/conda_setup.sh
+    export GIT_PS1_PROMPT_COLOR="\033[1;35m"
+    source ~/.simple_git_ps1_example.sh
+    export PATH=$HOME/.philconfig/utils${PATH:+:$PATH}
+    export PATH=$HOME/.local/bin${PATH:+:$PATH}
+    export PATH=$HOME/go/bin${PATH:+:$PATH}
+    export PATH=$HOME/bin${PATH:+:$PATH}
+    export PATH=$HOME/site4/go_1.16.4_linux_amd64/bin${PATH:+:$PATH}
+    export PACKAGE_DIR=$STOW_DIR/Cellar
+    export PATH=$STOW_DIR/bin${PATH:+:$PATH}
+    export PATH=$HOME/fs1/bin${PATH:+:$PATH}
+    export PATH=$HOME/fs2/bin${PATH:+:$PATH}
+    export PATH=$STOW_DIR/Cellar/stow_2.3.1_linux_amd64/bin${PATH:+:$PATH}
+    # source ~/.git-prompt.sh
+    source ~/go/src/gitlab.science.gc.ca/phc001/ord_run/cmd/ord_run/ord_soumet-completion.bash
+    source /home/phc001/.gitlab-runner/ci-admin-bundle/completions/gitlab-runner-completions.bash
+    # THE MOST IMPORTANT !!!
+    alias gitk='gitk --all &'
+    alias rr='$HOME/go/bin/ord_run -c 40 -cm 160G -tmpfs 10G -t 600 -shell /bin/bash'
+    alias r='$HOME/go/bin/ord_run -c 4 -cm 16G -tmpfs 5G -t 3600 -shell /bin/bash'
+    alias gotos='cd $GOPATH/src/gitlab.science.gc.ca'
+    alias gotog='cd $GOPATH/src/gitlab.com'
+    alias gotogh='cd $GOPATH/src/github.com'
+    alias domconda='source /home/ords/mrd/rpndat/dja001/python_miniconda3/envs/domutils_dev/bin/activate'
+    alias ls='ls --color -h'
+    alias tree='tree -C'
+    alias grep='grep --color'
+    alias gs='cd ~/go/src/gitlab.science.gc.ca/ ; pwd'
+    alias gc='cd ~/go/src/gitlab.com/ ; pwd'
+
+    export TZ=America/Toronto
+    export HISTSIZE=
+    export HISTFILESIZE=
+    export HISTIGNORE="rm -rf *"
 }
 
 function p.use-git(){
@@ -139,16 +159,20 @@ function base-env(){
     ssh localhost env | grep -v '^SSH\|^PWD'
     echo "SSH_CONNECTION=\"$SSH_CONNECTION\""
     echo "SSH_CLIENT=\"$SSH_CLIENT\""
-    echo "PWD=$PWD"
     echo "TERM=$TERM"
-    echo "DISPLAY=$DISPLAY"
     # ssh localhost env | sed 's/^\(SSH.*\)=\(.*\)/\1="\2"/'
 }
 
 function use-profile(){
     local username=$1
     (eval cd ~$username
-    eval env -i "$(base-env)" HOME=~$username PWD=~$username bash -l
+        eval env -i \
+            TERM=$TERM \
+            LC_TERMINAL=$LC_TERMINAL \
+            LC_TERMINAL_VERSION=$LC_TERMINAL_VERSION \
+            HOME=~$username \
+            PWD=~$username \
+            bash -l
     )
 }
 
@@ -265,7 +289,7 @@ orgman(){
 }
 
 p.setup-intel(){
-    source /home/sici000/ci-admin-bundle/environments/eccc-setup-intel-19.0.3.199-20210614.sh
+    source ~sici000/ci-env/latest/ubuntu-18.04-amd-64/intel-19.0.3.199.sh
 }
 p.setup-gnu(){
     source /home/sici000/ci-admin-bundle/environments/eccc-setup-gnu.sh
@@ -278,32 +302,18 @@ function configure_git_ps1_vars(){
     # Only works if using PROMPT_COMMAND
     GIT_PS1_SHOWCOLORHINTS=true
 }
-function too_simple_git_ps1_setup(){
-    configure_git_ps1_vars
-    unset PROMPT_COMMAND
-    PS1='\u@\h:\w$(__git_ps1 " (%s)")\$ '
+
+function w(){
+    curl wttr.in/montreal 2>/dev/null | head -n 7
 }
 
-function simple_git_ps1_setup(){
-    configure_git_ps1_vars
-    PROMPT_COMMAND='__git_ps1 "\u@\h:\w\" "\\\$ "'
+function ww(){
+    curl wttr.in/montreal 2>/dev/null | head -n 17
 }
 
-function color_git_ps1(){
-    # \[...\] is necessary for the width of the prompt to be correctly computed
-    # so that the line wraps correctly.
-    configure_git_ps1_vars
-    color="\[\033[35m\]"
-    nocolor="\[\033[0m\]"
-    __git_ps1 "${color}\u@\h:$(git_pwd)${nocolor}" "${color}\\\$${nocolor} "
+function www(){
+    curl wttr.in/montreal 2>/dev/null
 }
-
-function color_git_ps1_setup(){
-    configure_git_ps1_vars
-    PROMPT_COMMAND=color_git_ps1
-    # PROMPT_COMMAND=__git_ps1 "\[\033[35m\]\u@\h:$(git_pwd)\[\033[0m\]" "\[\033[35m\]\\\$\[\033[0m\] "
-}
-
 
 
 source ~/.ssh/ssh_functions.sh

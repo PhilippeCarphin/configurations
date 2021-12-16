@@ -416,7 +416,7 @@ __git_ps1 ()
 	rev_parse_exit_code="$?"
 
 	if [ -z "$repo_info" ]; then
-		return $exit
+		return 0
 	fi
 
 	local short_sha=""
