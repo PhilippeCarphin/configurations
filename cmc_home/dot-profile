@@ -31,11 +31,11 @@ function main_interactive(){
     fi
 
     source $HOME/.ssh/ssh_functions.sh
-    source $HOME/ssm_completion.bash
-    source $HOME/_ssmuse.sh
-    source ~/.simple_git_ps1_example.sh
-    source ~/go/src/gitlab.science.gc.ca/phc001/ord_run/cmd/ord_run/ord_soumet-completion.bash
-    source /home/phc001/.gitlab-runner/ci-admin-bundle/completions/gitlab-runner-completions.bash
+    source $HOME/simple_git_ps1_example.sh
+
+    for f in $(env -i ls $HOME/.bash_completion.d) ; do
+        source $HOME/.bash_completion.d/$f
+    done
 
     for f in $(env -i ls $HOME/fs1/etc/bash_completion.d) ; do
         source $HOME/fs1/etc/bash_completion.d/$f
