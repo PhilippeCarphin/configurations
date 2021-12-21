@@ -110,4 +110,28 @@ function p.clearjobs()
     )
 }
 
+function p.use_linuxbrew(){
+   export LD_LIBRARY_PATH=$HOME/.local/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+   export LD_LIBRARY_PATH=$HOME/.linuxbrew/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+   export PATH=$HOME/.linuxbrew/bin${PATH:+:${PATH}}
+}
+
+function p.realpath(){
+    python3 -c "import os; print(os.path.${FUNCNAME[0]##p.}('$1'))"
+}
+
+function p.normpath(){
+    python3 -c "import os; print(os.path.${FUNCNAME[0]##p.}('$1'))"
+}
+
+function p.relpath(){
+    if [[ "$1" == "" ]] ; then
+        echo "${FUNCNAME[0]}: ERROR: Missing argument
+
+USAGE: ${FUNCNAME[0]} PATH [START]"
+        return 1
+    fi
+    python3 -c "import os; print(os.path.${FUNCNAME[0]##p.}('$1', start='$2'))"
+}
+
 main
