@@ -107,7 +107,18 @@ git_time_since_last_commit() {
     # This is a reasonable assumption
     local hackish_toplevel=${PWD%%/\.git*}
 
+    # Little exception to my assumption is the directory ~/.gitlab-runner
+    if [[ $PWD == *.gitlab-runner* ]] ; then
+        hackish_toplevel=$PWD
+    fi
+
     # Don't show anything if there are no staged or unstaged changes
+    # This is only because I "absolutely need" to have the time since last commit
+    # even when in the .git directory, but not only that I absolutely need to
+    # only show it when there are staged or unstaged changes.
+    # This solution is inelegant, I just wanted to see if I could do it.  The
+    # elegant solution is to simply never show the time since last commit if we
+    # are in the .git directory!
     if (cd ${hackish_toplevel} && git diff --no-ext-diff --quiet && git diff --no-ext-diff --cached --quiet) ; then
         return
     fi
