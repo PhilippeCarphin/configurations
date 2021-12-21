@@ -10,7 +10,7 @@ main(){
     export PACKAGE_DIR=$STOW_DIR/Cellar
     export GITLAB_RUNNER_SCIENCE_ORDSOUMET_KEEP_FILES='yas'
     export GONOSUMDB=gitlab.science.gc.ca
-    export PATH=$STOW_DIR/bin:/home/phc001/site4/go/bin:$HOME/bin:$HOME/go/bin:$HOME/.local/bin${PATH:+:$PATH}
+    export PATH=$STOW_DIR/bin:/home/phc001/site4/go_1.16.4_linux_amd64/bin:$HOME/bin:$HOME/go/bin:$HOME/.local/bin${PATH:+:$PATH}
     if [[ "$-" == *i* ]] ; then
         main_interactive
     fi
