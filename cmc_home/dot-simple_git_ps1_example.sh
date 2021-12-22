@@ -37,7 +37,7 @@ function my_git_ps1(){
     # Arguments for the 3 arg form of __git_ps1
     pre="${ps1_exit_code}${c}\u@\h:$(git_pwd)${nc}"
     post="${c} \\\$${nc} "
-    gitstring_format=" (%s$(git_time_since_last_commit))"
+    gitstring_format=" (%s)"
 
     if shopt -op errexit >/dev/null ; then
         user_had_errexit=true
@@ -94,32 +94,9 @@ function __ps1_format_exit_code(){
 ################################################################################
 git_time_since_last_commit() {
     # This checks if we are in a repo an that there is a commit
-    if ! git log -n 1  > /dev/null 2>&1; then
-        return
-    fi
-
-    # If inside GIT_DIR, we can't do the git diff commands to determine
-    # wheher or not to show the time.  So we would like to CD to the repo
-    # root to run those git diff commands.
-
-    # To get the repo root from inside .git, we assume the GIT_DIR is called
-    # .git and that '/.git' does not occur somewhere else in the path.
-    # This is a reasonable assumption
-    local hackish_toplevel=${PWD%%/\.git*}
-
-    # Little exception to my assumption is the directory ~/.gitlab-runner
-    if [[ $PWD == *.gitlab-runner* ]] ; then
-        hackish_toplevel=$PWD
-    fi
-
-    # Don't show anything if there are no staged or unstaged changes
-    # This is only because I "absolutely need" to have the time since last commit
-    # even when in the .git directory, but not only that I absolutely need to
-    # only show it when there are staged or unstaged changes.
-    # This solution is inelegant, I just wanted to see if I could do it.  The
-    # elegant solution is to simply never show the time since last commit if we
-    # are in the .git directory!
-    if (cd ${hackish_toplevel} && git diff --no-ext-diff --quiet && git diff --no-ext-diff --cached --quiet) ; then
+    local repo_info
+    repo_info=$(git rev-parse --is-inside-work-tree 2>/dev/null)
+    if [ -z "$repo_info" ] ; then
         return
     fi
 
@@ -141,12 +118,12 @@ format_seconds(){
     SUB_HOURS=$(( $HOURS % 24))
     SUB_MINUTES=$(( $MINUTES % 60))
     if [ "$DAYS" -gt 5 ] ; then
-        echo " ${DAYS}days"
+        echo "${DAYS}days"
     elif [ "$DAYS" -gt 1 ]; then
-        echo " ${DAYS}d${SUB_HOURS}h${SUB_MINUTES}m"
+        echo "${DAYS}d${SUB_HOURS}h${SUB_MINUTES}m"
     elif [ "$HOURS" -gt 0 ]; then
-        echo " ${HOURS}h${SUB_MINUTES}m"
+        echo "${HOURS}h${SUB_MINUTES}m"
     else
-        echo " ${MINUTES}m"
+        echo "${MINUTES}m"
     fi
 }

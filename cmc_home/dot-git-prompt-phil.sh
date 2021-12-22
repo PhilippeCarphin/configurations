@@ -335,6 +335,33 @@ __git_sequencer_status ()
 	return 1
 }
 
+__git_ps1_time_since_last_commit() {
+    last_commit_unix_timestamp=$(git log --pretty=format:'%at' -1 2> /dev/null)
+    now_unix_timestamp=$(date +%s)
+    seconds_since_last_commit=$(($now_unix_timestamp - $last_commit_unix_timestamp))
+    format_seconds $seconds_since_last_commit
+}
+
+__git_ps1_format_seconds(){
+	seconds=$1
+    # Totals
+    MINUTES=$(($seconds / 60))
+    HOURS=$(($seconds /3600))
+    # Sub-hours and sub-minutes
+    seconds_per_day=$((60*60*24))
+    DAYS=$(($seconds / $seconds_per_day))
+    SUB_HOURS=$(( $HOURS % 24))
+    SUB_MINUTES=$(( $MINUTES % 60))
+    if [ "$DAYS" -gt 5 ] ; then
+        echo " ${DAYS}days"
+    elif [ "$DAYS" -gt 1 ]; then
+        echo " ${DAYS}d${SUB_HOURS}h${SUB_MINUTES}m"
+    elif [ "$HOURS" -gt 0 ]; then
+        echo " ${HOURS}h${SUB_MINUTES}m"
+    else
+        echo " ${MINUTES}m"
+    fi
+}
 # __git_ps1 accepts 0 or 1 arguments (i.e., format string)
 # when called from PS1 using command substitution
 # in this mode it prints text to add to bash PS1 prompt (includes branch name)
@@ -520,6 +547,7 @@ __git_ps1 ()
 	local h=""
 	local c=""
 	local p=""
+    local t=""
 
 	if [ "true" = "$inside_gitdir" ]; then
 		if [ "true" = "$bare_repo" ]; then
@@ -533,6 +561,9 @@ __git_ps1 ()
 		then
 			git diff --no-ext-diff --quiet || w="*"
 			git diff --no-ext-diff --cached --quiet || i="+"
+            if [[ "$w" == "*" ]] || [[ "$i" == "+" ]] ; then
+                t="$(__git_ps1_time_since_last_commit)"
+            fi
 			if [ -z "$short_sha" ] && [ -z "$i" ]; then
 				i="#"
 			fi
@@ -576,7 +607,7 @@ __git_ps1 ()
 	fi
 
 	local f="$h$w$i$s$u"
-	local gitstring="$c$b${f:+$z$f}${sparse}$r$p"
+	local gitstring="$c$b${f:+$z$f}${sparse}$r$p$t"
 
 	if [ $pcmode = yes ]; then
 		if [ "${__git_printf_supports_v-}" != yes ]; then
