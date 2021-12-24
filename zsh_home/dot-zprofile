@@ -3,9 +3,11 @@
 #
 # However it seems to me that because of TMUX this file gets sourced two times
 # instead of once but does not get sourced more than that many times.
-if [[ "${__PHILRC_ZPROFILE_ONLY_ONCE}" == 1 ]] ; then
-    return
-fi
+#
+# On second thought I'm removing this because it's causing other problems
+# if [[ "${__PHILRC_ZPROFILE_ONLY_ONCE}" == 1 ]] ; then
+#     return
+# fi
 export STOW_DIR=$HOME/fs
 
 export BASH_SILENCE_DEPRECATION_WARNING=1
@@ -16,4 +18,4 @@ PATH=$HOME/fs/bin:$PATH
 if [[ $(uname -m) == arm64 ]] ; then
     PATH=/opt/homebrew/bin:$PATH
 fi
-export __PHILRC_ZPROFILE_ONLY_ONCE=1
+# export __PHILRC_ZPROFILE_ONLY_ONCE=1

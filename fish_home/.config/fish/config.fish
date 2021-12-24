@@ -22,3 +22,7 @@ source /opt/homebrew/opt/modules/init/fish || true
 # set -x MODULEPATH $MODULEPATH:$HOME/.modules
 # source $HOME/Documents/GitHub/stow-completion/stow_completion.fish
 
+if test (uname -m) = arm64
+    alias vim=/opt/homebrew/bin/vim
+end
+

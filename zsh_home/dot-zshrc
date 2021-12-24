@@ -38,6 +38,9 @@ if [[ "$-" == *i* ]] ; then
 fi
 
 
+if [[ $(uname -m) == amd64 ]] ; then
+    alias vim=/opt/homebrew/bin/vim
+fi
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
 # __conda_setup="$('/Users/pcarphin/miniforge3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
