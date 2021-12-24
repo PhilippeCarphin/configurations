@@ -1,4 +1,19 @@
+# The whole point of putting things here is to have them be done the right
+# number of times since.
+#
+# However it seems to me that because of TMUX this file gets sourced two times
+# instead of once but does not get sourced more than that many times.
+if [[ "${__PHILRC_ZPROFILE_ONLY_ONCE}" == 1 ]] ; then
+    return
+fi
+export STOW_DIR=$HOME/fs
 
-export PHILRC_ZPROFILE_SOURCED="$(date)"
+export BASH_SILENCE_DEPRECATION_WARNING=1
 
-source $HOME/.philconfig/environment/path.sh
+PATH=$HOME/.local/bin:$PATH
+PATH=$HOME/go/bin:$PATH
+PATH=$HOME/fs/bin:$PATH
+if [[ $(uname -m) == arm64 ]] ; then
+    PATH=/opt/homebrew/bin:$PATH
+fi
+export __PHILRC_ZPROFILE_ONLY_ONCE=1

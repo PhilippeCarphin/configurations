@@ -1,2 +1,0 @@
-Thu Nov  9 09:40:32 EST 2017 : brew asdf asdf
-    >> Failed

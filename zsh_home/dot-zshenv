@@ -1,3 +1,2 @@
 export PHILRC_ZSHENV_SOURCED="$(date)"
 
-source $HOME/.philconfig/environment/path.sh

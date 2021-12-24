@@ -1,5 +1,0 @@
-#!/bin/bash
-
-source $PHILCONFIG/FILES/initutils
-echo "$(tput setab 8)$(tput setaf 3)Philconfig post commit hook: auto push on commit$(tput sgr 0)"
-git push origin master
