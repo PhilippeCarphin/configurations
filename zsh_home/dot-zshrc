@@ -19,23 +19,25 @@ fi
 # set -Ux LSCOLORS Exfxcxdxbxegedabagacad
 # From https://apple.stackexchange.com/a/33679
 export LSCOLORS=ExGxBxDxCxEgEdxbxgxcxd
-export CLICOLOR=true
-export CLICOLOR_FORCE=true
 
 source ~/.philconfig/environment/path.sh
+
+function zshrc_interactive(){
+    autoload -U compinit ; compinit
+    alias n='nnn -dhQex'
+    for f in $(env -i ls $STOW_DIR/etc/zsh_completion.d) ; do
+        source $STOW_DIR/etc/zsh_completion.d/$f
+    done
+    source /opt/homebrew/opt/modules/init/zsh
+    module load use.own
+}
 
 if [[ "$-" == *i* ]] ; then
     if ! [ -e ~/.normal_mode ] ; then
         exec fish $@
     fi
-    autoload -U compinit
-    compinit
-    alias n='nnn -dhQex'
-    source ~/.repos_completion.zsh
-    source ~/.git-prompt.sh
+    zshrc_interactive
 fi
-
-
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
 # __conda_setup="$('/Users/pcarphin/miniforge3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
