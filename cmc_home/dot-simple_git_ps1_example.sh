@@ -29,6 +29,13 @@ function my_git_ps1(){
     # save exit code of previous command to use in prompt
     previous_exit_code=$?
 
+    if shopt -op xtrace >/dev/null; then
+        user_had_xtrace=true
+    else
+        user_had_xtrace=false
+    fi
+    set +o xtrace
+
     # Color of the non-git part
     c="\[\033[35m\]"
     nc="\[\033[0m\]"
@@ -40,6 +47,7 @@ function my_git_ps1(){
     post="${c} \\\$${nc} "
     gitstring_format=" (%s $(git_time_since_last_commit))"
 
+
     if shopt -op errexit >/dev/null ; then
         user_had_errexit=true
     else
@@ -48,8 +56,13 @@ function my_git_ps1(){
     set +e
     __git_ps1 "${pre}" "${post}" "${gitstring_format}"
     # Do things with 'clever' if statements
+
     if [[ "${user_had_errexit}" == true ]] ; then
         set -e
+    fi
+
+    if [[ "${user_had_xtrace}" == true ]] ; then
+        set -x
     fi
 }
 
@@ -128,3 +141,4 @@ format_seconds(){
         echo "${MINUTES}m"
     fi
 }
+
