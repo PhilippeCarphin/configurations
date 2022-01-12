@@ -134,4 +134,12 @@ USAGE: ${FUNCNAME[0]} PATH [START]"
     python3 -c "import os; print(os.path.${FUNCNAME[0]##p.}('$1', start='$2'))"
 }
 
+function emacs-daemon(){
+    echo "Starting detatched tmux session named 'emacs-daemon' on '$(hostname)'"
+    tmux new -s emacs-daemon -d
+    echo "Sending keys 'emacs --fg-daemon' to session"
+    tmux send-keys -t emacs-daemon 'emacs --fg-daemon
+'
+}
+
 main
