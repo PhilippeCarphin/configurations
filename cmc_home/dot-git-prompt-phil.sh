@@ -547,7 +547,6 @@ __git_ps1 ()
 	local h=""
 	local c=""
 	local p=""
-    local t=""
 
 	if [ "true" = "$inside_gitdir" ]; then
 		if [ "true" = "$bare_repo" ]; then
@@ -561,9 +560,6 @@ __git_ps1 ()
 		then
 			git diff --no-ext-diff --quiet || w="*"
 			git diff --no-ext-diff --cached --quiet || i="+"
-            if [[ "$w" == "*" ]] || [[ "$i" == "+" ]] ; then
-                t="$(__git_ps1_time_since_last_commit)"
-            fi
 			if [ -z "$short_sha" ] && [ -z "$i" ]; then
 				i="#"
 			fi
@@ -607,7 +603,7 @@ __git_ps1 ()
 	fi
 
 	local f="$h$w$i$s$u"
-	local gitstring="$c$b${f:+$z$f}${sparse}$r$p$t"
+	local gitstring="$c$b${f:+$z$f}${sparse}$r$p"
 
 	if [ $pcmode = yes ]; then
 		if [ "${__git_printf_supports_v-}" != yes ]; then
