@@ -45,7 +45,8 @@ function my_git_ps1(){
     # Arguments for the 3 arg form of __git_ps1
     pre="${ps1_exit_code}${c}\u@\h:$(git_pwd)${nc}"
     post="${c} \\\$${nc} "
-    gitstring_format=" (%s $(git_time_since_last_commit))"
+    tslc=$(git_time_since_last_commit)
+    gitstring_format=" (%s${tslc:+ $tslc})"
 
 
     if shopt -op errexit >/dev/null ; then
@@ -54,8 +55,8 @@ function my_git_ps1(){
         user_had_errexit=false
     fi
     set +e
+
     __git_ps1 "${pre}" "${post}" "${gitstring_format}"
-    # Do things with 'clever' if statements
 
     if [[ "${user_had_errexit}" == true ]] ; then
         set -e
@@ -114,7 +115,10 @@ git_time_since_last_commit() {
         return
     fi
 
-    last_commit_unix_timestamp=$(git log --pretty=format:'%at' -1 2> /dev/null)
+    local last_commit_unix_timestamp now_unix_timestamp seconds_since_last_commit
+    if ! last_commit_unix_timestamp=$(git log --pretty=format:'%at' -1 2> /dev/null) ; then
+        return
+    fi
     now_unix_timestamp=$(date +%s)
     seconds_since_last_commit=$(($now_unix_timestamp - $last_commit_unix_timestamp))
 
