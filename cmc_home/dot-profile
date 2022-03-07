@@ -21,10 +21,12 @@ function p.set-web-proxy(){
     # From ~sbf000/.profile.d/interactive/post
     # except that I he had https_proxy=http://  and HTTPS_PROXY=http://
     # and I did            https_proxy=https:// and HTTPS_PROXY=https://
+    # EDIT: Turns out my extra 's' at the end was making
+    # things not work.
     export http_proxy=http://webproxy.science.gc.ca:8888/
-    export https_proxy=https://webproxy.science.gc.ca:8888/
+    export https_proxy=http://webproxy.science.gc.ca:8888/
     export HTTP_PROXY=http://webproxy.science.gc.ca:8888/
-    export HTTPS_PROXY=https://webproxy.science.gc.ca:8888/
+    export HTTPS_PROXY=http://webproxy.science.gc.ca:8888/
 }
 
 function main_interactive(){
@@ -86,6 +88,9 @@ function p.ordenv()
 
     export EC_ATOMIC_PROFILE_VERSION=1.11.0
     . /fs/ssm/eccc/mrd/ordenv/profile/check_profile
+
+    # export PATH=$HOME/fs1/bin:${PATH}
+    # complete -o default source .
 }
 
 function _p.require_ordenv()
