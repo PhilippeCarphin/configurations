@@ -17,6 +17,16 @@ main(){
 
 }
 
+function p.set-web-proxy(){
+    # From ~sbf000/.profile.d/interactive/post
+    # except that I he had https_proxy=http://  and HTTPS_PROXY=http://
+    # and I did            https_proxy=https:// and HTTPS_PROXY=https://
+    export http_proxy=http://webproxy.science.gc.ca:8888/
+    export https_proxy=https://webproxy.science.gc.ca:8888/
+    export HTTP_PROXY=http://webproxy.science.gc.ca:8888/
+    export HTTPS_PROXY=https://webproxy.science.gc.ca:8888/
+}
+
 function main_interactive(){
     # Remove that thing where it looks for Ubuntu packages if a command is not found
     unset command_not_found_handle
