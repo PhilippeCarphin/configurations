@@ -25,14 +25,24 @@ export CLICOLOR_FORCE=true
 source ~/.philconfig/environment/path.sh
 
 if [[ "$-" == *i* ]] ; then
-    if ! [ -e ~/.normal_mode ] ; then
-        exec fish $@
+    if ! [ -e ~/.normal_mode ] && ! [ -e ~/.noexec_zshrc ] ; then
+        if [[ $(hostname) == mini ]] ; then
+            exec arch -arch arm64 fish "$@"
+        else
+            exec fish "$@"
+        fi
+    fi
+
+    if ! [ -e ~/.noexec_zshrc ] && [[ $(hostname) == mini ]] && [[ $(uname -m) != arm64 ]] ; then
+        echo "exec'ing to switch to arm64 architecture on mini"
+        exec arch -arch arm64 zsh
     fi
     autoload -U compinit
     compinit
     alias n='nnn -dhQex'
     source ~/.repos_completion.zsh
     source ~/.git-prompt.sh
+    source /opt/homebrew/opt/modules/init/zsh
 fi
 
 
