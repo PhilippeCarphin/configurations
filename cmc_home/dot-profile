@@ -10,12 +10,25 @@ main(){
     export PACKAGE_DIR=$STOW_DIR/Cellar
     export GITLAB_RUNNER_SCIENCE_ORDSOUMET_KEEP_FILES='yas'
     export GONOSUMDB=gitlab.science.gc.ca
-    export PATH=$STOW_DIR/bin:/home/phc001/site4/go_1.16.4_linux_amd64/bin:$HOME/bin:$HOME/go/bin:$HOME/.local/bin${PATH:+:$PATH}
+    export PATH=$STOW_DIR/bin::$HOME/bin:$HOME/go/bin:$HOME/.local/bin${PATH:+:$PATH}
+    PATH+=:$HOME/tools/go_1.17.5_all.ssm/bin
+    PATH+=:$HOME/tools/go1.17.5.linux-amd64/bin
+    PATH+=:$HOME/tools/node-v16.13.1-linux-x64/bin
+    PATH+=:$HOME/tools/rust-1.69.0-x86_64-unknown-linux-gnu/bin
     if [[ "$-" == *i* ]] ; then
         main_interactive
     fi
 
 }
+
+function p.set-menu-complete(){
+    # make tab cycle through commands after listing
+    bind '"\t":menu-complete'
+    bind "set show-all-if-ambiguous on"
+    bind "set completion-ignore-case on"
+    bind "set menu-complete-display-prefix on"
+}
+
 
 function p.set-web-proxy(){
     # From ~sbf000/.profile.d/interactive/post
@@ -31,6 +44,8 @@ function p.set-web-proxy(){
 
 function main_interactive(){
     # Remove that thing where it looks for Ubuntu packages if a command is not found
+    export LESSOPEN="| /usr/bin/source-highlight-esc.sh %s"
+    export LESS=" -R"
     unset command_not_found_handle
     if [ -e ~sici000/alert ] ; then
         printf "\033[1;31m Alert from sici000\n"
@@ -44,19 +59,19 @@ function main_interactive(){
 
     source $HOME/.ssh/ssh_functions.sh
     source $HOME/.simple_git_ps1_example.sh
+    source $HOME/_phil_cd.bash
 
-    for f in $(env -i ls $HOME/.bash_completion.d) ; do
-        source $HOME/.bash_completion.d/$f
-    done
+    _source_dir $HOME/.bash_completion.d
+    _source_dir $HOME/fs1/etc/bash_completion.d
+    _source_dir $HOME/fs1/etc/profile.d
 
-    for f in $(env -i ls $HOME/fs1/etc/bash_completion.d) ; do
-        source $HOME/fs1/etc/bash_completion.d/$f
-    done
 
     alias ls='ls --color -h'
     alias grep='grep --color'
     alias tree='tree -C'
     alias gitk=gitk_all
+    alias make='make VERBOSE='
+    alias rmb='rm -rf ../build/*'
 
     export TZ=America/Toronto
     export HISTSIZE=
@@ -64,6 +79,74 @@ function main_interactive(){
     export HISTIGNORE="rm -rf *"
 }
 
+function _source_dir(){
+    dir=$1
+    if ! [ -d "$1" ] ; then
+        # No echo so this function can be called on non-existant dirs
+        # echo "${FUNCNAME[0]} ERROR: \$1='$1' is not a directory" >&2
+        return 1
+    fi
+    for f in $(env -i ls $dir) ; do
+        if ! source $dir/$f ; then
+            echo "${FUNCNAME[0]} ERROR: sourcing '$dir/$f' returned non-zero" >&2
+        fi
+    done
+}
+
+p.qsubi(){
+    if ! [ -e "$1" ] ; then
+        echo "ERROR: File '$1' does not exist"
+        return 1
+    fi
+	# SYNOPSIS
+	#        qsub [-a <date and time>] [-A <account string>] [-c <checkpoint spec>]
+	#             [-C <directive prefix>] [-e <path>] [-f] [-h]
+	#             [-I [-G [-- <GUI application/script>]] | [-X]] [-j <join>]
+	#             [-J <range> [%<max subjobs]] [-k <discard>] [-l <resource list>]
+	#             [-m <mail events>] [-M <user list>] [-N <name>] [-o <path>]
+	#             [-p <priority>] [-P <project>] [-q <destination>] [-r <y|n>]
+	#             [-R <remove options>] [-S <path list>] [-u <user list>]
+	#             [-v <variable list>] [-V] [-W <additional attributes>] [-z]
+	#             [- | <script> | -- <executable> [<arguments to executable>]]
+
+    qsub -I -- $1
+
+	# When I try doing it this way with a script, it just puts me in an
+    # interactive shell on a compute node and doesn't seem to run my script
+	# qsub -I $1
+}
+
+p.dqsubi(){
+    if ! [ -e "$1" ] ; then
+        echo "ERROR: File '$1' does not exist"
+        return 1
+    fi
+
+    if ! tempfile=$(mktemp qsubi-decorated-job-XXXXXXXX.sh) ; then
+        echo "ERROR: Could not create tempfile"
+        return 1
+    fi
+
+    # Job must have '#!/bin/bash' otherwise it "doesn't work"
+    cat $1 | decorate-script -cd -shebang >> ${tempfile}
+
+    chmod +x ${tempfile}
+    qsub -I -- ${tempfile}
+    rm ${tempfile}
+}
+
+p.pipeqsubi(){
+    if ! tempfile=$(mktemp qsubi-decorated-job-XXXXXXXX.sh) ; then
+        echo "ERROR: Could not create tempfile"
+        return 1
+    fi
+
+    decorate-script -cd -shebang >> ${tempfile}
+
+    chmod +x ${tempfile}
+    script -c "qsub -I -- ${tempfile}"
+    rm ${tempfile}
+}
 gitk_all(){
    command gitk --all $@ &
 }
@@ -73,7 +156,7 @@ function orgman(){
 }
 
 function p.setup-intel(){
-    source ~sici000/ci-env/latest/ubuntu-18.04-amd-64/intel-19.0.3.199.sh
+    source $(repos -get-dir ci-env)/latest/rhel-8-icelake-64/inteloneapi-2022.1.2.sh
 }
 function p.setup-gnu(){
     source ~sici000/ci-env/latest/ubuntu-18.04-amd-64/gnu-9.3.0.sh
@@ -81,16 +164,10 @@ function p.setup-gnu(){
 
 function p.ordenv()
 {
-    export ORDENV_SITE_PROFILE=20191220
-    export ORDENV_COMM_PROFILE=eccc/20200409
-    export ORDENV_GROUP_PROFILE=eccc/cmc/1.9.3
-    . /fs/ssm/main/env/ordenv-boot-20200204.sh
+    source ~/.profile_officiel
 
-    export EC_ATOMIC_PROFILE_VERSION=1.11.0
-    . /fs/ssm/eccc/mrd/ordenv/profile/check_profile
-
-    # export PATH=$HOME/fs1/bin:${PATH}
-    # complete -o default source .
+    export PATH=$HOME/fs1/bin:${PATH}
+    complete -o default source .
 }
 
 function _p.require_ordenv()
@@ -156,5 +233,14 @@ function emacs-daemon(){
     tmux send-keys -t emacs-daemon 'emacs --fg-daemon
 '
 }
+
+function vim(){
+    if [[ "$@" == "" ]] ; then
+        command vim -p .
+    else
+        command vim -p "$@"
+    fi
+}
+
 
 main

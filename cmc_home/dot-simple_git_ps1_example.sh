@@ -20,6 +20,14 @@ GIT_PS1_SHOWDIRTYSTATE=true
 GIT_PS1_SHOWTIMESINCECOMMIT=true
 PROMPT_COMMAND=my_git_ps1
 
+function source(){
+    case $1 in
+        *intel*) PHIL_EC_ENV=intel
+            ;;
+    esac
+
+    builtin source $1
+}
 ################################################################################
 # Calls __git_ps1 which sets PS1
 # Uses the 3 argument form which results in PS1=$1$(printf -- $3 $gitstring)$2
@@ -38,12 +46,16 @@ function my_git_ps1(){
 
     # Color of the non-git part
     c="\[\033[35m\]"
+    envc="\[\033[34m\]"
     nc="\[\033[0m\]"
 
     ps1_exit_code=$(__ps1_format_exit_code $previous_exit_code)
 
     # Arguments for the 3 arg form of __git_ps1
     pre="${ps1_exit_code}${c}\u@\h:$(git_pwd)${nc}"
+    if [[ "$PHIL_EC_ENV" != "" ]] ; then
+        pre="${pre} ${envc}[${PHIL_EC_ENV}]${nc}"
+    fi
     post="${c} \\\$${nc} "
     tslc=$(git_time_since_last_commit)
     gitstring_format=" (%s${tslc:+ $tslc})"

@@ -1,7 +1,13 @@
-export ORDENV_SITE_PROFILE=20220214
-export ORDENV_COMM_PROFILE=eccc/20220217
-export ORDENV_GROUP_PROFILE=eccc/cmc/1.9.7
-. /fs/ssm/main/env/ordenv-boot-20201118.sh
+# From 2022-04-01
+# Uses ldpreload to compensate for the slowness that can be caused by
+# LD_LIBRARY_PATH being pretty big.
+#
+# From JP:
+#
+#    Following HPCO's announcement below of the release of new site and
+#    community profiles, RPN has released a new 1.17 profile containing these
+#    updates. Note also that this profile adds libc.so.6 in the LD_PRELOAD
+#    variable on U2 in order to speed up the launching of shell commands and to
+#    limit the impact of LD_LIBRARY_PATH.
 
-export EC_ATOMIC_PROFILE_VERSION=1.15.0
-. $ARMNLIB_SHARE/check_profile_1.1.0
+source /fs/ssm/eccc/mrd/ordenv/profile/1.17.0
