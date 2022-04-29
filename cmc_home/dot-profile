@@ -59,7 +59,6 @@ function main_interactive(){
 
     source $HOME/.ssh/ssh_functions.sh
     source $HOME/.simple_git_ps1_example.sh
-    source $HOME/_phil_cd.bash
 
     _source_dir $HOME/.bash_completion.d
     _source_dir $HOME/fs1/etc/bash_completion.d
