@@ -164,13 +164,15 @@ function p.setup-intel(){
 
 function p.setup-gnu(){
     source ~sici000/ci-env/latest/ubuntu-18.04-amd-64/gnu-9.3.0.sh
+    export PHIL_EC_ENV=gnu
+    complete -o default source .
 }
 
 function p.ordenv()
 {
     source ~/.profile_officiel
-
     export PATH=$HOME/fs1/bin:${PATH}
+    export PHIL_EC_ENV=ORDENV
     complete -o default source .
 }
 
