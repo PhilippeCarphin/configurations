@@ -155,8 +155,13 @@ function orgman(){
 }
 
 function p.setup-intel(){
-    source $(repos -get-dir ci-env)/latest/rhel-8-icelake-64/inteloneapi-2022.1.2.sh
+    time {
+        source $(repos -get-dir ci-env)/latest/rhel-8-icelake-64/inteloneapi-2022.1.2.sh
+        export PHIL_EC_ENV=intel
+        complete -o default source .
+    }
 }
+
 function p.setup-gnu(){
     source ~sici000/ci-env/latest/ubuntu-18.04-amd-64/gnu-9.3.0.sh
 }

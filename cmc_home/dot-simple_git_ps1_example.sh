@@ -20,14 +20,6 @@ GIT_PS1_SHOWDIRTYSTATE=true
 GIT_PS1_SHOWTIMESINCECOMMIT=true
 PROMPT_COMMAND=my_git_ps1
 
-function source(){
-    case $1 in
-        *intel*) PHIL_EC_ENV=intel
-            ;;
-    esac
-
-    builtin source $1
-}
 ################################################################################
 # Calls __git_ps1 which sets PS1
 # Uses the 3 argument form which results in PS1=$1$(printf -- $3 $gitstring)$2
