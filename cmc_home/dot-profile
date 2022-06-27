@@ -1,9 +1,11 @@
 #!/bin/bash
-if [[ $TERM == "dumb" ]] ; then
-	unset PROMPT_COMMAND
-	PS1='$ '
-	return
-fi
+# if [[ $TERM == "dumb" ]] ; then
+#     # echo "process 12345678 active"
+#     # trap 'echo "cleaning up temporary directories"; echo "removing TMPDIR whatever"' EXIT
+# 	unset PROMPT_COMMAND
+# 	PS1='$ '
+# 	return
+# fi
 
 main(){
     export STOW_DIR=$HOME/fs1
@@ -15,10 +17,28 @@ main(){
     PATH+=:$HOME/tools/go1.17.5.linux-amd64/bin
     PATH+=:$HOME/tools/node-v16.13.1-linux-x64/bin
     PATH+=:$HOME/tools/rust-1.69.0-x86_64-unknown-linux-gnu/bin
+    if [ -e ~/.ordenv ] ; then
+        p.ordenv
+    fi
+    # p.ordenv # for testing purposes
+    # This seems to be needed to run maestro experiments (at least ordenv)
+    # p.use-maestro
+    export GITLAB_ACCESS_TOKEN=$(cat ~/.ssh/gitlab-access-token)
     if [[ "$-" == *i* ]] ; then
         main_interactive
     fi
 
+}
+
+dots(){
+    sed 's/./●/g' <<< $1
+}
+
+function env(){
+    command env "$@" \
+        | sed "s/^GITLAB_ACCESS_TOKEN=.*/GITLAB_ACCESS_TOKEN=$(dots $GITLAB_ACCESS_TOKEN)/" \
+        | sed 's/\(^BASH_FUNC.*\)/\1  }/' \
+        | grep -v '^}$'
 }
 
 function p.set-menu-complete(){
@@ -43,9 +63,9 @@ function p.set-web-proxy(){
 }
 
 function main_interactive(){
-    # Remove that thing where it looks for Ubuntu packages if a command is not found
     export LESSOPEN="| /usr/bin/source-highlight-esc.sh %s"
     export LESS=" -R"
+    # Remove that thing where it looks for Ubuntu packages if a command is not found
     unset command_not_found_handle
     if [ -e ~sici000/alert ] ; then
         printf "\033[1;31m Alert from sici000\n"
@@ -76,6 +96,9 @@ function main_interactive(){
     export HISTSIZE=
     export HISTFILESIZE=
     export HISTIGNORE="rm -rf *"
+
+    # Merci Philippe Blain :D
+    shopt -s direxpand
 }
 
 function _source_dir(){
@@ -94,7 +117,7 @@ function _source_dir(){
 
 p.qsubi(){
     if ! [ -e "$1" ] ; then
-        echo "ERROR: File '$1' does not exist"
+        echo "ERROR: File '$1' does not exist" >&2
         return 1
     fi
 	# SYNOPSIS
@@ -117,12 +140,12 @@ p.qsubi(){
 
 p.dqsubi(){
     if ! [ -e "$1" ] ; then
-        echo "ERROR: File '$1' does not exist"
+        echo "ERROR: File '$1' does not exist" >&2
         return 1
     fi
 
     if ! tempfile=$(mktemp qsubi-decorated-job-XXXXXXXX.sh) ; then
-        echo "ERROR: Could not create tempfile"
+        echo "ERROR: Could not create tempfile" >&2
         return 1
     fi
 
@@ -136,7 +159,7 @@ p.dqsubi(){
 
 p.pipeqsubi(){
     if ! tempfile=$(mktemp qsubi-decorated-job-XXXXXXXX.sh) ; then
-        echo "ERROR: Could not create tempfile"
+        echo "ERROR: Could not create tempfile" >&2
         return 1
     fi
 
@@ -156,21 +179,24 @@ function orgman(){
 
 function p.setup-intel(){
     time {
-        source $(repos -get-dir ci-env)/latest/rhel-8-icelake-64/inteloneapi-2022.1.2.sh
+        # source $(repos -get-dir ci-env)/latest/rhel-8-icelake-64/inteloneapi-2022.1.2.sh
+        source $(repos -get-dir ci-env)/latest/ppp5/inteloneapi-2022.1.2.sh
         export PHIL_EC_ENV=intel
         complete -o default source .
     }
 }
 
 function p.setup-gnu(){
-    source ~sici000/ci-env/latest/ubuntu-18.04-amd-64/gnu-9.3.0.sh
-    export PHIL_EC_ENV=gnu
-    complete -o default source .
+    time {
+        source $(repos -get-dir ci-env)/latest/rhel-8-amd-64/gnu-9.3.0.sh
+        export PHIL_EC_ENV=gnu
+        complete -o default source .
+    }
 }
 
 function p.ordenv()
 {
-    source ~/.profile_officiel
+    source ~/.profile_officiel_phil
     export PATH=$HOME/fs1/bin:${PATH}
     export PHIL_EC_ENV=ORDENV
     complete -o default source .
@@ -179,7 +205,7 @@ function p.ordenv()
 function _p.require_ordenv()
 {
     if [ -z "$ORDENV_SETUP" ] ; then
-        p.ordenv
+        p.ordenv 1>&2
     fi
 }
 
@@ -199,11 +225,11 @@ function p.clearjobs()
         for jobid in $(jobst -u $USER | grep $USER | cut -d '|' -f 1) ; do
             while jobdel ${jobid} > /dev/null 2>&1
             do
-                echo "Killing job '${jobid}'"
+                echo "Killing job '${jobid}'" >&2
                 sleep 3
             done
-            echo ""
-            echo "Job '${jobid}' successfully killed."
+            echo "" >&2
+            echo "Job '${jobid}' successfully killed." >&2
         done
     )
 }
@@ -226,16 +252,16 @@ function p.relpath(){
     if [[ "$1" == "" ]] ; then
         echo "${FUNCNAME[0]}: ERROR: Missing argument
 
-USAGE: ${FUNCNAME[0]} PATH [START]"
+USAGE: ${FUNCNAME[0]} PATH [START]" >&2
         return 1
     fi
     python3 -c "import os; print(os.path.${FUNCNAME[0]##p.}('$1', start='$2'))"
 }
 
 function emacs-daemon(){
-    echo "Starting detatched tmux session named 'emacs-daemon' on '$(hostname)'"
+    echo "Starting detatched tmux session named 'emacs-daemon' on '$(hostname)'" >&2
     tmux new -s emacs-daemon -d
-    echo "Sending keys 'emacs --fg-daemon' to session"
+    echo "Sending keys 'emacs --fg-daemon' to session" >&2
     tmux send-keys -t emacs-daemon 'emacs --fg-daemon
 '
 }
@@ -248,5 +274,63 @@ function vim(){
     fi
 }
 
+function iris-cmake(){
+    SSM_DEV=/home/ords/cmdd/cmds/nil000/ssm/workspace/
+    echo "Using SSM_DEV = ${SSM_DEV}" >&2
+    cmd='cmake .. -DApp_ROOT=${SSM_DEV}/App -DUSE_MPI_TRACE=ON -DMPI_TRACE_LIBRARY=$(repos -get-dir mpitrace)/src/libmpitrace.so -Drmn_ROOT=${SSM_DEV}/rmn -Dgeoref_ROOT=${SSM_DEV}/georef "$@"'
+    echo $cmd >&2
+    eval echo $cmd >&2
+    eval $cmd
+    # cmake .. -DApp_ROOT=$(repos -get-dir App)/localinstall -DUSE_MPI_TRACE=ON -DMPI_TRACE_LIBRARY=$(repos -get-dir mpitrace)/src/libmpitrace.so "$@"
+}
+
+function sshpwd(){
+    # Replace things like /fs/homeu1/eccc/cmd/cmds/<rest>
+    # with /home/<rest>
+    local dir="$(echo $PWD | sed 's/\/fs\/homeu[12]\/[a-z]\+\/[a-z]\+\/[a-z]\+/\/home/')"
+    ssh -t "$@" "cd $dir ; bash -l"
+}
+
+function p.use-maestro(){
+    _p.require_ordenv
+    . ssmuse-sh -d eccc/cmo/isst/maestro/1.8.4
+}
+
+function p.use-cmds-python(){
+    # https://gitlab.science.gc.ca/hpc/hpcr_upgrade_2/wikis/python
+    . ssmuse-sh -p /fs/ssm/eccc/cmd/cmds/env/python/py39_2022.05.24_rhel-8-icelake-64
+}
+
+function p.use-rpnpy(){
+    . ssmuse-sh -x rpn/MIG/ENV/d/rpnpy/rpnpy_2.1.6
+}
+
+function p.use-python3.9(){
+    export PATH=$HOME/tools/cpython-3.9.9/bin:$PATH
+}
+
+function p.use-python3.7(){
+    # export PATH=$HOME/tools/cpython-3.7.9/bin:$PATH
+    export PATH=$HOME/tools/cpython-3.7.9_ctypes/bin:$PATH
+}
+
+function p.reload-profile(){
+    unset ORDENV_SETUP
+    source ~/.profile
+}
+
+function p.pip(){
+    python3 -m pip --user "$@"
+}
+
+function ordenv-mode(){
+    touch ~/.ordenv
+    printf "Activating ordenv mode\n" >&2
+}
+
+function normal-mode(){
+    printf "Deactivating ordenv mode\n" >&2
+    rm -f ~/.ordenv
+}
 
 main
