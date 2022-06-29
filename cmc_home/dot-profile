@@ -12,8 +12,7 @@ main(){
     export PACKAGE_DIR=$STOW_DIR/Cellar
     export GITLAB_RUNNER_SCIENCE_ORDSOUMET_KEEP_FILES='yas'
     export GONOSUMDB=gitlab.science.gc.ca
-    export PATH=$STOW_DIR/bin::$HOME/bin:$HOME/go/bin:$HOME/.local/bin${PATH:+:$PATH}
-    PATH+=:$HOME/tools/go_1.17.5_all.ssm/bin
+    export PATH=$STOW_DIR/bin:$HOME/bin:$HOME/.local/bin${PATH:+:$PATH}
     PATH+=:$HOME/tools/go1.17.5.linux-amd64/bin
     PATH+=:$HOME/tools/node-v16.13.1-linux-x64/bin
     PATH+=:$HOME/tools/rust-1.69.0-x86_64-unknown-linux-gnu/bin
@@ -37,8 +36,8 @@ dots(){
 function env(){
     command env "$@" \
         | sed "s/^GITLAB_ACCESS_TOKEN=.*/GITLAB_ACCESS_TOKEN=$(dots $GITLAB_ACCESS_TOKEN)/" \
-        | sed 's/\(^BASH_FUNC.*\)/\1  }/' \
-        | grep -v '^}$'
+        | sed 's/\(^BASH_FUNC.*\)/\1 \x1b[33m[...]\x1b[0m }/' \
+        | grep -v '^}$\|^ '
 }
 
 function p.set-menu-complete(){
@@ -68,12 +67,12 @@ function main_interactive(){
     # Remove that thing where it looks for Ubuntu packages if a command is not found
     unset command_not_found_handle
     if [ -e ~sici000/alert ] ; then
-        printf "\033[1;31m Alert from sici000\n"
+        printf "\033[1;31m Alert from sici000\n" >&2
         cat ~sici000/alert
     fi
 
     if [ -e ~phc001/alert ] ; then
-        printf "\033[1;31m Alert from phc001\n"
+        printf "\033[1;31m Alert from phc001\n" >&2
         cat ~phc001/alert
     fi
 
@@ -180,7 +179,11 @@ function orgman(){
 function p.setup-intel(){
     time {
         # source $(repos -get-dir ci-env)/latest/rhel-8-icelake-64/inteloneapi-2022.1.2.sh
-        source $(repos -get-dir ci-env)/latest/ppp5/inteloneapi-2022.1.2.sh
+        # source $(repos -get-dir ci-env)/latest/rhel-8-icelake-64/inteloneapi-2022.1.2.sh
+        # source $(repos -get-dir ci-env)/latest/rhel-8-amd64-64/inteloneapi-2022.1.2.sh file doesn't exist
+        source $(repos -get-dir ci-env)/latest/rhel-8-amd-64/inteloneapi-2022.1.2.sh
+        export SSM_DEV=/home/ords/cmdd/cmds/nil000/ssm/workspace
+        export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$SSM_DEV/App/lib:$SSM_DEV/rmn/lib:$SSM_DEV/vgrid/lib:
         export PHIL_EC_ENV=intel
         complete -o default source .
     }
@@ -275,13 +278,13 @@ function vim(){
 }
 
 function iris-cmake(){
-    SSM_DEV=/home/ords/cmdd/cmds/nil000/ssm/workspace/
-    echo "Using SSM_DEV = ${SSM_DEV}" >&2
-    cmd='cmake .. -DApp_ROOT=${SSM_DEV}/App -DUSE_MPI_TRACE=ON -DMPI_TRACE_LIBRARY=$(repos -get-dir mpitrace)/src/libmpitrace.so -Drmn_ROOT=${SSM_DEV}/rmn -Dgeoref_ROOT=${SSM_DEV}/georef "$@"'
-    echo $cmd >&2
-    eval echo $cmd >&2
+    SSM_DEV=/home/ords/cmdd/cmds/nil000/ssm/workspace
+    printf "Using SSM_DEV from \033[1;35mJP\033[0m = ${SSM_DEV}\n" >&2
+    # cmd='cmake .. -DApp_ROOT=${SSM_DEV}/App -DUSE_MPI_TRACE=ON -DMPI_TRACE_LIBRARY=$(repos -get-dir mpitrace)/src/libmpitrace.so -Drmn_ROOT=${SSM_DEV}/rmn -Dgeoref_ROOT=${SSM_DEV}/georef "$@"'
+    cmd='cmake .. -DApp_ROOT=${SSM_DEV}/App -Drmn_ROOT=${SSM_DEV}/rmn -Dgeoref_ROOT=${SSM_DEV}/georef "$@"'
+    printf "Base command \033[34m$cmd\033[0m\n" >&2
+    printf "Evaluated command \033[32m$(eval echo $cmd)\033[0m\n" >&2
     eval $cmd
-    # cmake .. -DApp_ROOT=$(repos -get-dir App)/localinstall -DUSE_MPI_TRACE=ON -DMPI_TRACE_LIBRARY=$(repos -get-dir mpitrace)/src/libmpitrace.so "$@"
 }
 
 function sshpwd(){
@@ -331,6 +334,12 @@ function ordenv-mode(){
 function normal-mode(){
     printf "Deactivating ordenv mode\n" >&2
     rm -f ~/.ordenv
+}
+
+function cddrw(){
+    local d=$(dirname $(readlink -f $(which $1)))
+    printf "\033[33mcd $d\033[0m\n" >&2
+    cd $d
 }
 
 main
