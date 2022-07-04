@@ -290,11 +290,13 @@ function p.use_linuxbrew(){
 }
 
 function p.realpath(){
-    python3 -c "import os; print(os.path.${FUNCNAME[0]##p.}('$1'))"
+    local pyfunc=${FUNCNAME[0]##p.}
+    python3 -c "import os; print(os.path.${pyfunc}('$1'))"
 }
 
 function p.normpath(){
-    python3 -c "import os; print(os.path.${FUNCNAME[0]##p.}('$1'))"
+    local pyfunc=${FUNCNAME[0]##p.}
+    python3 -c "import os; print(os.path.${pyfunc}('$1'))"
 }
 
 function p.relpath(){
@@ -304,7 +306,8 @@ function p.relpath(){
 USAGE: ${FUNCNAME[0]} PATH [START]" >&2
         return 1
     fi
-    python3 -c "import os; print(os.path.${FUNCNAME[0]##p.}('$1', start='$2'))"
+    local pyfunc=${FUNCNAME[0]##p.}
+    python3 -c "import os; print(os.path.${pyfunc}('$1', start='$2'))"
 }
 
 function emacs-daemon(){
