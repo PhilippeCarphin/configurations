@@ -200,6 +200,7 @@ function p.setup-gnu(){
 function p.ordenv()
 {
 
+    printf "\033[33m%s\033[0m\n" "Loading ordenv $(readlink ~/.profile_officiel)"
     #
     # Use a temporary file to capture output of a source command since
     # $(source a_file.sh) would lose the effect of sourcing the file.
@@ -393,14 +394,16 @@ function cddrw(){
 
 p.use-totalview(){
     _p.require_ordenv
-    ssmcmd=". ssmuse-sh -x main/opt/totalview/totalview-2018.0.5"
+    local ssmcmd=". ssmuse-sh -x main/opt/totalview/totalview-2018.0.5"
     printf "\033[33m$ssmcmd\033[0m\n"
     $ssmcmd
 }
 
 p.use-ddt(){
     _p.require_ordenv
-    . ssmuse-sh -x main/opt/forge/21.1.3
+    local ssmcmd=". ssmuse-sh -x main/opt/forge/21.1.3"
+    printf "\033[33m$ssmcmd\033[0m\n"
+    $ssmcmd
 }
 
 main
