@@ -177,13 +177,15 @@ function orgman(){
 }
 
 function p.setup-intel(){
+    if [[ "${PHIL_EC_ENV}" == *intel* ]] ; then
+        return 0
+    fi
     time {
         # source $(repos -get-dir ci-env)/latest/rhel-8-icelake-64/inteloneapi-2022.1.2.sh
         # source $(repos -get-dir ci-env)/latest/rhel-8-icelake-64/inteloneapi-2022.1.2.sh
         # source $(repos -get-dir ci-env)/latest/rhel-8-amd64-64/inteloneapi-2022.1.2.sh file doesn't exist
         source $(repos -get-dir ci-env)/latest/rhel-8-amd-64/inteloneapi-2022.1.2.sh
         export SSM_DEV=/home/ords/cmdd/cmds/nil000/ssm/workspace
-        export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$SSM_DEV/App/lib:$SSM_DEV/rmn/lib:$SSM_DEV/vgrid/lib:
         export PHIL_EC_ENV=intel${PHIL_EC_ENV:+|${PHIL_EC_ENV}}
         complete -o default source .
     }
@@ -327,7 +329,9 @@ function vim(){
     fi
 }
 
-function iris-cmake(){
+function iris-cmake()
+{
+    p.setup-intel
     SSM_DEV=/home/ords/cmdd/cmds/nil000/ssm/workspace
     printf "Using SSM_DEV from \033[1;35mJP\033[0m = ${SSM_DEV}\n" >&2
     # cmd='cmake .. -DApp_ROOT=${SSM_DEV}/App -DUSE_MPI_TRACE=ON -DMPI_TRACE_LIBRARY=$(repos -get-dir mpitrace)/src/libmpitrace.so -Drmn_ROOT=${SSM_DEV}/rmn -Dgeoref_ROOT=${SSM_DEV}/georef "$@"'
@@ -405,5 +409,15 @@ p.use-ddt(){
     printf "\033[33m$ssmcmd\033[0m\n"
     $ssmcmd
 }
+
+p.setup-iris(){
+    p.setup-intel
+    export SSM_DEV=/home/ords/cmdd/cmds/nil000/ssm
+    export LD_LIBRARY_PATH=$SSM_DEV/workspace/App/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+    export LD_LIBRARY_PATH=$SSM_DEV/workspace/rmn/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+    export LD_LIBRARY_PATH=$SSM_DEV/workspace/vgrid/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+    export LD_LIBRARY_PATH=$SSM_DEV/workspace/georef/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+}
+
 
 main
