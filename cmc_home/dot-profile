@@ -184,7 +184,7 @@ function p.setup-intel(){
         source $(repos -get-dir ci-env)/latest/rhel-8-amd-64/inteloneapi-2022.1.2.sh
         export SSM_DEV=/home/ords/cmdd/cmds/nil000/ssm/workspace
         export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$SSM_DEV/App/lib:$SSM_DEV/rmn/lib:$SSM_DEV/vgrid/lib:
-        export PHIL_EC_ENV=intel
+        export PHIL_EC_ENV=intel${PHIL_EC_ENV:+|${PHIL_EC_ENV}}
         complete -o default source .
     }
 }
@@ -192,16 +192,62 @@ function p.setup-intel(){
 function p.setup-gnu(){
     time {
         source $(repos -get-dir ci-env)/latest/rhel-8-amd-64/gnu-9.3.0.sh
-        export PHIL_EC_ENV=gnu
+        export PHIL_EC_ENV=gnu${PHIL_EC_ENV:+|${PHIL_EC_ENV}}
         complete -o default source .
     }
 }
 
 function p.ordenv()
 {
-    source ~/.profile_officiel_phil
+
+    #
+    # Use a temporary file to capture output of a source command since
+    # $(source a_file.sh) would lose the effect of sourcing the file.
+    #
+    # See https://stackoverflow.com/a/66832192/5795941 which confirms that
+    # to do this we pretty much have to resort to using a temporary file.
+    #
+    local ordenv_output_file=$(mktemp $HOME/.ordenv_output_file_XXXXXXXXXXX)
+
+    #
+    # Source the official profile
+    #
+    source ~/.profile_officiel > ${ordenv_output_file} 2>&1
+    local ordenv_status=$?
+
+    #
+    # Only show the captured output if an error happened during the
+    # loading of ORDENV.  Otherwise, just print the last line which
+    # should be the line showing the time elapsed during the loading
+    # of ORDENV
+    #
+    if [[ ${ordenv_status} != 0 ]] ; then
+        printf "ERRORS occured during loading of ordenv\n" >&2
+        cat ${ordenv_output_file} >&2
+    else
+        printf "Sourcing of ORDENV successful\n" >&2
+        tail -n 1 ${ordenv_output_file}
+    fi
+
+    #
+    # Cleanup tempfile
+    #
+    rm -f ${ordenv_output_file}
+
+    #
+    # Readjust the PATH.  I don't remember why I put this here.  Probably
+    # because it prepends something which I would like to see come after
+    # my own things in $HOME/fs1.
+    #
     export PATH=$HOME/fs1/bin:${PATH}
-    export PHIL_EC_ENV=ORDENV
+
+    #
+    # Variable that is shown in my prompt string so that my PS1 can
+    # show whether ORDENV is loaded or not.
+    #
+    export PHIL_EC_ENV=ORDENV${PHIL_EC_ENV:+|${PHIL_EC_ENV}}
+
+    # Loading ordenv messes up autocompletion on the source command
     complete -o default source .
 }
 
@@ -326,12 +372,12 @@ function p.pip(){
     python3 -m pip --user "$@"
 }
 
-function ordenv-mode(){
+function p.ordenv-mode(){
     touch ~/.ordenv
     printf "Activating ordenv mode\n" >&2
 }
 
-function normal-mode(){
+function p.normal-mode(){
     printf "Deactivating ordenv mode\n" >&2
     rm -f ~/.ordenv
 }
