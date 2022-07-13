@@ -5,6 +5,8 @@
 [alias]
 	st = status
 	logl = log --oneline --decorate --graph --all
+    logd = log --oneline --graph --all --format=demo
+    logp = log --abbrev-commit --decorate --format=ol
 
 [credential]
 	helper = cache --timeout 36000
@@ -31,6 +33,9 @@
 
 [pretty]
 	ol = %C(yellow)%h%C(reset) %C(normal)%s%C(reset) %C(dim white)%an%C(reset) %C(dim blue)(%ad)%C(reset) %C(auto)%d%C(reset)
+    # demo = %C(yellow)%h%Creset %C(cyan)%an%Creset %s -- %C(auto)%d%C(reset)
+    demo = %C(yellow)%h%Creset %C(auto)%d%C(reset) %C(bold white)%<|(80)%s %C(dim blue)%an%Creset
+    # demo = %C(yellow)%h%Creset %C(auto)%d%C(reset) %C(bold white)%<(60)%s %C(dim blue)%an%Creset
 	# like 'ol', but with additional full hash at the end (used by 'logv')
 
 [status]
