@@ -357,7 +357,12 @@ function p.use-maestro(){
 
 function p.use-cmds-python(){
     # https://gitlab.science.gc.ca/hpc/hpcr_upgrade_2/wikis/python
+    if [[ "${PHIL_EC_ENV}" == *CMDS-PY* ]] ; then
+        return 0
+    fi
+    _p.require_ordenv
     . ssmuse-sh -p /fs/ssm/eccc/cmd/cmds/env/python/py39_2022.05.24_rhel-8-icelake-64
+    export PHIL_EC_ENV=${PHIL_EC_ENV:+$PHIL_EC_ENV|}CMDS-PY
 }
 
 function p.use-rpnpy(){
