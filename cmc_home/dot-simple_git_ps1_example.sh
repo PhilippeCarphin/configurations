@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if ! source ~/.git-prompt.sh 2>/dev/null ; then
+if ! source ~/.git-prompt-phil.sh 2>/dev/null ; then
     echo "ERROR : ~/.git-prompt.sh not found"
     echo "Please run 'wget https://raw.githubusercontent.com/git/git/v$(git --version | awk '{print $3}')/contrib/completion/git-prompt.sh -O ~/.git-prompt.sh' or something"
     echo "Note, the only difference is that git-prompt-phil.sh shows a red [UNTRACKED_FILES] instead of a '%' to make you dislike having untracked files"
