@@ -383,10 +383,6 @@ function p.reload-profile(){
     source ~/.profile
 }
 
-function p.pip(){
-    python3 -m pip --user "$@"
-}
-
 function p.ordenv-mode(){
     touch ~/.ordenv-mode
     printf "Activating ordenv mode\n" >&2
