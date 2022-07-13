@@ -422,5 +422,68 @@ p.setup-iris(){
     export LD_LIBRARY_PATH=$SSM_DEV/workspace/georef/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
 }
 
+p.use-vscode(){
+    _p.require_ordenv
+    . ssmuse-sh -x cmd/cmds/apps/vscode/1.38
+}
+
+# Documentation and shortcut for debugging with debugpy and vscode.
+#
+# 
+# Note: I have tested with a python script containing
+#
+#    # print_args.py
+#    import sys
+#    for i, arg in enumerate(sys.argv):
+#         print(f"argv[{i}] = '{arg}'")
+#
+# that doing the eval preserves the smart quotes around $@ so that
+#
+#    p.debugpy print_args.py a "b c" "d e f"
+#
+# does indeed print
+#
+#    i = 0, arg = print_args.py
+#    i = 1, arg = a
+#    i = 2, arg = b c
+#    i = 3, arg = d e f
+p.debugpy(){
+    if [[ "$1" == [0-9]* ]] ; then
+        local port=$1; shift
+    fi
+    local file=$1
+    if [ -z $file ] ; then
+        printf "USAGE: p.debugpy [PORT] FILE [ARGS ...]
+
+The PORT argument is detected as a string of only digits.  Therefore this command doesn't
+work if your filename is only digits but that would be weird.
+
+Run the command and launch the corresponding configuration in VSCode.  It should look like
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    \"version\": \"0.2.0\",
+    \"configurations\": [
+        {
+            \"name\": \"Attach\",
+            \"type\": \"python\",
+            \"request\": \"attach\",
+            \"connect\": {
+                \"host\": \"localhost\",
+                \"port\": 5678
+            }
+        }
+    ]
+}
+\033[1;31mERROR\033[0m: No file specified\n"
+        return 1
+    fi
+    port=${port:-5678}
+    cmd='python3 -m debugpy --wait-for-client --listen $port "$@"'
+    printf "Launching waiting debugger: \033[1;32m$(eval echo $cmd)\033[0m\n"
+    eval $cmd
+
+}
 
 main
