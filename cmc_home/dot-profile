@@ -1,11 +1,11 @@
 #!/bin/bash
-# if [[ $TERM == "dumb" ]] ; then
-#     # echo "process 12345678 active"
-#     # trap 'echo "cleaning up temporary directories"; echo "removing TMPDIR whatever"' EXIT
-# 	unset PROMPT_COMMAND
-# 	PS1='$ '
-# 	return
-# fi
+if [[ $TERM == "dumb" ]] ; then
+    # echo "process 12345678 active"
+    # trap 'echo "cleaning up temporary directories"; echo "removing TMPDIR whatever"' EXIT
+	unset PROMPT_COMMAND
+	PS1='$ '
+	return
+fi
 
 main(){
     export STOW_DIR=$HOME/fs1
