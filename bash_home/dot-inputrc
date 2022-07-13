@@ -1,0 +1,7 @@
+# From Philipe Blain
+# color folder/files during completion
+set colored-stats on
+# color common prefix during completion
+set colored-completion-prefix on
+# add type suffix to items during autocompletion
+set visible-stats on
