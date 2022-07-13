@@ -89,7 +89,6 @@ function main_interactive(){
     alias ls='ls --color -h'
     alias grep='grep --color'
     alias tree='tree -C'
-    alias gitk=gitk_all
     alias make='make VERBOSE='
     alias rmb='rm -rf ../build/*'
 
@@ -170,7 +169,8 @@ p.pipeqsubi(){
     script -c "qsub -I -- ${tempfile}"
     rm ${tempfile}
 }
-gitk_all(){
+
+gitk(){
    command gitk --all $@ &
 }
 
