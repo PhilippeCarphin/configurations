@@ -76,6 +76,8 @@ function main_interactive(){
         cat ~phc001/alert
     fi
 
+    eval $(dircolors -b)
+
     source $HOME/.ssh/ssh_functions.sh
     source $HOME/.simple_git_ps1_example.sh
 
