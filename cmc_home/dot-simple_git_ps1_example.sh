@@ -20,6 +20,7 @@ GIT_PS1_SHOWDIRTYSTATE=true
 GIT_PS1_SHOWTIMESINCECOMMIT=true
 PROMPT_COMMAND=my_git_ps1
 
+
 ################################################################################
 # Calls __git_ps1 which sets PS1
 # Uses the 3 argument form which results in PS1=$1$(printf -- $3 $gitstring)$2
@@ -31,6 +32,7 @@ function my_git_ps1(){
 
     if shopt -op xtrace >/dev/null; then
         user_had_xtrace=true
+        printf "Disabling xtrace during prompt evaluation\n"
     else
         user_had_xtrace=false
     fi
@@ -55,6 +57,7 @@ function my_git_ps1(){
 
     if shopt -op errexit >/dev/null ; then
         user_had_errexit=true
+        printf "Disabling errexit during prompt evaluation\n"
     else
         user_had_errexit=false
     fi
@@ -63,10 +66,12 @@ function my_git_ps1(){
     __git_ps1 "${pre}" "${post}" "${gitstring_format}"
 
     if [[ "${user_had_errexit}" == true ]] ; then
+        printf "Enabling errexit after prompt evaluation\n"
         set -e
     fi
 
     if [[ "${user_had_xtrace}" == true ]] ; then
+        printf "Reenabling xtrace after prompt evaluation\n"
         set -x
     fi
 }
