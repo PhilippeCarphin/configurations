@@ -92,6 +92,9 @@ function main_interactive(){
     alias make='make VERBOSE='
     alias rmb='rm -rf ../build/*'
 
+    # From /etc/profile.d/which2.sh
+    alias which='(alias; declare -f) | /usr/bin/which --tty-only --read-alias --read-functions --show-tilde --show-dot'
+
     export TZ=America/Toronto
     export HISTSIZE=
     export HISTFILESIZE=
