@@ -5,7 +5,8 @@
 [alias]
 	st = status
 	logl = log --oneline --decorate --graph --all
-    logd = log --oneline --graph --all --format=demo
+    logd = log --oneline --graph --format=demo
+    logad = log --all --oneline --graph --format=demo
     logp = log --abbrev-commit --decorate --format=ol
 
 [credential]
