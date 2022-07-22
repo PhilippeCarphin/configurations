@@ -475,7 +475,11 @@ Run the command and launch the corresponding configuration in VSCode.  It should
             \"connect\": {
                 \"host\": \"localhost\",
                 \"port\": 5678
-            }
+            },
+            // With this setting set to false, the debugger will enter library
+            // functions.  Otherwise, doing 'step into' while on a library
+            // function makes us jump over the function, confusing the audience.
+            \"justMyCode\": false
         }
     ]
 }
