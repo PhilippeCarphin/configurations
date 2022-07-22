@@ -493,4 +493,20 @@ Run the command and launch the corresponding configuration in VSCode.  It should
 
 }
 
+function p.org-tangle(){
+    #
+    # Note where the file appears in the command.  I tried to
+    #     emacs --batch -l org -f org-babel-tangle "$@"
+    # because it was simpler but it did not work giving
+    #     wrong type argument: stringp, nil
+    # so I think that the file has to be specified before doing
+    # the -f thing.  Or rather, a filename has to have already
+    # been read before -f is seen by the command parsing code.
+    #
+    local file=$1
+    shift
+    cmd='emacs --batch -l org --eval "(setq org-src-preserve-indentation t)" ${file} -f org-babel-tangle "$@"'
+    printf "Emacs batch command : \033[1;32m$(eval echo $cmd)\033[0m\n"
+    eval $cmd
+}
 main
