@@ -23,7 +23,7 @@ PROMPT_COMMAND=my_git_ps1
 funky_prompt_color_array=(
      21  27  33  39  45 # blue     --(increase-green)--> cyan
      51  50  49  48  47 # cyan     --(decrease blue)---> green
-     46  82 118 156 190 # green    --(increase red)----> yellow
+     46  82 118 154 190 # green    --(increase red)----> yellow
     226 220 214 208 202 # yellow   --(decrease green)--> red
     196 197 198 199 200 # red      --(increase blue)---> magenta
     201 165 129  93  57 # magenta  --(decrease red)----> blue
