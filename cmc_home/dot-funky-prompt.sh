@@ -31,13 +31,21 @@ funky_prompt_color_array=(
 funky_prompt_color_index=$(( RANDOM % ${#funky_prompt_color_array[@]} ))
 
 function print_code_rgb(){
-    echo "red=$(( ($1-16)/36 )), green=$(( (($1-16)%36)/6 )), blue=$(( ($1-16)%6 ))"
+    # Codes describing the RGB cube start at 16
+    # Code - 16 can be interpreted as a number in base 6
+    # where the digits are the RGB values from 0 to 5
+    # with 0 representing none of that color and 5 representing
+    # the maximum value for that color
+    local c=$(($1 - 16))
+    echo "code:$1, code-16:${c}, base6:(R:$(( code_value/36 )), G:$(( (code_value%36)/6 )), B:$(( code_value%6 )))"
 }
 funky_prompt_color_code=
 function set_prompt_color(){
     funky_prompt_color_code="\[\033[38;5;${funky_prompt_color_array[${funky_prompt_color_index}]}m\]"
     # echo "prompt_color = ${funky_prompt_color_array[${color_index}]}"
-    # code_to_rgb ${funky_prompt_color_array[${color_index}]}
+    if ! [ -z ${FUNKY_PROMPT_PRINT_CODE} ] ; then
+        print_code_rgb ${funky_prompt_color_array[${funky_prompt_color_index}]}
+    fi
     funky_prompt_color_index=$(( (funky_prompt_color_index + 1) % ${#funky_prompt_color_array[@]} ))
 }
 
