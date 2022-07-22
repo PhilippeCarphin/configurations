@@ -509,4 +509,23 @@ function p.org-tangle(){
     printf "Emacs batch command : \033[1;32m$(eval echo $cmd)\033[0m\n"
     eval $cmd
 }
+
+################################################################################
+# Remove from end of line.  This function was made because
+# when doing org-babel-tangle in emacs on Windows, even if the
+# file is a UNIX file with LF opened through TRAMP, when tangling
+# the resulting file has CRLF line endings.  Another way is to use
+# the above function p.org-tangle on the UNIX system.  If however
+# the emacs on that system is not the right version or is
+# missing some packages, then it may only be possible to tangle
+# it correctly on the Windows machine's emacs.  In that case
+# this function can be used on the file after.
+################################################################################
+function p.crlf-to-lf(){
+    local file=$1
+    cmd="sed 's/^M$//' \"\$@\""
+    printf "sed command: \033[1;32m$cmd\033[0m\n"
+    sed 's/
+$//' "$@"
+}
 main
