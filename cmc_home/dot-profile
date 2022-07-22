@@ -334,7 +334,7 @@ function vim(){
     fi
 }
 
-function iris-cmake()
+function p.iris-cmake()
 {
     p.setup-intel
     SSM_DEV=/home/ords/cmdd/cmds/nil000/ssm/workspace
