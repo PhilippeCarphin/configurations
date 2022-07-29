@@ -41,6 +41,9 @@ function print_code_rgb(){
 }
 funky_prompt_color_code=
 function set_prompt_color(){
+    if ! [ -z ${FUNKY_PROMPT_PAUSE_COLOR_CHANGE} ] ; then
+        return
+    fi
     funky_prompt_color_code="\[\033[38;5;${funky_prompt_color_array[${funky_prompt_color_index}]}m\]"
     # echo "prompt_color = ${funky_prompt_color_array[${color_index}]}"
     if ! [ -z ${FUNKY_PROMPT_PRINT_CODE} ] ; then
