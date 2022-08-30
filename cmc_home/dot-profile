@@ -1,46 +1,127 @@
 #!/bin/bash
 if [[ $TERM == "dumb" ]] ; then
-    # echo "process 12345678 active"
-    # trap 'echo "cleaning up temporary directories"; echo "removing TMPDIR whatever"' EXIT
-	unset PROMPT_COMMAND
-	PS1='$ '
-	return
+    source ~/.profile_officiel
+    return
 fi
 
-main(){
-    export STOW_DIR=$HOME/fs1
-    export PACKAGE_DIR=$STOW_DIR/Cellar
+#
+# I want what this script does to be the first thing you see when opening it
+# and to have no "naked" code inside the script except for that thing at the
+# top and the call to main at the very end.
+#
+function p.profile.main(){
+    export SSM_DEV=/home/ords/cmdd/cmds/nil000/ssm
+    export STOW_DIR="$HOME/fs1"
+    export PACKAGE_DIR="$STOW_DIR/Cellar"
     export GITLAB_RUNNER_SCIENCE_ORDSOUMET_KEEP_FILES='yas'
     export GONOSUMDB=gitlab.science.gc.ca
-    export PATH=$STOW_DIR/bin:$HOME/bin:$HOME/.local/bin${PATH:+:$PATH}
-    PATH+=:$HOME/tools/go1.17.5.linux-amd64/bin
-    PATH+=:$HOME/tools/node-v16.13.1-linux-x64/bin
-    PATH+=:$HOME/tools/rust-1.69.0-x86_64-unknown-linux-gnu/bin
-    if [ -e ~/.ordenv-mode ] ; then
+    export PATH="$STOW_DIR/bin:$HOME/bin:$HOME/.local/bin${PATH:+:$PATH}"
+    GITLAB_ACCESS_TOKEN="$(cat ~/.ssh/gitlab-access-token)"
+    export GITLAB_ACCESS_TOKEN
+    PATH+=":$HOME/tools/go1.19.linux-amd64/bin"
+    PATH+=":$HOME/tools/node-v16.13.1-linux-x64/bin"
+    PATH+=":$HOME/tools/rust-1.69.0-x86_64-unknown-linux-gnu/bin"
+
+    maybe-load-ordenv
+    maybe-load-maestro
+
+    if [[ "$-" == *i* ]] ; then
+        p.profile.main_interactive
+    fi
+}
+
+
+function p.profile.main_interactive(){
+    p.check-processes
+    p.nice-completion
+    # Remove that thing where it looks for Ubuntu packages if a command is not found
+    # unset command_not_found_handle
+    check-alert-file ~sici000/alert
+    check-alert-file ~/alert
+
+    eval "$(dircolors -b)"
+
+    source "$HOME/.ssh/ssh_functions.sh"
+    source "$HOME/.funky-prompt.sh"
+
+    _source_dir "$HOME/.bash_completion.d"
+    _source_dir "$HOME/fs1/etc/bash_completion.d"
+    _source_dir "$HOME/fs1/etc/profile.d"
+
+
+    alias ls='ls --color -h'
+    alias grep='grep --color'
+    alias tree='tree -C'
+    alias rmb='rm -rf ../build/*'
+    # From /etc/profile.d/which2.sh
+    alias which='(alias; declare -f) | /usr/bin/which --tty-only --read-alias --read-functions --show-tilde --show-dot'
+
+    export TZ=America/Toronto
+    export HISTSIZE=
+    export HISTFILESIZE=
+    export HISTIGNORE="rm -rf *"
+
+    # Merci Philippe Blain :D
+    shopt -s direxpand
+}
+
+
+function check-alert-file(){
+    local alert_file="$1"
+    if [ -e "${alert_file}" ] ; then
+        printf "\033[1;31m Alert from %s\n" "${alert_file}" >&2
+        cat "${alert_file}"
+    fi
+}
+
+function maybe-load-ordenv(){
+    if [ -e ~/.ordenv-mode ] || [ -e ~/.maestro-mode ] ; then
         p.ordenv
     fi
-    # p.ordenv # for testing purposes
-    # This seems to be needed to run maestro experiments (at least ordenv)
-    # p.use-maestro
-    export GITLAB_ACCESS_TOKEN=$(cat ~/.ssh/gitlab-access-token)
-    if [[ "$-" == *i* ]] ; then
-        main_interactive
+}
+
+function maybe-load-maestro(){
+    if [ -e ~/maestro-mode ] ; then
+        p.use-maestro
     fi
-
 }
 
+#
+# Since I put my gitlab access token in an environment variable, and for
+# troubleshooting I often dump my environment to a file, I don't want to
+# have my gitlab access token visible to anyone who looks at that file
+# and I don't want to have to remember to change that files permissions
+#
 dots(){
-    sed 's/./●/g' <<< $1
+    sed 's/./●/g' <<< "$1"
 }
 
+#
+# Adapted version of env which hides my gitlab access token and hides those
+# hideous BASH_FUNCwhatever: env is often piped to sort
+#
 function env(){
     command env "$@" \
-        | sed "s/^GITLAB_ACCESS_TOKEN=.*/GITLAB_ACCESS_TOKEN=$(dots $GITLAB_ACCESS_TOKEN)/" \
+        | sed "s/^GITLAB_ACCESS_TOKEN=.*/GITLAB_ACCESS_TOKEN=$(dots "$GITLAB_ACCESS_TOKEN")/" \
         | sed 's/\(^BASH_FUNC.*\)/\1 \x1b[33m[...]\x1b[0m }/' \
         | grep -v '^}$\|^ '
 }
 
+# DONT USE: Leaving it here to remind myself that this is
+# in fact not equivalent to putting thins in inputrc: by
+# using this function instead of inputrc, I wasn't getting
+# any colored-stats during my autocompletions.
+
+# Each line is equivalent to putting the content of
+# the single quotes in ~/.inputrc
+function p.nice-completion(){
+    bind 'set colored-stats on'
+    bind 'set colored-completion-prefix on'
+    bind 'set visible-stats on'
+}
+
 function p.set-menu-complete(){
+    # I think these things can go in the ~/.inputrc file, I know that
     # make tab cycle through commands after listing
     bind '"\t":menu-complete'
     bind "set show-all-if-ambiguous on"
@@ -55,126 +136,69 @@ function p.set-web-proxy(){
     # and I did            https_proxy=https:// and HTTPS_PROXY=https://
     # EDIT: Turns out my extra 's' at the end was making
     # things not work.
-    export http_proxy=http://webproxy.science.gc.ca:8888/
-    export https_proxy=http://webproxy.science.gc.ca:8888/
-    export HTTP_PROXY=http://webproxy.science.gc.ca:8888/
-    export HTTPS_PROXY=http://webproxy.science.gc.ca:8888/
+    local p=http://webproxy.science.gc.ca:8888/
+    export http_proxy=${p}
+    export https_proxy=${p}
+    export HTTP_PROXY=${p}
+    export HTTPS_PROXY=${p}
 }
 
-function main_interactive(){
-    export LESSOPEN="| /usr/bin/source-highlight-esc.sh %s"
-    export LESS=" -R"
-    # Remove that thing where it looks for Ubuntu packages if a command is not found
-    unset command_not_found_handle
-    if [ -e ~sici000/alert ] ; then
-        printf "\033[1;31m Alert from sici000\n" >&2
-        cat ~sici000/alert
-    fi
-
-    if [ -e ~phc001/alert ] ; then
-        printf "\033[1;31m Alert from phc001\n" >&2
-        cat ~phc001/alert
-    fi
-
-    eval $(dircolors -b)
-
-    source $HOME/.ssh/ssh_functions.sh
-    source $HOME/.funky-prompt.sh
-
-    _source_dir $HOME/.bash_completion.d
-    _source_dir $HOME/fs1/etc/bash_completion.d
-    _source_dir $HOME/fs1/etc/profile.d
-
-
-    alias ls='ls --color -h'
-    alias grep='grep --color'
-    alias tree='tree -C'
-    alias make='make VERBOSE='
-    alias rmb='rm -rf ../build/*'
-
-    # From /etc/profile.d/which2.sh
-    alias which='(alias; declare -f) | /usr/bin/which --tty-only --read-alias --read-functions --show-tilde --show-dot'
-
-    export TZ=America/Toronto
-    export HISTSIZE=
-    export HISTFILESIZE=
-    export HISTIGNORE="rm -rf *"
-
-    # Merci Philippe Blain :D
-    shopt -s direxpand
-}
 
 function _source_dir(){
-    dir=$1
+    dir="$1"
     if ! [ -d "$1" ] ; then
         # No echo so this function can be called on non-existant dirs
         # echo "${FUNCNAME[0]} ERROR: \$1='$1' is not a directory" >&2
         return 1
     fi
     for f in $(env -i ls $dir) ; do
-        if ! source $dir/$f ; then
+        if ! source "$dir/$f" ; then
             echo "${FUNCNAME[0]} ERROR: sourcing '$dir/$f' returned non-zero" >&2
         fi
     done
 }
 
-p.qsubi(){
-    if ! [ -e "$1" ] ; then
-        echo "ERROR: File '$1' does not exist" >&2
-        return 1
-    fi
-	# SYNOPSIS
-	#        qsub [-a <date and time>] [-A <account string>] [-c <checkpoint spec>]
-	#             [-C <directive prefix>] [-e <path>] [-f] [-h]
-	#             [-I [-G [-- <GUI application/script>]] | [-X]] [-j <join>]
-	#             [-J <range> [%<max subjobs]] [-k <discard>] [-l <resource list>]
-	#             [-m <mail events>] [-M <user list>] [-N <name>] [-o <path>]
-	#             [-p <priority>] [-P <project>] [-q <destination>] [-r <y|n>]
-	#             [-R <remove options>] [-S <path list>] [-u <user list>]
-	#             [-v <variable list>] [-V] [-W <additional attributes>] [-z]
-	#             [- | <script> | -- <executable> [<arguments to executable>]]
 
-    qsub -I -- $1
-
-	# When I try doing it this way with a script, it just puts me in an
-    # interactive shell on a compute node and doesn't seem to run my script
-	# qsub -I $1
-}
-
-p.dqsubi(){
+function p.dqsubi(){
     if ! [ -e "$1" ] ; then
         echo "ERROR: File '$1' does not exist" >&2
         return 1
     fi
 
-    if ! tempfile=$(mktemp qsubi-decorated-job-XXXXXXXX.sh) ; then
+    if ! tempfile="$(mktemp qsubi-decorated-job-XXXXXXXX.sh)" ; then
         echo "ERROR: Could not create tempfile" >&2
         return 1
     fi
 
     # Job must have '#!/bin/bash' otherwise it "doesn't work"
-    cat $1 | decorate-script -cd -shebang >> ${tempfile}
+    cat "$1" | decorate-script -cd -shebang >> "${tempfile}"
 
-    chmod +x ${tempfile}
-    qsub -I -- ${tempfile}
-    rm ${tempfile}
+    chmod +x "${tempfile}"
+    qsub -I -- "${tempfile}"
+    rm "${tempfile}"
 }
 
-p.pipeqsubi(){
-    if ! tempfile=$(mktemp qsubi-decorated-job-XXXXXXXX.sh) ; then
+function p.pipeqsubi(){
+    # This funciton shows that we can use the 'script' command to run 'qsubi -I'
+    # when stdin is not a TTY.
+    #
+    # If we wanted to have shell script that would run something interactively
+    # for us using qsub -I directly, it will complain that STDIN is not a tty 
+    # and refuse to do its thing.
+    if ! tempfile="$(mktemp qsubi-decorated-job-XXXXXXXX.sh)" ; then
         echo "ERROR: Could not create tempfile" >&2
         return 1
     fi
 
-    decorate-script -cd -shebang >> ${tempfile}
+    decorate-script -cd -shebang >> "${tempfile}"
 
-    chmod +x ${tempfile}
-    script -c "qsub -I -- ${tempfile}"
-    rm ${tempfile}
+    chmod +x "${tempfile}"
+    script -c "qsub -I -- \"${tempfile}\""
+    # rm "${tempfile}"
 }
 
-gitk(){
-   command gitk --all $@ &
+function gitk(){
+   command gitk --all "$@" &
 }
 
 function orgman(){
@@ -189,8 +213,8 @@ function p.setup-intel(){
         # source $(repos -get-dir ci-env)/latest/rhel-8-icelake-64/inteloneapi-2022.1.2.sh
         # source $(repos -get-dir ci-env)/latest/rhel-8-icelake-64/inteloneapi-2022.1.2.sh
         # source $(repos -get-dir ci-env)/latest/rhel-8-amd64-64/inteloneapi-2022.1.2.sh file doesn't exist
-        source $(repos -get-dir ci-env)/latest/rhel-8-amd-64/inteloneapi-2022.1.2.sh
-        export SSM_DEV=/home/ords/cmdd/cmds/nil000/ssm/workspace
+        source "$(repos -get-dir ci-env)/latest/rhel-8-amd-64/inteloneapi-2022.1.2.sh"
+        export SSM_DEV=/home/ords/cmdd/cmds/nil000/ssm
         export PHIL_EC_ENV=intel${PHIL_EC_ENV:+|${PHIL_EC_ENV}}
         complete -o default source .
     }
@@ -198,12 +222,21 @@ function p.setup-intel(){
 
 function p.setup-gnu(){
     time {
-        source $(repos -get-dir ci-env)/latest/rhel-8-amd-64/gnu-9.3.0.sh
+        source "$(repos -get-dir ci-env)/latest/rhel-8-amd-64/gnu-9.3.0.sh"
         export PHIL_EC_ENV=gnu${PHIL_EC_ENV:+|${PHIL_EC_ENV}}
         complete -o default source .
     }
 }
 
+#
+# This function looks really long but all it does is load ORDENV and only prints
+# the output if there was an error.  It does this by redirecting the output
+# to a tempfile and printing the file if the status after loading ordenv is
+# non-zero.
+#
+# ORDENV reorders PATH elements and messes with the completion of 'source' and
+# '.' so I put back my thing at the front of PATH and restore completion
+# behavior for source and '.'.
 function p.ordenv()
 {
 
@@ -215,12 +248,17 @@ function p.ordenv()
     # See https://stackoverflow.com/a/66832192/5795941 which confirms that
     # to do this we pretty much have to resort to using a temporary file.
     #
-    local ordenv_output_file=$(mktemp $HOME/.ordenv_output_file_XXXXXXXXXXX)
+    local ordenv_output_file
+    ordenv_output_file="$(mktemp "$HOME/.ordenv_output_file_XXXXXXXXXXX")"
 
     #
     # Source the official profile
     #
-    source ~/.profile_officiel > ${ordenv_output_file} 2>&1
+    {
+        echo "On host : $HOSTNAME"
+        echo "At date : $(date)"
+        source ~/.profile_officiel
+    } >> "${ordenv_output_file}" 2>&1
     local ordenv_status=$?
 
     #
@@ -229,31 +267,31 @@ function p.ordenv()
     # should be the line showing the time elapsed during the loading
     # of ORDENV
     #
-    if [[ ${ordenv_status} != 0 ]] ; then
+    if [[ "${ordenv_status}" != 0 ]] ; then
         printf "ERRORS occured during loading of ordenv\n" >&2
-        cat ${ordenv_output_file} >&2
+        cat "${ordenv_output_file}" >&2
     else
         printf "Sourcing of ORDENV successful\n" >&2
-        tail -n 1 ${ordenv_output_file}
+        tail -n 1 "${ordenv_output_file}" >&2
+        rm -f "${ordenv_output_file}"
     fi
 
     #
     # Cleanup tempfile
     #
-    rm -f ${ordenv_output_file}
 
     #
     # Readjust the PATH.  I don't remember why I put this here.  Probably
     # because it prepends something which I would like to see come after
     # my own things in $HOME/fs1.
     #
-    export PATH=$HOME/fs1/bin:${PATH}
+    export PATH="$HOME/fs1/bin:${PATH}"
 
     #
     # Variable that is shown in my prompt string so that my PS1 can
     # show whether ORDENV is loaded or not.
     #
-    export PHIL_EC_ENV=ORDENV${PHIL_EC_ENV:+|${PHIL_EC_ENV}}
+    export PHIL_EC_ENV="ORDENV${PHIL_EC_ENV:+|${PHIL_EC_ENV}}"
 
     # Loading ordenv messes up autocompletion on the source command
     complete -o default source .
@@ -270,7 +308,7 @@ function p.myjobs()
 {
     (
         _p.require_ordenv
-        jobst | grep ${USER} -n
+        jobst | grep "${USER}" -n
         exec 1>/dev/null
     )
 }
@@ -292,18 +330,18 @@ function p.clearjobs()
 }
 
 function p.use_linuxbrew(){
-   export LD_LIBRARY_PATH=$HOME/.local/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
-   export LD_LIBRARY_PATH=$HOME/.linuxbrew/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
-   export PATH=$HOME/.linuxbrew/bin${PATH:+:${PATH}}
+   export LD_LIBRARY_PATH="$HOME/.local/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+   export LD_LIBRARY_PATH="$HOME/.linuxbrew/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+   export PATH="$HOME/.linuxbrew/bin${PATH:+:${PATH}}"
 }
 
 function p.realpath(){
-    local pyfunc=${FUNCNAME[0]##p.}
+    local pyfunc="${FUNCNAME[0]##p.}"
     python3 -c "import os; print(os.path.${pyfunc}('$1'))"
 }
 
 function p.normpath(){
-    local pyfunc=${FUNCNAME[0]##p.}
+    local pyfunc="${FUNCNAME[0]##p.}"
     python3 -c "import os; print(os.path.${pyfunc}('$1'))"
 }
 
@@ -314,7 +352,7 @@ function p.relpath(){
 USAGE: ${FUNCNAME[0]} PATH [START]" >&2
         return 1
     fi
-    local pyfunc=${FUNCNAME[0]##p.}
+    local pyfunc="${FUNCNAME[0]##p.}"
     python3 -c "import os; print(os.path.${pyfunc}('$1', start='$2'))"
 }
 
@@ -327,7 +365,7 @@ function emacs-daemon(){
 }
 
 function vim(){
-    if [[ "$@" == "" ]] ; then
+    if [[ "$*" == "" ]] ; then
         command vim -p .
     else
         command vim -p "$@"
@@ -338,12 +376,12 @@ function p.iris-cmake()
 {
     p.setup-intel
     SSM_DEV=/home/ords/cmdd/cmds/nil000/ssm/workspace
-    printf "Using SSM_DEV from \033[1;35mJP\033[0m = ${SSM_DEV}\n" >&2
+    printf "Using SSM_DEV from \033[1;35mJP\033[0m = %s\n" "${SSM_DEV}" >&2
     # cmd='cmake .. -DApp_ROOT=${SSM_DEV}/App -DUSE_MPI_TRACE=ON -DMPI_TRACE_LIBRARY=$(repos -get-dir mpitrace)/src/libmpitrace.so -Drmn_ROOT=${SSM_DEV}/rmn -Dgeoref_ROOT=${SSM_DEV}/georef "$@"'
-    cmd='cmake .. -DApp_ROOT=${SSM_DEV}/App -Drmn_ROOT=${SSM_DEV}/rmn -Dgeoref_ROOT=${SSM_DEV}/georef "$@"'
-    printf "Base command \033[34m$cmd\033[0m\n" >&2
-    printf "Evaluated command \033[32m$(eval echo $cmd)\033[0m\n" >&2
-    eval $cmd
+    cmd='cmake .. -DApp_ROOT=${SSM_DEV}/App -Drmn_ROOT=${SSM_DEV}/rmn -Dgeoref_ROOT=${SSM_DEV}/georef -DCMAKE_INSTALL_PREFIX=$PWD/../localinstall "$@"'
+    printf "Base command \033[34m%s\033[0m\n" "${cmd}" >&2
+    printf "Evaluated command \033[32m%s\033[0m\n" "$(eval echo "$cmd")" >&2
+    eval "$cmd"
 }
 
 function sshpwd(){
@@ -365,20 +403,11 @@ function p.use-cmds-python(){
     fi
     _p.require_ordenv
     . ssmuse-sh -p /fs/ssm/eccc/cmd/cmds/env/python/py39_2022.05.24_rhel-8-icelake-64
-    export PHIL_EC_ENV=${PHIL_EC_ENV:+$PHIL_EC_ENV|}CMDS-PY
+    export PHIL_EC_ENV="${PHIL_EC_ENV:+$PHIL_EC_ENV|}CMDS-PY"
 }
 
 function p.use-rpnpy(){
     . ssmuse-sh -x rpn/MIG/ENV/d/rpnpy/rpnpy_2.1.6
-}
-
-function p.use-python3.9(){
-    export PATH=$HOME/tools/cpython-3.9.9/bin:$PATH
-}
-
-function p.use-python3.7(){
-    # export PATH=$HOME/tools/cpython-3.7.9/bin:$PATH
-    export PATH=$HOME/tools/cpython-3.7.9_ctypes/bin:$PATH
 }
 
 function p.reload-profile(){
@@ -397,26 +426,34 @@ function p.normal-mode(){
 }
 
 function cddrw(){
-    local d=$(dirname $(readlink -f $(which $1)))
-    printf "\033[33mcd $d\033[0m\n" >&2
-    cd $d
+    local cmd=$1
+    if ! which "${cmd}" 2>/dev/null ; then
+        >&2 echo -e "Usage : ${FUNCNAME[0]} CMD
+
+CMD must be a command"
+        return 1
+    fi
+    local command_location
+    command_location="$(dirname $(readlink -f $(which "${cmd}")))"
+    printf "\033[33mcd %s\033[0m\n" "${command_location}" >&2
+    cd "$command_location"
 }
 
-p.use-totalview(){
+function p.use-totalview(){
     _p.require_ordenv
     local ssmcmd=". ssmuse-sh -x main/opt/totalview/totalview-2018.0.5"
-    printf "\033[33m$ssmcmd\033[0m\n"
+    printf "\033[33m%s\033[0m\n" "${ssmcmd}"
     $ssmcmd
 }
 
-p.use-ddt(){
+function p.use-ddt(){
     _p.require_ordenv
     local ssmcmd=". ssmuse-sh -x main/opt/forge/21.1.3"
-    printf "\033[33m$ssmcmd\033[0m\n"
+    printf "\033[33m%s\033[0m\n" "${ssmcmd}"
     $ssmcmd
 }
 
-p.setup-iris(){
+function p.setup-iris(){
     p.setup-intel
     export SSM_DEV=/home/ords/cmdd/cmds/nil000/ssm
     export LD_LIBRARY_PATH=$SSM_DEV/workspace/App/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
@@ -425,14 +462,14 @@ p.setup-iris(){
     export LD_LIBRARY_PATH=$SSM_DEV/workspace/georef/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
 }
 
-p.use-vscode(){
+function p.use-vscode(){
     _p.require_ordenv
     . ssmuse-sh -x cmd/cmds/apps/vscode/1.38
 }
 
 # Documentation and shortcut for debugging with debugpy and vscode.
 #
-# 
+#
 # Note: I have tested with a python script containing
 #
 #    # print_args.py
@@ -450,7 +487,7 @@ p.use-vscode(){
 #    i = 1, arg = a
 #    i = 2, arg = b c
 #    i = 3, arg = d e f
-p.debugpy(){
+function p.debugpy(){
     if [[ "$1" == [0-9]* ]] ; then
         local port=$1; shift
     fi
@@ -488,7 +525,7 @@ Run the command and launch the corresponding configuration in VSCode.  It should
     fi
     port=${port:-5678}
     cmd='python3 -m debugpy --wait-for-client --listen $port "$@"'
-    printf "Launching waiting debugger: \033[1;32m$(eval echo $cmd)\033[0m\n"
+    printf "Launching waiting debugger: \033[1;32m%s\033[0m\n" "$(eval echo $cmd)"
     eval $cmd
 
 }
@@ -506,7 +543,7 @@ function p.org-tangle(){
     local file=$1
     shift
     cmd='emacs --batch -l org --eval "(setq org-src-preserve-indentation t)" ${file} -f org-babel-tangle "$@"'
-    printf "Emacs batch command : \033[1;32m$(eval echo $cmd)\033[0m\n"
+    printf "Emacs batch command : \033[1;32m%s\033[0m\n" "$(eval echo $cmd)"
     eval $cmd
 }
 
@@ -524,7 +561,7 @@ function p.org-tangle(){
 function p.crlf-to-lf(){
     local file=$1
     cmd="sed 's/^M$//' \"\$@\""
-    printf "sed command: \033[1;32m$cmd\033[0m\n"
+    printf "sed command: \033[1;32m%s\033[0m\n" "${cmd}"
     sed 's/
 $//' "$@"
 }
@@ -537,4 +574,135 @@ function p.igfind(){
     find . -iname "*$1*"
 }
 
-main
+function p.vstm(){
+    ~/my_scripts/vscode-tmux-session.sh
+}
+
+function p.clean-vstm(){
+    rm -f ~/.vscode-tmux-sockets/*
+}
+
+function p.myprocs(){
+    ps -F -u "$USER"
+}
+
+function p.tcheck(){
+    local nb_tmux
+    nb_tmux=$(pgrep -au "$USER" tmux | wc -l)
+    local tmux_color=""
+    if ((nb_tmux > 15)) ; then
+        tmux_color="\033[1;31m"
+    elif ((nb_tmux > 10)) ; then
+        tmux_color="\033[1;33m"
+    fi
+
+    printf "${tmux_color}Number of tmux procs : %s\033[0m\n" "${nb_tmux}"
+}
+
+function p.pcheck(){
+    local nb_procs
+    nb_procs=$(ps -u "$USER" | wc -l)
+    local proc_color=""
+    if ((nb_procs > 200)) ; then
+        proc_color="\033[1;31m"
+    elif ((nb_procs > 150)) ; then
+        proc_color="\033[1;33m"
+    fi
+    printf "${proc_color}Number of processes  : %s\033[0m\n" "${nb_procs}"
+}
+
+function p.check-processes(){
+    p.pcheck
+    p.tcheck
+}
+
+function p.unansi(){
+    sed 's/\x1b\[[0-9;]*m//g' "$@"
+}
+
+function p.setup-gem(){
+    # Following instructions from README.md
+    if [[ -n ${PHIL_GEM_SETUP_DONE} ]] ; then
+        echo "PHIL_GEM_SETUP_DONE=${PHIL_GEM_SETUP_DONE}: GEM setup already done skipping"
+        return 0
+    fi
+    scripts/link-dbase.sh
+    source .eccc_setup_intel
+    source .initial_setup
+    export PHIL_GEM_SETUP_DONE=yep
+}
+
+function p.setup-gem-iris(){
+    p.setup-gem
+    if [[ -n ${PHIL_GEM_IRIS_SETUP_DONE} ]] ; then
+        echo "PHIL_GEM_IRIS_SETUP_DONE=${PHIL_GEM_IRIS_SETUP_DONE}: GEM-iris setup already done, skipping"
+        return 0
+    fi
+    export IRIS_ROOT="$(repos -get-dir iris)/localinstall"
+    export GEOREF_ROOT="${SSM_DEV}/workspace/georef"
+    export APP_ROOT="${SSM_DEV}/workspace/App"
+    export LD_LIBRARY_PATH=${LD_LIBRARY_PATH:+${LD_LIBRARY_PATH}:}${IRIS_ROOT}/lib:${GEOREF_ROOT}/lib:${SSM_DEV}/workspace/vgrid/lib:${SSM_DEV}/workspace/rmn/lib
+    export PHIL_GEM_IRIS_SETUP_DONE=yup
+}
+
+function p.build-gem(){
+    p.setup-gem
+    make cmake
+    make work "$@"
+}
+
+function p.build-gem-iris(){
+    # p.setup-iris
+    p.setup-gem-iris
+    p.build-gem "$@"
+}
+
+function p.qsubi(){
+    qsub -I -lselect=1:ncpus=72:mem=50gb "$@"
+}
+
+function p.quiet-make(){
+    # Most PRN-SI projects have set(CMAKE_VERBOSE_MAKEFILE TRUE) which
+    # means the makefiles verbose by default and require an explicit
+    # 'VERBOSE=' (setting to nothing) to make them non-verbose
+    PHIL_VERBOSE_MAKE=""
+}
+
+function p.verbose-make(){
+    # Most PRN-SI projects have set(CMAKE_VERBOSE_MAKEFILE TRUE) which
+    # means the makefiles verbose by default and require an explicit
+    # 'VERBOSE=' (setting to nothing) to make them non-verbose
+    PHIL_VERBOSE_MAKE=1
+}
+
+
+function make(){
+    if [[ ${HOSTNAME} == *login* ]] ; then
+        for arg in "$@" ; do
+            if [[ "${arg}" == -j* ]] ; then
+                echo "You are on host ${HOSTNAME} ... you should not use '-j'.  Use 'command make $@' to bypass this function if you are sure"
+                return 1
+            fi
+        done
+    fi
+    command make VERBOSE=${PHIL_VERBOSE_MAKE} "$@"
+}
+
+
+function p.dusage(){
+    du --max-depth=1 -h | sort -h
+}
+
+p.pgrep(){
+    #  -f, --full
+    #         The  pattern is normally only matched against the
+    #         process name.  When -f is set, the  full  command
+    #         line is used.
+    #
+    pgrep -u $USER -f "$@"
+}
+
+p.profile.main
+
+unset -f p.profile.main
+unset -f p.profile.main_interactive
