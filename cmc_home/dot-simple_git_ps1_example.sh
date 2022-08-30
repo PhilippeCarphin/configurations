@@ -52,7 +52,8 @@ function my_git_ps1(){
     fi
     post="${c} \\\$${nc} "
     tslc=$(git_time_since_last_commit)
-    gitstring_format=" (%s${tslc:+ $tslc})"
+    submod=$(is_git_submodule)
+    gitstring_format=" (%s${tslc:+ $tslc}${submod:+ ${submod}})"
 
 
     if shopt -op errexit >/dev/null ; then
@@ -75,6 +76,18 @@ function my_git_ps1(){
         set -x
     fi
 }
+
+################################################################################
+# Output white on green 'SM' if we are inside a repo that is a submodule of
+# a super-repo.
+################################################################################
+function is_git_submodule(){
+    submod=$(git rev-parse --show-superproject-working-tree 2>/dev/null || true) # '|| true' is to prevent making the code exit if 'errexit' is on.
+    if [[ "${submod}" != "" ]] ; then
+        echo "\[\033[1;42m\]SM\[\033[0m\]"
+    fi
+}
+
 
 ################################################################################
 # Prints $PWD when outside a git repo and a shortened version of PWD when
