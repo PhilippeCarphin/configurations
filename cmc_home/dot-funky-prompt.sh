@@ -18,9 +18,9 @@ GIT_PS1_SHOWUPSTREAM=verbose
 GIT_PS1_SHOWCOLORHINTS=true
 GIT_PS1_SHOWDIRTYSTATE=true
 GIT_PS1_SHOWTIMESINCECOMMIT=true
-PROMPT_COMMAND=my_git_ps1
+PROMPT_COMMAND=__my_git_ps1
 
-funky_prompt_color_array=(
+__funky_prompt_color_array=(
      21  27  33  39  45 # blue     --(increase-green)--> cyan
      51  50  49  48  47 # cyan     --(decrease blue)---> green
      46  82 118 154 190 # green    --(increase red)----> yellow
@@ -28,31 +28,39 @@ funky_prompt_color_array=(
     196 197 198 199 200 # red      --(increase blue)---> magenta
     201 165 129  93  57 # magenta  --(decrease red)----> blue
 )
-funky_prompt_color_index=$(( RANDOM % ${#funky_prompt_color_array[@]} ))
+__funky_prompt_color_index=$(( RANDOM % ${#__funky_prompt_color_array[@]} ))
 
-function print_code_rgb(){
+__funky_prompt_print_code_rgb(){
     # Codes describing the RGB cube start at 16
     # Code - 16 can be interpreted as a number in base 6
     # where the digits are the RGB values from 0 to 5
     # with 0 representing none of that color and 5 representing
     # the maximum value for that color
     local c=$(($1 - 16))
-    echo "code:$1, code-16:${c}, base6:(R:$(( code_value/36 )), G:$(( (code_value%36)/6 )), B:$(( code_value%6 )))"
-}
-funky_prompt_color_code=
-function set_prompt_color(){
-    if ! [ -z ${FUNKY_PROMPT_PAUSE_COLOR_CHANGE} ] ; then
-        return
-    fi
-    funky_prompt_color_code="\[\033[38;5;${funky_prompt_color_array[${funky_prompt_color_index}]}m\]"
-    # echo "prompt_color = ${funky_prompt_color_array[${color_index}]}"
-    if ! [ -z ${FUNKY_PROMPT_PRINT_CODE} ] ; then
-        print_code_rgb ${funky_prompt_color_array[${funky_prompt_color_index}]}
-    fi
-    funky_prompt_color_index=$(( (funky_prompt_color_index + 1) % ${#funky_prompt_color_array[@]} ))
+    echo "code:$1, code-16:${c}, base6:(R:$(( c/36 )), G:$(( (c % 36)/6 )), B:$(( c % 6 )))"
 }
 
-function is_git_submodule(){
+__funky_prompt_color_code=
+pause-funky-prompt-color-cycle(){
+    FUNKY_PROMPT_PAUSE_COLOR_CYCLE=1
+}
+unpause-funky-prompt-color-cycle(){
+    FUNKY_PROMPT_PAUSE_COLOR_CYCLE=
+}
+
+__funky_prompt_set_prompt_color(){
+    if [[ -n ${FUNKY_PROMPT_PAUSE_COLOR_CYCLE-} ]] ; then
+        return
+    fi
+    __funky_prompt_color_code="\[\033[38;5;${__funky_prompt_color_array[${__funky_prompt_color_index}]}m\]"
+    # echo "prompt_color = ${funky_prompt_color_array[${color_index}]}"
+    if ! [ -z ${FUNKY_PROMPT_PRINT_CODE} ] ; then
+        __funky_prompt_print_code_rgb ${__funky_prompt_color_array[${__funky_prompt_color_index}]}
+    fi
+    __funky_prompt_color_index=$(( (__funky_prompt_color_index + 1) % ${#__funky_prompt_color_array[@]} ))
+}
+
+is_git_submodule(){
     submod=$(git rev-parse --show-superproject-working-tree 2>/dev/null || true) # '|| true' is to prevent making the code exit if 'errexit' is on.
     if [[ "${submod}" != "" ]] ; then
         echo "\[\033[1;42m\]SM\[\033[0m\]"
@@ -65,9 +73,8 @@ function is_git_submodule(){
 # Uses the 3 argument form which results in PS1=$1$(printf -- $3 $gitstring)$2
 # Note only the 2 and 3 argument forms set PS1.
 ################################################################################
-function my_git_ps1(){
-    # save exit code of previous command to use in prompt
-    previous_exit_code=$?
+__my_git_ps1(){
+    local previous_exit_code=$?
 
     if shopt -op xtrace >/dev/null; then
         user_had_xtrace=true
@@ -76,22 +83,22 @@ function my_git_ps1(){
         user_had_xtrace=false
     fi
     set +o xtrace
+    __phil_ps1_deal_with_vscode
 
     # Color of the non-git part
-    # c="\[\033[35m\]"
-    set_prompt_color
-    c=${funky_prompt_color_code}
+    __funky_prompt_set_prompt_color
+    c=${__funky_prompt_color_code}
     envc="\[\033[34m\]"
     nc="\[\033[0m\]"
 
     ps1_exit_code=$(__ps1_format_exit_code $previous_exit_code)
 
     # Arguments for the 3 arg form of __git_ps1
-    pre="${ps1_exit_code}${c}\u@\h:$(git_pwd)${nc}"
+    pre="${c}\u@\h:$(git_pwd)${nc}"
     if [[ "$PHIL_EC_ENV" != "" ]] ; then
         pre="${pre} ${envc}[${PHIL_EC_ENV}]${nc}"
     fi
-    post="${c} \\\$${nc} "
+    post="\n${ps1_exit_code}${c}\\\$${nc} "
     tslc=$(git_time_since_last_commit)
     submod=$(is_git_submodule)
     gitstring_format=" (%s${tslc:+ $tslc}${submod:+ ${submod}})"
@@ -114,6 +121,24 @@ function my_git_ps1(){
         printf "Reenabling xtrace after prompt evaluation\n"
         set -x
     fi
+    # echo "my_git_ps1 END" >&2
+    true
+}
+
+###############################################################################
+# At some point, inside VSCode shell, the displayed exit code was always 1
+# regardless of whether or not the previous command had succeeded or not.
+#
+# I then decided to do 'echo $PROMPT_COMMAND' and found that VSCode had, after
+# bash had loaded my profile, changed PROMPT_COMMAND to
+# __vsc_prompt_command_original which stores the status of the previous command
+# in __vsc_status and then does stuff and by the time this function is called,
+# $? is always 1!
+################################################################################
+__phil_ps1_deal_with_vscode(){
+    if [[ -n ${__vsc_status-} ]] ; then
+        previous_exit_code=${__vsc_status}
+    fi
 }
 
 ################################################################################
@@ -128,12 +153,12 @@ function my_git_ps1(){
 # to
 #    my-git-repo/a/b/c
 ################################################################################
-function git_pwd() {
+git_pwd() {
     if [[ $(git rev-parse --is-inside-work-tree 2>/dev/null) == true ]] ; then
         local repo_dir=$(git rev-parse --show-toplevel 2>/dev/null)
         local outer=$(basename $repo_dir)
         local inner=$(git rev-parse --show-prefix 2>/dev/null)
-        echo "${outer}/${inner}"
+        printf "\[\033[4m\]${outer}${nc}${c}/${inner}"
     else
         echo '\w'
     fi
@@ -143,8 +168,9 @@ function git_pwd() {
 # Print an exit code supplied as an argument.
 # Zero is printed in bold green, anything else is printed in bold red
 ################################################################################
-function __ps1_format_exit_code(){
+__ps1_format_exit_code(){
 	local previous_exit_code=$1
+    # echo "__ps1_format_exit_code: \$1=$1" >&2
 	if [[ $previous_exit_code == 0 ]] ; then
 		color="\[\033[1;32m\]"
 	else
