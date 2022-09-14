@@ -94,6 +94,14 @@ function maybe-load-maestro(){
     fi
 }
 
+lsl(){
+    ls --color=always -la "$@" | less -R
+}
+
+lsg(){
+    ls --color=always -la | grep "$@"
+}
+
 #
 # Since I put my gitlab access token in an environment variable, and for
 # troubleshooting I often dump my environment to a file, I don't want to
@@ -643,6 +651,10 @@ p.use-fstd2nc(){
 
 p.ps(){
     ps -f -u $USER
+}
+
+p.use-thinlinc(){
+    . ssmuse-sh -x main/opt/thinlinc/thinlinc_4.11.0
 }
 
 p.profile.main
