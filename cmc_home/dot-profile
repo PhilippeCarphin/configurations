@@ -33,7 +33,7 @@ function p.profile.main(){
 
 function p.profile.main_interactive(){
     p.check-processes
-    p.nice-completion
+    # p.nice-completion
     # Remove that thing where it looks for Ubuntu packages if a command is not found
     # unset command_not_found_handle
     check-alert-file ~sici000/alert
@@ -43,6 +43,7 @@ function p.profile.main_interactive(){
 
     source "$HOME/.ssh/ssh_functions.sh"
     source "$HOME/.funky-prompt.sh"
+    maybe-source "$HOME/.gem-functions.sh"
 
     _source_dir "$HOME/.bash_completion.d"
     _source_dir "$HOME/fs1/etc/bash_completion.d"
@@ -53,8 +54,8 @@ function p.profile.main_interactive(){
     alias grep='grep --color'
     alias tree='tree -C'
     alias rmb='rm -rf ../build/*'
-    # From /etc/profile.d/which2.sh
-    alias which='(alias; declare -f) | /usr/bin/which --tty-only --read-alias --read-functions --show-tilde --show-dot'
+    # From /etc/profile.d/which2.sh It makes which report what type reports but it only works on RHEL
+    # alias which='(alias; declare -f) | /usr/bin/which --tty-only --read-alias --read-functions --show-tilde --show-dot'
 
     export TZ=America/Toronto
     export HISTSIZE=
@@ -63,6 +64,13 @@ function p.profile.main_interactive(){
 
     # Merci Philippe Blain :D
     shopt -s direxpand
+}
+
+
+function maybe-source(){
+    if [ -f ${1} ] ; then
+        source $1
+    fi
 }
 
 
@@ -258,7 +266,7 @@ function p.ordenv()
         echo "On host : $HOSTNAME"
         echo "At date : $(date)"
         source ~/.profile_officiel
-    } >> "${ordenv_output_file}" 2>&1
+    } &> ${ordenv_output_file}
     local ordenv_status=$?
 
     #
@@ -372,18 +380,6 @@ function vim(){
     fi
 }
 
-function p.iris-cmake()
-{
-    p.setup-intel
-    SSM_DEV=/home/ords/cmdd/cmds/nil000/ssm/workspace
-    printf "Using SSM_DEV from \033[1;35mJP\033[0m = %s\n" "${SSM_DEV}" >&2
-    # cmd='cmake .. -DApp_ROOT=${SSM_DEV}/App -DUSE_MPI_TRACE=ON -DMPI_TRACE_LIBRARY=$(repos -get-dir mpitrace)/src/libmpitrace.so -Drmn_ROOT=${SSM_DEV}/rmn -Dgeoref_ROOT=${SSM_DEV}/georef "$@"'
-    cmd='cmake .. -DApp_ROOT=${SSM_DEV}/App -Drmn_ROOT=${SSM_DEV}/rmn -Dgeoref_ROOT=${SSM_DEV}/georef -DCMAKE_INSTALL_PREFIX=$PWD/../localinstall "$@"'
-    printf "Base command \033[34m%s\033[0m\n" "${cmd}" >&2
-    printf "Evaluated command \033[32m%s\033[0m\n" "$(eval echo "$cmd")" >&2
-    eval "$cmd"
-}
-
 function sshpwd(){
     # Replace things like /fs/homeu1/eccc/cmd/cmds/<rest>
     # with /home/<rest>
@@ -453,14 +449,6 @@ function p.use-ddt(){
     $ssmcmd
 }
 
-function p.setup-iris(){
-    p.setup-intel
-    export SSM_DEV=/home/ords/cmdd/cmds/nil000/ssm
-    export LD_LIBRARY_PATH=$SSM_DEV/workspace/App/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
-    export LD_LIBRARY_PATH=$SSM_DEV/workspace/rmn/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
-    export LD_LIBRARY_PATH=$SSM_DEV/workspace/vgrid/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
-    export LD_LIBRARY_PATH=$SSM_DEV/workspace/georef/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
-}
 
 function p.use-vscode(){
     _p.require_ordenv
@@ -468,25 +456,6 @@ function p.use-vscode(){
 }
 
 # Documentation and shortcut for debugging with debugpy and vscode.
-#
-#
-# Note: I have tested with a python script containing
-#
-#    # print_args.py
-#    import sys
-#    for i, arg in enumerate(sys.argv):
-#         print(f"argv[{i}] = '{arg}'")
-#
-# that doing the eval preserves the smart quotes around $@ so that
-#
-#    p.debugpy print_args.py a "b c" "d e f"
-#
-# does indeed print
-#
-#    i = 0, arg = print_args.py
-#    i = 1, arg = a
-#    i = 2, arg = b c
-#    i = 3, arg = d e f
 function p.debugpy(){
     if [[ "$1" == [0-9]* ]] ; then
         local port=$1; shift
@@ -620,43 +589,6 @@ function p.unansi(){
     sed 's/\x1b\[[0-9;]*m//g' "$@"
 }
 
-function p.setup-gem(){
-    # Following instructions from README.md
-    if [[ -n ${PHIL_GEM_SETUP_DONE} ]] ; then
-        echo "PHIL_GEM_SETUP_DONE=${PHIL_GEM_SETUP_DONE}: GEM setup already done skipping"
-        return 0
-    fi
-    scripts/link-dbase.sh
-    source .eccc_setup_intel
-    source .initial_setup
-    export PHIL_GEM_SETUP_DONE=yep
-}
-
-function p.setup-gem-iris(){
-    p.setup-gem
-    if [[ -n ${PHIL_GEM_IRIS_SETUP_DONE} ]] ; then
-        echo "PHIL_GEM_IRIS_SETUP_DONE=${PHIL_GEM_IRIS_SETUP_DONE}: GEM-iris setup already done, skipping"
-        return 0
-    fi
-    export IRIS_ROOT="$(repos -get-dir iris)/localinstall"
-    export GEOREF_ROOT="${SSM_DEV}/workspace/georef"
-    export APP_ROOT="${SSM_DEV}/workspace/App"
-    export LD_LIBRARY_PATH=${LD_LIBRARY_PATH:+${LD_LIBRARY_PATH}:}${IRIS_ROOT}/lib:${GEOREF_ROOT}/lib:${SSM_DEV}/workspace/vgrid/lib:${SSM_DEV}/workspace/rmn/lib
-    export PHIL_GEM_IRIS_SETUP_DONE=yup
-}
-
-function p.build-gem(){
-    p.setup-gem
-    make cmake
-    make work "$@"
-}
-
-function p.build-gem-iris(){
-    # p.setup-iris
-    p.setup-gem-iris
-    p.build-gem "$@"
-}
-
 function p.qsubi(){
     qsub -I -lselect=1:ncpus=72:mem=50gb "$@"
 }
@@ -677,7 +609,7 @@ function p.verbose-make(){
 
 
 function make(){
-    if [[ ${HOSTNAME} == *login* ]] ; then
+    if ! on_compute_node ; then
         for arg in "$@" ; do
             if [[ "${arg}" == -j* ]] ; then
                 echo "You are on host ${HOSTNAME} ... you should not use '-j'.  Use 'command make $@' to bypass this function if you are sure"
@@ -700,6 +632,17 @@ p.pgrep(){
     #         line is used.
     #
     pgrep -u $USER -f "$@"
+}
+
+p.use-fstd2nc(){
+    # Sebastien Fortier told me about a cool python package that can
+    # read fstd (RPN standard files) in python that doesn't depend on
+    # librmn.
+    . ssmuse-sh -p eccc/crd/ccmr/EC-CAS/master/fstd2nc_0.20220204.3
+}
+
+p.ps(){
+    ps -f -u $USER
 }
 
 p.profile.main
