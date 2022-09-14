@@ -20,14 +20,40 @@ GIT_PS1_SHOWDIRTYSTATE=true
 GIT_PS1_SHOWTIMESINCECOMMIT=true
 PROMPT_COMMAND=__my_git_ps1
 
+################################################################################
+#
+#                     BLACK               R(5)
+#                         +---------------+
+#                         |\              |\
+#                         | \             | \
+#                         |  \            |  \
+#                         |   \B(1)       |   \
+#                         |    +---------------+ M(6)
+#                         |    |          |    |
+#                         |    |          |    |
+#                    G(3) +----|----------+Y(4)|
+#                          \   |           \   |
+#                           \  |            \  |
+#                            \ |             \ |
+#                             \|              \|
+#                              +---------------+ WHITE
+#                            Cy(2)
+#
+# This is the only closed continuous loop that goes along all the edges of the
+# color cube without touch the black or white vertices.
+#
+# See https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit
+################################################################################
+
 __funky_prompt_color_array=(
-     21  27  33  39  45 # blue     --(increase-green)--> cyan
-     51  50  49  48  47 # cyan     --(decrease blue)---> green
-     46  82 118 154 190 # green    --(increase red)----> yellow
-    226 220 214 208 202 # yellow   --(decrease green)--> red
-    196 197 198 199 200 # red      --(increase blue)---> magenta
-    201 165 129  93  57 # magenta  --(decrease red)----> blue
+     21  27  33  39  45 # 1: blue     --(increase green)--> 2: cyan
+     51  50  49  48  47 # 2: cyan     --(decrease blue)---> 3: green
+     46  82 118 154 190 # 3: green    --(increase red)----> 4: yellow
+    226 220 214 208 202 # 4: yellow   --(decrease green)--> 5: red
+    196 197 198 199 200 # 5: red      --(increase blue)---> 6: magenta
+    201 165 129  93  57 # 6: magenta  --(decrease red)----> 1: blue
 )
+
 __funky_prompt_color_index=$(( RANDOM % ${#__funky_prompt_color_array[@]} ))
 
 __funky_prompt_print_code_rgb(){
