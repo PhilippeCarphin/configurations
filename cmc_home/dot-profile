@@ -1,4 +1,17 @@
 #!/bin/bash
+
+function dump-environment(){
+    local envdump_dir=$HOME/envdumps
+    mkdir -p ${envdump_dir}
+    local envdump_file=$(mktemp env_dump_$(TZ=America/Toronto date +%Y-%m-%d_%H:%M:%S)_XXX.txt --tmpdir=${envdump_dir})
+    echo "envdump_file = ${envdump_file}" >&2
+    echo "\$0 = '$0'" >> ${envdump_file}
+    echo "\$@ = '$@'" >> ${envdump_file}
+    command env >> ${envdump_file}
+}
+
+# dump-environment
+
 if [[ $TERM == "dumb" ]] ; then
     source ~/.profile_officiel
     return
@@ -22,9 +35,6 @@ function p.profile.main(){
     PATH+=":$HOME/tools/node-v16.13.1-linux-x64/bin"
     PATH+=":$HOME/tools/rust-1.69.0-x86_64-unknown-linux-gnu/bin"
 
-    maybe-load-ordenv
-    maybe-load-maestro
-
     if [[ "$-" == *i* ]] ; then
         p.profile.main_interactive
     fi
@@ -43,7 +53,12 @@ function p.profile.main_interactive(){
 
     source "$HOME/.ssh/ssh_functions.sh"
     source "$HOME/.funky-prompt.sh"
+    # Append to global history after every command.
+    # .funky-prompt.sh sets PROMPT_COMMAND
+    # so this next line must come AFTER sourcing ~/.funky-prompt.sh
+    PROMPT_COMMAND="history -a ; $PROMPT_COMMAND"
     maybe-source "$HOME/.gem-functions.sh"
+    maybe-source "$HOME/.maestro-functions.sh"
 
     _source_dir "$HOME/.bash_completion.d"
     _source_dir "$HOME/fs1/etc/bash_completion.d"
@@ -51,7 +66,7 @@ function p.profile.main_interactive(){
 
 
     alias ls='ls --color -h'
-    alias grep='grep --color'
+    alias grep='grep -n --color'
     alias tree='tree -C'
     alias rmb='rm -rf ../build/*'
     # From /etc/profile.d/which2.sh It makes which report what type reports but it only works on RHEL
@@ -64,12 +79,17 @@ function p.profile.main_interactive(){
 
     # Merci Philippe Blain :D
     shopt -s direxpand
+
+    if [[ "${PBS_ENVIRONMENT}" == PBS_INTERACTIVE ]] ; then
+        printf "PBS_ENVIRONMENT detected, cd'ing to \$PBS_O_WORKDIR=\033[33m${PBS_O_WORKDIR}\033[0m\n"
+        cd "${PBS_O_WORKDIR}" || return
+    fi
 }
 
 
 function maybe-source(){
-    if [ -f ${1} ] ; then
-        source $1
+    if [ -f "${1}" ] ; then
+        source "$1"
     fi
 }
 
@@ -120,7 +140,7 @@ function env(){
     command env "$@" \
         | sed "s/^GITLAB_ACCESS_TOKEN=.*/GITLAB_ACCESS_TOKEN=$(dots "$GITLAB_ACCESS_TOKEN")/" \
         | sed 's/\(^BASH_FUNC.*\)/\1 \x1b[33m[...]\x1b[0m }/' \
-        | grep -v '^}$\|^ '
+        | command grep -v '^}$\|^ '
 }
 
 # DONT USE: Leaving it here to remind myself that this is
@@ -167,7 +187,7 @@ function _source_dir(){
         # echo "${FUNCNAME[0]} ERROR: \$1='$1' is not a directory" >&2
         return 1
     fi
-    for f in $(env -i ls $dir) ; do
+    for f in $(command env -i ls $dir) ; do
         if ! source "$dir/$f" ; then
             echo "${FUNCNAME[0]} ERROR: sourcing '$dir/$f' returned non-zero" >&2
         fi
@@ -255,7 +275,12 @@ function p.setup-gnu(){
 # behavior for source and '.'.
 function p.ordenv()
 {
-
+    local ORDENV_VERBOSE="yup"
+    if [[ -z "${ORDENV_VERBOSE}" ]] ; then
+        source ~/.profile_officiel
+        complete -o default source .
+        return
+    fi
     printf "\033[33m%s\033[0m\n" "Loading ordenv $(readlink ~/.profile_officiel)"
     #
     # Use a temporary file to capture output of a source command since
@@ -345,11 +370,6 @@ function p.clearjobs()
     )
 }
 
-function p.use_linuxbrew(){
-   export LD_LIBRARY_PATH="$HOME/.local/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
-   export LD_LIBRARY_PATH="$HOME/.linuxbrew/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
-   export PATH="$HOME/.linuxbrew/bin${PATH:+:${PATH}}"
-}
 
 function p.realpath(){
     local pyfunc="${FUNCNAME[0]##p.}"
@@ -381,12 +401,35 @@ function emacs-daemon(){
 }
 
 function vim(){
+    local vimpath
+    case $(hostname) in
+        ppp*) vimpath=$HOME/fs1/bin/vim ;;
+        *)  vimpath=/usr/bin/vim ;;
+    esac
+
     if [[ "$*" == "" ]] ; then
-        command vim -p .
+        ${vimpath} -p .
     else
-        command vim -p "$@"
+        ${vimpath} -p "$@"
     fi
 }
+
+# function vimf(){
+#     local directory=$1
+#     vim $(find ${directory} -type f)
+# }
+# 
+# function cdwqwer(){
+#     local program=$1
+#     local full_path
+#     if ! full_path=$(which ${program}) ; then
+#         echo "Command 'which ${program}' failed.  Aborting"
+#         return 1
+#     fi
+#     local directory=$(dirname ${full_path})
+#     printf "\033[33mcd ${directory}\033[0m"
+#     cd ${directory}
+# }
 
 function sshpwd(){
     # Replace things like /fs/homeu1/eccc/cmd/cmds/<rest>
@@ -438,9 +481,9 @@ CMD must be a command"
         return 1
     fi
     local command_location
-    command_location="$(dirname $(readlink -f $(which "${cmd}")))"
+    command_location="$(dirname "$(readlink -f "$(which "${cmd}")")")"
     printf "\033[33mcd %s\033[0m\n" "${command_location}" >&2
-    cd "$command_location"
+    cd "$command_location" || return
 }
 
 function p.use-totalview(){
@@ -620,7 +663,7 @@ function make(){
     if ! on_compute_node ; then
         for arg in "$@" ; do
             if [[ "${arg}" == -j* ]] ; then
-                echo "You are on host ${HOSTNAME} ... you should not use '-j'.  Use 'command make $@' to bypass this function if you are sure"
+                echo "You are on host ${HOSTNAME} ... you should not use '-j'.  Use 'command make $*' to bypass this function if you are sure"
                 return 1
             fi
         done
@@ -650,12 +693,94 @@ p.use-fstd2nc(){
 }
 
 p.ps(){
-    ps -f -u $USER
+    # Note, 
+    ps -f -u $USER --cols $(tput cols) | sort -k 8
 }
 
 p.use-thinlinc(){
     . ssmuse-sh -x main/opt/thinlinc/thinlinc_4.11.0
 }
+
+p.check_procs_pppn(){
+    local pppn=${1}
+    if ! echo ${pppn} | grep -P "(ppp5)|(ppp6)" &>/dev/null ; then
+        echo "Argument 1 must be ppp5 or ppp6"
+        return 1
+    fi
+
+    for node in ${pppn}login-001 ${pppn}login-002 ; do
+        printf "\033[1;32mLogging in to $node\033[0m\n"
+        ssh -t -J${pppn} ${node} bash -lic true
+    done
+}
+
+p.check_procs_all(){
+    for pppn in ppp5 ppp6 ; do
+        printf "\033[1;35mChecking nodes on ${pppn}\033[0m\n"
+        p.check_procs_pppn ${pppn}
+    done
+}
+
+p.gcd(){
+    local repo_subdir=$1
+    local dir="$(git rev-parse --show-toplevel)/${repo_subdir}"
+    if ! cd $dir; then
+        return 1
+    fi
+    printf "\033[33mcd ${dir}\033[0m\n"
+}
+
+################################################################################
+# Acquire compute node for building and running GEM (or anything else)
+################################################################################
+function p.qsubi(){
+    qsub -I -lselect=1:ncpus=72:mem=50gb "$@"
+}
+
+
+function vimf(){
+    local dir=${1-.}
+    vim $(find $dir -type f)
+}
+
+function vimw(){
+    local cmd=$1
+    if [[ -z "${cmd}" ]] ; then
+        echo "${FUNCNAME[0]}: ERROR: Please provide a command"
+        return 1
+    fi
+
+    local cmd_path
+    if ! cmd_path=$(which ${cmd}) ; then
+        echo "${FUNCNAME[0]}: ERROR: Command not found using which"
+        return 1
+    fi
+    vim ${cmd_path}
+}
+
+function _errprint(){
+    printf "${FUNCNAME[1]}: \033[1;31mERROR\033[0m: $*\n" >&2
+}
+
+function p.view_listing(){
+    local compressed_listing=$1
+    if ! [[ -f "${compressed_listing}" ]] ; then
+        # printf "${FUNCNAME[0]}: \033[1;31mERROR\033[0m: Listing '${compressed_listing}' does not exist\n"
+        _errprint "Listing '${compressed_listing}' does not exist"
+        return 1
+    fi
+    # Assume that mktemp always succeeds
+    local tempfile=$(mktemp uncompressed_listing_XXXXXX.sh)
+    gunzip -c ${compressed_listing} > ${tempfile}
+    vim ${tempfile}
+    if ! rm ${tempfile} ; then
+        _errprint "Could not remove '${tempfile}'"
+    fi
+}
+
+
+
+
 
 p.profile.main
 

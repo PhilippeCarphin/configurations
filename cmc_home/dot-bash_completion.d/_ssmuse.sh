@@ -70,7 +70,7 @@ __ssmuse_sh_get_current_option(){
 }
 
 __suggest_ssmuse_sh_options(){
-	ssmuse_sh_compreply_candidates=" -d"
+	ssmuse_sh_compreply_candidates=" -d -x -f"
 }
 
 __suggest_ssmuse_sh_args_for_option(){
@@ -84,7 +84,7 @@ __suggest_ssmuse_sh_key_d_values(){
 }
 
 p.ssmuse-sh(){
-    . ssmuse-sh
+    . ssmuse-sh "$@"
 }
 
 complete -o default -F __complete_ssmuse_sh ssmuse-sh 'p.ssmuse-sh'
