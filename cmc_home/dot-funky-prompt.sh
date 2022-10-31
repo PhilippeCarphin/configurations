@@ -155,11 +155,19 @@ __my_git_ps1(){
 # At some point, inside VSCode shell, the displayed exit code was always 1
 # regardless of whether or not the previous command had succeeded or not.
 #
-# I then decided to do 'echo $PROMPT_COMMAND' and found that VSCode had, after
-# bash had loaded my profile, changed PROMPT_COMMAND to
+# VSCode launches integrated terminals with
+#
+#   /usr/bin/bash --init-file .../vscode-server/.../shellIntegration-bash.sh
+#
+# which
+# - loads either the ~/.bashrc or one of ~/.bash_profile, ~/.bash_login, ~/.profile
+#   based on VSCODE_SHELL_LOGIN (instead of passing -l to the command becasue it is
+#   incompatible with --init-file)
+#
 # __vsc_prompt_command_original which stores the status of the previous command
-# in __vsc_status and then does stuff and by the time this function is called,
-# $? is always 1!
+# in __vsc_status and then does stuff to let VSCode know whether the command
+# succeeded or failed and then calls what I had set as the PROMPT_COMMAND.
+# And by the time __my_git_ps1 function is called $? is always 1!
 ################################################################################
 __phil_ps1_deal_with_vscode(){
     if [[ -n ${__vsc_status-} ]] ; then

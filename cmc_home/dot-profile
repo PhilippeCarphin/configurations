@@ -10,6 +10,11 @@ function dump-environment(){
     command env >> ${envdump_file}
 }
 
+function reminders(){
+    echo "C-h does backward-word (.inputrc)"
+    echo "C-l does forward-word (.inputrc)"
+}
+
 # dump-environment
 
 if [[ $TERM == "dumb" ]] ; then
@@ -56,7 +61,7 @@ function p.profile.main_interactive(){
     # Append to global history after every command.
     # .funky-prompt.sh sets PROMPT_COMMAND
     # so this next line must come AFTER sourcing ~/.funky-prompt.sh
-    PROMPT_COMMAND="history -a ; $PROMPT_COMMAND"
+    PROMPT_COMMAND="$PROMPT_COMMAND; history -a"
     maybe-source "$HOME/.gem-functions.sh"
     maybe-source "$HOME/.maestro-functions.sh"
 
@@ -73,9 +78,12 @@ function p.profile.main_interactive(){
     # alias which='(alias; declare -f) | /usr/bin/which --tty-only --read-alias --read-functions --show-tilde --show-dot'
 
     export TZ=America/Toronto
-    export HISTSIZE=
-    export HISTFILESIZE=
-    export HISTIGNORE="rm -rf *"
+    HISTSIZE=-1
+    HISTFILESIZE="A non numeric value inhibits truncation"
+    HISTIGNORE="rm -rf *"
+    # A bit too whimsical
+    # HISTTIMEFORMAT=$'\033[1;32m%y-%m-%d \033[1;33m%H\033[0m:\033[1;34m%M\033[0m:\033[1;31m%S\033[0m '
+    HISTTIMEFORMAT=$'\033[1;32m%Y-%m-%d \033[1;33m%H:%M:%S\033[0m '
 
     # Merci Philippe Blain :D
     shopt -s direxpand
@@ -84,6 +92,7 @@ function p.profile.main_interactive(){
         printf "PBS_ENVIRONMENT detected, cd'ing to \$PBS_O_WORKDIR=\033[33m${PBS_O_WORKDIR}\033[0m\n"
         cd "${PBS_O_WORKDIR}" || return
     fi
+    reminders
 }
 
 
@@ -136,12 +145,12 @@ dots(){
 # Adapted version of env which hides my gitlab access token and hides those
 # hideous BASH_FUNCwhatever: env is often piped to sort
 #
-function env(){
-    command env "$@" \
-        | sed "s/^GITLAB_ACCESS_TOKEN=.*/GITLAB_ACCESS_TOKEN=$(dots "$GITLAB_ACCESS_TOKEN")/" \
-        | sed 's/\(^BASH_FUNC.*\)/\1 \x1b[33m[...]\x1b[0m }/' \
-        | command grep -v '^}$\|^ '
-}
+# function env(){
+#     command env "$@" \
+#         | sed "s/^GITLAB_ACCESS_TOKEN=.*/GITLAB_ACCESS_TOKEN=$(dots "$GITLAB_ACCESS_TOKEN")/" \
+#         | sed 's/\(^BASH_FUNC.*\)/\1 \x1b[33m[...]\x1b[0m }/' \
+#         | command grep -v '^}$\|^ '
+# }
 
 # DONT USE: Leaving it here to remind myself that this is
 # in fact not equivalent to putting thins in inputrc: by
@@ -721,14 +730,145 @@ p.check_procs_all(){
     done
 }
 
-p.gcd(){
-    local repo_subdir=$1
-    local dir="$(git rev-parse --show-toplevel)/${repo_subdir}"
-    if ! cd $dir; then
+git_cd(){
+    local dir repo_subdir
+    local repo_subdir="${1##:}"
+    if ! dir="$(git rev-parse --show-toplevel)/${repo_subdir}" ; then
+        echo "${FUNCNAME[0]}: ERROR: cd ${1} see above"
         return 1
     fi
+
+    if ! cd "$dir"; then
+        echo "${FUNCNAME[0]}: ERROR: cd ${1} see above"
+        return 1
+    fi
+
     printf "\033[33mcd ${dir}\033[0m\n"
 }
+
+cd(){
+    if [[ "${1}" == :* ]] ; then
+        git_cd "${1}"
+    else
+        command cd "$@"
+    fi
+}
+
+_cd_phil(){
+    local IFS='
+'
+    local cur prev words cword;
+    _init_completion || return;
+    if [[ "${words[1]}" == :* ]] ; then
+        # _complete_git_cd
+        _complete_git_cd_with_colons
+    else
+        _cd
+    fi
+}
+
+
+################################################################################
+# Complete paths starting with ':' starting from the root of the current git
+# repository.
+################################################################################
+_complete_git_cd(){
+    # echo "======================================" >> ~/.log.txt
+    COMPREPLY=()
+    local IFS=$'\n'
+
+    compopt -o filenames
+    local cur prev words cword git_repo
+    _init_completion || return;
+
+    if ! git_repo="$(git rev-parse --show-toplevel 2>/dev/null)" ; then
+        return 1
+    fi
+
+    # Complete 'cd :' to 'cd :/'.  This is important since otherwise, we
+    # risk getting candidates from the parent directory of the git repo:
+    # If we are in /home/phc001/repo but /home/phc001/repo_alternate exists,
+    # then without this, compgen -d /home/phc001/repo will give those two
+    # directories.
+    if [[ "${cur}" == : ]] ; then
+        COMPREPLY=("/")
+        return
+    fi
+
+    # Because COMP_WORDBREAKS contains ':', when the command line is 'cd :',
+    # the words array is ('cd' ':') in which case we do the above completion.
+    # In every other case such as 'cd :/a', the words array is ('cd' ':' '/a')
+    # If we wanted to keep the words as they are on the command line without
+    # separating on colons, then we need to do as in _complete_git_cd_with_colons
+    # and use __rassemble_comp_words_by_ref and __ltrim_colon_completions
+    if [[ "${prev}" != : ]] ; then
+        return
+    fi
+
+    full_cur="${git_repo}${cur#:}"
+
+    local i=0
+    local candidates=( $(compgen -d -- ${full_cur}) )
+    for full_path in "${candidates[@]}" ; do
+        relative_path="${full_path##${top}}/"
+        COMPREPLY[i++]="${relative_path}"
+    done
+}
+
+################################################################################
+# Complete paths starting with ':' starting from the root of the current git
+# repository.  This is an alternate version that I made to figure out how to
+# use deal with completing words that contain colons.  The first one is easier
+# since we just deal with the part after the colon separately and return
+# candidates for the part that comes after the colon.  This one is not so
+# hard either.
+################################################################################
+_complete_git_cd_with_colons(){
+    local top IFS='
+'
+    echo "======================================" >> ~/.log.txt
+    compopt -o filenames
+    if ! top="$(git rev-parse --show-toplevel)" ; then
+        return
+    fi
+
+
+    # Local is very important otherwise full_words and full_cword would
+    # become global variables that would grow every time __reassemble_comp_words_by_ref
+    # is called.  I could also do '_init_completion -n :'.  Either way the call
+    # to __ltrim_colon_completion is required at the end.
+    local full_words full_cword;
+    __reassemble_comp_words_by_ref ':' full_words full_cword
+    # echo "full_words = ${full_words[@]}" >> ~/.log.txt
+
+    local cur=${full_words[full_cword]}
+
+
+    if [[ "${cur}" == ":" ]] ; then
+        COMPREPLY=(":/")
+        __ltrim_colon_completions ':'
+        return
+    fi
+
+    if ! [[ "${cur}" == :* ]] ; then
+        return
+    fi
+
+    full_cur=${top}${cur#:}
+    candidates=($(compgen -d -- ${full_cur}))
+    local i=0
+    for full_path in "${candidates[@]}" ; do
+        # echo "d = ${d}" >> ~/.log.txt
+        # echo "s = ${s}" >> ~/.log.txt
+        relative_path=:${d##${top}}/
+        COMPREPLY[i++]=${relative_path}
+    done
+    __ltrim_colon_completions ':'
+
+}
+
+complete -o nospace -F _cd_phil cd
+
 
 ################################################################################
 # Acquire compute node for building and running GEM (or anything else)
