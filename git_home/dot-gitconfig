@@ -13,6 +13,8 @@
     cfind =  "!f() { : git ls-files ; git -C \"${GIT_PREFIX}\" --work-tree=$PWD ls-files | grep \"$@\"; }; f"
     findr =  "!f() { : git ls-files ; git -C \"${GIT_PREFIX}\" --work-tree=$PWD lsr :/\\*\"$1\"\\*; }; f"
     lsr = ls-files --recurse-submodule
+    ldapm = "!f() { result=$(ldapsearch -xLLL \"(|(cn=*$1*)(uid=$1))\"); name=$(printf \"$result\" | \\grep ^cn | awk -F': ' '{print $2}'); mail=$(printf \"$result\" | \\grep ^mail | awk -F': ' '{print $2}'); echo \"$name <${mail,,}>\" | /home/phc001/map_emails.py ; }; f"
+    ldap = "!f() { result=$(ldapsearch -xLLL \"(|(cn=*$1*)(uid=$1))\"); name=$(printf \"$result\" | \\grep ^cn | awk -F': ' '{print $2}'); mail=$(printf \"$result\" | \\grep ^mail | awk -F': ' '{print $2}'); echo \"$name <${mail,,}>\" ; }; f"
 
 [credential]
 	helper = cache --timeout 36000

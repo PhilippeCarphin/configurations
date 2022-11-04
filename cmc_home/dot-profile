@@ -47,7 +47,7 @@ function p.profile.main(){
 
 
 function p.profile.main_interactive(){
-    p.check-processes
+    # p.check-processes
     # p.nice-completion
     # Remove that thing where it looks for Ubuntu packages if a command is not found
     # unset command_not_found_handle
@@ -84,6 +84,7 @@ function p.profile.main_interactive(){
     # A bit too whimsical
     # HISTTIMEFORMAT=$'\033[1;32m%y-%m-%d \033[1;33m%H\033[0m:\033[1;34m%M\033[0m:\033[1;31m%S\033[0m '
     HISTTIMEFORMAT=$'\033[1;32m%Y-%m-%d \033[1;33m%H:%M:%S\033[0m '
+    GIT_CD_VERBOSE=yes
 
     # Merci Philippe Blain :D
     shopt -s direxpand
@@ -93,6 +94,9 @@ function p.profile.main_interactive(){
         cd "${PBS_O_WORKDIR}" || return
     fi
     reminders
+
+    # Restore completion since 
+    # complete -o default source .
 }
 
 
@@ -142,15 +146,18 @@ dots(){
 }
 
 #
-# Adapted version of env which hides my gitlab access token and hides those
-# hideous BASH_FUNCwhatever: env is often piped to sort
-#
-# function env(){
-#     command env "$@" \
-#         | sed "s/^GITLAB_ACCESS_TOKEN=.*/GITLAB_ACCESS_TOKEN=$(dots "$GITLAB_ACCESS_TOKEN")/" \
-#         | sed 's/\(^BASH_FUNC.*\)/\1 \x1b[33m[...]\x1b[0m }/' \
-#         | command grep -v '^}$\|^ '
-# }
+# - Change "GITLAB_ACCESS_TOKEN=<the-token>" to "GITLAB_ACCESS_TOKEN=<dots>"
+#   only because I think it's cool and it took me two seconds to code.
+# - Change lines "BASH_FUNC_thing(){ stuff" to "BASH_FUNC_thing(){ stuff [...] }"
+# - Remove all lines starting with a space because they are part of multiline
+#   values of those BASH_FUNC_thing
+dump-env(){
+    command env "$@" \
+        | sed "s/^GITLAB_ACCESS_TOKEN=.*/GITLAB_ACCESS_TOKEN=$(dots "$GITLAB_ACCESS_TOKEN")/" \
+        | sed 's/\(^BASH_FUNC.*\)/\1 \x1b[33m[...]\x1b[0m }/' \
+        | command grep -v '^}$\|^ ' \
+        | sort
+}
 
 # DONT USE: Leaving it here to remind myself that this is
 # in fact not equivalent to putting thins in inputrc: by
@@ -287,7 +294,6 @@ function p.ordenv()
     local ORDENV_VERBOSE="yup"
     if [[ -z "${ORDENV_VERBOSE}" ]] ; then
         source ~/.profile_officiel
-        complete -o default source .
         return
     fi
     printf "\033[33m%s\033[0m\n" "Loading ordenv $(readlink ~/.profile_officiel)"
@@ -417,11 +423,28 @@ function vim(){
     esac
 
     if [[ "$*" == "" ]] ; then
-        ${vimpath} -p .
+        VIMPATH=${vimpath} git_vim -p .
     else
-        ${vimpath} -p "$@"
+        VIMPATH=${vimpath} git_vim -p "$@"
     fi
 }
+
+git_vim(){
+    declare -a args
+    #
+    # This seems like it could be reusable behavior to enable many commands
+    # to open paths starting with ':' as relative to the root of a git repo
+    if ! __resolve_git_colons "$@" &>/dev/null ; then
+        args=("$@")
+    fi
+    echo "Running command 'vim -p ${args[@]}'"
+    if [[ -n "${VIMPATH}" ]] ; then
+        ${VIMPATH} "${args[@]}"
+    else
+        command vim "${args[@]}"
+    fi
+}
+
 
 # function vimf(){
 #     local directory=$1

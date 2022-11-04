@@ -1,12 +1,40 @@
-# From Philipe Blain
-
+# These 3 are from Philipe Blain
 # color folder/files during completion
-# This setting is deactivated because completion candidates for non-file items
-# are colored as if they were broken links which for me is flashing red
-# set colored-stats on
-
+set colored-stats on
 # color common prefix during completion
 set colored-completion-prefix on
-
 # add type suffix to items during autocompletion
 set visible-stats on
+
+
+$if mode=emacs
+    $if Bash
+        # Causes references to previous commands to be expanded when pressing
+        # space after something like '!3:1' to get the first argument of the
+        # 3rd previous command in the history
+        #
+        # It needs to be in a conditionnal so that it only happens with Bash
+        # otherwise it will disable your ability to enter spaces in other things
+        # that use readline like the Python interactive shell.
+        Space: magic-space
+    $endif
+    # Originally, C-f is forward-char and M-f is forward-word but I use
+    # the Fn-' to produce right-arrow.
+    "\C-f": forward-word # Originally forward-char
+    "\C-b": backward-word # Originally backward-char
+    "\C-t": dynamic-complete-history
+
+    # "\e[Z": forward-word
+    # "\C-h": backward-word
+    "\C-x \C-r": re-read-init-file
+    "\C-n": non-incremental-forward-history-search
+    # Takes what you already have, puts it in "$(...)" and ends with your cursor
+    # at the start of the line.  Fun thing to try but you could just type '| xargs'
+    # instead.  But it's a cool demo of how you can customize readline
+    # - go to start (\C-a)
+    # - Insert ' "$('
+    # - go to end (\C-e)
+    # - insert '"'
+    # - go to start
+    "\e\C-m": '\C-a "$(\C-e)"\C-a'
+$endif

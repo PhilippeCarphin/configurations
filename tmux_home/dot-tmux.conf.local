@@ -313,6 +313,7 @@ bind -T copy-mode-vi Enter send-keys -X copy-pipe-and-cancel “reattach-to-user
 set -g default-command '\
     env -i \
         DISPLAY=$DISPLAY \
+        XAUTHORITY=$XAUTHORITY \
         HOME=$HOME \
         LANG=$LANG \
         LC_TERMINAL=$LC_TERMINAL \

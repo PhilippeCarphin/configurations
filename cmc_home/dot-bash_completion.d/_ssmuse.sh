@@ -24,6 +24,9 @@ __complete_ssmuse_sh() {
 	__suggest_ssmuse_sh_compreply_candidates >> ~/log.txt 2>&1
 
 
+    if (( ${#COMPREPLY[@]} )) ; then
+        return
+    fi
 	# Compgen: takes the list of candidates and selects those matching ${cur}.
 	# Once COMPREPLY is set, the shell does the rest.
 	COMPREPLY=( $(compgen -W "${ssmuse_sh_compreply_candidates}" -- ${cur}))
@@ -80,7 +83,37 @@ __suggest_ssmuse_sh_args_for_option(){
 }
 
 __suggest_ssmuse_sh_key_d_values(){
+    __suggest_ssmuse_sh_packages
+    return
     ssmuse_sh_compreply_candidates="$(env -i ls ~phc001/site4/ssm | sed 's/^/\/home\/phc001\/site4\/ssm\//')"
+}
+
+__suggest_bases(){
+    compopt -o nospace
+    ssmuse_sh_compreply_candidates="comm/ eccc/ hpci/ hpco/ hpcs/ main/ sys/ cmd/ cmo/ crd/ isst/ mrd/"
+}
+
+__suggest_ssmuse_sh_packages(){
+    #
+    # If it's an absolute path or a relative path
+    # let default file completion handle it
+    #
+    compopt -o filenames
+    if [[ "${cur}" == /* ]] || [[ "${cur}" == .* ]] ; then
+        return
+    fi
+    case ${cur} in
+        comm/*|eccc/*|hpci/*|hpco/*|hpcs/*|main/*|sys/*)
+            COMPREPLY[0]="/fs/ssm/${cur}"
+            return
+            ;;
+        cmd/*|cmo/*|crd/*|isst/*|mrd/*)
+            COMPREPLY[0]="/fs/ssm/eccc/${cur}"
+            return
+            ;;
+    esac
+
+    __suggest_bases
 }
 
 p.ssmuse-sh(){

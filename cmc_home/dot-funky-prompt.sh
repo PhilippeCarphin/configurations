@@ -120,11 +120,11 @@ __my_git_ps1(){
     ps1_exit_code=$(__ps1_format_exit_code $previous_exit_code)
 
     # Arguments for the 3 arg form of __git_ps1
-    pre="${c}\u@\h:$(git_pwd)${nc}"
+    pre="${ps1_exit_code}\n${c}\u@\h:$(git_pwd)${nc}"
     if [[ "$PHIL_EC_ENV" != "" ]] ; then
         pre="${pre} ${envc}[${PHIL_EC_ENV}]${nc}"
     fi
-    post="\n${ps1_exit_code}${c}\\\$${nc} "
+    post="\n${c}\\\$${nc} "
     tslc=$(git_time_since_last_commit)
     submod=$(is_git_submodule)
     gitstring_format=" (%s${tslc:+ $tslc}${submod:+ ${submod}})"
@@ -205,10 +205,13 @@ git_pwd() {
 __ps1_format_exit_code(){
 	local previous_exit_code=$1
     # echo "__ps1_format_exit_code: \$1=$1" >&2
+    local symbol
 	if [[ $previous_exit_code == 0 ]] ; then
 		color="\[\033[1;32m\]"
+        symbol="\u2705"
 	else
         color="\[\033[1;31m\]"
+        symbol="\u274c"
     fi
     printf " ${color}$previous_exit_code\[\033[0m\] "
 }
