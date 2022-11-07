@@ -57,7 +57,8 @@ function p.profile.main_interactive(){
     eval "$(dircolors -b)"
 
     source "$HOME/.ssh/ssh_functions.sh"
-    source "$HOME/.funky-prompt.sh"
+    # source "$HOME/.funky-prompt.sh"
+    source "$HOME/.powerline.sh"
     # Append to global history after every command.
     # .funky-prompt.sh sets PROMPT_COMMAND
     # so this next line must come AFTER sourcing ~/.funky-prompt.sh
@@ -195,7 +196,14 @@ function p.set-web-proxy(){
     export HTTPS_PROXY=${p}
 }
 
+function p.unset-web-proxy(){
+    unset http_proxy
+    unset https_proxy
+    unset HTTP_PROXY
+    unset HTTPS_PROXY
+}
 
+    p=http://webproxy.science.gc.ca:8888/
 function _source_dir(){
     dir="$1"
     if ! [ -d "$1" ] ; then
