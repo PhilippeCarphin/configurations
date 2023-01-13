@@ -1,26 +1,22 @@
 #!/bin/bash
 
-function log(){
-    # echo $@ >> ~/log.txt
-    true
-}
 
 __complete_ssm() {
-    log "__complete_ssm() BEGIN"
+    # log "__complete_ssm() BEGIN"
     local cur="${COMP_WORDS[COMP_CWORD]}"
 	COMPREPLY=( $(compgen -W "$(__suggest_ssm_compreply_candidates)" -- ${cur}))
-    log "__complete_ssm() END"
+    # log "__complete_ssm() END"
 }
 
 __suggest_ssm_compreply_candidates(){
     if __dash_dash_in_words ; then
         return
     fi
-    log "dash dash is not in words"
+    # log "dash dash is not in words"
 
     subcommand=$(__get_ssm_subcommand)
     if [[ "${subcommand}" != "" ]] ; then
-        log "Subcommand is '${subcommand}'"
+        # log "Subcommand is '${subcommand}'"
         option=$(__get_current_option)
         if [[ "$option" != "" ]] ; then
             __suggest_ssm_values_for_option ${option}
