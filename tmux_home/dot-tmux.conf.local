@@ -294,16 +294,38 @@ set -g prefix C-a
 # Make it so that pressing C-a a second time sends C-a to the underlying program.
 bind C-a send-prefix
 
+set-option -g history-limit 200000
+
+# Sending tmux commands with 'tmux clear-history' does not work in panes that
+# are ssh'd into another machine.
+# bind k send-keys "clear ; tmux clear-history" Enter
+# bind -r g send-keys "clear" Enter \; clear-history
+# WELL, although I had fun discovering creating my binding
+# it doing it once only cleared the history beyond what was
+# currently visible leaving one screenful of history
+# and by mistake, I did C-l which did exactly what I was looking
+# for.
+
 # move status line to top
 # set -g status-position top
 
 bind / split-window -h
 bind é split-window -h
+bind ? split-window -h -b # Split horizontally with new window on other side
 bind - split-window -v
+bind _ split-window -v -b
+bind ^ copy-mode # The same key as '[' on the US keyboard.
+                 # Since in Canadian multilingual, the key to the right of 'P'
+                 # produces a dead ^, it has to be pressed twice but so far,
+                 # it feels like I could get used to it.  Pressing it twice
+                 # produces two real ^, so doing prefix and pressing the key
+                 # twice puts me in copy-mode and sends a real ^ which puts
+                 # my cursor at the beginning of the line
+bind ç paste-buffer
 
 # set -g default-command "env -i HOME=$HOME LOGNAME=$LOGNAME USER=$USER TERM=$TERM DISPLAY=$DISPLAY /bin/bash -l"
 # bind -T copy-mode-vi Enter send-keys -X copy-pipe-and-cancel "pbcopy"
-bind -T copy-mode-vi Enter send-keys -X copy-pipe-and-cancel “reattach-to-user-namespace pbcopy”
+bind -T copy-mode-vi Enter send-keys -X copy-pipe-and-cancel "reattach-to-user-namespace pbcopy"
 # bind F set -g default-command 'xonsh'
 
 # set -g default-command "/bin/bash -l"
