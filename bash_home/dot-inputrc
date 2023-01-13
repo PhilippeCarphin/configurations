@@ -1,4 +1,5 @@
-# These 3 are from Philipe Blain
+$include /etc/inputrc
+# These 3 are from Philippe Blain
 # color folder/files during completion
 set colored-stats on
 # color common prefix during completion
@@ -6,28 +7,40 @@ set colored-completion-prefix on
 # add type suffix to items during autocompletion
 set visible-stats on
 
+$if Bash
+    # Causes references to previous commands to be expanded when pressing
+    # space after something like '!3:1' to get the first argument of the
+    # 3rd previous command in the history
+    #
+    # It needs to be in a conditionnal so that it only happens with Bash
+    # otherwise it will disable your ability to enter spaces in other things
+    # that use readline like the Python interactive shell.
+    Space: magic-space
+$endif
+
 
 $if mode=emacs
-    $if Bash
-        # Causes references to previous commands to be expanded when pressing
-        # space after something like '!3:1' to get the first argument of the
-        # 3rd previous command in the history
-        #
-        # It needs to be in a conditionnal so that it only happens with Bash
-        # otherwise it will disable your ability to enter spaces in other things
-        # that use readline like the Python interactive shell.
-        Space: magic-space
-    $endif
     # Originally, C-f is forward-char and M-f is forward-word but I use
     # the Fn-' to produce right-arrow.
-    "\C-f": forward-word # Originally forward-char
-    "\C-b": backward-word # Originally backward-char
-    "\C-t": dynamic-complete-history
+    "\C-f": shell-forward-word # Originally forward-char
+    "\C-b": shell-backward-word # Originally backward-char
+    "\el": forward-word
+    "\eh": backward-word
+    "\eL": shell-forward-word
+    "\eH": shell-backward-word
+
+    # "\C-t": dynamic-complete-history
+    # "\C-s": '\C-a \C-f \C-w' # Can't use C-s because it "freezes the probram"
+    # "\C-'": '\C-a\C-f\C-w'   # Also unusable for some reason
+    "\C-t": '\C-a\C-f\C-w'
+    #
+    "\C-xp": "PATH=${PATH}\e\C-e\C-a\ef\e[C:\e[D"
+    "\C-v": "\e\C-e"
 
     # "\e[Z": forward-word
     # "\C-h": backward-word
     "\C-x \C-r": re-read-init-file
-    "\C-n": non-incremental-forward-history-search
+    # "\C-n": non-incremental-forward-history-search
     # Takes what you already have, puts it in "$(...)" and ends with your cursor
     # at the start of the line.  Fun thing to try but you could just type '| xargs'
     # instead.  But it's a cool demo of how you can customize readline
@@ -36,5 +49,5 @@ $if mode=emacs
     # - go to end (\C-e)
     # - insert '"'
     # - go to start
-    "\e\C-m": '\C-a "$(\C-e)"\C-a'
+    # "\e\C-m": '\C-a "$(\C-e)"\C-a'
 $endif
