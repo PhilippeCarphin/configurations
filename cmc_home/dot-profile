@@ -1,76 +1,91 @@
 #!/bin/bash
 
-function dump-environment(){
-    local envdump_dir=$HOME/envdumps
-    mkdir -p ${envdump_dir}
-    local envdump_file=$(mktemp env_dump_$(TZ=America/Toronto date +%Y-%m-%d_%H:%M:%S)_XXX.txt --tmpdir=${envdump_dir})
-    echo "envdump_file = ${envdump_file}" >&2
-    echo "\$0 = '$0'" >> ${envdump_file}
-    echo "\$@ = '$@'" >> ${envdump_file}
-    command env >> ${envdump_file}
+p.error(){
+    printf "${FUNCNAME[1]}: \033[1;31mERROR\033[0m: $*\n"
 }
-
-function reminders(){
-    echo "C-h does backward-word (.inputrc)"
-    echo "C-l does forward-word (.inputrc)"
-}
-
-# dump-environment
-
-if [[ $TERM == "dumb" ]] ; then
-    source ~/.profile_officiel
-    return
-fi
 
 #
 # I want what this script does to be the first thing you see when opening it
 # and to have no "naked" code inside the script except for that thing at the
 # top and the call to main at the very end.
 #
+
 function p.profile.main(){
+    export TZ=America/Toronto
+    export LANG=en_US.UTF-8
     export SSM_DEV=/home/ords/cmdd/cmds/nil000/ssm
     export STOW_DIR="$HOME/fs1"
     export PACKAGE_DIR="$STOW_DIR/Cellar"
     export GITLAB_RUNNER_SCIENCE_ORDSOUMET_KEEP_FILES='yas'
     export GONOSUMDB=gitlab.science.gc.ca
     export PATH="$STOW_DIR/bin:$HOME/bin:$HOME/.local/bin${PATH:+:$PATH}"
-    GITLAB_ACCESS_TOKEN="$(cat ~/.ssh/gitlab-access-token)"
-    export GITLAB_ACCESS_TOKEN
+    export GITLAB_ACCESS_TOKEN="$(cat ~/.ssh/gitlab-access-token)"
+    export EDITOR=/usr/bin/vim
     PATH+=":$HOME/tools/go1.19.linux-amd64/bin"
     PATH+=":$HOME/tools/node-v16.13.1-linux-x64/bin"
-    PATH+=":$HOME/tools/rust-1.69.0-x86_64-unknown-linux-gnu/bin"
-
+    PATH+=":$HOME/tools/rust0.69.0-x86_64-unknown-linux-gnu/bin"
+    . ssmuse-sh -x /fs/ssm/hpco/exp/ssm/ssm-12.0-beta1 \
+                -x /fs/ssm/hpco/exp/ssmuse/ssmuse-1.13-beta2
     if [[ "$-" == *i* ]] ; then
         p.profile.main_interactive
     fi
 }
-
 
 function p.profile.main_interactive(){
     # p.check-processes
     # p.nice-completion
     # Remove that thing where it looks for Ubuntu packages if a command is not found
     # unset command_not_found_handle
+    export PYTHONSTARTUP=~/.pyrc
+    export PACK_DIR=${HOME}/.profile.d/interactive/pack
+
+    # Set directories for lazy loading of bash completions
+    # See function '_completion_loader' from /usr/share/bash-completion/bash_completion.
+    # It looks in ${BASH_COMPLETION_USER_DIR}/completions and <X>/completions
+    # for each directory in the colon separated list of paths XDG_DATA_DIRS.
+    #
+    # This is the simplest way but for things like source, this lazy loading
+    # will not happen since ordenv already sets up a broken completion function
+    # for source and . and I can't do it for ssmuse-sh and r.load.dot because
+    # they are not commands but files that are sourced.
+    #
+    # Anyway, the lazy loading is a good mechanism for all the system commands
+    # since there are like a thousand of them but for my own stuff since there
+    # are about 20 of them.
+    BASH_COMPLETION_USER_DIR=${HOME}/.bash_completion.d
+    # Fun fact, I carelessly had 'XDG_DATA_DIRS=${HOME}/fs1/etc/bash-completion'
+    # and had no problems until I started trying to use VSCode.  It was crashing
+    # but not under all circumstances.  The reason for modifying XDG_DATA_DIRS
+    # initially was because I saw that the bash-completion shell library looks
+    # there to lazy load completions for commands.
+    XDG_DATA_DIRS=${XDG_DATA_DIRS:+${XDG_DATA_DIRS}:}${HOME}/fs1/etc/bash-completion
     check-alert-file ~sici000/alert
     check-alert-file ~/alert
 
-    eval "$(dircolors -b)"
+    set_ls_colors_for_readline_and_ls
 
     source "$HOME/.ssh/ssh_functions.sh"
     # source "$HOME/.funky-prompt.sh"
-    source "$HOME/.powerline.sh"
+    source "$HOME/shell_lib/powerline.sh"; __next_line_mode
+    # source $HOME/A_CLASSER/git-colon-path-support.bash
+    SOURCE_COMPLETE_EXCLUDE_EXECUTABLE=""
+    SOURCE_COMPLETE_ONLY_TEXT_FILES="yes"
+    GIT_CD_VERBOSE=yes
+    source $HOME/shell_lib/git-colon-path-support.bash
+    source $HOME/shell_lib/impersonate.sh
     # Append to global history after every command.
     # .funky-prompt.sh sets PROMPT_COMMAND
     # so this next line must come AFTER sourcing ~/.funky-prompt.sh
     PROMPT_COMMAND="$PROMPT_COMMAND; history -a"
-    maybe-source "$HOME/.gem-functions.sh"
-    maybe-source "$HOME/.maestro-functions.sh"
+    # Replaced by single files in ~/bin
+    # maybe-source "$HOME/shell_lib/gem-functions.sh"
+    maybe-source "$HOME/shell_lib/maestro-functions.sh"
 
-    _source_dir "$HOME/.bash_completion.d"
+    # _source_dir "$HOME/.bash_completion.d"
     _source_dir "$HOME/fs1/etc/bash_completion.d"
     _source_dir "$HOME/fs1/etc/profile.d"
 
-
+    alias print_args='__print_args "$@"'
     alias ls='ls --color -h'
     alias grep='grep -n --color'
     alias tree='tree -C'
@@ -78,26 +93,34 @@ function p.profile.main_interactive(){
     # From /etc/profile.d/which2.sh It makes which report what type reports but it only works on RHEL
     # alias which='(alias; declare -f) | /usr/bin/which --tty-only --read-alias --read-functions --show-tilde --show-dot'
 
-    export TZ=America/Toronto
     HISTSIZE=-1
     HISTFILESIZE="A non numeric value inhibits truncation"
     HISTIGNORE="rm -rf *"
     # A bit too whimsical
     # HISTTIMEFORMAT=$'\033[1;32m%y-%m-%d \033[1;33m%H\033[0m:\033[1;34m%M\033[0m:\033[1;31m%S\033[0m '
     HISTTIMEFORMAT=$'\033[1;32m%Y-%m-%d \033[1;33m%H:%M:%S\033[0m '
-    GIT_CD_VERBOSE=yes
 
     # Merci Philippe Blain :D
     shopt -s direxpand
 
     if [[ "${PBS_ENVIRONMENT}" == PBS_INTERACTIVE ]] ; then
-        printf "PBS_ENVIRONMENT detected, cd'ing to \$PBS_O_WORKDIR=\033[33m${PBS_O_WORKDIR}\033[0m\n"
+        printf "PBS_ENVIRONMENT detected, cd'ing to \$PBS_O_WORKDIR=${PBS_O_WORKDIR}\n" >&2
         cd "${PBS_O_WORKDIR}" || return
+        echo "${PBS_JOBID}" > ~/.ssh/current_job
+        echo "JOBID ${PBS_JOBID} written in ~/.ssh/current_job" >&2
     fi
+
     reminders
 
-    # Restore completion since 
-    # complete -o default source .
+    # Cd
+    alias cd=__cd_or_git_cd
+    complete -o nospace -F _cd_or_git_cd cd
+
+    # ls
+    alias ls='wrap_command_colon_paths ls --color'
+    complete -o default -F __complete_git_colon_paths ls
+
+    configure_vim
 }
 
 
@@ -203,14 +226,14 @@ function p.unset-web-proxy(){
     unset HTTPS_PROXY
 }
 
-    p=http://webproxy.science.gc.ca:8888/
 function _source_dir(){
-    dir="$1"
+    local dir="$1"
     if ! [ -d "$1" ] ; then
         # No echo so this function can be called on non-existant dirs
         # echo "${FUNCNAME[0]} ERROR: \$1='$1' is not a directory" >&2
         return 1
     fi
+    local f
     for f in $(command env -i ls $dir) ; do
         if ! source "$dir/$f" ; then
             echo "${FUNCNAME[0]} ERROR: sourcing '$dir/$f' returned non-zero" >&2
@@ -265,100 +288,12 @@ function orgman(){
     pandoc --standalone -f org -t man $1 | /usr/bin/man -l -
 }
 
-function p.setup-intel(){
-    if [[ "${PHIL_EC_ENV}" == *intel* ]] ; then
-        return 0
-    fi
-    time {
-        # source $(repos -get-dir ci-env)/latest/rhel-8-icelake-64/inteloneapi-2022.1.2.sh
-        # source $(repos -get-dir ci-env)/latest/rhel-8-icelake-64/inteloneapi-2022.1.2.sh
-        # source $(repos -get-dir ci-env)/latest/rhel-8-amd64-64/inteloneapi-2022.1.2.sh file doesn't exist
-        source "$(repos -get-dir ci-env)/latest/rhel-8-amd-64/inteloneapi-2022.1.2.sh"
-        export SSM_DEV=/home/ords/cmdd/cmds/nil000/ssm
-        export PHIL_EC_ENV=intel${PHIL_EC_ENV:+|${PHIL_EC_ENV}}
-        complete -o default source .
-    }
-}
-
 function p.setup-gnu(){
     time {
         source "$(repos -get-dir ci-env)/latest/rhel-8-amd-64/gnu-9.3.0.sh"
         export PHIL_EC_ENV=gnu${PHIL_EC_ENV:+|${PHIL_EC_ENV}}
         complete -o default source .
     }
-}
-
-#
-# This function looks really long but all it does is load ORDENV and only prints
-# the output if there was an error.  It does this by redirecting the output
-# to a tempfile and printing the file if the status after loading ordenv is
-# non-zero.
-#
-# ORDENV reorders PATH elements and messes with the completion of 'source' and
-# '.' so I put back my thing at the front of PATH and restore completion
-# behavior for source and '.'.
-function p.ordenv()
-{
-    local ORDENV_VERBOSE="yup"
-    if [[ -z "${ORDENV_VERBOSE}" ]] ; then
-        source ~/.profile_officiel
-        return
-    fi
-    printf "\033[33m%s\033[0m\n" "Loading ordenv $(readlink ~/.profile_officiel)"
-    #
-    # Use a temporary file to capture output of a source command since
-    # $(source a_file.sh) would lose the effect of sourcing the file.
-    #
-    # See https://stackoverflow.com/a/66832192/5795941 which confirms that
-    # to do this we pretty much have to resort to using a temporary file.
-    #
-    local ordenv_output_file
-    ordenv_output_file="$(mktemp "$HOME/.ordenv_output_file_XXXXXXXXXXX")"
-
-    #
-    # Source the official profile
-    #
-    {
-        echo "On host : $HOSTNAME"
-        echo "At date : $(date)"
-        source ~/.profile_officiel
-    } &> ${ordenv_output_file}
-    local ordenv_status=$?
-
-    #
-    # Only show the captured output if an error happened during the
-    # loading of ORDENV.  Otherwise, just print the last line which
-    # should be the line showing the time elapsed during the loading
-    # of ORDENV
-    #
-    if [[ "${ordenv_status}" != 0 ]] ; then
-        printf "ERRORS occured during loading of ordenv\n" >&2
-        cat "${ordenv_output_file}" >&2
-    else
-        printf "Sourcing of ORDENV successful\n" >&2
-        tail -n 1 "${ordenv_output_file}" >&2
-        rm -f "${ordenv_output_file}"
-    fi
-
-    #
-    # Cleanup tempfile
-    #
-
-    #
-    # Readjust the PATH.  I don't remember why I put this here.  Probably
-    # because it prepends something which I would like to see come after
-    # my own things in $HOME/fs1.
-    #
-    export PATH="$HOME/fs1/bin:${PATH}"
-
-    #
-    # Variable that is shown in my prompt string so that my PS1 can
-    # show whether ORDENV is loaded or not.
-    #
-    export PHIL_EC_ENV="ORDENV${PHIL_EC_ENV:+|${PHIL_EC_ENV}}"
-
-    # Loading ordenv messes up autocompletion on the source command
-    complete -o default source .
 }
 
 function _p.require_ordenv()
@@ -423,93 +358,17 @@ function emacs-daemon(){
 '
 }
 
-function vim(){
-    local vimpath
-    case $(hostname) in
-        ppp*) vimpath=$HOME/fs1/bin/vim ;;
-        *)  vimpath=/usr/bin/vim ;;
-    esac
-
-    if [[ "$*" == "" ]] ; then
-        VIMPATH=${vimpath} git_vim -p .
-    else
-        VIMPATH=${vimpath} git_vim -p "$@"
-    fi
+function vimf(){
+    local directory=$1
+    vim -p $(find ${directory} -type f)
 }
 
-git_vim(){
-    declare -a args
-    #
-    # This seems like it could be reusable behavior to enable many commands
-    # to open paths starting with ':' as relative to the root of a git repo
-    if ! __resolve_git_colons "$@" &>/dev/null ; then
-        args=("$@")
-    fi
-    echo "Running command 'vim -p ${args[@]}'"
-    if [[ -n "${VIMPATH}" ]] ; then
-        ${VIMPATH} "${args[@]}"
-    else
-        command vim "${args[@]}"
-    fi
-}
-
-
-# function vimf(){
-#     local directory=$1
-#     vim $(find ${directory} -type f)
-# }
-# 
-# function cdwqwer(){
-#     local program=$1
-#     local full_path
-#     if ! full_path=$(which ${program}) ; then
-#         echo "Command 'which ${program}' failed.  Aborting"
-#         return 1
-#     fi
-#     local directory=$(dirname ${full_path})
-#     printf "\033[33mcd ${directory}\033[0m"
-#     cd ${directory}
-# }
 
 function sshpwd(){
     # Replace things like /fs/homeu1/eccc/cmd/cmds/<rest>
     # with /home/<rest>
     local dir="$(echo $PWD | sed 's/\/fs\/homeu[12]\/[a-z]\+\/[a-z]\+\/[a-z]\+/\/home/')"
     ssh -t "$@" "cd $dir ; bash -l"
-}
-
-function p.use-maestro(){
-    _p.require_ordenv
-    . ssmuse-sh -d eccc/cmo/isst/maestro/1.8.4
-}
-
-function p.use-cmds-python(){
-    # https://gitlab.science.gc.ca/hpc/hpcr_upgrade_2/wikis/python
-    if [[ "${PHIL_EC_ENV}" == *CMDS-PY* ]] ; then
-        return 0
-    fi
-    _p.require_ordenv
-    . ssmuse-sh -p /fs/ssm/eccc/cmd/cmds/env/python/py39_2022.05.24_rhel-8-icelake-64
-    export PHIL_EC_ENV="${PHIL_EC_ENV:+$PHIL_EC_ENV|}CMDS-PY"
-}
-
-function p.use-rpnpy(){
-    . ssmuse-sh -x rpn/MIG/ENV/d/rpnpy/rpnpy_2.1.6
-}
-
-function p.reload-profile(){
-    unset ORDENV_SETUP
-    source ~/.profile
-}
-
-function p.ordenv-mode(){
-    touch ~/.ordenv-mode
-    printf "Activating ordenv mode\n" >&2
-}
-
-function p.normal-mode(){
-    printf "Deactivating ordenv mode\n" >&2
-    rm -f ~/.ordenv-mode
 }
 
 function cddrw(){
@@ -526,25 +385,41 @@ CMD must be a command"
     cd "$command_location" || return
 }
 
-function p.use-totalview(){
-    _p.require_ordenv
-    local ssmcmd=". ssmuse-sh -x main/opt/totalview/totalview-2018.0.5"
-    printf "\033[33m%s\033[0m\n" "${ssmcmd}"
-    $ssmcmd
+function cdd(){
+    local filepath=$1
+    if [[ -d ${filepath} ]] ; then
+        printf "${FUNCNAME[0]}: Warning: argument '${filepath}' is a directory.  Perhaps use cd or cdr\n" >&2
+    fi
+
+    local dir
+    if ! dir=$(dirname ${filepath}) ; then
+        printf "${FUNCNAME[0]}: ERROR: Could not get dirname for '${link_target}'"
+        return 1
+    fi
+
+    builtin cd ${dir}
 }
 
-function p.use-ddt(){
-    _p.require_ordenv
-    local ssmcmd=". ssmuse-sh -x main/opt/forge/21.1.3"
-    printf "\033[33m%s\033[0m\n" "${ssmcmd}"
-    $ssmcmd
+function cddr(){
+    local filepath=$1
+    if [[ -d ${filepath} ]] ; then
+        printf "${FUNCNAME[0]}: Warning: argument '${filepath}' is a directory.  Perhaps use cd or cdr\n" >&2
+    fi
+    local link_target
+    if ! link_target=$(readlink ${filepath}) ; then
+        printf "${FUNCNAME[0]}: ERROR: Could not follow link '${filepath}'"
+        return 1
+    fi
+
+    local dir
+    if ! dir=$(dirname ${link_target}) ; then
+        printf "${FUNCNAME[0]}: ERROR: Could not get dirname for '${link_target}'"
+        return 1
+    fi
+
+    builtin cd ${dir}
 }
 
-
-function p.use-vscode(){
-    _p.require_ordenv
-    . ssmuse-sh -x cmd/cmds/apps/vscode/1.38
-}
 
 # Documentation and shortcut for debugging with debugpy and vscode.
 function p.debugpy(){
@@ -681,7 +556,7 @@ function p.unansi(){
 }
 
 function p.qsubi(){
-    qsub -I -lselect=1:ncpus=72:mem=50gb "$@"
+    qsub -I -lselect=1:ncpus=80:mem=201gb "$@"
 }
 
 function p.quiet-make(){
@@ -701,6 +576,7 @@ function p.verbose-make(){
 
 function make(){
     if ! on_compute_node ; then
+        local arg
         for arg in "$@" ; do
             if [[ "${arg}" == -j* ]] ; then
                 echo "You are on host ${HOSTNAME} ... you should not use '-j'.  Use 'command make $*' to bypass this function if you are sure"
@@ -725,20 +601,13 @@ p.pgrep(){
     pgrep -u $USER -f "$@"
 }
 
-p.use-fstd2nc(){
-    # Sebastien Fortier told me about a cool python package that can
-    # read fstd (RPN standard files) in python that doesn't depend on
-    # librmn.
-    . ssmuse-sh -p eccc/crd/ccmr/EC-CAS/master/fstd2nc_0.20220204.3
-}
-
 p.ps(){
     # Note, 
     ps -f -u $USER --cols $(tput cols) | sort -k 8
 }
-
-p.use-thinlinc(){
-    . ssmuse-sh -x main/opt/thinlinc/thinlinc_4.11.0
+p.pst(){
+    # Note, 
+    ps f -f -u $USER
 }
 
 p.check_procs_pppn(){
@@ -750,7 +619,7 @@ p.check_procs_pppn(){
 
     for node in ${pppn}login-001 ${pppn}login-002 ; do
         printf "\033[1;32mLogging in to $node\033[0m\n"
-        ssh -t -J${pppn} ${node} bash -lic true
+        ssh -t -J${pppn} ${node} 'ps -u phc001 -f'
     done
 }
 
@@ -761,145 +630,6 @@ p.check_procs_all(){
     done
 }
 
-git_cd(){
-    local dir repo_subdir
-    local repo_subdir="${1##:}"
-    if ! dir="$(git rev-parse --show-toplevel)/${repo_subdir}" ; then
-        echo "${FUNCNAME[0]}: ERROR: cd ${1} see above"
-        return 1
-    fi
-
-    if ! cd "$dir"; then
-        echo "${FUNCNAME[0]}: ERROR: cd ${1} see above"
-        return 1
-    fi
-
-    printf "\033[33mcd ${dir}\033[0m\n"
-}
-
-cd(){
-    if [[ "${1}" == :* ]] ; then
-        git_cd "${1}"
-    else
-        command cd "$@"
-    fi
-}
-
-_cd_phil(){
-    local IFS='
-'
-    local cur prev words cword;
-    _init_completion || return;
-    if [[ "${words[1]}" == :* ]] ; then
-        # _complete_git_cd
-        _complete_git_cd_with_colons
-    else
-        _cd
-    fi
-}
-
-
-################################################################################
-# Complete paths starting with ':' starting from the root of the current git
-# repository.
-################################################################################
-_complete_git_cd(){
-    # echo "======================================" >> ~/.log.txt
-    COMPREPLY=()
-    local IFS=$'\n'
-
-    compopt -o filenames
-    local cur prev words cword git_repo
-    _init_completion || return;
-
-    if ! git_repo="$(git rev-parse --show-toplevel 2>/dev/null)" ; then
-        return 1
-    fi
-
-    # Complete 'cd :' to 'cd :/'.  This is important since otherwise, we
-    # risk getting candidates from the parent directory of the git repo:
-    # If we are in /home/phc001/repo but /home/phc001/repo_alternate exists,
-    # then without this, compgen -d /home/phc001/repo will give those two
-    # directories.
-    if [[ "${cur}" == : ]] ; then
-        COMPREPLY=("/")
-        return
-    fi
-
-    # Because COMP_WORDBREAKS contains ':', when the command line is 'cd :',
-    # the words array is ('cd' ':') in which case we do the above completion.
-    # In every other case such as 'cd :/a', the words array is ('cd' ':' '/a')
-    # If we wanted to keep the words as they are on the command line without
-    # separating on colons, then we need to do as in _complete_git_cd_with_colons
-    # and use __rassemble_comp_words_by_ref and __ltrim_colon_completions
-    if [[ "${prev}" != : ]] ; then
-        return
-    fi
-
-    full_cur="${git_repo}${cur#:}"
-
-    local i=0
-    local candidates=( $(compgen -d -- ${full_cur}) )
-    for full_path in "${candidates[@]}" ; do
-        relative_path="${full_path##${top}}/"
-        COMPREPLY[i++]="${relative_path}"
-    done
-}
-
-################################################################################
-# Complete paths starting with ':' starting from the root of the current git
-# repository.  This is an alternate version that I made to figure out how to
-# use deal with completing words that contain colons.  The first one is easier
-# since we just deal with the part after the colon separately and return
-# candidates for the part that comes after the colon.  This one is not so
-# hard either.
-################################################################################
-_complete_git_cd_with_colons(){
-    local top IFS='
-'
-    echo "======================================" >> ~/.log.txt
-    compopt -o filenames
-    if ! top="$(git rev-parse --show-toplevel)" ; then
-        return
-    fi
-
-
-    # Local is very important otherwise full_words and full_cword would
-    # become global variables that would grow every time __reassemble_comp_words_by_ref
-    # is called.  I could also do '_init_completion -n :'.  Either way the call
-    # to __ltrim_colon_completion is required at the end.
-    local full_words full_cword;
-    __reassemble_comp_words_by_ref ':' full_words full_cword
-    # echo "full_words = ${full_words[@]}" >> ~/.log.txt
-
-    local cur=${full_words[full_cword]}
-
-
-    if [[ "${cur}" == ":" ]] ; then
-        COMPREPLY=(":/")
-        __ltrim_colon_completions ':'
-        return
-    fi
-
-    if ! [[ "${cur}" == :* ]] ; then
-        return
-    fi
-
-    full_cur=${top}${cur#:}
-    candidates=($(compgen -d -- ${full_cur}))
-    local i=0
-    for full_path in "${candidates[@]}" ; do
-        # echo "d = ${d}" >> ~/.log.txt
-        # echo "s = ${s}" >> ~/.log.txt
-        relative_path=:${d##${top}}/
-        COMPREPLY[i++]=${relative_path}
-    done
-    __ltrim_colon_completions ':'
-
-}
-
-complete -o nospace -F _cd_phil cd
-
 
 ################################################################################
 # Acquire compute node for building and running GEM (or anything else)
@@ -908,11 +638,6 @@ function p.qsubi(){
     qsub -I -lselect=1:ncpus=72:mem=50gb "$@"
 }
 
-
-function vimf(){
-    local dir=${1-.}
-    vim $(find $dir -type f)
-}
 
 function vimw(){
     local cmd=$1
@@ -933,6 +658,10 @@ function _errprint(){
     printf "${FUNCNAME[1]}: \033[1;31mERROR\033[0m: $*\n" >&2
 }
 
+function do_error(){
+    _errprint "An error happened, oh no!"
+}
+
 function p.view_listing(){
     local compressed_listing=$1
     if ! [[ -f "${compressed_listing}" ]] ; then
@@ -949,11 +678,270 @@ function p.view_listing(){
     fi
 }
 
+function vim(){
+    if [[ $(hostname) == ppp* ]] ; then
+        $HOME/fs1/bin/vim "$@"
+    else
+        /usr/bin/vim "$@"
+    fi
+}
+
+function configure_vim(){
+    complete -o default -F __complete_git_colon_paths vim
+    alias vim='wrap_command_colon_paths vim -p'
+}
+
+#
+# Because $PYTHONSTARTUP is ignored when using the '-i' option, we just
+# prepend its content to the python file we are running.
+#
+py3i(){
+    file=$1
+    python3 -i -c "$(cat ~/.pyrc $file)"
+}
 
 
+function dump-environment(){
+    local envdump_dir=$HOME/envdumps
+    mkdir -p ${envdump_dir}
+    local envdump_file=$(mktemp env_dump_$(TZ=America/Toronto date +%Y-%m-%d_%H:%M:%S)_XXX.txt --tmpdir=${envdump_dir})
+    echo "envdump_file = ${envdump_file}" >&2
+    echo "\$0 = '$0'" >> ${envdump_file}
+    echo "\$@ = '$@'" >> ${envdump_file}
+    command env >> ${envdump_file}
+}
+
+function reminders(){
+    printf "\033[0mC-f or ^[L does shell-forward-word (.inputrc)\n" >&2
+    printf "\033[0m^[l does forward-word (.inputrc)\n" >&2
+    printf "\033[0mC-b or ^[H does shell-backward-word (.inputrc)\n" >&2
+    printf "\033[0m^[h does backward-word (.inputrc)\n" >&2
+    printf "\033[0mC-t does C-aC-fC-w (change command)\n" >&2
+    printf "\033[0mC-xp does \"prepend edit PATH\"\n" >&2
+}
+
+function xargso(){
+    if [[ "${1}" == "" ]] ; then
+        printf "${FUNCNAME[0]}: \033[1;31mERROR\033[0m: At least one argument must be give\n"
+        return 1
+    fi
+    if [[ "${1}" == -h ]] ; then
+        printf "${FUNCNAME[0]} does the equivalent of 'xargs -o' on BSD"
+        printf "which is to reopen STDIN as /dev/tty in the child process\n"
+        printf "This is useful to when opening an interactive application\n"
+        printf "like vim\n"
+        return 0
+    fi
+    cmd="$@ \"\$@\" </dev/tty"
+
+    print_args xargs sh -c "${cmd}"
+    printf "===============================\n"
+    print_args xargs sh -c "${cmd}" "$@"
+    printf "===============================\n"
+    xargs sh -c "${cmd}" fuckface
+    # xargs sh -c "${cmd}" "$@"
+    # this does not work :
+    # xargs sh -c "$@ \"\$@\" </dev/tty"
+    print_args xargs sh -c "$@ \"\$@\" </dev/tty"
+}
+
+
+function x.use(){
+    local pack_dir="${1}"
+    shift
+    if [[ -z "${1}" ]] ; then
+        echo "${FUNCNAME[1]}: ERROR: An argument must be provided"
+        return 1
+    fi
+
+    local pack_name="${1}"
+    if ! [[ -f ${pack_dir}/${pack_name} ]] ; then
+        echo "${FUNCNAME[1]}: ERROR: No package named '${pack_name}' in ${pack_dir}"
+        return 1
+    fi
+
+    shift
+    local status
+    #source ${pack_dir}/${pack_name} "$@" 
+    local i=0
+    while IFS= read -r line ; do
+        : $((i++))
+        if [[ -z "${line}" ]] ; then
+            continue
+        fi
+        printf "\033[1;32m${FUNCNAME[1]}: ${line}\033[0m\n"
+        if ! eval ${line} ; then
+            printf "${FUNCNAME[1]}: \033[1;31mERROR\033[0m error on line ${i} of ${pack_dir}/${pack_name}\n"
+        fi
+    done < ${pack_dir}/${pack_name}
+    status=$?
+    if [[ ${status} != 0 ]] ; then
+        echo "${FUNCNAME[1]}: ERROR: Sourcing '${pack_dir}/${pack_name}' returned an error : $?"
+    fi
+    return ${status}
+}
+
+function p.use(){
+    x.use ${PACK_DIR} "$@"
+}
+
+function f.use(){
+    x.use ~for000/.profile.d/interactive/pack "$@"
+}
+
+function __print_args(){
+    # Useful to double check how arguments are given to a program.
+    # For example, xargso above, the arguments get split /c
+    local i=1
+    echo "${FUNCNAME[1]}: \$0   = $0"
+    echo "${FUNCNAME[1]}: \$#   = $#"
+    echo "${FUNCNAME[1]}: args = '$@'"
+    for arg in "$@" ; do
+        echo "${FUNCNAME[1]}: arg[$((i++))] = $arg"
+    done
+}
+
+function p.ftake(){
+    if [[ -z "${1}" ]] ; then
+        p.error "Argument required"
+        return 1
+    fi
+    local to_take="$(echo ~for000/.profile.d/interactive/pack/$1)"
+
+    if ! [[ -f ${to_take} ]] ; then
+        p.error "Package to take '${1}' does not exist in '~for000/.profile.d/interactive/pack'"
+        return 1
+    fi
+
+    local new_name
+    if [[ -n "${2}" ]] ; then
+        new_name=${2}
+    else
+        new_name=""
+    fi
+
+    if ! cp ${to_take} ${PACK_DIR}/${new_name} ; then
+        p.error "Could not copy '${to_take}' to '${PACK_DIR}/${new_name}'"
+        return 1
+    fi
+}
+
+log(){
+    echo "${FUNCNAME[1]}: $*" >> ~/.log.txt
+}
+
+_x.use(){
+    local pack_dir=$1
+    local prev cur words cword
+    log "================================================================="
+    _init_completion || return
+
+    log "prev=${prev}, cur=${cur}, words=${words[@]}, cword=${cword}"
+    case ${cword} in
+        0) echo "Can't happen!" ;;
+        1) COMPREPLY=($(compgen -W "$(cd ${pack_dir} ; command ls | command grep -v '^_')" -- ${cur})) ;;
+        2|*) _dispatch_pack_complete ${prev} ;;
+    esac
+}
+
+_p.use(){
+    _x.use ${PACK_DIR}
+}
+
+_f.use(){
+    _x.use ~for000/.profile.d/interactive/pack
+}
+
+#
+# Default is not applied here because p.use's first argument cannot be a file
+# from PWD (unless we are in ${PACK_DIR} but those will get suggested by _p.use
+# anyway.  Instead, we use _filedir to suggest give the default suggestions.
+#
+complete -F _p.use p.use p.view-pack
+complete -F _f.use f.use f.view-pack p.ftake
+p.view-pack(){
+    vim ${PACK_DIR}/${1}
+}
+f.view-pack(){
+    vim ~for000/.profile.d/interactive/pack/${1}
+}
+
+_dispatch_pack_complete(){
+    case ${1} in
+        code-tools) COMPREPLY=($(compgen -W "gnu intel gnu9" -- ${cur})) ;;
+        rpnpy) COMPREPLY=($(cd $HOME ; _filedir)) ;;
+        *) _filedir ;;
+    esac
+}
+
+function show-vars(){
+    # Show environment variables and shell variables
+    declare -p
+}
+
+function show-functions(){(
+    # Show all function names with definition location
+    shopt -s extdebug
+    local functions
+    if [[ -n ${1} ]] ; then
+        functions=($(declare -F 2>&1 | cut -d ' ' -f 3 | command grep "$1"))
+    else
+        functions=($(declare -F 2>&1 | cut -d ' ' -f 3))
+    fi
+
+    for f in "${functions[@]}" ; do
+        declare -F $f
+    done | awk '{printf "%c[32m%s %c[1;35m%s %c[1;33m%s%c[0m\n", 27, $1, 27, $2, 27, $3, 27}'
+)}
+
+################################################################################
+# PROBLEM: If you have 'set colored-stats on' in your ~/.inputrc, readline will
+# color completion candidates according to LS_COLORS and if you have something
+# it will color anything that is not a file (program options) accordint to the
+# as 'missing files' which if you have 'mi=01;05;37;49' in your LS_COLORS is
+# bold blinking bright white on red background which is super annoying.
+# SOLUTION: Since readline parses LS_COLORS at initialization and never again
+# after that, the trick is to set 'mi=00' in LS_COLORS, then do anything that
+# causes readline to be initialized, and then set LS_COLORS back to its original
+# value.  Alternatively we could just not put anything for missing files in
+# LS_COLORS but I wanted figure out a way to have some coloring for missing
+# files
+# In http://git.savannah.gnu.org/cgit/bash.git/tree/lib/readline/:
+# - In parse_colors.c:300 Function _rl_parse_colors() parses LS_COLORS
+# - In readline.c:1322 Function readline_initialize_everything
+# - In readline.c:1183 Function rl_initialize() calls readline_initialize_everything()
+#   only if rl_initialized == 0 then sets rl_initialized to 1 so that it
+#   is never called again and does "other stuff".  Future calls to
+#   readline_initialize_everything() only do the "other stuff"
+# - In realine.c:354 Function readline(), rl_initialize() is called everytime
+#   but after the first time, it only does the "other stuff".
+################################################################################
+set_ls_colors_for_readline_and_ls(){
+
+    # Set LS_COLORS however you like
+    eval "$(dircolors -b ~/.dir_colors.256color)"
+
+    # Initialize readline with those same LS_COLORS except for the 'mi' part
+    local my_ls_colors="${LS_COLORS}"
+    LS_COLORS="$(echo "${LS_COLORS}" | sed 's/mi=[0-9;]*/mi=00/')"
+    bind -f ~/.inputrc # Anything that causes initialization of readline library
+
+    # Put back the 'mi' part in LS_COLORS
+    # LS_COLORS="${my_ls_colors}"
+
+    # Another option would be to have two files but ideally, you want LS_COLORS
+    # for readline to be the same for everything except for the 'mi' part
+    # eval "$(dircolors -b ~/.dir_colors.readline)"
+    # bind -r ~/.inputrc
+    # eval "$(dircolors -b ~/.dir_colors.256color)"
+}
+
+# dump-environment
+p.env(){
+    env -0 | sort -z | tr '\0' '\n'
+}
 
 
 p.profile.main
-
 unset -f p.profile.main
 unset -f p.profile.main_interactive
