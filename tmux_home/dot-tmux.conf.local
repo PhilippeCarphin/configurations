@@ -297,22 +297,36 @@ bind C-a send-prefix
 set-option -g history-limit 200000
 
 # Sending tmux commands with 'tmux clear-history' does not work in panes that
-# are ssh'd into another machine.
-# bind k send-keys "clear ; tmux clear-history" Enter
-# bind -r g send-keys "clear" Enter \; clear-history
-# WELL, although I had fun discovering creating my binding
-# it doing it once only cleared the history beyond what was
-# currently visible leaving one screenful of history
-# and by mistake, I did C-l which did exactly what I was looking
-# for.
+# are ssh'd into another machine:
+#     bind k send-keys "clear ; tmux clear-history" Enter
+# Sending the keys 'clear' and then running the clear-history command from TMUX
+#     bind -r g send-keys "clear" Enter \; clear-history
+# almost works except I think the clear doen't have time to happend before the
+# clear-history command is run so it's like the clear happens before, which
+# leaves a screenful in the history.
+# We can add a sleep in the command
+#     bind k send-keys "clear" Enter \; run "sleep 0.1" \; clear-history
+# and at this point, we have recreated the `C-l` binding that oh-my-tmux
+# provides in ~/.tmux.conf which is the same as this except that it sends
+# `C-l` instead of `"clear" Enter`.  Which taught me that `C-l` was a native
+# BASH binding that clears the screen.  Which is consistent with the fact
+# that in Vim `C-l` causes the screen to be redrawn.
+# bind C-k send-keys "clear" Enter \; run "sleep 0.1" \; clear-history
 
 # move status line to top
 # set -g status-position top
 
 bind / split-window -h
 bind é split-window -h
-bind ? split-window -h -b # Split horizontally with new window on other side
 bind - split-window -v
+# For each binding from $(tmux list-keys), if tmux_conf_new_pane_retain_current_path
+# is true, the _apply_bindings shell function from ~/.tmux.conf applies a sed
+# s/split-window([ \t]+-(h|v))?$/& -c "#{pane_current_path}"/g' to add the '-c ...'
+# part to the command.  However, with '-b' in the command, this sed command
+# does not match so the '-c "#{pane_current_path}"' does not get added to the
+# following bindings.  Because of this, I add the '-c thing' myself.
+bind ? split-window -h -b  # Split horizontally with new pane on other side
+bind É split-window -h -b  # Split horizontally with new pane on other side
 bind _ split-window -v -b
 bind ^ copy-mode # The same key as '[' on the US keyboard.
                  # Since in Canadian multilingual, the key to the right of 'P'
@@ -332,7 +346,8 @@ bind -T copy-mode-vi Enter send-keys -X copy-pipe-and-cancel "reattach-to-user-n
 # set -g default-command "env -i /bin/bash -l"
 # set -g default-command "ssh localhost"
 # set -g default-command "env -i DISPLAY=$DISPLAY HOME=$HOME LANG=$LANG LOGNAME=$LOGNAME USER=$USER /bin/bash -l"
-set -g default-command '\
+set -g default-command 'eval env -i $(/home/phc001/bin/vars) /bin/bash -l'
+# set -g default-command '\
     env -i \
         DISPLAY=$DISPLAY \
         XAUTHORITY=$XAUTHORITY \
@@ -342,6 +357,7 @@ set -g default-command '\
         LC_TERMINAL_VERSION=$LC_TERMINAL_VERSION \
         LOGNAME=$LOGNAME \
         MAIL=$MAIL \
+        PBS_JOBID=$PBS_JOBID \
         SHELL=$SHELL \
         SSH_CLIENT="$SSH_CLIENT" \
         SSH_CONNECTION="$SSH_CONNECTION" \

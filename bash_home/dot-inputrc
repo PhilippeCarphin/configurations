@@ -1,7 +1,5 @@
 $include /etc/inputrc
 # These 3 are from Philippe Blain
-# color folder/files during completion
-set colored-stats on
 # color common prefix during completion
 set colored-completion-prefix on
 # add type suffix to items during autocompletion
@@ -16,6 +14,11 @@ $if Bash
     # otherwise it will disable your ability to enter spaces in other things
     # that use readline like the Python interactive shell.
     Space: magic-space
+
+    # color folder/files during completion
+    # Only for Bash because otherwise we would get potentially weird coloring
+    # in Python
+    set colored-stats on
 $endif
 
 
