@@ -11,6 +11,7 @@ p.error(){
 #
 
 function p.profile.main(){
+    set_rload_log_level
     export TZ=America/Toronto
     export LANG=en_US.UTF-8
     export SSM_DEV=/home/ords/cmdd/cmds/nil000/ssm
@@ -1098,6 +1099,14 @@ _p.view-rev-file(){
     # done
 }
 alias nn='vim ~/nemo_xios_notes.org'
+
+# When using r.load, the output of the underlying `ssmuse-sh` command is hidden
+# by default.  Since it was requested that it be shown, a variable LOG_LEVEL
+# was added which if set to 'ERROR' would not redirect the output of
+# `r.shortcut-2.dot` to /dev/null
+set_rload_log_level(){
+    export LOG_LEVEL=ERROR
+}
 
 complete -o bashdefault -o default -o nospace -F _p.view-rev-file p.view-rev-file
 
