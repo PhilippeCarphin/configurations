@@ -11,7 +11,7 @@ p.error(){
 #
 
 function p.profile.main(){
-    set_rload_log_level
+    _set_rload_log_level
     export TZ=America/Toronto
     export LANG=en_US.UTF-8
     export SSM_DEV=/home/ords/cmdd/cmds/nil000/ssm
@@ -479,13 +479,20 @@ Run the command and launch the corresponding configuration in VSCode.  It should
 
 function p.org-tangle(){
     #
-    # Note where the file appears in the command.  I tried to
+    # Note where the file appears in the command.   I  tried  to
     #     emacs --batch -l org -f org-babel-tangle "$@"
-    # because it was simpler but it did not work giving
+    # because  it  was  simpler  but  it  did  not  work  giving
     #     wrong type argument: stringp, nil
-    # so I think that the file has to be specified before doing
-    # the -f thing.  Or rather, a filename has to have already
-    # been read before -f is seen by the command parsing code.
+    # so I think that the file has to be specified before  doing
+    # # the -f thing.  Or rather, a filename has to have already
+    # # been read before -f is seen by the command parsing code.
+    #
+    # The manpage for emacs says that '-l', '-f',  '--eval'  are
+    # Lisp-oriented, "these options are processed in  the  order
+    # encountered".
+    #
+    # It does not say  that  for  the  file  to  open  but  from
+    # experimentation, that's what I've seen
     #
     local file=$1
     shift
@@ -1104,8 +1111,17 @@ alias nn='vim ~/nemo_xios_notes.org'
 # by default.  Since it was requested that it be shown, a variable LOG_LEVEL
 # was added which if set to 'ERROR' would not redirect the output of
 # `r.shortcut-2.dot` to /dev/null
-set_rload_log_level(){
+_set_rload_log_level(){
     export LOG_LEVEL=ERROR
+}
+
+
+# List all paths that ld will search in for libraries in the current environment
+p.get_ld_search_paths(){
+    # ldconfig -v outputs a path followed by all shared libraries in that path
+    # with a leading tab.  To get just the paths, we filter out the lines
+    # beginning with a tab.
+    ldconfig -v 2>/dev/null | grep -v ^$'\t'
 }
 
 complete -o bashdefault -o default -o nospace -F _p.view-rev-file p.view-rev-file
