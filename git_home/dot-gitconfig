@@ -80,6 +80,6 @@
 [commit]
 	verbose = 2
 [advice]
-	detachedHead = false
+    detachedHead = true
 [merge]
 	tool = vimdiff
