@@ -1,9 +1,9 @@
 [user]
-	name = "Philippe Carphin"
-	email = philippe.carphin@ec.gc.ca
+    name = "Philippe Carphin"
+    email = philippe.carphin@ec.gc.ca
 
 [alias]
-	st = status
+    st = status
     logl = log --oneline --decorate --graph --all
     logd = log --oneline --graph --format=std --all
     logd2 = log --oneline --graph --format=std2 --all
@@ -12,7 +12,7 @@
     logdn = log --oneline --graph --format=stdnarrow --all
     logls = log --oneline --decorate --graph
     logds = log --oneline --graph --format=std
-	log-series = ! git tag UPSTREAM @{u} && git logu --format=\"- [PATCH %(describe:tags=true,match=UPSTREAM)/$(git rev-list @{u}.. | wc -l)] %s  \" --reverse  | sed -e \"s/UPSTREAM-//\" -e \"s|-g[a-f0-9]\\+/|/|\" && git tag -d UPSTREAM > /dev/null
+    log-series = ! git tag UPSTREAM @{u} && git logu --format=\"- [PATCH %(describe:tags=true,match=UPSTREAM)/$(git rev-list @{u}.. | wc -l)] %s  \" --reverse  | sed -e \"s/UPSTREAM-//\" -e \"s|-g[a-f0-9]\\+/|/|\" && git tag -d UPSTREAM > /dev/null
     grepr = grep --recurse-submodules
     find =  "!f() { : git ls-files ; git -C \"${GIT_PREFIX}\" --work-tree=$PWD ls-files :/\\*\"$1\"\\*; }; f"
     cfind =  "!f() { : git ls-files ; git -C \"${GIT_PREFIX}\" --work-tree=$PWD ls-files | grep \"$@\"; }; f"
@@ -26,25 +26,25 @@
     rawshow = "-c \"core.pager=less --tabs=4 -RFX\" show"
 
 [credential]
-	helper = cache --timeout 36000
+    helper = cache --timeout 36000
 
 [pull]
-	ff = only
+    ff = only
 
 [url "https://github.com/PhilippeCarphin/"]
-       insteadOf = me:
+    insteadOf = me:
 
 [diff]
-	tool = vimdiff
+    tool = vimdiff
 
 [core]
-	excludesfile = ~/.gitignore.global
+    excludesfile = ~/.gitignore.global
     # editor = vim
-	pager = diff-so-fancy | less --tabs=4 -RFX
+    pager = diff-so-fancy | less --tabs=4 -RFX
 
 [gui]
-	fontui = -family \".SF NS Text\" -size 18 -weight normal -slant roman -underline 0 -overstrike 0
-	fontdiff = -family \"DejaVu Sans Mono\" -size 16 -weight normal -slant roman -underline 0 -overstrike 0
+    fontui = -family \".SF NS Text\" -size 18 -weight normal -slant roman -underline 0 -overstrike 0
+    fontdiff = -family \"DejaVu Sans Mono\" -size 16 -weight normal -slant roman -underline 0 -overstrike 0
 # [http "https://gitlab.science.gc.ca/"]
 #        proxy = socks5h://127.0.0.1:8080
 [log]
@@ -58,29 +58,29 @@
     stdwide = %C(yellow)%h%C(reset)%C(auto)%d%C(reset) %C(bold white)%<|(100,trunc)%s %<(17)%C(dim cyan)%ad%Creset %C(dim blue)%an%C(reset)
 
 [status]
-	submoduleSummary = true
+    submoduleSummary = true
 
 [submodule]
     # recurse = true
 
 [safe]
-	directory = *
+    directory = *
 
 
 # Merci Philippe Blain!
 [color "grep"]
-	filename = magenta
-	linenumber = green
-	column = green
-	function = 146 bold
+    filename = magenta
+    linenumber = green
+    column = green
+    function = 146 bold
 [grep]
-	lineNumber = true
-	column = true
-	fallbackToNoIndex = true
+    lineNumber = true
+    column = true
+    fallbackToNoIndex = true
 [commit]
     # Show diffs in COMMIT_EDITMSG
     verbose = 2
 [advice]
     detachedHead = true
 [merge]
-	tool = vimdiff
+    tool = vimdiff
