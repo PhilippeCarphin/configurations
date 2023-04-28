@@ -40,7 +40,6 @@ function p.profile.main_interactive(){
     # unset command_not_found_handle
     export PYTHONSTARTUP=~/.pyrc
     export PACK_DIR=${HOME}/.profile.d/interactive/pack
-    export MANPATH=${HOME}/fs1/share/man:${MANPATH}
 
     # See code of __load_completion from /usr/share/bash-completion/bash_completion ...
     # It searches an array of directories that starts out as
