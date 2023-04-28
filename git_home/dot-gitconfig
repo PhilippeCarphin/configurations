@@ -78,7 +78,8 @@
 	column = true
 	fallbackToNoIndex = true
 [commit]
-	verbose = 2
+    # Show diffs in COMMIT_EDITMSG
+    verbose = 2
 [advice]
     detachedHead = true
 [merge]
