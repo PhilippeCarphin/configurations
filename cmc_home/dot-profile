@@ -57,7 +57,7 @@ function p.profile.main_interactive(){
 
     source "$HOME/.ssh/ssh_functions.sh"
     # source "$HOME/.funky-prompt.sh"
-    source "$HOME/.philconfig/shell_lib/powerline.sh"; __next_line_mode 1
+    source "$HOME/.philconfig/shell_lib/powerline.sh"
     source "$HOME/.git-completion.bash"
     SOURCE_COMPLETE_EXCLUDE_EXECUTABLE=""
     SOURCE_COMPLETE_ONLY_TEXT_FILES="yes"
