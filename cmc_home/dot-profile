@@ -59,6 +59,8 @@ function p.profile.main_interactive(){
     # source "$HOME/.funky-prompt.sh"
     source "$HOME/.philconfig/shell_lib/powerline.sh"
     source "$HOME/.git-completion.bash"
+    source ~/.fzf.bash
+    FZF_COMPLETION_OPT="--preview 'bat --color=always {}'"
     SOURCE_COMPLETE_EXCLUDE_EXECUTABLE=""
     SOURCE_COMPLETE_ONLY_TEXT_FILES="yes"
     GIT_CD_VERBOSE=yes
