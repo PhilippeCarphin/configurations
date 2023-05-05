@@ -5,7 +5,7 @@
 [alias]
     st = status
     logl = log --oneline --decorate --graph --all
-    logd = log --oneline --graph --format=std --all
+    logd = log --oneline --graph --format=std2 --all
     logd2 = log --oneline --graph --format=std2 --all
     logd3 = log --oneline --graph --format=std3 --all
     logdw = log --oneline --graph --format=stdwide --all
@@ -35,12 +35,13 @@
     insteadOf = me:
 
 [diff]
-    tool = vimdiff
+    tool = xxdiff
 
 [core]
     excludesfile = ~/.gitignore.global
     # editor = vim
-    pager = diff-so-fancy | less --tabs=4 -RFX
+    # pager = diff-so-fancy | less --tabs=4 -RFX
+    pager = less --tabs=4 -RFX
 
 [gui]
     fontui = -family \".SF NS Text\" -size 18 -weight normal -slant roman -underline 0 -overstrike 0

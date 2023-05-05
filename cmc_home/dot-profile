@@ -11,6 +11,7 @@ p.error(){
 #
 
 function p.profile.main(){
+    export XDG_RUNTIME_DIR=$HOME/run
     _set_rload_log_level
     export TZ=America/Toronto
     export LANG=en_US.UTF-8
@@ -58,6 +59,9 @@ function p.profile.main_interactive(){
     source "$HOME/.ssh/ssh_functions.sh"
     # source "$HOME/.funky-prompt.sh"
     source "$HOME/.philconfig/shell_lib/powerline.sh"
+    export __shell_grayscale="lets try it for now"
+    export __editor_grayscale="lets see how it goes"
+    # source "$HOME/git_presentation_demo/prompt-options/minimal_colored_prompt_with_colored_git_info_and_previous_exit_code.sh"
     source "$HOME/.git-completion.bash"
     source ~/.fzf.bash
     FZF_COMPLETION_OPT="--preview 'bat --color=always {}'"
@@ -105,7 +109,7 @@ function p.profile.main_interactive(){
     fi
 
     fix-source-complete
-    reminders
+    # reminders
 
     # Cd
     # alias cd=__cd_or_git_cd
@@ -114,7 +118,15 @@ function p.profile.main_interactive(){
     complete -o default -F __complete_git_colon_dirs cd
 
     # ls
-    alias ls='wrap_command_colon_paths ls --color'
+    if [[ -v __shell_grayscale ]] ; then
+        __powerline_grayscale=yes
+        alias ls='wrap_command_colon_paths ls'
+        ln -sf $HOME/.philconfig/tmux_home/dot-tmux.conf.local.grayscale $HOME/.tmux.conf.local
+    else
+        unset __powerline_grayscale
+        alias ls='wrap_command_colon_paths ls --color'
+        ln -sf $HOME/.philconfig/tmux_home/dot-tmux.conf.local $HOME/.tmux.conf.local
+    fi
     complete -o default -F __complete_git_colon_paths ls
 
 
@@ -500,6 +512,31 @@ function p.org-tangle(){
     cmd='emacs --batch -l org --eval "(setq org-src-preserve-indentation t)" ${file} -f org-babel-tangle "$@"'
     printf "Emacs batch command : \033[1;32m%s\033[0m\n" "$(eval echo $cmd)"
     eval $cmd
+}
+
+function p.org-export(){
+    local export_backend
+    local export_function
+    case $1 in
+        man)
+            export_backend=ox-man
+            export_function=org-man-export-to-man
+            ;;
+        html)
+            export_backend=ox-html
+            export_function=org-html-export-to-html
+            ;;
+        *) echo "Unknown export type '$1'"
+            return 1
+            ;;
+    esac
+    shift
+
+    echo "export_backend=${export_backend}"
+    cmd=(emacs --batch -l ~/.emacs.d/init.el -l ${export_backend} ${1} -f ${export_function})
+    printf "%s\n" "${cmd[*]}"
+    ${cmd[@]}
+
 }
 
 ################################################################################
