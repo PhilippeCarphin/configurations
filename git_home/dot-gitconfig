@@ -5,7 +5,7 @@
 [alias]
     st = status
     logl = log --oneline --decorate --graph --all
-    logd = log --oneline --graph --format=std2 --all
+    logd = log --oneline --graph --format=std --all
     logd2 = log --oneline --graph --format=std2 --all
     logd3 = log --oneline --graph --format=std3 --all
     logdw = log --oneline --graph --format=stdwide --all
@@ -24,6 +24,8 @@
     # view = "!f() { revision_and_line=\"$1\"; blob_revision=$(echo \"$revision_and_line\" | cut -d: -f1-2); line=$(echo \"$revision_and_line\" | cut -d: -f3); git show $blob_revision | vim -R - -c \"doautocmd BufRead $blob_revision\" +$line ; }; f"
     rawdiff = "-c \"core.pager=less --tabs=4 -RFX\" diff"
     rawshow = "-c \"core.pager=less --tabs=4 -RFX\" show"
+    xd = difftool --dir-diff
+    dt = difftool --dir-diff
 
 [credential]
     helper = cache --timeout 36000
@@ -40,8 +42,8 @@
 [core]
     excludesfile = ~/.gitignore.global
     # editor = vim
-    # pager = diff-so-fancy | less --tabs=4 -RFX
-    pager = less --tabs=4 -RFX
+    pager = diff-so-fancy | less --tabs=4 -RFX
+    # pager = less --tabs=4 -RFX
 
 [gui]
     fontui = -family \".SF NS Text\" -size 18 -weight normal -slant roman -underline 0 -overstrike 0
@@ -52,7 +54,7 @@
     date = human
 
 [pretty]
-    std = %C(yellow)%h%C(reset)%C(auto)%<(20,trunc)%d%C(reset) %C(bold white)%<|(90,trunc)%s %<(17)%C(dim cyan)%ad%Creset %C(dim blue)%an%C(reset)
+    std = %C(yellow)%h%C(reset)%C(auto)%d%C(reset) %C(bold white)%<|(90,trunc)%s %<(17)%C(dim cyan)%ad%Creset %C(dim blue)%an%C(reset)
     std2 = %C(yellow)%h%C(reset)%C(auto)%C(reset) %C(bold white)%<|(90,trunc)%s %<(17)%C(dim cyan)%ad%Creset %C(dim blue)%<(17,trunc)%an%C(auto)%d
     std3 = %C(auto)%d%C(reset) %C(bold white)%<|(90,trunc)%s %<(17)%C(dim cyan)%ad%Creset %C(dim blue)%an%C(reset)
     stdnarrow = %C(bold white)%<|(60,trunc)%s %<(17)%C(dim cyan)%ad%Creset %C(dim blue)%an%C(reset)
