@@ -37,7 +37,7 @@ $if mode=emacs
     # "\C-'": '\C-a\C-f\C-w'   # Also unusable for some reason
     "\C-t": '\C-a\C-f\C-w'
     #
-    "\C-xp": "PATH=${PATH}\e\C-e\C-a\ef\e[C:\e[D"
+    "\C-xp": "\C-aPATH=\C-e:${PATH}\C-a\ef\e[C"
     "\C-v": "\e\C-e"
 
     # "\e[Z": forward-word
@@ -53,4 +53,5 @@ $if mode=emacs
     # - insert '"'
     # - go to start
     # "\e\C-m": '\C-a "$(\C-e)"\C-a'
+    "\C-xr": "source ~/.profile_phil\n"
 $endif
