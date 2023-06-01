@@ -9,7 +9,7 @@
     logd2 = log --oneline --graph --format=std2 --all
     logd3 = log --oneline --graph --format=std3 --all
     logdw = log --oneline --graph --format=stdwide --all
-    logdn = log --oneline --graph --format=stdnarrow --all
+    logdn = log --oneline --graph --format=stdnarrow --all --decorate-refs-exclude=refs/remotes/*
     logls = log --oneline --decorate --graph
     logds = log --oneline --graph --format=std
     log-series = ! git tag UPSTREAM @{u} && git logu --format=\"- [PATCH %(describe:tags=true,match=UPSTREAM)/$(git rev-list @{u}.. | wc -l)] %s  \" --reverse  | sed -e \"s/UPSTREAM-//\" -e \"s|-g[a-f0-9]\\+/|/|\" && git tag -d UPSTREAM > /dev/null
@@ -54,11 +54,11 @@
     date = human
 
 [pretty]
-    std = %C(yellow)%h%C(reset)%C(auto)%d%C(reset) %C(bold white)%<|(90,trunc)%s %<(17)%C(dim cyan)%ad%Creset %C(dim blue)%an%C(reset)
-    std2 = %C(yellow)%h%C(reset)%C(auto)%C(reset) %C(bold white)%<|(90,trunc)%s %<(17)%C(dim cyan)%ad%Creset %C(dim blue)%<(17,trunc)%an%C(auto)%d
-    std3 = %C(auto)%d%C(reset) %C(bold white)%<|(90,trunc)%s %<(17)%C(dim cyan)%ad%Creset %C(dim blue)%an%C(reset)
-    stdnarrow = %C(bold white)%<|(60,trunc)%s %<(17)%C(dim cyan)%ad%Creset %C(dim blue)%an%C(reset)
-    stdwide = %C(yellow)%h%C(reset)%C(auto)%d%C(reset) %C(bold white)%<|(100,trunc)%s %<(17)%C(dim cyan)%ad%Creset %C(dim blue)%an%C(reset)
+    std = %C(yellow)%h%C(reset)%C(auto)%d%C(reset) %C(bold white)%<|(90,trunc)%s %<(17)%C(cyan)%ad%Creset %C(blue)%an%C(reset)
+    std2 = %C(yellow)%h%C(reset)%C(auto)%C(reset) %C(bold white)%<|(90,trunc)%s %<(17)%C(cyan)%ad%Creset %C(blue)%<(17,trunc)%an%C(auto)%d
+    std3 = %C(auto)%d%C(reset) %C(bold white)%<|(90,trunc)%s %<(17)%C(cyan)%ad%Creset %C(blue)%an%C(reset)
+    stdnarrow = %C(auto)%d%C(reset) %C(bold white)%<|(70,trunc)%s %<(17)%C(cyan)%ad%Creset %C(blue)%an%C(reset)
+    stdwide = %C(yellow)%h%C(reset)%C(auto)%d%C(reset) %C(bold white)%<|(100,trunc)%s %<(17)%C(cyan)%ad%Creset %C(blue)%an%C(reset)
 
 [status]
     submoduleSummary = true
