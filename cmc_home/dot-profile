@@ -96,12 +96,18 @@ function p.profile.main_interactive(){
     # From /etc/profile.d/which2.sh It makes which report what type reports but it only works on RHEL
     # alias which='(alias; declare -f) | /usr/bin/which --tty-only --read-alias --read-functions --show-tilde --show-dot'
 
+    # https://stackoverflow.com/a/19533853/5795941
+    # Other contexts may truncate the history, namely some people have said that
+    # history may get truncated at bash startup before these two settings have
+    # taken effect.  Therefore, we set the history to unlimited size, and only
+    # after doing that we set the history file to a different file.
     HISTSIZE=-1
-    HISTFILESIZE="A non numeric value inhibits truncation"
+    HISTFILESIZE=-1
     HISTIGNORE="rm -rf *"
+    HISTFILE=~/.eternal_bash_history
     # A bit too whimsical
     # HISTTIMEFORMAT=$'\033[1;32m%y-%m-%d \033[1;33m%H\033[0m:\033[1;34m%M\033[0m:\033[1;31m%S\033[0m '
-    HISTTIMEFORMAT=$'\033[1;32m%Y-%m-%d \033[1;33m%H:%M:%S\033[0m '
+    HISTTIMEFORMAT=$'\033[1;32m%Y-%m-%d \033[1;33m%H:%M:%S\033[0m \033[1;31m'
 
     # Merci Philippe Blain :D
     shopt -s direxpand
