@@ -639,7 +639,7 @@ function make(){
 
 
 function p.dusage(){
-    du --max-depth=1 -h | sort -h
+    du --max-depth=1 -h "$@" | sort -h
 }
 
 p.pgrep(){
