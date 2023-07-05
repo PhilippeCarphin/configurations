@@ -1338,6 +1338,10 @@ p.print_ps1(){
     fi
 }
 
+p.curl-gitlab(){
+    curl --header "Private-Token: $(cat ~/.ssh/gitlab-access-token)" "$@" | jq
+}
+
 p.profile.main
 unset -f p.profile.main
 unset -f p.profile.main_interactive
