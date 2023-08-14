@@ -38,7 +38,7 @@ $if mode=emacs
     "\C-t": '\C-a\C-f\C-w'
     #
     "\C-xp": "\C-aPATH=\C-e:${PATH}\C-a\ef\e[C"
-    "\C-v": "\e\C-e"
+    "\C-v": "\e\C-e" # WEIRD: Causes segfault in python3 interactive shell
 
     # "\e[Z": forward-word
     # "\C-h": backward-word

@@ -22,7 +22,7 @@ function p.profile.main(){
     export PATH="$STOW_DIR/bin:$HOME/bin:$HOME/.local/bin${PATH:+:$PATH}"
     export GITLAB_ACCESS_TOKEN="$(cat ~/.ssh/gitlab-access-token)"
     export EDITOR=/usr/bin/vim
-    PATH+=":$HOME/tools/go1.19.linux-amd64/bin"
+    PATH+=":$HOME/tools/go/bin"
     PATH+=":$HOME/tools/node-v16.13.1-linux-x64/bin"
     # PATH+=":$HOME/tools/rust-1.69.0-x86_64-unknown-linux-gnu/bin"
     PATH+=":/home/phc001/tools/rust-1.68.0-x86_64-unknown-linux-gnu/install-dir/bin"
@@ -45,6 +45,7 @@ function p.profile.main_interactive(){
     # unset command_not_found_handle
     export PYTHONSTARTUP=~/.pyrc
     export PACK_DIR=${HOME}/.profile.d/interactive/pack
+    export CMAKE_EXPORT_COMPILE_COMMANDS=yooos
 
     # See code of __load_completion from /usr/share/bash-completion/bash_completion ...
     # It searches an array of directories that starts out as
@@ -63,9 +64,6 @@ function p.profile.main_interactive(){
     source "$HOME/.ssh/ssh_functions.sh"
     # source "$HOME/.funky-prompt.sh"
     source "$HOME/.philconfig/shell_lib/powerline.sh"
-    GIT_PS1_SHOWUPSTREAM=verbose
-    GIT_PS1_SHOWDIRTYSTATE=y
-    GIT_PS1_SHOWUNTRACKEDFILES=y
     # PS1='[\u@\h \W$(__git_ps1)] $ '
     # PS1=' $? \001\033[1m\002[\u@\h \W$(__git_ps1)] $ \001\033[0m\002'
     # export __shell_grayscale="lets try it for now"
@@ -573,7 +571,7 @@ function p.myprocs(){
 
 function p.tcheck(){
     local nb_tmux
-    nb_tmux=$(pgrep -au "$USER" tmux | wc -l)
+    nb_tmux=$(pgrep -cfau "$USER" tmux)
     local tmux_color=""
     if ((nb_tmux > 15)) ; then
         tmux_color="\033[1;31m"
@@ -603,10 +601,6 @@ function p.check-processes(){
 
 function p.unansi(){
     sed 's/\x1b\[[0-9;]*m//g' "$@"
-}
-
-function p.qsubi(){
-    qsub -I -lselect=1:ncpus=80:mem=201gb "$@"
 }
 
 function p.quiet-make(){
@@ -686,13 +680,17 @@ p.check_procs_all(){
 # Acquire compute node for building and running GEM (or anything else)
 ################################################################################
 
+# function p.qsubi(){
+#     qsub -I -lselect=1:ncpus=80:mem=200gb "$@"
+# }
+
 function p.qsubi(){
     local ncpu=72
     if [[ "${1}" =~ [1-9][0-9]* ]] ; then
         ncpu=${1}
         shift
     fi
-    cmd=(qsub -I -lselect=1:ncpus=80:mem=50gb "$@")
+    cmd=(qsub -I -lselect=1:ncpus=80:mem=100gb "$@")
     printf "Running cmd '\033[1m%s\033[0m'\n" "${cmd[*]}"
     "${cmd[@]}"
 }
@@ -751,6 +749,161 @@ py3i(){
     python3 -i -c "$(cat ~/.pyrc $file)"
 }
 
+#
+# This is probably the dumbest way to spend a couple hours but there you go,
+# parse arguments to python3 to check if python3 was called with the -i with
+# either a file or -c "some code" or -c"some code".
+#
+# In that case, it doesn't read the ~/.pyrc file so I wouldn't get my cool
+# yellow and blue prompts.
+#
+# The first half splitting the arguments between arguments for python and
+# arguments for the file or the code (-c).
+#
+# Once the splitting is done, we can use getopt to reliably determine if:w
+#
+python3x(){
+    printf "$(shopt -s extdebug; declare -F python3): EXPERIMENTAL\n" >&2
+    local py_args=()
+    local script_args=()
+    local file=""
+    local code=""
+    local i=1
+    #
+    # Accumulate all command line arguments until -c or a file
+    # into py_args, when -c"...", of -c "..." is found, define code to be
+    # the "...". When a *.py file is found define file.
+    #
+    for((i=1;i<=$#;i++)) ; do
+        # https://stackoverflow.com/a/4555979/5795941
+        # Requires 'shopt -s extglob'
+        # It looks like the case '-*([^c])c' could include the '-c' case
+        # but if the '-c*([^c])c' handled '-c', it would put '-' in py_args.
+        # So in fact we need a case '-c' and a case '-+([^c])c'.  Same for
+        # the '-c*' and '-+([^c])c*' cases, they cannot be treated the same
+        # way.
+        case ${!i} in
+            -c) # ex: python3 -c "print('allo')"
+                local x=$((i+1))
+                code="${!x}"
+                i=$((i+2))
+                break
+                ;;
+            -c*) # ex: python3 -c"print('allo')"
+                code="${!i#-c}"
+                i=$((i+1))
+                break
+                ;;
+            -+([^c])c) # ex: python3 -ic "print('allo')"
+                py_args+=("$(echo "${!i}" | sed 's/c.*$//')")
+                local x=$((i+1))
+                code="${!x}"
+                i=$((i+2))
+                break;
+                ;;
+            -+([^c])c*) # ex: python3 -ic"print('allo')"
+                py_args+=("$(echo "${!i}" | head -n 1 | sed 's/c.*$//')")
+                code="$(echo "${!i}" | head -n 1 | sed 's/^-[^c]*c//')"
+                if [[ "${!i}" == *$'\n'* ]] ; then
+                    code+=$'\n'
+                    code+="$(echo "${!i}" | tail -n +2)"
+                fi
+                i=$((i+1))
+                break;
+                ;;
+            *.py)
+                file="${!i}"
+                i=$((i+1))
+                break
+                ;;
+            *) py_args+=("${!i}") ;;
+        esac
+    done
+
+    #
+    # Accumulate all args after -c"...", -c "..., or a file into
+    # the array script_args
+    #
+    for((;i<=$#;i++)) ; do
+        script_args+=("${!i}")
+    done
+
+    #
+    # Use getopt to determine reliably if -i is present in py_args
+    #
+    local spec=Bbc:dEhiIm:O::qsSuvVW:X:x
+    local interactive=0
+    eval local normalized_args=($(getopt -n "" -o ${spec} -- "${py_args[@]}"))
+    for a in "${normalized_args[@]}" ; do
+        if [[ "${a}" == "-i" ]] ; then
+            interactive=1
+            break;
+        fi
+    done
+
+    #
+    # If non-interactive or there is no -c CODE or file in the command line,
+    # just run the python3 command with forwarded args
+    #
+    if [[ "${interactive}" == 0 ]] || ([[ -z "${code}" ]] && [[ -z "${file}" ]]) ; then
+        command python3 "$@"
+        return
+    fi
+
+    #
+    # Adapt code or file by prepending ~/.pyrc.  For files, the command is
+    # changed to a python -c CODE with CODE containing ~/.pyrc, some other
+    # hacks and finally the content of the file
+    #
+    local wc="$(wc -l ~/.pyrc)"
+    local pyrc_nlines=${wc% *}
+    local new_code
+    if [[ "${code}" != "" ]] ; then
+        new_code="$(cat ~/.pyrc)"$'\n'"${code}"
+        offset=${pyrc_nlines}
+    elif [[ "${file}" != "" ]] ; then
+        new_code="$(cat ~/.pyrc)"$'\n'
+        new_code+="import sys"$'\n'
+        new_code+="__file__='${file}'"$'\n'
+        new_code+="sys.argv[0]=\"${file}\""$'\n'
+        new_code+="$(cat "${file}")"
+        offset=$((pyrc_nlines + 3))
+    fi
+
+    #
+    # Run the same python command with code stderr optionally redirected through
+    # a filter that will modify line numbers in traceback lines referring to
+    # code from -c or a file so that they match the original argument to -c or
+    # the original file.
+    #
+    if [[ -v PYRC_NOFILTER ]] ; then
+        command python3 -u "${py_args[@]}" -c "${new_code}" "${script_args[@]}"
+    else
+        command python3 -u "${py_args[@]}" -c "${new_code}" "${script_args[@]}" &> >(command python3 -u -c "
+import sys
+for l in sys.stdin:
+    # print(l[:-1])
+    if l.startswith('  File \"<string>\"'):
+        # print(f'  >>> original line: \"{l[:-1]}\"')
+        parts = l.split(',')
+        if sys.argv[1]:
+            print(parts[0].replace('<string>',sys.argv[1])+', ', end='')
+        else:
+            print(parts[0]+', ', end='')
+        line_parts=parts[1].split(' ')
+        print(line_parts[1] + ' ', end='')
+        # print(f'line_parts={line_parts}')
+        print(int(line_parts[2]) - ${offset}, end='')
+        print(',', end='')
+        if len(parts) == 3:
+            print(parts[2], end='')
+        else:
+            print()
+    else:
+        print(l, end='')
+" "${file}")
+    fi
+}
 
 function dump-environment-to-tmpfile(){
     local envdump_dir=$HOME/envdumps
@@ -1048,7 +1201,10 @@ p.cmakel(){
 }
 
 p.shame(){
-    trap 'echo "                      a commoner kicks you"' SIGINT
+(
+    i=0
+    trap 'echo "                      a commoner kicks you"; i=$((i-1))' SIGINT
+    trap 'stty echo' EXIT
     stty -echo
     for((i=0;i<5;i++)); do
         echo -n "shame!"
@@ -1063,6 +1219,7 @@ p.shame(){
     stty echo
     trap '' SIGINT
     exit 1
+)
 }
 
 p.view-rev-file(){
@@ -1387,6 +1544,23 @@ function cd..(){
     cd $dir
 }
 
+# This function is pretty much just so that I remember the command and when I
+# remember it well enough I will delete it.
+function p.lsdirs(){
+    ls -d */
+}
+function vimpy(){
+    local module=${1%%.*}
+    local obj=${1##*.}
+    local python_script="
+import os
+import ${module}
+code = ${module}.${obj}.__code__
+print(f'{code.co_filename} +{code.co_firstlineno}')
+"
+    local vim_args=($(python3 <<< ${python_script}))
+    vim "${vim_args[@]}"
+}
 p.profile.main
 unset -f p.profile.main
 unset -f p.profile.main_interactive

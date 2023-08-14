@@ -4,15 +4,23 @@
 
 [alias]
     st = status
-    logl = log --oneline --decorate --graph --all
-    logd = log --oneline --graph --format=std --all
-    logd2 = log --oneline --graph --format=std2 --all
-    logd3 = log --oneline --graph --format=std3 --all
-    logdw = log --oneline --graph --format=stdwide --all
-    logdn = log --oneline --graph --format=stdnarrow --all --decorate-refs-exclude=refs/remotes/*
-    logls = log --oneline --decorate --graph
-    logds = log --oneline --graph --format=std
-    log-series = ! git tag UPSTREAM @{u} && git logu --format=\"- [PATCH %(describe:tags=true,match=UPSTREAM)/$(git rev-list @{u}.. | wc -l)] %s  \" --reverse  | sed -e \"s/UPSTREAM-//\" -e \"s|-g[a-f0-9]\\+/|/|\" && git tag -d UPSTREAM > /dev/null
+    discard = restore -p
+    ds = diff --stat
+    dss = "!f(){ printf '+   -   FILE\n' ; git diff --numstat ; } ; f"
+    logl   = log --oneline --graph
+    loglu  = log --oneline --graph                  HEAD HEAD@{u}
+    logd   = log --oneline --graph --format=std
+    logdu  = log --oneline --graph --format=std     HEAD HEAD@{u}
+    logd2  = log --oneline --graph --format=std2
+    logd3  = log --oneline --graph --format=std3
+    logdw  = log --oneline --graph --format=stdwide
+
+    # For Philippe Blain's log-series, also requires format ol in [pretty] section
+	logo = log --abbrev-commit --decorate --format=ol
+	logu = logo @{upstream}..
+    # log-series = ! git tag UPSTREAM @{u} && git logu --format=\"- [PATCH %(describe:tags=true,match=UPSTREAM)/$(git rev-list @{u}.. | wc -l)] %s  \" --reverse  | sed -e \"s/UPSTREAM-//\" -e \"s|-g[a-f0-9]\\+/|/|\" && git tag -d UPSTREAM > /dev/null
+	log-series = ! git tag UPSTREAM @{u} && git logu --topo-order --format=\"- [PATCH %(describe:tags=true,match=UPSTREAM)/$(git rev-list @{u}.. | wc -l)] %s  \" --reverse  | sed -e \"s/UPSTREAM-//\" -e \"s|-g[a-f0-9]\\+/|/|\" && git tag -d UPSTREAM > /dev/null
+
     grepr = grep --recurse-submodules
     find =  "!f() { : git ls-files ; git -C \"${GIT_PREFIX}\" --work-tree=$PWD ls-files :/\\*\"$1\"\\*; }; f"
     cfind =  "!f() { : git ls-files ; git -C \"${GIT_PREFIX}\" --work-tree=$PWD ls-files | grep \"$@\"; }; f"
@@ -27,6 +35,7 @@
     xd = difftool --dir-diff
     dt = difftool --dir-diff
 
+	hist = log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short
 [credential]
     helper = cache --timeout 36000
 
@@ -52,13 +61,16 @@
 #        proxy = socks5h://127.0.0.1:8080
 [log]
     date = human
+    excludeDecoration = refs/remotes/private*
 
 [pretty]
     std = %C(yellow)%h%C(reset)%C(auto)%d%C(reset) %C(bold white)%<|(90,trunc)%s %<(17)%C(cyan)%ad%Creset %C(blue)%an%C(reset)
     std2 = %C(yellow)%h%C(reset)%C(auto)%C(reset) %C(bold white)%<|(90,trunc)%s %<(17)%C(cyan)%ad%Creset %C(blue)%<(17,trunc)%an%C(auto)%d
     std3 = %C(auto)%d%C(reset) %C(bold white)%<|(90,trunc)%s %<(17)%C(cyan)%ad%Creset %C(blue)%an%C(reset)
     stdnarrow = %C(auto)%d%C(reset) %C(bold white)%<|(70,trunc)%s %<(17)%C(cyan)%ad%Creset %C(blue)%an%C(reset)
-    stdwide = %C(yellow)%h%C(reset)%C(auto)%d%C(reset) %C(bold white)%<|(100,trunc)%s %<(17)%C(cyan)%ad%Creset %C(blue)%an%C(reset)
+    stdwide = %C(yellow)%h%C(reset)%C(auto)%d%C(reset) %C(bold white)%<|(140,trunc)%s %<(17)%C(cyan)%ad%Creset %C(blue)%an%C(reset)
+	# similar to '--oneline' but with additional information (author, author date, (notes truncated at 2 chars) )
+	ol = %C(yellow)%h%C(reset) %C(normal)%s%C(reset) %C(dim white)%an%C(reset) %C(dim blue)(%ad)%C(reset) %C(auto)%d%C(reset)
 
 [status]
     submoduleSummary = true
@@ -84,6 +96,6 @@
     # Show diffs in COMMIT_EDITMSG
     verbose = 2
 [advice]
-    detachedHead = true
+	detachedHead = false
 [merge]
     tool = vimdiff
