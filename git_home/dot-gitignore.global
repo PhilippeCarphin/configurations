@@ -22,3 +22,4 @@ build-*
 localinstall
 localinstall-*
 compile_commands.json
+.cache
