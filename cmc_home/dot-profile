@@ -82,6 +82,7 @@ function p.profile.main_interactive(){
 
     _source_dir "$HOME/fs1/etc/bash_completion.d"
     _source_dir "$HOME/fs1/etc/profile.d"
+    _source_dir "$HOME/.bash_completion.d"
     source ~/.git-prompt.sh
 
     alias print_args='__print_args "$@"'
@@ -90,6 +91,8 @@ function p.profile.main_interactive(){
     alias tree='tree -C'
     alias rmb='rm -rf ../build/*'
     alias rg='rg --no-heading --color=auto'
+    alias gdb='~phb001/.local_rhel-8-icelake-64/bin/gdb -q -tui'
+    alias gdbserver='~phb001/.local_rhel-8-icelake-64/bin/gdbserver'
     # From /etc/profile.d/which2.sh It makes which report what type reports but it only works on RHEL
     # alias which='(alias; declare -f) | /usr/bin/which --tty-only --read-alias --read-functions --show-tilde --show-dot'
 

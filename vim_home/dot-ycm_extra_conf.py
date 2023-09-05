@@ -71,14 +71,19 @@ def phil_get_compilation_database_folder():
             universal_newlines=True
     )
     if result.returncode != 0:
+        log("Returning os.getcwd()={os.getcwd()} for compilation database location")
         return os.getcwd()
 
+
+    log(f"Repodir is {result.stdout}")
     return result.stdout
 
 def log(message):
-    print(message, file=open(os.path.expanduser('~/.log.txt'), 'a+'))
+    pass
+    # print(message, file=open(os.path.expanduser('~/.log.txt'), 'a+'))
 
 def add_cmake_stuff():
+    log("Start add cmake stuff")
     result = subprocess.run(
             "git rev-parse --show-toplevel",
             shell=True,
@@ -91,6 +96,7 @@ def add_cmake_stuff():
 
     repo_dir = result.stdout.strip()
     if not os.path.isfile(f'{repo_dir}/CMakeLists.txt'):
+        log("No CMakeLists.txt file in repo")
         return
 
     if os.path.exists(f'{repo_dir}/compile_commands.json'):
@@ -101,7 +107,7 @@ def add_cmake_stuff():
     else:
         sorted_builds = list(sorted(
             filter(lambda s: s.startswith('build'), os.listdir(repo_dir)),
-            key=(lambda f: os.stat(f).st_ctime)
+            key=(lambda f: os.stat(f"{repo_dir}/{f}").st_ctime)
         ))
 
         if len(sorted_builds) == 0:
@@ -111,8 +117,6 @@ def add_cmake_stuff():
         flags.append(f'-I{repo_dir}/{sorted_builds[0]}')
 
 add_cmake_stuff()
-
-
 
 compilation_database_folder = phil_get_compilation_database_folder()
 
