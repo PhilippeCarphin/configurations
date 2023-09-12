@@ -14,6 +14,7 @@
     logd2  = log --oneline --graph --format=std2
     logd3  = log --oneline --graph --format=std3
     logdw  = log --oneline --graph --format=stdwide
+    logdn  = log --oneline --graph --format=stdnarrow
 
     # For Philippe Blain's log-series, also requires format ol in [pretty] section
 	logo = log --abbrev-commit --decorate --format=ol
