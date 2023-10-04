@@ -1576,6 +1576,18 @@ print(f'{code.co_filename} +{code.co_firstlineno}')
     local vim_args=($(python3 <<< ${python_script}))
     vim "${vim_args[@]}"
 }
+
+function p.line_range(){
+    local file=$1
+    local start=$2
+    local end=$3
+    local nb_lines=$((end - start))
+    if [[ "${file}" == "-" ]] ; then
+        tail -n +${start} | head -n ${nb_lines}
+    else
+        tail -n +${start} ${file} | head -n ${nb_lines}
+    fi
+}
 p.profile.main
 unset -f p.profile.main
 unset -f p.profile.main_interactive
