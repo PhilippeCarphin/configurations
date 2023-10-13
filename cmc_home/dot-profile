@@ -85,7 +85,6 @@ function p.profile.main_interactive(){
     _source_dir "$HOME/.bash_completion.d"
     source ~/.git-prompt.sh
 
-    alias print_args='__print_args "$@"'
     alias ls='ls --color -h'
     alias grep='grep -n --color'
     alias tree='tree -C'
@@ -789,7 +788,7 @@ python3x(){
     # into py_args, when -c"...", of -c "..." is found, define code to be
     # the "...". When a *.py file is found define file.
     #
-    for((i=1;i<=$#;i++)) ; do
+    for ((i=1;i<=$#;i++)) ; do
         # https://stackoverflow.com/a/4555979/5795941
         # Requires 'shopt -s extglob'
         # It looks like the case '-*([^c])c' could include the '-c' case
@@ -839,7 +838,7 @@ python3x(){
     # Accumulate all args after -c"...", -c "..., or a file into
     # the array script_args
     #
-    for((;i<=$#;i++)) ; do
+    for ((;i<=$#;i++)) ; do
         script_args+=("${!i}")
     done
 
@@ -953,7 +952,7 @@ function xargso(){
     fi
     cmd="$@ \"\$@\" </dev/tty"
 
-    print_args xargs sh -c "${cmd}"
+    # print_args xargs sh -c "${cmd}"
     printf "===============================\n"
     print_args xargs sh -c "${cmd}" "$@"
     printf "===============================\n"
@@ -1013,15 +1012,19 @@ function f.use(){
     x.use ~for000/.profile.d/interactive/pack "$@"
 }
 
-function __print_args(){
+function print_args(){
     # Useful to double check how arguments are given to a program.
     # For example, xargso above, the arguments get split /c
+    local caller=${FUNCNAME[1]}
+    if [[ "${caller}" == "" ]] ; then
+        caller="main"
+    fi
     local i=1
-    echo "${FUNCNAME[1]}: \$0   = $0"
-    echo "${FUNCNAME[1]}: \$#   = $#"
-    echo "${FUNCNAME[1]}: args = '$@'"
+    echo "${caller}: \$0   = $0"
+    echo "${caller}: \$#   = $#"
+    echo "${caller}: args = '$@'"
     for arg in "$@" ; do
-        echo "${FUNCNAME[1]}: arg[$((i++))] = $arg"
+        echo "${caller}: arg[$((i++))] = $arg"
     done
 }
 
@@ -1221,7 +1224,7 @@ p.shame(){
     trap 'echo "                      a commoner kicks you"; i=$((i-1))' SIGINT
     trap 'stty echo' EXIT
     stty -echo
-    for((i=0;i<5;i++)); do
+    for ((i=0;i<5;i++)) ; do
         echo -n "shame!"
         sleep 1
         echo -n " ding"
@@ -1587,6 +1590,10 @@ function p.line_range(){
     else
         tail -n +${start} ${file} | head -n ${nb_lines}
     fi
+}
+
+function p.colonlist(){
+    tr ':' '\n' | sort
 }
 p.profile.main
 unset -f p.profile.main
