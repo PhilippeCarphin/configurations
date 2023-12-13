@@ -63,6 +63,31 @@ flags = [
 # Most projects will NOT need to set this to anything; you can just change the
 # 'flags' list of compilation flags.
 def phil_get_compilation_database_folder():
+    f = get_cdbf_2()
+    if f is not None:
+        log(f"compilation database folder is {f}")
+        return f
+
+    return get_cdbf_1()
+
+def get_cdbf_2():
+    if os.path.isfile(os.path.join(os.getcwd(), 'compilie_commands.json')):
+        return os.getcwd()
+    cmake_lists = find_cmake_lists()
+    log(f"cmake_lists = {cmake_lists}")
+    if cmake_lists is None:
+        return None
+    start = os.path.dirname(cmake_lists)
+    log(f"start = {start}")
+    cp = subprocess.run(["find", start, "-name", "compile_commands.json"], timeout=5, stdout=subprocess.PIPE, universal_newlines=True)
+    log(f"cp.stdout = {cp.stdout}")
+    results = cp.stdout.splitlines()
+    log(f"results = {results}")
+    for r in results:
+        return os.path.dirname(r)
+
+
+def get_cdbf_1():
     result = subprocess.run(
             "git rev-parse --show-toplevel",
             shell=True,
@@ -77,10 +102,20 @@ def phil_get_compilation_database_folder():
 
     log(f"Repodir is {result.stdout}")
     return result.stdout
+def find_cmake_lists():
+    current = os.environ['PWD']
+    last_cmake_lists = None
+    while True:
+        cmake_lists = os.path.join(current, 'CMakeLists.txt')
+        if os.path.isfile(cmake_lists):
+            last_cmake_lists = cmake_lists
+        elif current == '/':
+            return last_cmake_lists
+        current = os.path.dirname(current)
+
 
 def log(message):
-    pass
-    # print(message, file=open(os.path.expanduser('~/.log.txt'), 'a+'))
+    print(message, file=open(os.path.expanduser('~/.log.txt'), 'a+'))
 
 def add_cmake_stuff():
     log("Start add cmake stuff")

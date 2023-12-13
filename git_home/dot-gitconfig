@@ -96,7 +96,11 @@
 [commit]
     # Show diffs in COMMIT_EDITMSG
     verbose = 2
+# End merci Philippe Blain!
+
 [advice]
 	detachedHead = false
 [merge]
     tool = vimdiff
+[init]
+    defaultBranch = master

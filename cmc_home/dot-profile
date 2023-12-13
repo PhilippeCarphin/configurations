@@ -4,86 +4,42 @@ p.error(){
     printf "${FUNCNAME[1]}: \033[1;31mERROR\033[0m: $*\n" >&2
 }
 
-#
-# I want what this script does to be the first thing you see when opening it
-# and to have no "naked" code inside the script except for that thing at the
-# top and the call to main at the very end.
-#
-
 function p.profile.main(){
-    _set_rload_log_level
+    export LOG_LEVEL=ERROR # For r.load
+    export CMAKE_EXPORT_COMPILE_COMMANDS=TRUE
     export TZ=America/Toronto
     export LANG=en_US.UTF-8
     export SSM_DEV=/home/ords/cmdd/cmds/nil000/ssm
-    export STOW_DIR="$HOME/fs1"
-    export PACKAGE_DIR="$STOW_DIR/Cellar"
     export GITLAB_RUNNER_SCIENCE_ORDSOUMET_KEEP_FILES='yas'
     export GONOSUMDB=gitlab.science.gc.ca
-    export PATH="$STOW_DIR/bin:$HOME/bin:$HOME/.local/bin${PATH:+:$PATH}"
+    export PATH="$HOME/bin:$HOME/.local/bin${PATH:+:$PATH}:$HOME/tools/go/bin"
     export GITLAB_ACCESS_TOKEN="$(cat ~/.ssh/gitlab-access-token)"
     export EDITOR=/usr/bin/vim
-    PATH+=":$HOME/tools/go/bin"
     source $HOME/.cargo/env
-    . ssmuse-sh -x /fs/ssm/hpco/exp/ssm/ssm-12.0-beta1 \
-                -x /fs/ssm/hpco/exp/ssmuse/ssmuse-1.13-beta2
-    if p.is_vscode_server_login ; then
-        export GO111MODULES=off
-        export TMPDIR=/tmp/$USER/vscode-server
-        mkdir -p ${TMPDIR}
-    fi
+    . ssmuse-sh -x /fs/ssm/hpco/exp/ssmuse/ssmuse-1.13-beta2
+    configure_fs1_env
+    configure_spack
+    configure_vscode_server_environment
     if [[ "$-" == *i* ]] ; then
         p.profile.main_interactive
     fi
 }
 
 function p.profile.main_interactive(){
-    # p.check-processes
-    # p.nice-completion
-    # Remove that thing where it looks for Ubuntu packages if a command is not found
-    # unset command_not_found_handle
     export PYTHONSTARTUP=~/.pyrc
     export PACK_DIR=${HOME}/.profile.d/interactive/pack
-    export CMAKE_EXPORT_COMPILE_COMMANDS=yooos
-
-    # See code of __load_completion from /usr/share/bash-completion/bash_completion ...
-    # It searches an array of directories that starts out as
-    # dirs=(${BASH_COMPLETION_USER_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/bash-completion}/completions)
-    # Since I don't define BASH_COMPLETION_USER_DIR and XDG_DATA_HOME
-    # is also not defined, dirs=(${HOME}/.local/share/bash-completion/completions).
-    # After that it does
-    #     for dir in ${XDG_DATA_DIRS:-/usr/local/share:/usr/share};
-    #         dirs+=($dir/bash-completion/completions);
-    XDG_DATA_DIRS=${XDG_DATA_DIRS:+${XDG_DATA_DIRS}:}${HOME}/fs1/etc
-    check-alert-file ~sici000/alert
-    check-alert-file ~/alert
-
     set_ls_colors_for_readline_and_ls
 
-    source "$HOME/.ssh/ssh_functions.sh"
-    # source "$HOME/.funky-prompt.sh"
-    source "$HOME/.philconfig/shell_lib/powerline.sh"
-    # PS1='[\u@\h \W$(__git_ps1)] $ '
-    # PS1=' $? \001\033[1m\002[\u@\h \W$(__git_ps1)] $ \001\033[0m\002'
-    # export __shell_grayscale="lets try it for now"
-    # export __editor_grayscale="lets see how it goes"
-    # source "$HOME/git_presentation_demo/prompt-options/minimal_colored_prompt_with_colored_git_info_and_previous_exit_code.sh"
-    source "$HOME/.git-completion.bash"
-    source ~/.fzf.bash
-    FZF_COMPLETION_OPT="--preview 'bat --color=always {}'"
-    SOURCE_COMPLETE_EXCLUDE_EXECUTABLE=""
-    SOURCE_COMPLETE_ONLY_TEXT_FILES="yes"
-    GIT_CD_VERBOSE=yes
-    source $HOME/.philconfig/shell_lib/impersonate.sh
-    # Append to global history after every command.
-    # .funky-prompt.sh sets PROMPT_COMMAND
-    # so this next line must come AFTER sourcing ~/.funky-prompt.sh
+    source "$HOME/Repositories/github.com/philippecarphin/bash-powerline/powerline.sh"
     PROMPT_COMMAND="$PROMPT_COMMAND; history -a"
-    maybe-source "$HOME/.philconfig/shell_lib/maestro-functions.sh"
-
-    _source_dir "$HOME/fs1/etc/bash_completion.d"
-    _source_dir "$HOME/fs1/etc/profile.d"
+    source "$HOME/.git-completion.bash"
+    source "$HOME/.ssh/ssh_functions.sh"
+    source "$HOME/.philconfig/shell_lib/x.use"
+    source "$HOME/.philconfig/shell_lib/functions.sh"
+    source "$HOME/.philconfig/shell_lib/view-rev-file.sh"
+    FZF_COMPLETION_OPT="--preview 'bat --color=always {}'"
+    # source ~/.fzf.bash
     _source_dir "$HOME/.bash_completion.d"
-    source ~/.git-prompt.sh
 
     alias ls='ls --color -h'
     alias grep='grep -n --color'
@@ -92,25 +48,46 @@ function p.profile.main_interactive(){
     alias rg='rg --no-heading --color=auto'
     alias gdb='~phb001/.local_rhel-8-icelake-64/bin/gdb -q -tui'
     alias gdbserver='~phb001/.local_rhel-8-icelake-64/bin/gdbserver'
-    # From /etc/profile.d/which2.sh It makes which report what type reports but it only works on RHEL
-    # alias which='(alias; declare -f) | /usr/bin/which --tty-only --read-alias --read-functions --show-tilde --show-dot'
+    alias diff='diff -u --color'
+    alias :wqa='exit 0'
+    alias :q='exit 0'
+    alias :qa='exit 0'
+    alias :wq='exit 0'
+    alias :cq='exit 1'
+    alias cd='wrap_command_colon_paths cd'
+    complete -F __complete_git_colon_dirs cd
+    alias git=git-enforce-rules-of-philippes
+    complete -o default -o nospace -o filenames -F _DottableCompletion source .
+    shopt -s direxpand # Merci Philippe Blain :D
+    check-alert-file ~sici000/alert
+    check-alert-file ~/alert
+    maybe_cd_to_pbs_o_workdir
+    configure_history
+    configure_vim
+}
 
-    # https://stackoverflow.com/a/19533853/5795941
-    # Other contexts may truncate the history, namely some people have said that
-    # history may get truncated at bash startup before these two settings have
-    # taken effect.  Therefore, we set the history to unlimited size, and only
-    # after doing that we set the history file to a different file.
-    HISTSIZE=-1
-    HISTFILESIZE=-1
-    HISTIGNORE="rm -rf *"
-    HISTFILE=~/.eternal_bash_history
-    # A bit too whimsical
-    # HISTTIMEFORMAT=$'\033[1;32m%y-%m-%d \033[1;33m%H\033[0m:\033[1;34m%M\033[0m:\033[1;31m%S\033[0m '
-    HISTTIMEFORMAT=$'\033[1;32m%Y-%m-%d \033[1;33m%H:%M:%S\033[0m \033[1;31m'
+configure_fs1_env(){
+    # See code of __load_completion from /usr/share/bash-completion/bash_completion ...
+    # It searches an array of directories that starts out as
+    # Since I don't define BASH_COMPLETION_USER_DIR and XDG_DATA_HOME
+    # is also not defined, dirs=(${HOME}/.local/share/bash-completion/completions).
+    # After that it does
+    #     dirs=(${BASH_COMPLETION_USER_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/bash-completion}/completions)
+    #     for dir in ${XDG_DATA_DIRS:-/usr/local/share:/usr/share};
+    #         dirs+=($dir/bash-completion/completions);
+    #     done
+    # then for each of
+    #
+    export STOW_DIR="$HOME/fs1"
+    XDG_DATA_DIRS=${XDG_DATA_DIRS:+${XDG_DATA_DIRS}:}${STOW_DIR}/etc
+    export PACKAGE_DIR="$STOW_DIR/Cellar"
+    export LD_LIBRARY_PATH="${STOW_DIR}/lib:${STOW_DIR}/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+    export PATH=${STOW_DIR}/bin${PATH:+:${PATH}}
+    _source_dir "$HOME/fs1/etc/bash_completion.d"
+    _source_dir "$HOME/fs1/etc/profile.d"
+}
 
-    # Merci Philippe Blain :D
-    shopt -s direxpand
-
+maybe_cd_to_pbs_o_workdir(){
     if [[ "${PBS_ENVIRONMENT}" == PBS_INTERACTIVE ]] ; then
         printf "PBS_ENVIRONMENT detected, cd'ing to \$PBS_O_WORKDIR=${PBS_O_WORKDIR}\n" >&2
         if ! cd "${PBS_O_WORKDIR}" ; then
@@ -119,30 +96,6 @@ function p.profile.main_interactive(){
         echo "${PBS_JOBID}" > ~/.ssh/current_job
         echo "JOBID ${PBS_JOBID} written in ~/.ssh/current_job" >&2
     fi
-
-    fix-source-complete
-    # reminders
-
-    # Cd
-    alias cd='wrap_command_colon_paths cd'
-    complete -F __complete_git_colon_dirs cd
-
-    alias git=git-enforce-rules-of-philippes
-
-    # ls
-    if [[ -v __shell_grayscale ]] ; then
-        __powerline_grayscale=yes
-        alias ls='wrap_command_colon_paths ls'
-        ln -sf $HOME/.philconfig/tmux_home/dot-tmux.conf.local.grayscale $HOME/.tmux.conf.local
-    else
-        unset __powerline_grayscale
-        alias ls='wrap_command_colon_paths ls --color'
-        ln -sf $HOME/.philconfig/tmux_home/dot-tmux.conf.local $HOME/.tmux.conf.local
-    fi
-    complete -o default -F __complete_git_colon_paths ls
-
-
-    configure_vim
 }
 
 
@@ -152,6 +105,19 @@ function maybe-source(){
     fi
 }
 
+configure_vscode_server_environment(){
+    if [[ -v VSCODE_AGENT_FOLDER ]] ; then
+        export GO111MODULES=off
+        export TMPDIR=/tmp/$USER/vscode-server
+        mkdir -p ${TMPDIR}
+    fi
+}
+
+configure_spack(){
+    export SPACK_SKIP_MODULES=y
+    if [[ -n "${SPACK_SKIP_MODULES}" ]] ; then echo "WARNING: SPACK_SKIP_MODULES is set" >&2 ; fi
+    . $(repos -get-dir spack)/share/spack/setup-env.sh
+}
 
 function check-alert-file(){
     local alert_file="$1"
@@ -161,584 +127,43 @@ function check-alert-file(){
     fi
 }
 
-function maybe-load-ordenv(){
-    if [ -e ~/.ordenv-mode ] || [ -e ~/.maestro-mode ] ; then
-        p.ordenv
-    fi
+function configure_history(){
+    # https://stackoverflow.com/a/19533853/5795941
+    # Other contexts may truncate the history, namely some people have said that
+    # history may get truncated at bash startup before these two settings have
+    # taken effect.  Therefore, we set the history to unlimited size, and only
+    # after doing that we set the history file to a different file.
+    HISTSIZE=-1
+    HISTFILESIZE=-1
+    HISTIGNORE="rm -rf *"
+    HISTFILE=~/.eternal_bash_history
+    HISTTIMEFORMAT=$'\033[1;32m%Y-%m-%d \033[1;33m%H:%M:%S\033[0m \033[1;31m'
 }
 
-function maybe-load-maestro(){
-    if [ -e ~/maestro-mode ] ; then
-        p.use-maestro
-    fi
-}
-
-lsl(){
-    ls --color=always -la "$@" | less -R
-}
-
-lsg(){
-    ls --color=always -la | grep "$@"
-}
-
-#
-# Since I put my gitlab access token in an environment variable, and for
-# troubleshooting I often dump my environment to a file, I don't want to
-# have my gitlab access token visible to anyone who looks at that file
-# and I don't want to have to remember to change that files permissions
-#
-dots(){
-    sed 's/./●/g' <<< "$1"
-}
-
-#
-# - Change "GITLAB_ACCESS_TOKEN=<the-token>" to "GITLAB_ACCESS_TOKEN=<dots>"
-#   only because I think it's cool and it took me two seconds to code.
-# - Change lines "BASH_FUNC_thing(){ stuff" to "BASH_FUNC_thing(){ stuff [...] }"
-# - Remove all lines starting with a space because they are part of multiline
-#   values of those BASH_FUNC_thing
-dump-env(){
-    command env "$@" \
-        | sed "s/^GITLAB_ACCESS_TOKEN=.*/GITLAB_ACCESS_TOKEN=$(dots "$GITLAB_ACCESS_TOKEN")/" \
-        | sed 's/\(^BASH_FUNC.*\)/\1 \x1b[33m[...]\x1b[0m }/' \
-        | command grep -v '^}$\|^ ' \
-        | sort
-}
-
-# DONT USE: Leaving it here to remind myself that this is
-# in fact not equivalent to putting thins in inputrc: by
-# using this function instead of inputrc, I wasn't getting
-# any colored-stats during my autocompletions.
-
-# Each line is equivalent to putting the content of
-# the single quotes in ~/.inputrc
-function p.nice-completion(){
-    bind 'set colored-stats on'
-    bind 'set colored-completion-prefix on'
-    bind 'set visible-stats on'
-}
-
-function p.set-menu-complete(){
-    # I think these things can go in the ~/.inputrc file, I know that
-    # make tab cycle through commands after listing
-    bind '"\t":menu-complete'
-    bind "set show-all-if-ambiguous on"
-    bind "set completion-ignore-case on"
-    bind "set menu-complete-display-prefix on"
-}
-
-
-function p.set-web-proxy(){
-    # From ~sbf000/.profile.d/interactive/post
-    # except that I he had https_proxy=http://  and HTTPS_PROXY=http://
-    # and I did            https_proxy=https:// and HTTPS_PROXY=https://
-    # EDIT: Turns out my extra 's' at the end was making
-    # things not work.
-    local p=http://webproxy.science.gc.ca:8888/
-    export http_proxy=${p}
-    export https_proxy=${p}
-    export HTTP_PROXY=${p}
-    export HTTPS_PROXY=${p}
-}
-
-function p.unset-web-proxy(){
-    unset http_proxy
-    unset https_proxy
-    unset HTTP_PROXY
-    unset HTTPS_PROXY
-}
 
 function _source_dir(){
     local dir="$1"
     if ! [ -d "$1" ] ; then
-        # No echo so this function can be called on non-existant dirs
-        # p.error "\$1='$1' is not a directory"
         return 1
     fi
     local f
     for f in $(command env -i ls $dir) ; do
+        if ! ( [[ "$f" = *.sh ]] || [[ "$f" = *.bash ]] ) ; then
+            continue
+        fi
         if ! source "$dir/$f" ; then
             p.error "sourcing '$dir/$f' returned non-zero"
-
         fi
     done
-}
-
-
-function p.dqsubi(){
-    if ! [ -e "$1" ] ; then
-        p.error "File '$1' does not exist"
-        return 1
-    fi
-
-    if ! tempfile="$(mktemp qsubi-decorated-job-XXXXXXXX.sh)" ; then
-        p.error "Could not create tempfile"
-        return 1
-    fi
-
-    # Job must have '#!/bin/bash' otherwise it "doesn't work"
-    cat "$1" | decorate-script -cd -shebang >> "${tempfile}"
-
-    chmod +x "${tempfile}"
-    qsub -I -- "${tempfile}"
-    rm "${tempfile}"
-}
-
-function p.pipeqsubi(){
-    # This funciton shows that we can use the 'script' command to run 'qsubi -I'
-    # when stdin is not a TTY.
-    #
-    # If we wanted to have shell script that would run something interactively
-    # for us using qsub -I directly, it will complain that STDIN is not a tty 
-    # and refuse to do its thing.
-    if ! tempfile="$(mktemp qsubi-decorated-job-XXXXXXXX.sh)" ; then
-        p.error "Could not create tempfile"
-        return 1
-    fi
-
-    decorate-script -cd -shebang >> "${tempfile}"
-
-    chmod +x "${tempfile}"
-    script -c "qsub -I -- \"${tempfile}\""
-    # rm "${tempfile}"
-}
-
-function gitk(){
-    command gitk --all "$@" &
-}
-function tig(){
-    command tig --all "$@"
-}
-
-function orgman(){
-    pandoc --standalone -f org -t man $1 | /usr/bin/man -l -
-}
-
-function p.myjobs()
-{
-    (
-        _p.require_ordenv
-        jobst | grep "${USER}" -n
-        exec 1>/dev/null
-    )
-}
-
-function p.clearjobs()
-{
-    (
-        _p.require_ordenv
-        for jobid in $(jobst -u $USER | grep $USER | cut -d '|' -f 1) ; do
-            while jobdel ${jobid} > /dev/null 2>&1
-            do
-                echo "Killing job '${jobid}'" >&2
-                sleep 3
-            done
-            echo "" >&2
-            echo "Job '${jobid}' successfully killed." >&2
-        done
-    )
-}
-
-
-function p.realpath(){
-    local pyfunc="${FUNCNAME[0]##p.}"
-    python3 -c "import os; print(os.path.${pyfunc}('$1'))"
-}
-
-function p.normpath(){
-    local pyfunc="${FUNCNAME[0]##p.}"
-    python3 -c "import os; print(os.path.${pyfunc}('$1'))"
-}
-
-function p.relpath(){
-    if [[ "$1" == "" ]] ; then
-        echo "${FUNCNAME[0]}: ERROR: Missing argument
-
-USAGE: ${FUNCNAME[0]} PATH [START]" >&2
-        return 1
-    fi
-    local pyfunc="${FUNCNAME[0]##p.}"
-    python3 -c "import os; print(os.path.${pyfunc}('$1', start='$2'))"
-}
-
-function emacs-daemon(){
-    echo "Starting detatched tmux session named 'emacs-daemon' on '$(hostname)'" >&2
-    tmux new -s emacs-daemon -d
-    echo "Sending keys 'emacs --fg-daemon' to session" >&2
-    tmux send-keys -t emacs-daemon 'emacs --fg-daemon
-'
-}
-
-function vimf(){
-    local directory=$1; shift
-    vim -p $(find ${directory} -type f "$@")
-}
-
-
-function sshpwd(){
-    # Replace things like /fs/homeu1/eccc/cmd/cmds/<rest>
-    # with /home/<rest>
-    local dir="$(echo $PWD | sed 's/\/fs\/homeu[12]\/[a-z]\+\/[a-z]\+\/[a-z]\+/\/home/')"
-    ssh -t "$@" "cd $dir ; bash -l"
-}
-
-function cddrw(){
-    local cmd=$1
-    if ! which "${cmd}" 2>/dev/null ; then
-        >&2 echo -e "Usage : ${FUNCNAME[0]} CMD
-
-CMD must be a command"
-        return 1
-    fi
-    local command_location
-    command_location="$(dirname "$(readlink -f "$(which "${cmd}")")")"
-    printf "\033[33mcd %s\033[0m\n" "${command_location}" >&2
-    cd "$command_location" || return
-}
-
-function cddw(){
-    local cmd=$1
-    if ! which "${cmd}" 2>/dev/null ; then
-        >&2 echo -e "Usage : ${FUNCNAME[0]} CMD
-
-CMD must be a command"
-        return 1
-    fi
-    local command_location
-    command_location="$(dirname "$(which "${cmd}")")"
-    printf "\033[33mcd %s\033[0m\n" "${command_location}" >&2
-    cd "$command_location" || return
-}
-
-function cdd(){
-    local filepath=$1
-    if [[ -d ${filepath} ]] ; then
-        printf "${FUNCNAME[0]}: Warning: argument '${filepath}' is a directory.  Perhaps use cd or cdr\n" >&2
-    fi
-
-    local dir
-    if ! dir=$(dirname ${filepath}) ; then
-        p.error "Could not get dirname for '${link_target}'"
-        return 1
-    fi
-
-    builtin cd ${dir}
-}
-
-function cddr(){
-    local filepath=$1
-    if [[ -d ${filepath} ]] ; then
-        printf "${FUNCNAME[0]}: Warning: argument '${filepath}' is a directory.  Perhaps use cd or cdr\n" >&2
-    fi
-    local link_target
-    if ! link_target=$(readlink ${filepath}) ; then
-        p.error "Could not follow link '${filepath}'"
-        return 1
-    fi
-
-    local dir
-    if ! dir=$(dirname ${link_target}) ; then
-        p.error "Could not get dirname for '${link_target}'"
-        return 1
-    fi
-
-    builtin cd ${dir}
-}
-
-
-# Documentation and shortcut for debugging with debugpy and vscode.
-function p.debugpy(){
-    if [[ "$1" == [0-9]* ]] ; then
-        local port=$1; shift
-    fi
-    local file=$1
-    if [ -z $file ] ; then
-        printf "USAGE: p.debugpy [PORT] FILE [ARGS ...]
-
-The PORT argument is detected as a string of only digits.  Therefore this command doesn't
-work if your filename is only digits but that would be weird.
-
-Run the command and launch the corresponding configuration in VSCode.  It should look like
-{
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-    \"version\": \"0.2.0\",
-    \"configurations\": [
-        {
-            \"name\": \"Attach\",
-            \"type\": \"python\",
-            \"request\": \"attach\",
-            \"connect\": {
-                \"host\": \"localhost\",
-                \"port\": 5678
-            },
-            // With this setting set to false, the debugger will enter library
-            // functions.  Otherwise, doing 'step into' while on a library
-            // function makes us jump over the function, confusing the audience.
-            \"justMyCode\": false
-        }
-    ]
-}
-\033[1;31mERROR\033[0m: No file specified\n"
-        return 1
-    fi
-    port=${port:-5678}
-    cmd='python3.8 -m debugpy --wait-for-client --listen $port "$@"'
-    printf "Launching waiting debugger: \033[1;32m%s\033[0m\n" "$(eval echo $cmd)"
-    eval $cmd
-
-}
-
-function p.org-tangle(){
-    #
-    # Note where the file appears in the command.   I  tried  to
-    #     emacs --batch -l org -f org-babel-tangle "$@"
-    # because  it  was  simpler  but  it  did  not  work  giving
-    #     wrong type argument: stringp, nil
-    # so I think that the file has to be specified before  doing
-    # # the -f thing.  Or rather, a filename has to have already
-    # # been read before -f is seen by the command parsing code.
-    #
-    # The manpage for emacs says that '-l', '-f',  '--eval'  are
-    # Lisp-oriented, "these options are processed in  the  order
-    # encountered".
-    #
-    # It does not say  that  for  the  file  to  open  but  from
-    # experimentation, that's what I've seen
-    #
-    local file=$1
-    shift
-    cmd='emacs --batch -l org --eval "(setq org-src-preserve-indentation t)" ${file} -f org-babel-tangle "$@"'
-    printf "Emacs batch command : \033[1;32m%s\033[0m\n" "$(eval echo $cmd)"
-    eval $cmd
-}
-
-function p.org-export(){
-    local export_backend
-    local export_function
-    case $1 in
-        man)
-            export_backend=ox-man
-            export_function=org-man-export-to-man
-            ;;
-        html)
-            export_backend=ox-html
-            export_function=org-html-export-to-html
-            ;;
-        *) echo "Unknown export type '$1'"
-            return 1
-            ;;
-    esac
-    shift
-
-    echo "export_backend=${export_backend}"
-    cmd=(emacs --batch -l ~/.emacs.d/init.el -l ${export_backend} ${1} -f ${export_function})
-    printf "%s\n" "${cmd[*]}"
-    ${cmd[@]}
-
-}
-
-################################################################################
-# Remove from end of line.  This function was made because
-# when doing org-babel-tangle in emacs on Windows, even if the
-# file is a UNIX file with LF opened through TRAMP, when tangling
-# the resulting file has CRLF line endings.  Another way is to use
-# the above function p.org-tangle on the UNIX system.  If however
-# the emacs on that system is not the right version or is
-# missing some packages, then it may only be possible to tangle
-# it correctly on the Windows machine's emacs.  In that case
-# this function can be used on the file after.
-################################################################################
-function p.crlf-to-lf(){
-    local file=$1
-    cmd="sed 's/^M$//' \"\$@\""
-    printf "sed command: \033[1;32m%s\033[0m\n" "${cmd}"
-    sed 's/
-$//' "$@"
-}
-
-
-################################################################################
-# Case insensitive glob find
-################################################################################
-function p.igfind(){
-    find . -iname "*$1*"
-}
-
-function p.myprocs(){
-    ps -F -u "$USER"
-}
-
-function p.tcheck(){
-    local nb_tmux
-    nb_tmux=$(pgrep -cfau "$USER" tmux)
-    local tmux_color=""
-    if ((nb_tmux > 15)) ; then
-        tmux_color="\033[1;31m"
-    elif ((nb_tmux > 10)) ; then
-        tmux_color="\033[1;33m"
-    fi
-
-    printf "${tmux_color}Number of tmux procs : %s\033[0m\n" "${nb_tmux}"
-}
-
-function p.pcheck(){
-    local nb_procs
-    nb_procs=$(ps -u "$USER" | wc -l)
-    local proc_color=""
-    if ((nb_procs > 200)) ; then
-        proc_color="\033[1;31m"
-    elif ((nb_procs > 150)) ; then
-        proc_color="\033[1;33m"
-    fi
-    printf "${proc_color}Number of processes  : %s\033[0m\n" "${nb_procs}"
-}
-
-function p.check-processes(){
-    p.pcheck
-    p.tcheck
-}
-
-function p.unansi(){
-    sed 's/\x1b\[[0-9;]*m//g' "$@"
-}
-
-function p.quiet-make(){
-    # Most PRN-SI projects have set(CMAKE_VERBOSE_MAKEFILE TRUE) which
-    # means the makefiles verbose by default and require an explicit
-    # 'VERBOSE=' (setting to nothing) to make them non-verbose
-    PHIL_VERBOSE_MAKE=""
-}
-
-function p.verbose-make(){
-    # Most PRN-SI projects have set(CMAKE_VERBOSE_MAKEFILE TRUE) which
-    # means the makefiles verbose by default and require an explicit
-    # 'VERBOSE=' (setting to nothing) to make them non-verbose
-    PHIL_VERBOSE_MAKE=1
-}
-
-
-function make(){
-    (
-    set -o pipefail
-    if ! on_compute_node ; then
-        local arg
-        for arg in "$@" ; do
-            if [[ "${arg}" == -j* ]] ; then
-                echo "You are on host ${HOSTNAME} ... you should not use '-j'.  Use 'command make $*' to bypass this function if you are sure"
-                return 1
-            fi
-        done
-    fi
-    CLICOLOR_FORCE=yep command make VERBOSE=${PHIL_VERBOSE_MAKE} --no-print-directory "$@" 2>&1 | highlight.sh error "" warning "" "undefined \w*" "^make.*"
-    )
-}
-
-
-function p.dusage(){
-    du --max-depth=1 -h "$@" | sort -h
-}
-
-p.pgrep(){
-    #  -f, --full
-    #         The  pattern is normally only matched against the
-    #         process name.  When -f is set, the  full  command
-    #         line is used.
-    #
-    pgrep -u $USER -f "$@"
-}
-
-p.ps(){
-    ps -f -u $USER --cols $(tput cols) | sort -k 8
-}
-p.pst(){
-    ps f -f -u $USER
-}
-
-p.check_procs_pppn(){
-    local pppn=${1}
-    if ! echo ${pppn} | grep -P "(ppp5)|(ppp6)" &>/dev/null ; then
-        echo "Argument 1 must be ppp5 or ppp6"
-        return 1
-    fi
-
-    for node in ${pppn}login-001 ${pppn}login-002 ; do
-        printf "\033[1;32mLogging in to $node\033[0m\n"
-        ssh -t -J${pppn} ${node} 'ps -u phc001 -f'
-    done
-}
-
-p.check_procs_all(){
-    for pppn in ppp5 ppp6 ; do
-        printf "\033[1;35mChecking nodes on ${pppn}\033[0m\n"
-        p.check_procs_pppn ${pppn}
-    done
-}
-
-
-################################################################################
-# Acquire compute node for building and running GEM (or anything else)
-################################################################################
-
-# function p.qsubi(){
-#     qsub -I -lselect=1:ncpus=80:mem=200gb "$@"
-# }
-
-function p.qsubi(){
-    local ncpu=72
-    if [[ "${1}" =~ [1-9][0-9]* ]] ; then
-        ncpu=${1}
-        shift
-    fi
-    cmd=(qsub -I -lselect=1:ncpus=80:mem=100gb "$@")
-    printf "Running cmd '\033[1m%s\033[0m'\n" "${cmd[*]}"
-    "${cmd[@]}"
-}
-
-
-function vimw(){
-    local cmd=$1
-    if [[ -z "${cmd}" ]] ; then
-        p.error "Please provide a command"
-        return 1
-    fi
-
-    local cmd_path
-    if ! cmd_path=$(which ${cmd}) ; then
-        p.error "Command not found using which"
-        return 1
-    fi
-    vim ${cmd_path}
-}
-complete -c vimw
-
-function p.view_listing(){
-    local compressed_listing=$1
-    if ! [[ -f "${compressed_listing}" ]] ; then
-        p.error "Listing '${compressed_listing}' does not exist"
-        return 1
-    fi
-    # Assume that mktemp always succeeds
-    local tempfile=$(mktemp uncompressed_listing_XXXXXX.sh)
-    gunzip -c ${compressed_listing} > ${tempfile}
-    vim ${tempfile}
-    if ! rm ${tempfile} ; then
-        p.error "Could not remove '${tempfile}'"
-    fi
-}
-
-function vim(){
-    if [[ $(hostname) == ppp* ]] ; then
-        $HOME/fs1/bin/vim "$@"
-    else
-        /usr/bin/vim "$@"
-    fi
 }
 
 function configure_vim(){
     complete -o default -F __complete_git_colon_paths vim
     function vim()(
+        if [[ $(hostname) != ppp* ]] ; then
+            /usr/bin/vim -p "$@"
+            return
+        fi
         local IFS=:
         for d in ${CMAKE_PREFIX_PATH} ; do
             C_INCLUDE_PATH=${d}/include${C_INCLUDE_PATH:+:${C_INCLUDE_PATH}}
@@ -754,391 +179,6 @@ function configure_vim(){
     )
 }
 
-#
-# Because $PYTHONSTARTUP is ignored when using the '-i' option, we just
-# prepend its content to the python file we are running.
-#
-py3i(){
-    file=$1
-    python3 -i -c "$(cat ~/.pyrc $file)"
-}
-
-#
-# This is probably the dumbest way to spend a couple hours but there you go,
-# parse arguments to python3 to check if python3 was called with the -i with
-# either a file or -c "some code" or -c"some code".
-#
-# In that case, it doesn't read the ~/.pyrc file so I wouldn't get my cool
-# yellow and blue prompts.
-#
-# The first half splitting the arguments between arguments for python and
-# arguments for the file or the code (-c).
-#
-# Once the splitting is done, we can use getopt to reliably determine if:w
-#
-python3x(){
-    printf "$(shopt -s extdebug; declare -F python3): EXPERIMENTAL\n" >&2
-    local py_args=()
-    local script_args=()
-    local file=""
-    local code=""
-    local i=1
-    #
-    # Accumulate all command line arguments until -c or a file
-    # into py_args, when -c"...", of -c "..." is found, define code to be
-    # the "...". When a *.py file is found define file.
-    #
-    for ((i=1;i<=$#;i++)) ; do
-        # https://stackoverflow.com/a/4555979/5795941
-        # Requires 'shopt -s extglob'
-        # It looks like the case '-*([^c])c' could include the '-c' case
-        # but if the '-c*([^c])c' handled '-c', it would put '-' in py_args.
-        # So in fact we need a case '-c' and a case '-+([^c])c'.  Same for
-        # the '-c*' and '-+([^c])c*' cases, they cannot be treated the same
-        # way.
-        case ${!i} in
-            -c) # ex: python3 -c "print('allo')"
-                local x=$((i+1))
-                code="${!x}"
-                i=$((i+2))
-                break
-                ;;
-            -c*) # ex: python3 -c"print('allo')"
-                code="${!i#-c}"
-                i=$((i+1))
-                break
-                ;;
-            -+([^c])c) # ex: python3 -ic "print('allo')"
-                py_args+=("$(echo "${!i}" | sed 's/c.*$//')")
-                local x=$((i+1))
-                code="${!x}"
-                i=$((i+2))
-                break;
-                ;;
-            -+([^c])c*) # ex: python3 -ic"print('allo')"
-                py_args+=("$(echo "${!i}" | head -n 1 | sed 's/c.*$//')")
-                code="$(echo "${!i}" | head -n 1 | sed 's/^-[^c]*c//')"
-                if [[ "${!i}" == *$'\n'* ]] ; then
-                    code+=$'\n'
-                    code+="$(echo "${!i}" | tail -n +2)"
-                fi
-                i=$((i+1))
-                break;
-                ;;
-            *.py)
-                file="${!i}"
-                i=$((i+1))
-                break
-                ;;
-            *) py_args+=("${!i}") ;;
-        esac
-    done
-
-    #
-    # Accumulate all args after -c"...", -c "..., or a file into
-    # the array script_args
-    #
-    for ((;i<=$#;i++)) ; do
-        script_args+=("${!i}")
-    done
-
-    #
-    # Use getopt to determine reliably if -i is present in py_args
-    #
-    local spec=Bbc:dEhiIm:O::qsSuvVW:X:x
-    local interactive=0
-    eval local normalized_args=($(getopt -n "" -o ${spec} -- "${py_args[@]}"))
-    for a in "${normalized_args[@]}" ; do
-        if [[ "${a}" == "-i" ]] ; then
-            interactive=1
-            break;
-        fi
-    done
-
-    #
-    # If non-interactive or there is no -c CODE or file in the command line,
-    # just run the python3 command with forwarded args
-    #
-    if [[ "${interactive}" == 0 ]] || ([[ -z "${code}" ]] && [[ -z "${file}" ]]) ; then
-        command python3 "$@"
-        return
-    fi
-
-    #
-    # Adapt code or file by prepending ~/.pyrc.  For files, the command is
-    # changed to a python -c CODE with CODE containing ~/.pyrc, some other
-    # hacks and finally the content of the file
-    #
-    local wc="$(wc -l ~/.pyrc)"
-    local pyrc_nlines=${wc% *}
-    local new_code
-    if [[ "${code}" != "" ]] ; then
-        new_code="$(cat ~/.pyrc)"$'\n'"${code}"
-        offset=${pyrc_nlines}
-    elif [[ "${file}" != "" ]] ; then
-        new_code="$(cat ~/.pyrc)"$'\n'
-        new_code+="import sys"$'\n'
-        new_code+="__file__='${file}'"$'\n'
-        new_code+="sys.argv[0]=\"${file}\""$'\n'
-        new_code+="$(cat "${file}")"
-        offset=$((pyrc_nlines + 3))
-    fi
-
-    #
-    # Run the same python command with code stderr optionally redirected through
-    # a filter that will modify line numbers in traceback lines referring to
-    # code from -c or a file so that they match the original argument to -c or
-    # the original file.
-    #
-    if [[ -v PYRC_NOFILTER ]] ; then
-        command python3 -u "${py_args[@]}" -c "${new_code}" "${script_args[@]}"
-    else
-        command python3 -u "${py_args[@]}" -c "${new_code}" "${script_args[@]}" &> >(command python3 -u -c "
-import sys
-for l in sys.stdin:
-    # print(l[:-1])
-    if l.startswith('  File \"<string>\"'):
-        # print(f'  >>> original line: \"{l[:-1]}\"')
-        parts = l.split(',')
-        if sys.argv[1]:
-            print(parts[0].replace('<string>',sys.argv[1])+', ', end='')
-        else:
-            print(parts[0]+', ', end='')
-        line_parts=parts[1].split(' ')
-        print(line_parts[1] + ' ', end='')
-        # print(f'line_parts={line_parts}')
-        print(int(line_parts[2]) - ${offset}, end='')
-        print(',', end='')
-        if len(parts) == 3:
-            print(parts[2], end='')
-        else:
-            print()
-    else:
-        print(l, end='')
-" "${file}")
-    fi
-}
-
-function dump-environment-to-tmpfile(){
-    local envdump_dir=$HOME/envdumps
-    mkdir -p ${envdump_dir}
-    local envdump_file=$(mktemp env_dump_$(TZ=America/Toronto date +%Y-%m-%d_%H:%M:%S)_XXX.txt --tmpdir=${envdump_dir})
-    echo "envdump_file = ${envdump_file}" >&2
-    echo "\$0 = '$0'" >> ${envdump_file}
-    echo "\$@ = '$@'" >> ${envdump_file}
-    command env >> ${envdump_file}
-}
-
-function reminders(){
-    printf "\033[0mC-f or ^[L does shell-forward-word (.inputrc)\n" >&2
-    printf "\033[0m^[l does forward-word (.inputrc)\n" >&2
-    printf "\033[0mC-b or ^[H does shell-backward-word (.inputrc)\n" >&2
-    printf "\033[0m^[h does backward-word (.inputrc)\n" >&2
-    printf "\033[0mC-t does C-aC-fC-w (change command)\n" >&2
-    printf "\033[0mC-xp does \"prepend edit PATH\"\n" >&2
-}
-
-function xargso(){
-    if [[ "${1}" == "" ]] ; then
-        p.error "At least one argument must be give"
-        return 1
-    fi
-    if [[ "${1}" == -h ]] ; then
-        printf "${FUNCNAME[0]} does the equivalent of 'xargs -o' on BSD"
-        printf "which is to reopen STDIN as /dev/tty in the child process\n"
-        printf "This is useful to when opening an interactive application\n"
-        printf "like vim\n"
-        return 0
-    fi
-    cmd="$@ \"\$@\" </dev/tty"
-
-    # print_args xargs sh -c "${cmd}"
-    printf "===============================\n"
-    print_args xargs sh -c "${cmd}" "$@"
-    printf "===============================\n"
-    xargs sh -c "${cmd}" fuckface
-    # xargs sh -c "${cmd}" "$@"
-    # this does not work :
-    # xargs sh -c "$@ \"\$@\" </dev/tty"
-    print_args xargs sh -c "$@ \"\$@\" </dev/tty"
-}
-
-
-function x.use(){
-    local pack_dir="${1}"
-    shift
-    if [[ -z "${1}" ]] ; then
-        p.error "An argument must be provided"
-        return 1
-    fi
-
-    local pack_name="${1}"
-    if ! [[ -f ${pack_dir}/${pack_name} ]] ; then
-        p.error "No package named '${pack_name}' in ${pack_dir}"
-        return 1
-    fi
-
-    shift
-    local status
-    #source ${pack_dir}/${pack_name} "$@" 
-    local i=0
-    while IFS= read -r line ; do
-        : $((i++))
-        if [[ -z "${line}" ]] ; then
-            continue
-        fi
-        printf "\033[1m${FUNCNAME[1]}: "
-        if [[ ${line} == \#* ]] ; then
-            printf "\033[22;34m$(eval echo ${line})\033[0m\n"
-        else
-            printf "\033[1;32m$(eval echo ${line})\033[0m\n"
-        fi
-        if ! eval ${line} ; then
-            p.error "error on line ${i} of ${pack_dir}/${pack_name}"
-        fi
-    done < ${pack_dir}/${pack_name}
-    status=$?
-    if [[ ${status} != 0 ]] ; then
-        p.error "Sourcing '${pack_dir}/${pack_name}' returned an error : $?"
-    fi
-    return ${status}
-}
-
-function p.use(){
-    x.use ${PACK_DIR} "$@"
-}
-
-function f.use(){
-    x.use ~for000/.profile.d/interactive/pack "$@"
-}
-
-function print_args(){
-    # Useful to double check how arguments are given to a program.
-    # For example, xargso above, the arguments get split /c
-    local caller=${FUNCNAME[1]}
-    if [[ "${caller}" == "" ]] ; then
-        caller="main"
-    fi
-    local i=1
-    echo "${caller}: \$0   = $0"
-    echo "${caller}: \$#   = $#"
-    echo "${caller}: args = '$@'"
-    for arg in "$@" ; do
-        echo "${caller}: arg[$((i++))] = $arg"
-    done
-}
-
-function p.ftake(){
-    if [[ -z "${1}" ]] ; then
-        p.error "Argument required"
-        return 1
-    fi
-    local to_take="$(echo ~for000/.profile.d/interactive/pack/$1)"
-
-    if ! [[ -f ${to_take} ]] ; then
-        p.error "Package to take '${1}' does not exist in '~for000/.profile.d/interactive/pack'"
-        return 1
-    fi
-
-    local new_name
-    if [[ -n "${2}" ]] ; then
-        new_name=${2}
-    else
-        new_name=""
-    fi
-
-    if ! cp ${to_take} ${PACK_DIR}/${new_name} ; then
-        p.error "Could not copy '${to_take}' to '${PACK_DIR}/${new_name}'"
-        return 1
-    fi
-}
-
-log(){
-    echo "${FUNCNAME[1]}: $*" >> ~/.log.txt
-}
-
-_x.use(){
-    local pack_dir=$1
-    local prev cur words cword
-    log "================================================================="
-    _init_completion || return
-
-    log "prev=${prev}, cur=${cur}, words=${words[@]}, cword=${cword}"
-    case ${cword} in
-        0) echo "Can't happen!" ;;
-        1) COMPREPLY=($(compgen -W "$(cd ${pack_dir} ; command ls | command grep -v '^_')" -- ${cur})) ;;
-        2|*) _dispatch_pack_complete ${prev} ;;
-    esac
-}
-
-_p.use(){
-    _x.use ${PACK_DIR}
-}
-
-_f.use(){
-    _x.use ~for000/.profile.d/interactive/pack
-}
-
-#
-# Default is not applied here because p.use's first argument cannot be a file
-# from PWD (unless we are in ${PACK_DIR} but those will get suggested by _p.use
-# anyway.  Instead, we use _filedir to suggest give the default suggestions.
-#
-complete -F _p.use p.use p.view-pack
-complete -F _f.use f.use f.view-pack p.ftake
-p.view-pack(){
-    vim ${PACK_DIR}/${1}
-}
-f.view-pack(){
-    vim ~for000/.profile.d/interactive/pack/${1}
-}
-
-_dispatch_pack_complete(){
-    case ${1} in
-        code-tools) COMPREPLY=($(compgen -W "gnu intel gnu9" -- ${cur})) ;;
-        rpnpy) COMPREPLY=($(cd $HOME ; _filedir)) ;;
-        *) _filedir ;;
-    esac
-}
-
-function p.show-vars(){
-    # Show environment variables and shell variables
-    (
-
-        local abbrev=$'\033[1;33m...\033[0m'
-        GLUSTER_BARRIER_OPTIONS=${abbrev}
-        GLUSTER_COMMAND_TREE=${abbrev}
-        GLUSTER_FINAL_LIST=${abbrev}
-        GLUSTER_GEO_REPLICATION_OPTIONS=${abbrev}
-        GLUSTER_GEO_REPLICATION_SUBOPTIONS=${abbrev}
-        GLUSTER_PROFILE_OPTIONS=${abbrev}
-        GLUSTER_QUOTA_OPTIONS=${abbrev}
-        GLUSTER_TOP_OPTIONS=${abbrev}
-        GLUSTER_TOP_SUBOPTIONS1=${abbrev}
-        GLUSTER_TOP_SUBOPTIONS2=${abbrev}
-        GLUSTER_VOLUME_OPTIONS=${abbrev}
-        LS_COLORS=${abbrev}
-        _xspecs=([...]="...")
-        unset abbrev
-
-        declare -p
-    )
-}
-
-function show-functions(){(
-    # Show all function names with definition location
-    shopt -s extdebug
-    local functions
-    if [[ -n ${1} ]] ; then
-        functions=($(declare -F 2>&1 | cut -d ' ' -f 3 | command grep "$1"))
-    else
-        functions=($(declare -F 2>&1 | cut -d ' ' -f 3))
-    fi
-
-    for f in "${functions[@]}" ; do
-        declare -F $f
-    done | awk '{printf "%c[32m%s %c[1;35m%s %c[1;33m%s%c[0m\n", 27, $1, 27, $2, 27, $3, 27}'
-)}
 
 ################################################################################
 # PROBLEM: If you have 'set colored-stats on' in your ~/.inputrc, readline will
@@ -1163,6 +203,11 @@ function show-functions(){(
 #   readline_initialize_everything() only do the "other stuff"
 # - In realine.c:354 Function readline(), rl_initialize() is called everytime
 #   but after the first time, it only does the "other stuff".
+#
+# IMPORTANT: This needs to be done before anything else causes the otherwise
+# the initialization will already have happened with whatever LS_COLORS was at
+# that time.  For example, fzf initialization does many 'bind x y' commands
+# which initializes readline
 ################################################################################
 set_ls_colors_for_readline_and_ls(){
 
@@ -1180,421 +225,10 @@ set_ls_colors_for_readline_and_ls(){
     # read LS_COLORS.  Anyway, we don't want show-colored-stats in Python so
     # that is totally OK.
     LS_COLORS="${my_ls_colors}"
-
-    # Another option would be to have two files but ideally, you want LS_COLORS
-    # for readline to be the same for everything except for the 'mi' part
-    # eval "$(dircolors -b ~/.dir_colors.readline)"
-    # bind -r ~/.inputrc
-    # eval "$(dircolors -b ~/.dir_colors.256color)"
-}
-
-# dump-environment
-p.env(){
-    env -0 | sort -z | tr '\0' '\n'
-}
-
-fix-source-complete(){
-    complete -o default -o nospace -o filenames -F _DottableCompletion source .
-}
-
-fdate(){
-    date +%Y-%m-%d_%H.%M.%S
-}
-
-p.mcd(){
-    local dir=$1
-    if [[ -z ${dir} ]] ; then
-        p.error "Name required for new directory"
-        return 1
-    fi
-
-    echo "mkdir ${dir}"
-    mkdir ${dir} || return 1
-    echo "cd ${dir}"
-    cd ${dir} || return 1
-}
-
-p.cmakel(){
-    cmake "$@" | less
-}
-
-p.shame(){
-(
-    i=0
-    trap 'echo "                      a commoner kicks you"; i=$((i-1))' SIGINT
-    trap 'stty echo' EXIT
-    stty -echo
-    for ((i=0;i<5;i++)) ; do
-        echo -n "shame!"
-        sleep 1
-        echo -n " ding"
-        sleep 0.5
-        echo -n " ding"
-        sleep 2
-        echo ""
-    done
-    echo "y'know, like they did to Cercei Lannister"
-    stty echo
-    trap '' SIGINT
-    exit 1
-)
-}
-
-p.view-rev-file(){
-    case "${1}" in -h|--help)
-        printf "Show a file at a certain revision.  Convenience wrapper for 'git show <rev>:<file>'\n\n"
-        printf "\t${FUNCNAME[0]} <rev> <file> [vim-args...]\n"
-        printf "\t${FUNCNAME[0]} <rev>:<file>:<line>\n\n"
-        printf "The one argument form is meant to take the output\n"
-        printf "of a 'git grep -p <pattern> <rev>' command\n"
-        return
-        ;;
-    esac
-
-    if [[ "$1" == *:* ]] ; then
-        local rev=${1%%:*}
-        local file_line_col=${1#*:}
-        local file=${file_line_col%%:*}
-        local line_col=${file_line_col#*:}
-        local line=${line_col%%:*}
-        echo "ref=${rev}, file_line_col=${file_line_col}, file=${file}, line=${line}"
-        git show ${rev}:${file} | vim -R - -c "doautocmd BufRead ${file}" +${line}
-    elif (( $# >= 2 )) ; then
-        local rev=$1
-        local file=$2
-        shift; shift
-
-        #
-        # Make path relative to repo root
-        # The git show command only takes paths relative to the repo root.
-        #
-        local repo
-        if ! repo=$(git rev-parse --show-toplevel) ; then
-            return 1
-        fi
-
-        # cd -P is necessary to match with the repo root returned by
-        local abspath=$(cd -P ${PWD} && pwd)/$file
-        # echo "abspath=${abspath}"
-        local normpath=$(python3 -c "import os; print(os.path.normpath('${abspath}'))")
-        # echo "normpath=${normpath}"
-        local repo_relpath=${normpath##${repo}/}
-        # echo "repo_relpath=${repo_relpath}"
-
-        local ft=${file##*.}
-        case ${file} in
-            *Makefile|*makefile) ft=make ;;
-            CMakeLists.txt) ft=cmake ;;
-        esac
-        printf "Running 'git show ${rev}:${repo_relpath}'\n"
-
-        git show ${rev}:${repo_relpath} | vim -R - -c "doautocmd BufRead ${file}" "$@"
-    else
-        p.error "Incorrect arguments"
-        ${FUNCNAME[0]} --help
-        return 1
-    fi
-}
-
-p.log(){
-echo "${FUNCNAME[1]}(): $@" >> ~/.log.txt
-}
-source $HOME/.philconfig/shell_lib/file_complete_elsewhere.bash
-_p.view-rev-file(){
-    local cur prev words cword
-    _init_completion -n : || return
-
-    echo "${FUNCNAME[0]}: cword = ${cword}" >> ~/.log.txt
-    echo "${FUNCNAME[0]}: cur = ${cur}" >> ~/.log.txt
-
-    # Complete REFs
-    if (( cword == 1 )) ; then
-        if ! complete -p git 1>/dev/null 2>/dev/null ; then
-            __load_completion git
-        fi
-        #
-        # Git completion is set with 'compopt -o nospace' and
-        # the functions add spaces to the COMPREPLY candidates
-        #
-        compopt -o nospace
-        compopt -o filenames
-        __git_complete_refs
-        if (( ${#COMPREPLY[@]} == 1 )) ; then
-            compopt +o filenames
-        fi
-    else
-    # Complete filenames with filenames available 
-        local git_repo
-        if ! git_repo=$(git rev-parse --show-toplevel 2>/dev/null) ; then
-            return
-        fi
-
-        local rev=${words[1]}
-        local dirname="${cur%/*}/"
-        # If there are no slashes,
-        if [[ "${cur}" != */* ]] ; then
-            dirname=""
-        fi
-
-        # Since git ls-tree doesn't produce output beginning with './',
-        # when ${cur} begins with './', we add './' to compgen output and use
-        # ${cur#./} to match
-        local prefix
-        if [[ "${cur}" == ./* ]] ; then
-            prefix="-P ./"
-        fi
-        local newcur=${cur#./}
-
-
-        # Relative to the repo root
-        # COMPREPLY=( $(cd ${git_repo} ; compgen -W "$(git ls-tree --name-only ${rev} ${dirname})" -- ${cur}) )
-        # Relative to PWD, the actual function will need to to change the path
-        # to one that is relative to the git repo.
-        COMPREPLY=( $(compgen ${prefix} -W "$(git ls-tree --name-only ${rev} ${dirname})" -- ${newcur}) )
-
-        compopt -o nospace
-        compopt -o filenames
-
-        # COMPREPLY=( $(cd ${git_repo} ; compgen -f -- "${cur}") )
-        if (( ${#COMPREPLY[@]} == 1 )) ; then
-            only_candidate=${COMPREPLY[0]}
-            # if [[ -f ${git_repo}/${only_candidate} ]] ; then
-            if [[ -f ${only_candidate} ]] ; then
-                COMPREPLY[0]="${only_candidate} "
-                compopt +o filenames
-                # The file may not exist if the currently checked out commit
-                # does not have it.  Since we don't know if it's a directory
-                # all we can do is not add the space.
-            elif [[ -d ${only_candidate} ]] ; then
-                COMPREPLY[0]="${only_candidate}/"
-            fi
-        fi
-    fi
-    p.log "COMPREPLY=${COMPREPLY[@]}"
-    # for c in "${COMPREPLY[@]}" ; do
-    #     p.log "COMPREPLY elem : '${c}'"
-    # done
-}
-alias nn='vim ~/nemo_xios_notes.org'
-
-# When using r.load, the output of the underlying `ssmuse-sh` command is hidden
-# by default.  Since it was requested that it be shown, a variable LOG_LEVEL
-# was added which if set to 'ERROR' would not redirect the output of
-# `r.shortcut-2.dot` to /dev/null
-_set_rload_log_level(){
-    export LOG_LEVEL=ERROR
 }
 
 
-# List all paths that ld will search in for libraries in the current environment
-p.get_ld_search_paths(){
-    # ldconfig -v outputs a path followed by all shared libraries in that path
-    # with a leading tab.  To get just the paths, we filter out the lines
-    # beginning with a tab.
-    ldconfig -v 2>/dev/null | grep -v ^$'\t'
-}
-
-p.set-title(){
-    # TMUX intercepts this and stores it in #T.  Then TMUX may
-    # output something for the terminal program.  To have TMUX
-    # "pass it through", use
-    #     set-option -g set-titles on
-    #     set-option -g set-titles-string "#T"
-    printf "\033]0;$*\007"
-}
-p.get-cursor(){
-    # https://stackoverflow.com/questions/2575037/how-to-get-the-cursor-position-in-bash
-    local CURPOS
-    echo -en "\E[6n"
-    read -sdR CURPOS
-    echo ${CURPOS#*[}
-}
-
-#
-# Lifted from /usr/share/bash-completion/completions/make
-#
-p.get-make-targets(){
-    words=("$@")
-    # before we check for makefiles, see if a path was specified
-    # with -C/--directory
-    local -a makef_dir
-    for (( i=0; i < ${#words[@]}; i++ )); do
-        if [[ ${words[i]} == -@(C|-directory) ]]; then
-            # eval for tilde expansion
-            eval makef_dir=( -C "${words[i+1]}" )
-            break
-        fi
-    done
-
-    # before we scan for targets, see if a Makefile name was
-    # specified with -f/--file/--makefile
-    local -a makef
-    for (( i=0; i < ${#words[@]}; i++ )); do
-        if [[ ${words[i]} == -@(f|-?(make)file) ]]; then
-            # eval for tilde expansion
-            eval makef=( -f "${words[i+1]}" )
-            break
-        fi
-    done
-
-    if [[ "$(type -t _make)" != function ]] ; then
-        _completion_loader make
-    fi
-
-    #
-    # shopt -po <opt> prints a command to set <opt> to its current value
-    #
-    local reset=$(shopt -po posix)
-
-    #
-    # 'make -npq' prints all info from parsing the makefile with potential
-    # '-f somefile' or '-C somedir'.  This output is passed through a sed
-    # command with sed script produced by _make_target_extract_script which
-    # filters out everything except target names.
-    #
-    set +o posix
-    LC_ALL=C make -npq __BASH_MAKE_COMPLETION__=1 "${makef_dir[@]}" "${makef[@]}" .DEFAULT 2>/dev/null \
-        | command sed -nf <(_make_target_extract_script -- "${cur}") \
-        | sort
-    $reset
-}
-
-complete -o bashdefault -o default -o nospace -F _p.view-rev-file p.view-rev-file
-
-p.fdate(){
-    ## Date for use in filenames
-    date +%Y-%m-%d_%H.%M.%S
-}
-
-p.is_vscode_server_login(){
-    [[ -v VSCODE_AGENT_FOLDER ]]
-}
-
-make(){
-    if ! [ -t 1 ] ; then
-        command make "$@"
-    else
-        local subst
-        subst+="s/error/\x1b[1;31m&\x1b[0m/g; "
-        subst+="s/warning/\x1b[1;33m&\x1b[0m/g; "
-        subst+="s/undefined reference/\x1b[1;35m&\x1b[0m/g; "
-        subst+="s/^make.*/\x1b[1;36m&\x1b[0m/g;"
-        # For debugging
-        # echo "subst = '$subst'"
-        (
-            set -o pipefail
-            CLICOLOR_FORCE=yes_please command make --no-print-directory "$@" 2>&1 | sed --unbuffered "${subst}"
-        )
-    fi
-}
-
-p.pr(){
-    vim ~/.profile_phil
-}
-p.prw(){
-    vim ~/.profile_wrapper
-}
-p.tty(){
-    [ -t 1 ]
-}
-
-p.print_ps1(){
-    # In "", \ is used to escape, if we want our string to contain
-    # an actual backslash, we need to put \\.  Sed also interprets \
-    # so to match an actual \, sed needs to receive two backslashes
-    # The string needs to contain two backslashes, and to create this
-    # string, we need to put four backslashes in our text file.
-    bs="\\\\"
-    ob="\["
-    cb="\]"
-    subst="s/${bs}${ob}\|${bs}${cb}//g; "
-    subst+="s/${bs}h/${HOSTNAME}/;"
-    subst+="s/${bs}u/${USER}/"
-    printf "$(echo "$PS1" | sed "${subst}")"
-    if ! [[ "${1}" = -n ]] ; then
-        printf "\n"
-    fi
-}
-
-p.curl-gitlab(){
-    curl --header "Private-Token: $(cat ~/.ssh/gitlab-access-token)" "$@" | jq
-}
-
-p.cmake_asm(){
-    cat <<- EOF
-		If <source_dir>/<d>/CMakeLists.txt creates a target with the
-		source file <source_dir>/<d>/<d2>/file.c, then going go into
-		<build_dir>/<d> and run 'make <d2>/file.c.s to generate the
-		assembly for file.c.  The path will be printed.  It should be
-		<build_dir>/<d>/CMakeFiles/<target_name>.dir/file.c.s
-
-		Note: Some components of <d> may change names if
-		add_subdirectory(a a2) is used.  For example, if <d> = a/b/c
-		in the source dir would become <d> = a2/b/c in the build_dir
-		Multiple components can be replaced by a single component as
-		well add_subdirectory(a/b/c e) would mean that we would need
-		to go to <build_dir>/e to run 'make <d2>/file.c.s.
-	EOF
-}
-
-function ancestor_with_basename(){
-    local ancestor=$1
-    local dir=$PWD
-    while [[ "$(basename $dir)" != "${ancestor}" ]] ; do
-        if [[ "${dir}" == "/" ]] ; then
-            echo "Root reached and ancestor '${ancestor}' not found" >&2
-            return 1
-        fi
-        dir=$(dirname $dir)
-    done
-    echo $dir
-}
-
-
-function cd..(){
-    local ancestor=$1
-    local dir
-    if ! dir=$(ancestor_with_basename $ancestor) ; then
-        echo "${FUNCNAME[0]}: no ancestor with basename '$ancestor'" >&2
-        return 1
-    fi
-    printf "\033[34mcd $dir\033[0m\n"
-    cd $dir
-}
-
-# This function is pretty much just so that I remember the command and when I
-# remember it well enough I will delete it.
-function p.lsdirs(){
-    ls -d */
-}
-function vimpy(){
-    local module=${1%%.*}
-    local obj=${1##*.}
-    local python_script="
-import os
-import ${module}
-code = ${module}.${obj}.__code__
-print(f'{code.co_filename} +{code.co_firstlineno}')
-"
-    local vim_args=($(python3 <<< ${python_script}))
-    vim "${vim_args[@]}"
-}
-
-function p.line_range(){
-    local file=$1
-    local start=$2
-    local end=$3
-    local nb_lines=$((end - start))
-    if [[ "${file}" == "-" ]] ; then
-        tail -n +${start} | head -n ${nb_lines}
-    else
-        tail -n +${start} ${file} | head -n ${nb_lines}
-    fi
-}
-
-function p.colonlist(){
-    tr ':' '\n' | sort
-}
+###################### KEEP THIS AT THE END ####################################
 p.profile.main
 unset -f p.profile.main
 unset -f p.profile.main_interactive

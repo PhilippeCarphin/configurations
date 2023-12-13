@@ -10,9 +10,9 @@ function debug(){
     if [[ "${1}" == -f ]] ; then
         # export PS4='+ [35m${BASH_SOURCE[0]}[36m:[1;39m${FUNCNAME[0]}[36m:[32m${LINENO}[36m:[0m '
         # export PS4='+ [35m${BASH_SOURCE[0]}[36m:[1;39m${FUNCNAME[0]}[22;36m:[32m${LINENO}[36m:[0m '
-        export PS4='\033[1;33m+ \033[35m${BASH_SOURCE[0]}\033[36m:\033[1;39m${FUNCNAME[0]}\033[22;36m:\033[32m${LINENO}\033[36m:\033[0m '
+        export PS4='+ \033[35m${BASH_SOURCE[0]}\033[36m:\033[1;39m${FUNCNAME[0]}\033[22;36m:\033[32m${LINENO}\033[36m:\033[0m '
     else
-        export PS4='\033[1;33m+ \033[35m${BASH_SOURCE[0]}\033[36m:\033[32m${LINENO}\033[36m:\033[0m '
+        export PS4='+ \033[35m${BASH_SOURCE[0]}\033[36m:\033[32m${LINENO}\033[36m:\033[0m '
     fi
     local debug_fd=5
     local debug_file=$(mktemp bash_debug_session_$(date +%Y-%m-%d_%H-%M)_XXX.txt --tmpdir=${HOME}/.bash_debug.d)
