@@ -381,6 +381,7 @@ function glcurl(){
 function glccurl(){
     curl --header "PRIVATE-TOKEN: $(cat ~/.ssh/gitlab-com-access-token)" https://gitlab.com/api/v4$1
 }
+
 ################################################################################
 # Create a directory of dot graphs from a CMake 
 ################################################################################

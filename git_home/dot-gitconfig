@@ -28,7 +28,7 @@
     findr =  "!f() { : git ls-files ; git -C \"${GIT_PREFIX}\" --work-tree=$PWD lsr :/\\*\"$1\"\\*; }; f"
     lsr = ls-files --recurse-submodule
     ldap = "!f() { result=$(ldapsearch -xLLL \"(|(cn=*$1*)(uid=$1))\"); name=$(printf \"$result\" | \\grep ^cn | awk -F': ' '{print $2}'); mail=$(printf \"$result\" | \\grep ^mail | awk -F': ' '{print $2}'); echo \"$name <${mail,,}>\" ; }; f"
-    detatch = "!f() { echo \"Just use 'git checkout --detatch'\" ; git checkout --detatch ; } ; f"
+    detach = "!f() { echo \"Just use 'git checkout --detach'\" ; git checkout --detach ; } ; f"
     suir = submodule update --init --recursive
     # view = "!f() { revision_and_line=\"$1\"; blob_revision=$(echo \"$revision_and_line\" | cut -d: -f1-2); line=$(echo \"$revision_and_line\" | cut -d: -f3); git show $blob_revision | vim -R - -c \"doautocmd BufRead $blob_revision\" +$line ; }; f"
     rawdiff = "-c \"core.pager=less --tabs=4 -RFX\" diff"
@@ -56,8 +56,8 @@
     # pager = less --tabs=4 -RFX
 
 [gui]
-    fontui = -family \".SF NS Text\" -size 18 -weight normal -slant roman -underline 0 -overstrike 0
-    fontdiff = -family \"DejaVu Sans Mono\" -size 16 -weight normal -slant roman -underline 0 -overstrike 0
+	fontui = -family \".SF NS Text\" -size 18 -weight normal -slant roman -underline 0 -overstrike 0
+	fontdiff = -family \"DejaVu Sans Mono\" -size 16 -weight normal -slant roman -underline 0 -overstrike 0
 # [http "https://gitlab.science.gc.ca/"]
 #        proxy = socks5h://127.0.0.1:8080
 [log]

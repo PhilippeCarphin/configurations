@@ -38,7 +38,7 @@ function p.profile.main_interactive(){
     source "$HOME/.philconfig/shell_lib/functions.sh"
     source "$HOME/.philconfig/shell_lib/view-rev-file.sh"
     FZF_COMPLETION_OPT="--preview 'bat --color=always {}'"
-    # source ~/.fzf.bash
+    source ~/.fzf.bash
     _source_dir "$HOME/.bash_completion.d"
 
     alias ls='ls --color -h'
@@ -225,6 +225,96 @@ set_ls_colors_for_readline_and_ls(){
     # read LS_COLORS.  Anyway, we don't want show-colored-stats in Python so
     # that is totally OK.
     LS_COLORS="${my_ls_colors}"
+}
+
+
+function print_array(){
+    local color=true
+    if [[ ${1} == --no-color ]] ; then
+        color=false
+        shift
+    fi
+    local -n  array_ref=$1
+    local     array_name=$1
+    local -ri nb_items=${2-${#array_ref[@]}}
+    printf "Uncolored quotes are not part of the array element\n"
+    printf "%s\n" "If array elment contains true ($'\033[31m' as opposed to '\033[31m')"
+    printf "color codes, then colors will be weird\n"
+    local fmt="\033[35m%s\033[0m[\033[36m%d\033[0m]='\033[32m%s\033[0m'\n"
+    if ! ${color} ; then
+        fmt="%s[%d]='%s'\n"
+    fi
+    for((i=0;i<nb_items;i++)) ; do
+        printf "${fmt}" "${array_name}" "$i" "${array_ref[i]}"
+    done
+}
+
+# Some functions like 'trap -p SIG' print their output in such a way that it
+# can be manually copy-pasted into a shell to set the same trap:
+# $ set_trap="$(trap -p exit)"
+# $ trap '' exit
+# $ eval "${set_trap}"
+# If we want to get the actual code of the trap, we need to get the 3rd argument
+# of the command stored in ${set_trap} which can be done with
+# $ exit_trap="$(eval echo-nth-arg 3 "$(trap -p EXIT)")"
+# An eval is required because the output of trap is meant to be run as if it
+# was typed so that the code of the trap becomes exactly one argument.
+function echo-nth-arg(){
+    local n=$1
+    shift
+    echo "${!n}"
+}
+
+function shell_vars(){
+    local all_vars=$(mktemp all_vars.XXXXXX)
+    compgen -v | sort >${all_vars}
+    local env_vars=$(mktemp env_vars.XXXXXX)
+    compgen -e | sort >${env_vars}
+    # BEGIN RANT
+    # Very important note: -1 tells comm to SUPPRESS column 1 not to show it
+    # Every time I use comm (which is not super often) I glance at the manpage
+    # and see 
+    # -1 ... (lines unique to file 1)
+    # -2 ... (lines unique to file 2)
+    # and the "unique to file 1" draws my eye and I look no further.  I know it
+    # clearly says "suppress" but when writing this function and the previous
+    # time I had to use comm, both times I missed it and went "unique to file 1,
+    # that's what I want, comm -1 ..., why isn't it doing what I want?!"
+    # END RANT
+    comm -23 ${all_vars} ${env_vars}
+    rm "${all_vars}" "${env_vars}"
+}
+
+function func_change(){
+    local initial_funcs=$(mktemp -t initial_funcs.XXXXXX)
+    compgen -A function | sort >${initial_funcs}
+    local final_funcs=$(mktemp -t final_funcs.XXXXXX)
+    (
+        "${@}"
+        compgen -A function | sort >${final_funcs}
+    )
+    printf "\033[1;32mNew functions:\033[0m\n"
+    printf "\033[1;32m==============\033[0m\n"
+    comm -23 ${final_funcs} ${initial_funcs}
+    printf "\033[1;31mRemoved functions:\033[0m\n"
+    printf "\033[1;31m==================\033[0m\n"
+    comm -13 ${final_funcs} ${initial_funcs}
+    printf "\033[1;33mKept functions\033[0m\n"
+    printf "\033[1;33m==============\033[0m\n"
+    comm -12 ${final_funcs} ${initial_funcs}
+    rm "${final_funcs}" "${initial_funcs}"
+}
+
+function func_change_2(){
+    local initial_funcs=$(mktemp -t initial_funcs.XXXXXX)
+    declare -f >${initial_funcs}
+    local final_funcs=$(mktemp -t final_funcs.XXXXXX)
+    (
+        "${@}"
+        declare -f >${final_funcs}
+    )
+    python3 ~/A_CLASSER/diff_functions.py -i ${initial_funcs} -f ${final_funcs}
+    rm "${final_funcs}" "${initial_funcs}"
 }
 
 
