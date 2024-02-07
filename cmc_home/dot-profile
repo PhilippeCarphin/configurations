@@ -12,10 +12,8 @@ function p.profile.main(){
     export SSM_DEV=/home/ords/cmdd/cmds/nil000/ssm
     export GITLAB_RUNNER_SCIENCE_ORDSOUMET_KEEP_FILES='yas'
     export GONOSUMDB=gitlab.science.gc.ca
-    export PATH="$HOME/bin:$HOME/.local/bin${PATH:+:$PATH}:$HOME/tools/go/bin"
-    export GITLAB_ACCESS_TOKEN="$(cat ~/.ssh/gitlab-access-token)"
+    export PATH="$HOME/bin:$HOME/.local/bin${PATH:+:$PATH}:$HOME/tools/go/bin:${HOME}/tools/rust-1.75/bin"
     export EDITOR=/usr/bin/vim
-    source $HOME/.cargo/env
     . ssmuse-sh -x /fs/ssm/hpco/exp/ssmuse/ssmuse-1.13-beta2
     configure_fs1_env
     configure_spack
@@ -37,6 +35,7 @@ function p.profile.main_interactive(){
     source "$HOME/.philconfig/shell_lib/x.use"
     source "$HOME/.philconfig/shell_lib/functions.sh"
     source "$HOME/.philconfig/shell_lib/view-rev-file.sh"
+    source "$HOME/A_CLASSER/env-diff/env-diff-cmd.bash"
     FZF_COMPLETION_OPT="--preview 'bat --color=always {}'"
     source ~/.fzf.bash
     _source_dir "$HOME/.bash_completion.d"
@@ -73,10 +72,21 @@ configure_fs1_env(){
     # is also not defined, dirs=(${HOME}/.local/share/bash-completion/completions).
     # After that it does
     #     dirs=(${BASH_COMPLETION_USER_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/bash-completion}/completions)
+    #     # Equivalently: dirs is defined following this logic:
+    #     # if[[ -z ${BASH_COMPLETION_USER_DIR} ]] ; then
+    #     #     dirs=(${BASH_COMPLETION_USER_DIR}/completions)
+    #     # else
+    #     #     if [[ -n ${XDG_DATA_HOME} ]] ; then
+    #     #         dirs=(${XDG_DATA_HOME}/bash-completion/completions)
+    #     #     else
+    #     #         dirs=($HOME/.local/share/bash-completion/completions)
+    #     #     fi
+    #     # fi
+    #
+    #     # Add '$d/bash-completion/completions' for each dir in XDG_DATA_DIRS and /usr/local/share and /usr/share
     #     for dir in ${XDG_DATA_DIRS:-/usr/local/share:/usr/share};
     #         dirs+=($dir/bash-completion/completions);
     #     done
-    # then for each of
     #
     export STOW_DIR="$HOME/fs1"
     XDG_DATA_DIRS=${XDG_DATA_DIRS:+${XDG_DATA_DIRS}:}${STOW_DIR}/etc
@@ -105,7 +115,23 @@ function maybe-source(){
     fi
 }
 
+################################################################################
+# Certain things about our environment setup don't jive well with vscode-server
+# so we override them for that case.
+# - TMPDIR: contains the PID of the process that loaded ordenv. Otherwise:
+#   - parent : lauches a child
+#   - child : has TMPDIR which contains PID of parent
+#   - parent : detaches child and exits, causing r.cleanup_tmpdir to delete
+#              TMPDIR
+#   - child : has a TMPDIR which does not exist.
+# 
+################################################################################
 configure_vscode_server_environment(){
+    # Dump environment to file at very beginning to see what the env looks
+    # like when vscode server logs in.
+    #
+    # env -0 | sort -z | tr '\0' '\n' > ~/env_$(date +%Y-%m-%d_%H.%M.%S)
+    #
     if [[ -v VSCODE_AGENT_FOLDER ]] ; then
         export GO111MODULES=off
         export TMPDIR=/tmp/$USER/vscode-server
@@ -137,7 +163,7 @@ function configure_history(){
     HISTFILESIZE=-1
     HISTIGNORE="rm -rf *"
     HISTFILE=~/.eternal_bash_history
-    HISTTIMEFORMAT=$'\033[1;32m%Y-%m-%d \033[1;33m%H:%M:%S\033[0m \033[1;31m'
+    HISTTIMEFORMAT=$'\033[1;32m%Y-%m-%d \033[1;33m%H:%M:%S\033[0m '
 }
 
 
@@ -211,110 +237,21 @@ function configure_vim(){
 ################################################################################
 set_ls_colors_for_readline_and_ls(){
 
+    :
     # Set LS_COLORS however you like
-    eval "$(dircolors -b ~/.dir_colors.256color)"
+    eval "$(dircolors)"
 
-    # Initialize readline with those same LS_COLORS except for the 'mi' part
-    local my_ls_colors="${LS_COLORS}"
-    LS_COLORS="$(echo "${LS_COLORS}" | sed 's/mi=[0-9;]*/mi=00/')"
-    bind -f ~/.inputrc # Anything that causes initialization of readline library
+    # # Initialize readline with those same LS_COLORS except for the 'mi' part
+    # local my_ls_colors="${LS_COLORS}"
+    # LS_COLORS="$(echo "${LS_COLORS}" | sed 's/mi=[0-9;]*/mi=00/')"
+    # bind -f ~/.inputrc # Anything that causes initialization of readline library
 
-    # Put back the 'mi' part in LS_COLORS
-    # We need the 'show-colored-stats' to be for BASH only in ~/.inputrc since
-    # the python interpreter will initialize readline in its process and will
-    # read LS_COLORS.  Anyway, we don't want show-colored-stats in Python so
-    # that is totally OK.
-    LS_COLORS="${my_ls_colors}"
-}
-
-
-function print_array(){
-    local color=true
-    if [[ ${1} == --no-color ]] ; then
-        color=false
-        shift
-    fi
-    local -n  array_ref=$1
-    local     array_name=$1
-    local -ri nb_items=${2-${#array_ref[@]}}
-    printf "Uncolored quotes are not part of the array element\n"
-    printf "%s\n" "If array elment contains true ($'\033[31m' as opposed to '\033[31m')"
-    printf "color codes, then colors will be weird\n"
-    local fmt="\033[35m%s\033[0m[\033[36m%d\033[0m]='\033[32m%s\033[0m'\n"
-    if ! ${color} ; then
-        fmt="%s[%d]='%s'\n"
-    fi
-    for((i=0;i<nb_items;i++)) ; do
-        printf "${fmt}" "${array_name}" "$i" "${array_ref[i]}"
-    done
-}
-
-# Some functions like 'trap -p SIG' print their output in such a way that it
-# can be manually copy-pasted into a shell to set the same trap:
-# $ set_trap="$(trap -p exit)"
-# $ trap '' exit
-# $ eval "${set_trap}"
-# If we want to get the actual code of the trap, we need to get the 3rd argument
-# of the command stored in ${set_trap} which can be done with
-# $ exit_trap="$(eval echo-nth-arg 3 "$(trap -p EXIT)")"
-# An eval is required because the output of trap is meant to be run as if it
-# was typed so that the code of the trap becomes exactly one argument.
-function echo-nth-arg(){
-    local n=$1
-    shift
-    echo "${!n}"
-}
-
-function shell_vars(){
-    local all_vars=$(mktemp all_vars.XXXXXX)
-    compgen -v | sort >${all_vars}
-    local env_vars=$(mktemp env_vars.XXXXXX)
-    compgen -e | sort >${env_vars}
-    # BEGIN RANT
-    # Very important note: -1 tells comm to SUPPRESS column 1 not to show it
-    # Every time I use comm (which is not super often) I glance at the manpage
-    # and see 
-    # -1 ... (lines unique to file 1)
-    # -2 ... (lines unique to file 2)
-    # and the "unique to file 1" draws my eye and I look no further.  I know it
-    # clearly says "suppress" but when writing this function and the previous
-    # time I had to use comm, both times I missed it and went "unique to file 1,
-    # that's what I want, comm -1 ..., why isn't it doing what I want?!"
-    # END RANT
-    comm -23 ${all_vars} ${env_vars}
-    rm "${all_vars}" "${env_vars}"
-}
-
-function func_change(){
-    local initial_funcs=$(mktemp -t initial_funcs.XXXXXX)
-    compgen -A function | sort >${initial_funcs}
-    local final_funcs=$(mktemp -t final_funcs.XXXXXX)
-    (
-        "${@}"
-        compgen -A function | sort >${final_funcs}
-    )
-    printf "\033[1;32mNew functions:\033[0m\n"
-    printf "\033[1;32m==============\033[0m\n"
-    comm -23 ${final_funcs} ${initial_funcs}
-    printf "\033[1;31mRemoved functions:\033[0m\n"
-    printf "\033[1;31m==================\033[0m\n"
-    comm -13 ${final_funcs} ${initial_funcs}
-    printf "\033[1;33mKept functions\033[0m\n"
-    printf "\033[1;33m==============\033[0m\n"
-    comm -12 ${final_funcs} ${initial_funcs}
-    rm "${final_funcs}" "${initial_funcs}"
-}
-
-function func_change_2(){
-    local initial_funcs=$(mktemp -t initial_funcs.XXXXXX)
-    declare -f >${initial_funcs}
-    local final_funcs=$(mktemp -t final_funcs.XXXXXX)
-    (
-        "${@}"
-        declare -f >${final_funcs}
-    )
-    python3 ~/A_CLASSER/diff_functions.py -i ${initial_funcs} -f ${final_funcs}
-    rm "${final_funcs}" "${initial_funcs}"
+    # # Put back the 'mi' part in LS_COLORS
+    # # We need the 'show-colored-stats' to be for BASH only in ~/.inputrc since
+    # # the python interpreter will initialize readline in its process and will
+    # # read LS_COLORS.  Anyway, we don't want show-colored-stats in Python so
+    # # that is totally OK.
+    # LS_COLORS="${my_ls_colors}"
 }
 
 

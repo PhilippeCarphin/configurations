@@ -10,12 +10,14 @@ dots(){
 }
 
 p.env(){
-    env -0 | sort -z | tr '\0' '\n' \
-    | grep -z -v '^BASH_FUNC_.*%%=' \
-    | sed "s/^GITLAB_ACCESS_TOKEN=.*/GITLAB_ACCESS_TOKEN=$(dots "$GITLAB_ACCESS_TOKEN")/"
+    env -0 | sort -z \
+    | command grep -z -v '^BASH_FUNC_.*%%=' \
+    | sed -z "s/^GITLAB_ACCESS_TOKEN=.*/GITLAB_ACCESS_TOKEN=$(dots "$GITLAB_ACCESS_TOKEN")/" \
+    | sed -z "s/\([a-zA-Z_]\+\)=\(.*\)/\x1b[34m\1\x1b[36m=\x1b[0m\2/" \
+    | tr '\0' '\n'
 }
 
-
+# WORK
 function p.set-web-proxy(){
     # From ~sbf000/.profile.d/interactive/post
     # except that I he had https_proxy=http://  and HTTPS_PROXY=http://
@@ -40,6 +42,7 @@ function orgman(){
     pandoc --standalone -f org -t man $1 | /usr/bin/man -l -
 }
 
+# WORK
 function p.myjobs()
 {
     (
@@ -49,6 +52,7 @@ function p.myjobs()
     )
 }
 
+# WORK
 function p.clearjobs()
 {
     (
@@ -157,46 +161,6 @@ function print_args(){
     done
 }
 
-function p.show-vars(){
-    # Show environment variables and shell variables
-    (
-
-        local abbrev=$'\033[1;33m...\033[0m'
-        GLUSTER_BARRIER_OPTIONS=${abbrev}
-        GLUSTER_COMMAND_TREE=${abbrev}
-        GLUSTER_FINAL_LIST=${abbrev}
-        GLUSTER_GEO_REPLICATION_OPTIONS=${abbrev}
-        GLUSTER_GEO_REPLICATION_SUBOPTIONS=${abbrev}
-        GLUSTER_PROFILE_OPTIONS=${abbrev}
-        GLUSTER_QUOTA_OPTIONS=${abbrev}
-        GLUSTER_TOP_OPTIONS=${abbrev}
-        GLUSTER_TOP_SUBOPTIONS1=${abbrev}
-        GLUSTER_TOP_SUBOPTIONS2=${abbrev}
-        GLUSTER_VOLUME_OPTIONS=${abbrev}
-        LS_COLORS=${abbrev}
-        _xspecs=([...]="...")
-        unset abbrev
-
-        declare -p
-    )
-}
-
-function show-functions(){(
-    # Show all function names with definition location
-    shopt -s extdebug
-    local functions
-    if [[ -n ${1} ]] ; then
-        functions=($(declare -F 2>&1 | cut -d ' ' -f 3 | command grep "$1"))
-    else
-        functions=($(declare -F 2>&1 | cut -d ' ' -f 3))
-    fi
-
-    for f in "${functions[@]}" ; do
-        declare -F $f
-    done | awk '{printf "%c[32m%s %c[1;35m%s %c[1;33m%s%c[0m\n", 27, $1, 27, $2, 27, $3, 27}'
-)}
-
-
 # A date command to use in _F_ilenames
 fdate(){
     date +%Y-%m-%d_%H.%M.%S
@@ -294,6 +258,7 @@ make(){
     fi
 }
 
+# WORK-ish
 p.pr(){
     vim ~/.profile_phil
 }
@@ -304,9 +269,9 @@ p.print_ps1(){
     # so to match an actual \, sed needs to receive two backslashes
     # The string needs to contain two backslashes, and to create this
     # string, we need to put four backslashes in our text file.
-    bs="\\\\"
-    ob="\["
-    cb="\]"
+    bs="\\\\" # Create a string that contains two backslashes
+    ob="\["   # \[ which sed will interpret as the character '['
+    cb="\]"   # \] which sed will interpret as the character ']'
     subst="s/${bs}${ob}\|${bs}${cb}//g; "
     subst+="s/${bs}h/${HOSTNAME}/;"
     subst+="s/${bs}u/${USER}/"
@@ -330,7 +295,7 @@ p.cmake_asm(){
 		Multiple components can be replaced by a single component as
 		well add_subdirectory(a/b/c e) would mean that we would need
 		to go to <build_dir>/e to run 'make <d2>/file.c.s.
-	EOF
+EOF
 }
 
 function ancestor_with_basename(){
@@ -373,6 +338,7 @@ function p.colonlist(){
 # Send curl requests with headers containing the gitlab access token used to
 # test API requests to gitlab.science.gc.ca or gitlab.com.
 ################################################################################
+# WORK
 function glcurl(){
     local req=${1} ; shift
     curl "$@" --header "PRIVATE-TOKEN: $(cat ~/.ssh/gitlab-access-token)" https://gitlab.science.gc.ca/api/v4${req}
@@ -451,10 +417,12 @@ function p.dotgraph-helper(){
 ################################################################################
 # Maestro functions
 ################################################################################
+# WORK
 function p.clear-exp-sitestore(){
     rm -rf ~/site5/rm_hind_seas_hub/work/*
 }
 
+# WORK
 function xflow(){
     if ! [[ -d hub ]] && [[ -d listings ]] && [[ -L EntryModule ]] ; then
         printf "phil xflow adapter: \033[1;31mERROR\033[0m: Please run inside an experiment\n"
@@ -464,6 +432,7 @@ function xflow(){
     SEQ_EXP_HOME=$PWD command xflow
 }
 
+# WORK
 function p.view_listing(){
     local compressed_listing=$1
     if ! [[ -f "${compressed_listing}" ]] ; then
@@ -591,80 +560,65 @@ function p.crlf-to-lf(){
 $//' "$@"
 }
 
-function p.myprocs(){
-    ps -F -u "$USER"
-}
-
-function p.tcheck(){
-    local nb_tmux
-    nb_tmux=$(pgrep -cfau "$USER" tmux)
-    local tmux_color=""
-    if ((nb_tmux > 15)) ; then
-        tmux_color="\033[1;31m"
-    elif ((nb_tmux > 10)) ; then
-        tmux_color="\033[1;33m"
-    fi
-
-    printf "${tmux_color}Number of tmux procs : %s\033[0m\n" "${nb_tmux}"
-}
-
-function p.pcheck(){
-    local nb_procs
-    nb_procs=$(ps -u "$USER" | wc -l)
-    local proc_color=""
-    if ((nb_procs > 200)) ; then
-        proc_color="\033[1;31m"
-    elif ((nb_procs > 150)) ; then
-        proc_color="\033[1;33m"
-    fi
-    printf "${proc_color}Number of processes  : %s\033[0m\n" "${nb_procs}"
-}
-
-function p.check-processes(){
-    p.pcheck
-    p.tcheck
-}
-
 function p.unansi(){
     sed 's/\x1b\[[0-9;]*m//g' "$@"
 }
 
-function make2(){
-    (
-    set -o pipefail
-    if ! on_compute_node ; then
-        local arg
-        for arg in "$@" ; do
-            if [[ "${arg}" == -j* ]] ; then
-                echo "You are on host ${HOSTNAME} ... you should not use '-j'.  Use 'command make $*' to bypass this function if you are sure"
-                return 1
-            fi
-        done
-    fi
-    CLICOLOR_FORCE=yep command make VERBOSE=${PHIL_VERBOSE_MAKE} --no-print-directory "$@" 2>&1 | highlight.sh error "" warning "" "undefined \w*" "^make.*"
-    )
-}
-
 function make(){
-    if ! [ -t 1 ] ; then
-        command make "$@"
-    else
+    if [[ -t 1 ]] ; then
         local subst
-        subst+="s/error/\x1b[1;31m&\x1b[0m/g; "
-        subst+="s/warning/\x1b[1;33m&\x1b[0m/g; "
-        subst+="s/undefined reference/\x1b[1;35m&\x1b[0m/g; "
-        subst+="s/^make.*/\x1b[1;36m&\x1b[0m/g;"
+        subst+="s/error/$(tput bold)$(tput setaf 1)&$(tput sgr 0)/g; "
+        subst+="s/warning/$(tput bold)$(tput setaf 3)&$(tput sgr 0)/g; "
+        subst+="s/undefined reference/$(tput bold)$(tput setaf 3)&$(tput sgr 0)/g; "
+        subst+="s/^make.*/$(tput bold)$(tput setaf 6)&$(tput sgr 0)/g;"
         # For debugging
         # echo "subst = '$subst'"
         (
             set -o pipefail
             CLICOLOR_FORCE=yes_please command make --no-print-directory "$@" 2>&1 | sed --unbuffered "${subst}"
         )
+    else
+        command make "$@"
     fi
+}
+function wye(){
+    while read l ; do
+        echo "$l" >&2
+        echo "$l" >&1
+    done
 }
 
 function p.dusage(){
-    du --max-depth=1 -h "$@" | sort -h
+    # * : All files not beginning with '.'
+    # .[!.]* : All files beginning with one dot but not two (excludes '..' and '..*' and '.')
+    # ..?* : File names beginning with '..' folowed by at least one character
+    # . : To give the total for this directory
+    du -sh * .[!.]* ..?* | sort -h | python3 -c "
+import sys
+multiplier = { 'K': 10**3, 'M':10**6, 'G': 10**9, 'T':10**12 }
+letters = {0: '', 3:'K', 6:'M', 9:'G', 12:'T'}
+total_bytes = 0.0
+for l in sys.stdin:
+    print(l.strip())
+    size, filename = l.split()
+    # print(f'size: {size}, filename: {filename}')
+    if size[-1] in 'KMGTP':
+        bytes = float(size[:-1]) * multiplier.get(size[-1], 1)
+    else:
+        bytes = size
+    total_bytes += int(bytes)
+for p in [3,6,9,12]:
+    if total_bytes < 10**p:
+        total_str = f'{total_bytes/(10**(p-3)):.1f}{letters[p-3]}'
+        break
+else:
+    total_str = str(total_bytes)
+print('---------------------')
+print(f'{total_str}')
+"
+
+    # Used to be `du --max-depth=1 -h | sort -h` but this didn't list regular
+    # files, just directories which made it easy to miss large regular files.
 }
 
 p.pgrep(){
@@ -672,37 +626,17 @@ p.pgrep(){
 }
 
 p.ps(){
-    ps -f -u $USER --cols $(tput cols) | sort -k 8
+    ps -f -u $USER --cols $(tput cols) "$@" | sort -k 8
 }
 
 p.pst(){
     ps f -f -u $USER
 }
 
-p.check_procs_pppn(){
-    local pppn=${1}
-    if ! echo ${pppn} | grep -P "(ppp5)|(ppp6)" &>/dev/null ; then
-        echo "Argument 1 must be ppp5 or ppp6"
-        return 1
-    fi
-
-    for node in ${pppn}login-001 ${pppn}login-002 ; do
-        printf "\033[1;32mLogging in to $node\033[0m\n"
-        ssh -t -J${pppn} ${node} 'ps -u phc001 -f'
-    done
-}
-
-p.check_procs_all(){
-    for pppn in ppp5 ppp6 ; do
-        printf "\033[1;35mChecking nodes on ${pppn}\033[0m\n"
-        p.check_procs_pppn ${pppn}
-    done
-}
-
-
 ################################################################################
 # Acquire compute node for building and running GEM (or anything else)
 ################################################################################
+# WORK
 function p.qsubi(){
     local ncpu=72
     if [[ "${1}" =~ [1-9][0-9]* ]] ; then
@@ -714,7 +648,131 @@ function p.qsubi(){
     "${cmd[@]}"
 }
 
+# WORK
 function p.last-finger(){
     local epoch=$(stat --format=%X ~/.plan)
     echo "$(date --date=@${epoch}) (atime of ~/.plan (may be inacurrate))"
 }
+
+print_array(){
+    local -n  ref=$1
+    local     name=$1
+    local fmt="\033[35m%s\033[0m[\033[36m%s\033[0m]='\033[32m%s\033[0m'\n"
+    for k in ${!ref[@]} ; do
+        printf "${fmt}" "${name}" "$k" "${ref[$k]}"
+    done
+}
+_print_array(){
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local arrays=($(compgen -A arrayvar))
+    arrays+=($(declare -A | cut -d ' ' -f 3 | cut -d = -f 1))
+    COMPREPLY=($(compgen -W "${arrays[*]}" -- "${cur}"))
+}
+complete -c _print_array print_array
+
+# Some functions like 'trap -p SIG' print their output in such a way that it
+# can be manually copy-pasted into a shell to set the same trap:
+# $ set_trap="$(trap -p exit)"
+# $ trap '' exit
+# $ eval "${set_trap}"
+# If we want to get the actual code of the trap, we need to get the 3rd argument
+# of the command stored in ${set_trap} which can be done with
+# $ exit_trap="$(eval echo-nth-arg 3 "$(trap -p EXIT)")"
+# An eval is required because the output of trap is meant to be run as if it
+# was typed so that the code of the trap becomes exactly one argument.
+function echo-nth-arg(){
+    local n=$1
+    shift
+    echo "${!n}"
+}
+
+function shell_vars(){
+    local _shell_vars_tmpdir
+    if ! _shell_vars_tmpdir=$(mktemp -t -d shell_vars_tmpdir.XXXXXX) ; then
+        return 1
+    fi
+    if ! compgen -v | sort >${_shell_vars_tmpdir}/all_vars.txt ; then
+        return 1
+    fi
+    if ! compgen -e | sort >${_shell_vars_tmpdir}/env_vars.txt ; then
+        return 1
+    fi
+    if ! compgen -A arrayvar | sort >${_shell_vars_tmpdir}/arr_vars.txt ; then
+        return 1
+    fi
+    if ! declare -A | cut -d ' ' -f 3 | cut -d '=' -f 1 | sort > ${_shell_vars_tmpdir}/assoc_arr_vars.txt ; then
+        return 1
+    fi
+    # BEGIN RANT
+    # Very important note: -1 tells comm to SUPPRESS column 1 not to show it
+    # Every time I use comm (which is not super often) I glance at the manpage
+    # and see 
+    # -1 ... (lines unique to file 1)
+    # -2 ... (lines unique to file 2)
+    # and the "unique to file 1" draws my eye and I look no further.  I know it
+    # clearly says "suppress" but when writing this function and the previous
+    # time I had to use comm, both times I missed it and went "unique to file 1,
+    # that's what I want, comm -1 ..., why isn't it doing what I want?!"
+    # END RANT
+    comm -23 ${_shell_vars_tmpdir}/all_vars.txt ${_shell_vars_tmpdir}/env_vars.txt > ${_shell_vars_tmpdir}/noenv.txt
+    comm -23 ${_shell_vars_tmpdir}/noenv.txt ${_shell_vars_tmpdir}/arr_vars.txt > ${_shell_vars_tmpdir}/noarr.txt
+    comm -23 ${_shell_vars_tmpdir}/noarr.txt ${_shell_vars_tmpdir}/assoc_arr_vars.txt >${_shell_vars_tmpdir}/shell_vars.txt
+
+    if [[ "${1}" == "-v" ]] ; then
+        local var
+        while read var ; do
+            local -n val=${var}
+            echo "${var}=${val[*]}"
+        done < ${_shell_vars_tmpdir}/shell_vars.txt
+    else
+        cat ${_shell_vars_tmpdir}/shell_vars.txt
+    fi
+    rm -r ${_shell_vars_tmpdir}
+}
+
+function func_change(){
+    local initial_funcs=$(mktemp -t initial_funcs.XXXXXX)
+    compgen -A function | sort >${initial_funcs}
+    local final_funcs=$(mktemp -t final_funcs.XXXXXX)
+    (
+        "${@}"
+        compgen -A function | sort >${final_funcs}
+    )
+    printf "\033[1;32mNew functions:\033[0m\n"
+    printf "\033[1;32m==============\033[0m\n"
+    comm -23 ${final_funcs} ${initial_funcs}
+    printf "\033[1;31mRemoved functions:\033[0m\n"
+    printf "\033[1;31m==================\033[0m\n"
+    comm -13 ${final_funcs} ${initial_funcs}
+    printf "\033[1;33mKept functions\033[0m\n"
+    printf "\033[1;33m==============\033[0m\n"
+    comm -12 ${final_funcs} ${initial_funcs}
+    rm "${final_funcs}" "${initial_funcs}"
+}
+
+function func_change_2(){
+    local initial_funcs=$(mktemp -t initial_funcs.XXXXXX)
+    declare -f >${initial_funcs}
+    local final_funcs=$(mktemp -t final_funcs.XXXXXX)
+    (
+        eval "${@}"
+        declare -f >${final_funcs}
+    )
+    python3 ~/A_CLASSER/env-diff/diff_functions.py -i ${initial_funcs} -f ${final_funcs}
+    rm "${final_funcs}" "${initial_funcs}"
+}
+
+man(){
+    (
+        if (( COLUMNS >= 80 )) ; then
+            export MANWIDTH=80
+        fi
+        command man --no-justification "$@"
+    )
+}
+
+
+p.type(){
+    type "$@" | bat -l bash
+}
+complete -A function p.type
