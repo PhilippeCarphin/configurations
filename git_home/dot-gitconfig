@@ -35,8 +35,15 @@
     rawshow = "-c \"core.pager=less --tabs=4 -RFX\" show"
     xd = difftool --dir-diff
     dt = difftool --dir-diff
+    ydiff = difftool -x 'ydiff -s -w0 -c auto'
+    yddiff = difftool --dir-diff -x 'ydiff -s -w0 -c auto'
+    xxdiff = difftool -x 'xxdiff' --dir-diff
+    meld = difftool -x 'meld'
 
 	hist = log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short
+    # Change git@domain:project-path[.git] to https://domain/project-path
+    #        ^^^^      ^            ^^^^^^    ^^^^^^^^      ^            ^
+    to-http = "!f(){ remote=origin ; if [[ $# == 1 ]] ; then remote=$1 ; fi ;  git remote get-url $remote | sed -e 's/:/\\//' -e 's/^git@/https:\\/\\//' -e 's/\\.git$//' ; } ; f"
 [credential]
     helper = cache --timeout 36000
 
@@ -63,6 +70,29 @@
 # 
 # [diff]
 #     colorMoved = default
+
+################################################################################
+# difftool options
+################################################################################
+[difftool]
+    prompt = false
+# Add the following to your .gitconfig file.
+# https://stackoverflow.com/questions/34119866/setting-up-and-using-meld-as-your-git-difftool-and-mergetool
+######################### xxdiff ###############################################
+# [diff]
+# 	tool = xxdiff
+######################### meld #################################################
+# [diff]
+#   tool = meld
+######################### ydiff ################################################
+# For viewing side-by-side diff in the shell
+# [diff]
+#     tool = ydiff
+# [difftool "ydiff"]
+#     cmd = ydiff -s -w0 -c auto
+# NOTE: We can have multiple difftool options configured by creating aliases
+# like `ydiff = difftool -x 'ydiff -s -w0 -c auto'` and these allow for extra
+# options like `xxdiff = difftool -x xxdiff --dir-diff`
 
 [gui]
 	fontui = -family \".SF NS Text\" -size 18 -weight normal -slant roman -underline 0 -overstrike 0
@@ -110,6 +140,6 @@
 [advice]
 	detachedHead = false
 [merge]
-    tool = vimdiff
+	tool = meld
 [init]
     defaultBranch = master

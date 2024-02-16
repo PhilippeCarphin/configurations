@@ -5,6 +5,7 @@ p.error(){
 }
 
 function p.profile.main(){
+    export EDITOR=/usr/bin/vim
     export LOG_LEVEL=ERROR # For r.load
     export CMAKE_EXPORT_COMPILE_COMMANDS=TRUE
     export TZ=America/Toronto
@@ -13,7 +14,7 @@ function p.profile.main(){
     export GITLAB_RUNNER_SCIENCE_ORDSOUMET_KEEP_FILES='yas'
     export GONOSUMDB=gitlab.science.gc.ca
     export PATH="$HOME/bin:$HOME/.local/bin${PATH:+:$PATH}:$HOME/tools/go/bin:${HOME}/tools/rust-1.75/bin"
-    export EDITOR=/usr/bin/vim
+    # export EDITOR=/usr/bin/vim
     . ssmuse-sh -x /fs/ssm/hpco/exp/ssmuse/ssmuse-1.13-beta2
     configure_fs1_env
     configure_spack
