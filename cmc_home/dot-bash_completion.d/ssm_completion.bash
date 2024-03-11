@@ -156,7 +156,7 @@ __suggest_ssm_cache-dir(){
 
 __dash_dash_in_words(){
     for ((i=0;i<COMP_CWORD-1;i++)) ; do
-        w=${COMP_WORD[$i]}
+        w=${COMP_WORDS[$i]}
         if [[ "$w" == "--" ]] ; then
             return 0
         fi

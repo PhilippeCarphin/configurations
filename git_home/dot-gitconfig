@@ -39,11 +39,21 @@
     yddiff = difftool --dir-diff -x 'ydiff -s -w0 -c auto'
     xxdiff = difftool -x 'xxdiff' --dir-diff
     meld = difftool -x 'meld'
+    meld2 = difftool --dir-diff -x 'meld'
+	# With --dir-diff it seems like it doens't work if the version
+	# of git is not recent enough saying "<paht> : Is a directory
+	comparedir = difftool --dir-diff -x 'meld'
+	comparetxt = difftool -x 'meld'
 
 	hist = log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short
     # Change git@domain:project-path[.git] to https://domain/project-path
     #        ^^^^      ^            ^^^^^^    ^^^^^^^^      ^            ^
     to-http = "!f(){ remote=origin ; if [[ $# == 1 ]] ; then remote=$1 ; fi ;  git remote get-url $remote | sed -e 's/:/\\//' -e 's/^git@/https:\\/\\//' -e 's/\\.git$//' ; } ; f"
+	grep-call = "!f() { : git grep ; pattern=\"$1\"; shift; git -C \"$GIT_PREFIX\" --work-tree=$PWD grep -i -p -E -e \"call[ ]+$pattern([ ]+|\\()*\" \"$@\" ; }; f"
+
+[diff "fortran-namelist"]
+	xfuncname = "^[ \\t]*&.*$"
+
 [credential]
     helper = cache --timeout 36000
 
@@ -143,3 +153,7 @@
 	tool = meld
 [init]
     defaultBranch = master
+
+[includeIf "gitdir:~/Repositories/github.com/philippecarphin/"]
+    path = ~/Repositories/github.com/philippecarphin/gitconfig
+

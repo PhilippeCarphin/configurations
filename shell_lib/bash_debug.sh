@@ -28,7 +28,11 @@ function debug(){
     # fd=5, doing 'exec ${fd}>${file}' would fail with the message
     # 'bash: exec: 5: not found' whereas doing 'exec 5>${file}' does work.
     # Hence the eval.
-    eval "exec ${debug_fd}>${debug_file}"
+    # eval "exec ${debug_fd}>${debug_file}"
+    # UPDATE: On this stack overflow answer https://unix.stackexchange.com/a/669677/161630
+    # I noticed that he used this syntax:
+    exec {debug_fd}>${debug_file}
+    # AND it works.
     BASH_XTRACEFD=${debug_fd}
     set -x
 }
@@ -54,7 +58,7 @@ function cdebug(){
 function undebug(){
     case ${BASH_XTRACEFD} in
         1|2|'') ;;
-        *) eval "exec ${BASH_XTRACEFD}>&-" ;;
+        *) exec {BASH_XTRACEFD}>&- ;;
     esac
     set +x
     unset BASH_XTRACEFD

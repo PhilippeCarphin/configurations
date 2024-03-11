@@ -485,6 +485,7 @@ Run the command and launch the corresponding configuration in VSCode.  It should
 \033[1;31mERROR\033[0m: No file specified\n"
         return 1
     fi
+    echo "Make sure python3 gets a 3.7+ version"
     port=${port:-5678}
     cmd=(python3.8 -m debugpy --wait-for-client --listen $port "$@")
     printf "Launching waiting debugger: \033[1;32m%s\033[0m\n" "${cmd[*]}"
@@ -589,6 +590,8 @@ function wye(){
 }
 
 function p.dusage(){
+    (
+        shopt -s nullglob
     # * : All files not beginning with '.'
     # .[!.]* : All files beginning with one dot but not two (excludes '..' and '..*' and '.')
     # ..?* : File names beginning with '..' folowed by at least one character
@@ -619,6 +622,7 @@ print(f'{total_str}')
 
     # Used to be `du --max-depth=1 -h | sort -h` but this didn't list regular
     # files, just directories which made it easy to miss large regular files.
+    )
 }
 
 p.pgrep(){
@@ -662,6 +666,23 @@ print_array(){
         printf "${fmt}" "${name}" "$k" "${ref[$k]}"
     done
 }
+
+print_list(){
+    if (( $# == 2 )) ; then
+        local sep=$1 ; shift
+    else
+        local sep=:
+    fi
+    local -n ref=$1
+
+    # echo "${ref}" | tr "${sep}" "\n" | awk "{print NR\": '\"\$0\"'\"}"
+
+    local IFS="${sep}"
+    local -a elements=(${ref})
+    unset IFS
+    print_array elements
+}
+
 _print_array(){
     local cur="${COMP_WORDS[COMP_CWORD]}"
     local arrays=($(compgen -A arrayvar))
@@ -771,8 +792,66 @@ man(){
     )
 }
 
+trace(){
+    (
+        set -x
+        SSMUSE_XTRACE_VERBOSE=1
+        eval "$@"
+    )
+}
+
 
 p.type(){
     type "$@" | bat -l bash
 }
 complete -A function p.type
+
+p.do-login-nodes(){
+    local reset_pipefail=$(shopt -po pipefail)
+    set -o pipefail
+    local interactive=false
+    local login=""
+    local quiet=false
+    local -a posargs=()
+    while (($# > 0)) ; do
+        case $1 in
+            --interactive) interactive=true ; shift ;;
+            --login) login=--login ; shift ;;
+            --quiet) quiet=true ; shift ;;
+            --) shift ; posargs+=("$@") ; break ;;
+            *) posargs+=("$1") ; shift ;;
+        esac
+    done
+
+    local -A statuses
+    for i in 5 6 ; do
+        for j in 1 2 3 ; do
+            if ${interactive} ; then
+                ssh -t -J ppp${i} ppp${i}login-00${j} "eval echo ${posargs[@]} | bash ${login} -i" \
+                    | grep -v '^Warning: Permanently added .*to the list of known hosts.$'
+            else
+                ${quiet} || printf "\033[1;32m==> \033[1;37mDoing node '%s'\033[0m\n" ppp${i}login-00${j}
+                ${quiet} || echo "$ ${posargs[*]}"
+                if ${quiet} ; then
+                    ssh -t -J ppp${i} ppp${i}login-00${j} echo "${posargs[*]}" \| bash ${login} &>/dev/null
+                    statuses[ppp${i}login${j}]=$?
+                else
+                    ssh -t -J ppp${i} ppp${i}login-00${j} echo "${posargs[*]}" \| bash ${login} \
+                        |& command grep -v '^Warning: Permanently added .*to the list of known hosts\..\?$'
+                    local status=$?
+                    if ((status == 0)) ; then
+                        printf "\033[1;34m  --> \033[1;32m${status}\033[0m\n"
+                    else
+                        printf "\033[1;34m  --> \033[1;31m${status}\033[0m\n"
+                    fi
+                fi
+            fi
+        done
+    done
+    ${reset_pipefail}
+}
+
+p.whowho(){
+    who | sort | awk '{print $1}' | uniq | while read u ; do finger $u | head -n 1 ; done | sort -k 4
+}
+

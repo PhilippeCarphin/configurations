@@ -14,8 +14,12 @@ function p.profile.main(){
     export GITLAB_RUNNER_SCIENCE_ORDSOUMET_KEEP_FILES='yas'
     export GONOSUMDB=gitlab.science.gc.ca
     export PATH="$HOME/bin:$HOME/.local/bin${PATH:+:$PATH}:$HOME/tools/go/bin:${HOME}/tools/rust-1.75/bin"
+    local p=http://webproxy.science.gc.ca:8888/
+    export http_proxy=${p}
+    export https_proxy=${p}
+    export HTTP_PROXY=${p}
+    export HTTPS_PROXY=${p}
     # export EDITOR=/usr/bin/vim
-    . ssmuse-sh -x /fs/ssm/hpco/exp/ssmuse/ssmuse-1.13-beta2
     configure_fs1_env
     configure_spack
     configure_vscode_server_environment
@@ -36,7 +40,7 @@ function p.profile.main_interactive(){
     source "$HOME/.philconfig/shell_lib/x.use"
     source "$HOME/.philconfig/shell_lib/functions.sh"
     source "$HOME/.philconfig/shell_lib/view-rev-file.sh"
-    source "$HOME/A_CLASSER/env-diff/env-diff-cmd.bash"
+    source "$HOME/Repositories/github.com/philippecarphin/env-diff/env-diff-cmd.bash"
     FZF_COMPLETION_OPT="--preview 'bat --color=always {}'"
     source ~/.fzf.bash
     _source_dir "$HOME/.bash_completion.d"
@@ -54,8 +58,8 @@ function p.profile.main_interactive(){
     alias :qa='exit 0'
     alias :wq='exit 0'
     alias :cq='exit 1'
-    alias cd='wrap_command_colon_paths cd'
-    complete -F __complete_git_colon_dirs cd
+    alias cd='gcps_wrap_command_colon_paths cd'
+    complete -F _gcps_complete_colon_dirs cd
     alias git=git-enforce-rules-of-philippes
     complete -o default -o nospace -o filenames -F _DottableCompletion source .
     shopt -s direxpand # Merci Philippe Blain :D
@@ -185,7 +189,7 @@ function _source_dir(){
 }
 
 function configure_vim(){
-    complete -o default -F __complete_git_colon_paths vim
+    complete -o default -F _gcps_complete_colon_paths vim
     function vim()(
         if [[ $(hostname) != ppp* ]] ; then
             /usr/bin/vim -p "$@"
@@ -202,7 +206,7 @@ function configure_vim(){
         done < <(env -0)
         export C_INCLUDE_PATH
         # echo "C_INCLUDE_PATH=${C_INCLUDE_PATH}"
-        wrap_command_colon_paths command vim -p "$@"
+        gcps_wrap_command_colon_paths command vim -p "$@"
     )
 }
 
@@ -253,6 +257,13 @@ set_ls_colors_for_readline_and_ls(){
     # # read LS_COLORS.  Anyway, we don't want show-colored-stats in Python so
     # # that is totally OK.
     # LS_COLORS="${my_ls_colors}"
+}
+
+p.notes(){
+    echo '${X@P}: The value of X passed through prompt evaluation'
+    echo '${X@Q}: Quote the value of X for use as unquoted input'
+    echo '${X@a}: Attributes of variable X as printed by declare -p X'
+    echo '${X:_Y}: (_ is -,=,+,?): Do something if X is unset or null, but without the colon, it just checks for unset.'
 }
 
 
