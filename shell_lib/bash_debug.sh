@@ -4,7 +4,22 @@
 # leading me to believe that for some reason bash doesn't
 # expand the variable in >&${debug_fd} but if we redo it with
 # debug_fd=2 and 2 is a file descriptor, the call will succeed!
-# But it's just that the error message shows the unexpanded form.
+# It's just that the error message shows the unexpanded form.
+#
+# When using variable expansion on the left side of a redirection, we have a
+# different quirky behavior:  With debug_fd=8 and 8 is not a file descriptor
+# meaning that it is available to be used as the file descriptor.  But using
+# the variable, we can try `exec ${debug_fd}>the_file` and it will print
+# `bash: exec: 8: not found` confusing the audience.  If we simply wrote out
+# `exec 8>the_file` it works, so we can use an eval but we have to be careful
+# so that the redirection is part of the eval. `eval exec ${fd}>file` redirects
+# ${fd} to file for the eval command.  We need `eval "exec ${fd}>file"`.
+#
+# But I don't care what number the FD is, all I want is an unused one and there
+# is a syntax just for that
+# - Finds an unused FD
+# - Stores it in a variable
+# - Doesn't have that weird expansior interaction that requires an eval.
 
 function debug(){
 
@@ -15,25 +30,12 @@ function debug(){
     else
         export PS4='+ \033[35m${BASH_SOURCE[0]}\033[36m:\033[32m${LINENO}\033[36m:\033[0m '
     fi
-    local debug_fd=5
     local debug_file=$(mktemp bash_debug_session_$(date +%Y-%m-%d_%H-%M)_XXX.txt --tmpdir=${HOME}/.bash_debug.d)
     ln -sf ${debug_file} ~/.bash_debug.d/latest
-    if : 2>/dev/null >&${debug_fd} || : 2>/dev/null <&${debug_fd} ; then
-        echo "ERROR: The file descriptor '${debug_fd}' is already in use or is invalid" >&2
-        return 1
-    fi
 
-    # This needs to be in an eval because it seems that the exec works
-    # differently than in other contexts.  Without the eval, say if
-    # fd=5, doing 'exec ${fd}>${file}' would fail with the message
-    # 'bash: exec: 5: not found' whereas doing 'exec 5>${file}' does work.
-    # Hence the eval.
-    # eval "exec ${debug_fd}>${debug_file}"
-    # UPDATE: On this stack overflow answer https://unix.stackexchange.com/a/669677/161630
-    # I noticed that he used this syntax:
-    exec {debug_fd}>${debug_file}
-    # AND it works.
-    BASH_XTRACEFD=${debug_fd}
+    # local debug_fd
+    exec {BASH_XTRACEFD}>${debug_file}
+    # BASH_XTRACEFD=${debug_fd}
     set -x
 }
 

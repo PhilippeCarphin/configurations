@@ -10,10 +10,16 @@ dots(){
 }
 
 p.env(){
+    local color_var_names
+    if [[ -t stdout ]] ; then
+        color_var_names=(sed -z "s/\([a-zA-Z_]\+\)=\(.*\)/\x1b[34m\1\x1b[36m=\x1b[0m\2/")
+    else
+        color_var_names=(cat)
+    fi
     env -0 | sort -z \
     | command grep -z -v '^BASH_FUNC_.*%%=' \
     | sed -z "s/^GITLAB_ACCESS_TOKEN=.*/GITLAB_ACCESS_TOKEN=$(dots "$GITLAB_ACCESS_TOKEN")/" \
-    | sed -z "s/\([a-zA-Z_]\+\)=\(.*\)/\x1b[34m\1\x1b[36m=\x1b[0m\2/" \
+    | "${color_var_names[@]}" \
     | tr '\0' '\n'
 }
 
@@ -340,8 +346,11 @@ function p.colonlist(){
 ################################################################################
 # WORK
 function glcurl(){
-    local req=${1} ; shift
-    curl "$@" --header "PRIVATE-TOKEN: $(cat ~/.ssh/gitlab-access-token)" https://gitlab.science.gc.ca/api/v4${req}
+    # Keep unevaluated for printing then evaluate
+    local header='PRIVATE-TOKEN: $(<~/.ssh/gitlab-access-token)'
+    local url="https://gitlab.science.gc.ca/api/v4${1}"
+    printf 'curl --header "%s" %s\n' "${header}" "${url}" >&2
+    curl --header "$(eval echo ${header})" ${url}
 }
 
 function glccurl(){
@@ -570,7 +579,7 @@ function make(){
         local subst
         subst+="s/error/$(tput bold)$(tput setaf 1)&$(tput sgr 0)/g; "
         subst+="s/warning/$(tput bold)$(tput setaf 3)&$(tput sgr 0)/g; "
-        subst+="s/undefined reference/$(tput bold)$(tput setaf 3)&$(tput sgr 0)/g; "
+        subst+="s/undefined reference/$(tput bold)$(tput setaf 5)&$(tput sgr 0)/g; "
         subst+="s/^make.*/$(tput bold)$(tput setaf 6)&$(tput sgr 0)/g;"
         # For debugging
         # echo "subst = '$subst'"
@@ -593,8 +602,11 @@ function p.dusage(){
     (
         shopt -s nullglob
     # * : All files not beginning with '.'
-    # .[!.]* : All files beginning with one dot but not two (excludes '..' and '..*' and '.')
+    # .[!.]* : Files starting with a dot, followed by not-a-dot, followed by
+    #          anything.
     # ..?* : File names beginning with '..' folowed by at least one character
+    #        since the previous expression excluded all files beginning with
+    #        '..'
     # . : To give the total for this directory
     du -sh * .[!.]* ..?* | sort -h | python3 -c "
 import sys
@@ -855,3 +867,7 @@ p.whowho(){
     who | sort | awk '{print $1}' | uniq | while read u ; do finger $u | head -n 1 ; done | sort -k 4
 }
 
+
+p.voir(){
+    voir "$@" | sed '/   \*.*\*$/d'
+}
