@@ -13,7 +13,7 @@ function p.profile.main(){
     export SSM_DEV=/home/ords/cmdd/cmds/nil000/ssm
     export GITLAB_RUNNER_SCIENCE_ORDSOUMET_KEEP_FILES='yas'
     export GONOSUMDB=gitlab.science.gc.ca
-    export PATH="$HOME/bin:$HOME/.local/bin${PATH:+:$PATH}:$HOME/tools/go/bin:${HOME}/tools/rust-1.75/bin"
+    export PATH="$HOME/bin:$HOME/.local/bin${PATH:+:$PATH}:$HOME/tools/go/bin:${HOME}/tools/rust-1.75/bin:$HOME/tools/node-v16.13.1-linux-x64/bin"
     local p=http://webproxy.science.gc.ca:8888/
     export http_proxy=${p}
     export https_proxy=${p}
@@ -59,7 +59,7 @@ function p.profile.main_interactive(){
     alias :wq='exit 0'
     alias :cq='exit 1'
     alias cd='gcps_wrap_command_colon_paths cd'
-    complete -F _gcps_complete_colon_dirs cd
+    complete -F _gcps_complete_cd cd
     alias git=git-enforce-rules-of-philippes
     complete -o default -o nospace -o filenames -F _DottableCompletion source .
     shopt -s direxpand # Merci Philippe Blain :D
@@ -75,8 +75,7 @@ configure_fs1_env(){
     # It searches an array of directories that starts out as
     # Since I don't define BASH_COMPLETION_USER_DIR and XDG_DATA_HOME
     # is also not defined, dirs=(${HOME}/.local/share/bash-completion/completions).
-    # After that it does
-    #     dirs=(${BASH_COMPLETION_USER_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/bash-completion}/completions)
+    # 1   dirs=(${BASH_COMPLETION_USER_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/bash-completion}/completions)
     #     # Equivalently: dirs is defined following this logic:
     #     # if[[ -z ${BASH_COMPLETION_USER_DIR} ]] ; then
     #     #     dirs=(${BASH_COMPLETION_USER_DIR}/completions)
@@ -89,12 +88,31 @@ configure_fs1_env(){
     #     # fi
     #
     #     # Add '$d/bash-completion/completions' for each dir in XDG_DATA_DIRS and /usr/local/share and /usr/share
-    #     for dir in ${XDG_DATA_DIRS:-/usr/local/share:/usr/share};
+    # 2   for dir in ${XDG_DATA_DIRS:-/usr/local/share:/usr/share};
     #         dirs+=($dir/bash-completion/completions);
     #     done
     #
+    # So basically, the initialization at 1 adds
+    #
+    #       $HOME/.local/share/bash-completion/completions
+    #
+    # because BASH_COMPLETION_USER_DIR and XDG_DATA_HOME are unset.  Next, we
+    # add
+    #
+    #       $dir/bash-completion/completions
+    #
+    # for d in $XDG_DATA_DIRS (colon separated list) therefore.
+    #
+    # To work with this system, completions should be stored in
+    #
+    #       <SOME_DIR>/bash-completion/completions
+    #
+    # and <SOME_DIR> should be added to XDG_DATA_DIRS.  In this case, I have
+    # been putting completion scripts inside etc but looking at 2, it seems
+    # like share would be more appropriate.
+    #
     export STOW_DIR="$HOME/fs1"
-    XDG_DATA_DIRS=${XDG_DATA_DIRS:+${XDG_DATA_DIRS}:}${STOW_DIR}/etc
+    XDG_DATA_DIRS=${XDG_DATA_DIRS:+${XDG_DATA_DIRS}:}${STOW_DIR}/share:${STOW_DIR}/etc
     export PACKAGE_DIR="$STOW_DIR/Cellar"
     export LD_LIBRARY_PATH="${STOW_DIR}/lib:${STOW_DIR}/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
     export PATH=${STOW_DIR}/bin${PATH:+:${PATH}}
@@ -142,6 +160,14 @@ configure_vscode_server_environment(){
         export TMPDIR=/tmp/$USER/vscode-server
         mkdir -p ${TMPDIR}
     fi
+
+    # At work, the sshd config is has a slight problem.  The expected behavior
+    # is that sshd creates /run/user/$(id -u) and sets XDG_RUNTIME_DIR to that
+    # value.  The observed behavior is that it sets XDG_RUNTIME_DIR but does
+    # not always create the directory.  Only sshd can create this directory, the
+    # user cannot.  To mitigate this, I set it to something else.
+    export XDG_RUNTIME_DIR=/tmp/$USER/xdg_runtime_dir
+    mkdir -p ${XDG_RUNTIME_DIR}
 }
 
 configure_spack(){
@@ -195,10 +221,15 @@ function configure_vim(){
             /usr/bin/vim -p "$@"
             return
         fi
-        local IFS=:
-        for d in ${CMAKE_PREFIX_PATH} ; do
+        #
+        # Add $d/include for all the directories of CMAKE_PREFIX_PATH
+        # and for all environment variables of the form <X>_DIR
+        # so that YouCompleteMe will look in those directories
+        #
+        for d in ${CMAKE_PREFIX_PATH//:/ } ; do
             C_INCLUDE_PATH=${d}/include${C_INCLUDE_PATH:+:${C_INCLUDE_PATH}}
         done
+
         while IFS='=' read -r -d $'\0' k v ; do
             if [[ "${k}" = *_DIR ]] ; then
                 C_INCLUDE_PATH=${v}/include${C_INCLUDE_PATH:+:${C_INCLUDE_PATH}}
@@ -225,13 +256,15 @@ function configure_vim(){
 # files in LS_COLORS but I wanted figure out a way to have some coloring for
 # missing files
 #
+# RELEVANT CODE FROM READLINE
 # In http://git.savannah.gnu.org/cgit/bash.git/tree/lib/readline/:
 # - In parse_colors.c:300 Function _rl_parse_colors() parses LS_COLORS
-# - In readline.c:1322 Function readline_initialize_everything
+# - In readline.c:1322 Function readline_initialize_everything calls
+#   _rl_parse_colors();
 # - In readline.c:1183 Function rl_initialize() calls readline_initialize_everything()
 #   only if rl_initialized == 0 then sets rl_initialized to 1 so that it
 #   is never called again and does "other stuff".  Future calls to
-#   readline_initialize_everything() only do the "other stuff"
+#   rl_initialize() only do the "other stuff"
 # - In realine.c:354 Function readline(), rl_initialize() is called everytime
 #   but after the first time, it only does the "other stuff".
 #
@@ -244,19 +277,19 @@ set_ls_colors_for_readline_and_ls(){
 
     :
     # Set LS_COLORS however you like
-    eval "$(dircolors)"
+    # eval "$(dircolors -b)"
 
     # # Initialize readline with those same LS_COLORS except for the 'mi' part
-    # local my_ls_colors="${LS_COLORS}"
-    # LS_COLORS="$(echo "${LS_COLORS}" | sed 's/mi=[0-9;]*/mi=00/')"
-    # bind -f ~/.inputrc # Anything that causes initialization of readline library
+    local my_ls_colors="${LS_COLORS}"
+    LS_COLORS="$(echo "${LS_COLORS}" | sed 's/mi=[0-9;]*/mi=00/')"
+    bind -f ~/.inputrc # Anything that causes initialization of readline library
 
     # # Put back the 'mi' part in LS_COLORS
     # # We need the 'show-colored-stats' to be for BASH only in ~/.inputrc since
     # # the python interpreter will initialize readline in its process and will
     # # read LS_COLORS.  Anyway, we don't want show-colored-stats in Python so
     # # that is totally OK.
-    # LS_COLORS="${my_ls_colors}"
+    LS_COLORS="${my_ls_colors}"
 }
 
 p.notes(){
@@ -265,6 +298,86 @@ p.notes(){
     echo '${X@a}: Attributes of variable X as printed by declare -p X'
     echo '${X:_Y}: (_ is -,=,+,?): Do something if X is unset or null, but without the colon, it just checks for unset.'
 }
+
+glcurl-project-job(){
+    if [[ "$1" == -h ]] || (( $# != 2 )); then
+        echo "${FUNCNAME[0]} PROJECT_ID JOB_ID"
+        echo ""
+        echo "Show subset of job information using jq"
+        if [[ "$1" == -h ]] ; then
+            return 0
+        else
+            echo "ERROR: Two arguments required"
+            return 1
+        fi
+    fi
+    resp="$(glcurl /projects/$1/jobs/$2)"
+    if [[ "${resp}" != {\"id\"* ]] ; then
+        jq <<< ${resp}
+        return 1
+    fi
+    jq '{id,stage,name,web_url,ref,tag,pipeline:.pipeline|{id,web_url},user:.user|{id,name,location,organization},commit:.commit|{short_id,message,author_name}}' <<< "${resp}"
+}
+
+
+command_not_found_handle(){
+    local pack=$HOME/.profile.d/interactive/pack/$1
+    if [[ -f "${pack}" ]] ; then
+        p.use $1
+        unset -f command_not_found_handle
+        "$@"
+    else
+        echo "bash: $1: command not found" >&2
+        return 127
+    fi
+}
+
+p.unresolved-repodir(){
+    local candidate=$(
+        local prev=$PWD
+        while true ; do
+            if ! git rev-parse --is-inside-work-tree &>/dev/null ; then
+                echo "${prev}"
+                return 1
+            fi
+            prev=$PWD
+            cd ..
+        done
+    )
+    local true_repo_dir
+    if ! true_repo_dir=$(git rev-parse --show-toplevel 2>/dev/null) ; then
+        return 1
+    fi
+
+    local candidate_inode=$(stat --format=%i ${candidate})
+    local repo_inode=$(stat --format=%i ${true_repo_dir})
+    if [[ ${candidate_inode} == ${repo_inode} ]] ; then
+        echo ${candidate}
+    else
+        echo "Unresolved root '${candidate}' is not the same directory as true repo root" >&2
+        echo "${true_repo_dir}"
+    fi
+}
+
+p.find_path_var(){
+    local -n path_var=$1 ; shift
+    # local to_find=$2
+    find ${path_var//[:, ;]/ } "$@"
+}
+_p.find_path_var(){
+    local cur prev words cword
+    _init_completion || return
+    echo "cword=${cword}" >> ~/.log.txt
+    if ((cword > 1)) ; then
+        if ! _find 2>/dev/null ; then
+            __load_completion find && _find
+        fi
+    else
+        COMPREPLY=($(compgen -v -- "${cur}"))
+    fi
+}
+complete -F _p.find_path_var p.find_path_var
+
 
 
 ###################### KEEP THIS AT THE END ####################################
