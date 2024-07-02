@@ -1,0 +1,4 @@
+[user]
+    email = phil103@hotmail.com
+[includeIf "hasconfig:remote.*.url:**github.com/ECCC-ASTD-MRD/*"]
+    path = ~/.gitconfig.work

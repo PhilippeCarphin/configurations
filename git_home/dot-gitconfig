@@ -1,6 +1,6 @@
 [user]
     name = "Philippe Carphin"
-    email = philippe.carphin@ec.gc.ca
+    # email set in specific files at the end
 
 [alias]
     st = status
@@ -152,8 +152,7 @@
 [merge]
 	tool = meld
 [init]
-    defaultBranch = master
+    defaultBranch = main
 
-[includeIf "gitdir:~/Repositories/github.com/philippecarphin/"]
-    path = ~/Repositories/github.com/philippecarphin/gitconfig
-
+[include]
+    path = ~/.gitconfig.specific

@@ -22,7 +22,9 @@ build
 build-*
 .vscode
 localinstall
-localinstall-*
+localinstall*
 compile_commands.json
 .cache
 install-dir
+.fortlsrc
+fortls_debug.log
