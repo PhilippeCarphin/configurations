@@ -15,10 +15,19 @@
 # You should have received a copy of the GNU General Public License
 # along with ycmd.  If not, see <http://www.gnu.org/licenses/>.
 
+# NOTE:  CMake uses '-isystem <DIR>' sometimes instead of '-I' and that seems
+# not be interpreted when the compile_commands.json file is read: for example,
+# in python-cxx-extension, Vim highlights a million errors because the Python.h
+# include is not found.  When I open the compile_commands.json file and manually
+# replace -isystem with -I and reopen Vim, I have no errors.
+
+
 import os
 import sys
 import subprocess
 import ycm_core
+
+import json
 
 # These are the compilation flags that will be used in case there's no
 # compilation database set (by default, one is not set).
@@ -27,6 +36,7 @@ flags = [
 '-Wall',
 '-Wextra',
 '-Werror',
+'-Werror=implicit-function-declaration',
 '-fexceptions',
 # '-DNDEBUG',
 # THIS IS IMPORTANT! Without a "-std=<something>" flag, clang won't know which
@@ -45,14 +55,10 @@ flags = [
 '-I./include',
 '-x',
 'c',
-'-isystem',
-'/usr/include',
-'-isystem',
-'/usr/local/include',
-'-isystem',
-'/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/c++/v1',
-'-isystem',
-'/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include',
+'-isystem', '/usr/include',
+'-isystem', '/usr/local/include',
+'-isystem', '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/c++/v1',
+'-isystem', '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include',
 ]
 
 
@@ -139,6 +145,7 @@ def add_cmake_stuff():
         log(f'compile_commands.json found')
         log(f'ADDING -I{build_dir}')
         flags.append(f'-I{build_dir}')
+        flags.append("/usr/include/python3.8")
     else:
         sorted_builds = list(sorted(
             filter(lambda s: s.startswith('build'), os.listdir(repo_dir)),
@@ -154,6 +161,50 @@ def add_cmake_stuff():
 add_cmake_stuff()
 
 compilation_database_folder = phil_get_compilation_database_folder()
+
+def add_includes_from_compilation_commands_json():
+    global flags
+    if not compilation_database_folder:
+        return
+    compilation_commands_filename = os.path.join(compilation_database_folder, "compile_commands.json")
+    if not os.path.exists(compilation_commands_filename):
+        return
+
+    with open(compilation_commands_filename) as f:
+        d = json.load(f)
+
+    for elem in d:
+        add_includes_from_command(elem['command'])
+
+def add_includes_from_command(command):
+    global flags
+    words = iter(command.split())
+    for w in words:
+        if w == "-isystem" or w == "-I":
+            inc = next(words)
+            log(f"ADDING dir from ['{w}', '{inc}'] to flags")
+            flags += [w, inc]
+            continue
+        if w.startswith("-isystem") or w.startswith("-I"):
+            log(f"ADDING dir from ['{w}'] to flags")
+            flags += [w]
+
+add_includes_from_compilation_commands_json()
+
+def add_final_flags():
+    global flags
+    flags += [
+        "-I/usr/include/python3.8/",
+        "-I./Include",
+        "-I./include",
+        "-I./inc",
+        "-I./Include/internal",
+    ]
+
+add_final_flags()
+log(f"flags = {flags}")
+
+
 
 # PHIL: If the variable 'database' is not None and no compile_commands.json
 # exists in compilation_database_folder, then I get no compiler help at all
