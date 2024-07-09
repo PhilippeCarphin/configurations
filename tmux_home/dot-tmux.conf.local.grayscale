@@ -60,23 +60,23 @@ tmux_conf_theme_focused_pane_bg='#0087d7'               # light blue
 # pane border style, possible values are:
 #   - thin (default)
 #   - fat
-tmux_conf_theme_pane_border_style=fat
+tmux_conf_theme_pane_border_style=thin
 
 # pane borders colours:
-tmux_conf_theme_pane_border='#000044'                   # gray
-tmux_conf_theme_pane_active_border='#2020ff'            # light blue
+tmux_conf_theme_pane_border='#808080'                   # gray
+tmux_conf_theme_pane_active_border='#a0a0a0'            # light blue
 
 # pane indicator colours
-tmux_conf_theme_pane_indicator='#00afff'                # light blue
-tmux_conf_theme_pane_active_indicator='#00afff'         # light blue
+tmux_conf_theme_pane_indicator='#ff0000'                # light blue
+tmux_conf_theme_pane_active_indicator='#00ffff'         # light blue
 
 # status line style
 tmux_conf_theme_message_fg='#000000'                    # black
-tmux_conf_theme_message_bg='#ffff00'                    # yellow
+tmux_conf_theme_message_bg='#a0a0a0'                    # yellow
 tmux_conf_theme_message_attr='bold'
 
 # status line command style (<prefix> : Escape)
-tmux_conf_theme_message_command_fg='#ffff00'            # yellow
+tmux_conf_theme_message_command_fg='#ffffff'            # yellow
 tmux_conf_theme_message_command_bg='#000000'            # black
 tmux_conf_theme_message_command_attr='bold'
 
@@ -108,8 +108,8 @@ tmux_conf_theme_terminal_title='#h ❐ #S ● #I #W'
 #     - #{hostname_ssh}
 #     - #{username}
 #     - #{username_ssh}
-tmux_conf_theme_window_status_fg='#00008a'              # light gray
-tmux_conf_theme_window_status_bg='#000008'              # dark gray
+tmux_conf_theme_window_status_fg='#808080'              # light gray
+tmux_conf_theme_window_status_bg='#200020'              # dark gray
 tmux_conf_theme_window_status_attr='none'
 tmux_conf_theme_window_status_format='#I #W'
 #tmux_conf_theme_window_status_format='#{circled_window_index} #W'
@@ -124,7 +124,7 @@ tmux_conf_theme_window_status_format='#I #W'
 #     - #{username}
 #     - #{username_ssh}
 tmux_conf_theme_window_status_current_fg='#000000'      # black
-tmux_conf_theme_window_status_current_bg='#2020ff'      # light blue
+tmux_conf_theme_window_status_current_bg='#a0a0a0'      # light blue
 tmux_conf_theme_window_status_current_attr='bold'
 tmux_conf_theme_window_status_current_format='#I #W'
 #tmux_conf_theme_window_status_current_format='#{circled_window_index} #W'
@@ -141,7 +141,7 @@ tmux_conf_theme_window_status_bell_bg='default'
 tmux_conf_theme_window_status_bell_attr='blink,bold'
 
 # window last status style
-tmux_conf_theme_window_status_last_fg='#8700d7'         # light blue
+tmux_conf_theme_window_status_last_fg='#a0a0a0'         # light blue
 tmux_conf_theme_window_status_last_bg='default'
 tmux_conf_theme_window_status_last_attr='none'
 
@@ -183,12 +183,13 @@ tmux_conf_theme_status_right='#{prefix}#{pairing}#{synchronized} #{?battery_stat
 
 # status left style
 tmux_conf_theme_status_left_fg='#000000,#e4e4e4,#e4e4e4'  # black, white , white
-tmux_conf_theme_status_left_bg='#0000ff,#2020af,#3030ff'  # yellow, pink, white blue
+tmux_conf_theme_status_left_bg='#404040,#808080,#a0a0a0'  # yellow, pink, white blue
 tmux_conf_theme_status_left_attr='bold,none,none'
 
 # status right style
 tmux_conf_theme_status_right_fg='#8a8a8a,#e4e4e4,#000000' # light gray, white, black
-tmux_conf_theme_status_right_bg='#080808,#0000d7,#2020f4' # dark gray, red, white
+tmux_conf_theme_status_right_bg='#5f0087,#8700af,#af00d7' # dark gray, red, white
+tmux_conf_theme_status_right_bg='#404040,#808080,#a0a0a0' # dark gray, red, white
 tmux_conf_theme_status_right_attr='none,none,bold'
 
 # pairing indicator
@@ -364,4 +365,3 @@ set -g default-command 'eval env -i $(/home/phc001/bin/vars) /bin/bash -l'
         TMUX=$TMUX \
         USER=$USER \
     /bin/bash -l'
-

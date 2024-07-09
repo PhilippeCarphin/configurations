@@ -1,0 +1,118 @@
+#!/bin/bash
+
+function x.use(){
+    local pack_dir="${1}"
+    shift
+    if [[ -z "${1}" ]] ; then
+        p.error "An argument must be provided"
+        return 1
+    fi
+
+    local pack_name="${1}"
+    if ! [[ -f ${pack_dir}/${pack_name} ]] ; then
+        p.error "No package named '${pack_name}' in ${pack_dir}"
+        return 1
+    fi
+
+    shift
+    local status
+    local i=0
+    while IFS= read -r line ; do
+        : $((i++))
+        if [[ -z "${line}" ]] ; then
+            continue
+        fi
+        printf "\033[1m${FUNCNAME[1]}: "
+        if [[ ${line} == \#* ]] ; then
+            printf "\033[22;34m$(eval echo ${line})\033[0m\n"
+        else
+            printf "\033[1;32m$(eval echo ${line})\033[0m\n"
+        fi
+        if ! eval ${line} ; then
+            p.error "error on line ${i} of ${pack_dir}/${pack_name}"
+        fi
+    done < ${pack_dir}/${pack_name}
+    status=$?
+    if [[ ${status} != 0 ]] ; then
+        p.error "Sourcing '${pack_dir}/${pack_name}' returned an error : $?"
+    fi
+    return ${status}
+}
+
+_x.use(){
+    local pack_dir=$1
+    local prev cur words cword
+    _init_completion || return
+
+    case ${cword} in
+        0) echo "Can't happen!" ;;
+        1) COMPREPLY=($(compgen -W "$(cd ${pack_dir} ; command ls | command grep -v '^_')" -- ${cur})) ;;
+        2|*) _dispatch_pack_complete ${prev} ;;
+    esac
+}
+
+_p.use(){
+    _x.use ${PACK_DIR}
+}
+
+_f.use(){
+    _x.use ~for000/.profile.d/interactive/pack
+}
+
+#
+# Default is not applied here because p.use's first argument cannot be a file
+# from PWD (unless we are in ${PACK_DIR} but those will get suggested by _p.use
+# anyway.  Instead, we use _filedir to suggest give the default suggestions.
+#
+p.view-pack(){
+    vim ${PACK_DIR}/${1}
+}
+f.view-pack(){
+    vim ~for000/.profile.d/interactive/pack/${1}
+}
+
+_dispatch_pack_complete(){
+    case ${1} in
+        code-tools) COMPREPLY=($(compgen -W "gnu intel gnu9" -- ${cur})) ;;
+        rpnpy) COMPREPLY=($(cd $HOME ; _filedir)) ;;
+        *) _filedir ;;
+    esac
+}
+
+
+function p.ftake(){
+    if [[ -z "${1}" ]] ; then
+        p.error "Argument required"
+        return 1
+    fi
+    local to_take="$(echo ~for000/.profile.d/interactive/pack/$1)"
+
+    if ! [[ -f ${to_take} ]] ; then
+        p.error "Package to take '${1}' does not exist in '~for000/.profile.d/interactive/pack'"
+        return 1
+    fi
+
+    local new_name
+    if [[ -n "${2}" ]] ; then
+        new_name=${2}
+    else
+        new_name=""
+    fi
+
+    if ! cp ${to_take} ${PACK_DIR}/${new_name} ; then
+        p.error "Could not copy '${to_take}' to '${PACK_DIR}/${new_name}'"
+        return 1
+    fi
+}
+
+
+function p.use(){
+    x.use ${PACK_DIR} "$@"
+}
+
+function f.use(){
+    x.use ~for000/.profile.d/interactive/pack "$@"
+}
+
+complete -F _p.use p.use p.view-pack
+complete -F _f.use f.use f.view-pack p.ftake

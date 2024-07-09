@@ -1,0 +1,13 @@
+# From 2022-04-01
+# Uses ldpreload to compensate for the slowness that can be caused by
+# LD_LIBRARY_PATH being pretty big.
+#
+# From JP:
+#
+#    Following HPCO's announcement below of the release of new site and
+#    community profiles, RPN has released a new 1.17 profile containing these
+#    updates. Note also that this profile adds libc.so.6 in the LD_PRELOAD
+#    variable on U2 in order to speed up the launching of shell commands and to
+#    limit the impact of LD_LIBRARY_PATH.
+
+source /fs/ssm/eccc/mrd/ordenv/profile/1.17.0

@@ -9,6 +9,8 @@
 # -- Emacs temp files
 .#*
 \#*
+*~
+
 .nfs*
 .focustree.json
 .idea/
@@ -17,5 +19,12 @@
 .focustree.*.json
 plugins/paths_of_real_plugin_sources.txt
 build
+build-*
 .vscode
-*~
+localinstall
+localinstall*
+compile_commands.json
+.cache
+install-dir
+.fortlsrc
+fortls_debug.log
