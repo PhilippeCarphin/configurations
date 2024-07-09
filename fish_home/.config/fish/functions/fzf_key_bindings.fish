@@ -1,0 +1,1 @@
+/Users/pcarphin/Repositories/github.com/junegunn/fzf.git/shell/key-bindings.fish

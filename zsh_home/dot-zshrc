@@ -1,5 +1,6 @@
 #!/bin/zsh
 
+
 if [[ "$TERM" == "dumb" ]] ; then
   unsetopt zle
   unsetopt prompt_cr
@@ -25,24 +26,45 @@ export CLICOLOR_FORCE=true
 source ~/.philconfig/environment/path.sh
 
 if [[ "$-" == *i* ]] ; then
-    if ! [ -e ~/.normal_mode ] && ! [ -e ~/.noexec_zshrc ] ; then
+    export STOW_DIR=$HOME/fs
+    export LANG=en_US.UTF-8
+    export TERM=screen-256color
+
+    PATH="/Users/pcarphin/perl5/bin${PATH:+:${PATH}}"; export PATH;
+    PERL5LIB="/Users/pcarphin/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
+    PERL_LOCAL_LIB_ROOT="/Users/pcarphin/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
+    PERL_MB_OPT="--install_base \"/Users/pcarphin/perl5\""; export PERL_MB_OPT;
+    PERL_MM_OPT="INSTALL_BASE=/Users/pcarphin/perl5"; export PERL_MM_OPT;
+
+
+    [ -f "/Users/pcarphin/.ghcup/env" ] && source "/Users/pcarphin/.ghcup/env" # ghcup-env
+    # which bash >&2
+    export PS4='+ \033[35m${BASH_SOURCE[0]}\033[36m:\033[1;37m${FUNCNAME[0]}\033[22;36m:\033[32m${LINENO}\033[0m'
+    if ! [ -e ~/.normal_mode ] && ! [ -e ~/.noexec_zshrc ] && ! [[ -v NORMAL_MODE ]] ; then
         if [[ $(hostname) == mini ]] ; then
-            exec arch -arch arm64 fish "$@"
+            exec arch -arch arm64 bash "$@"
         else
-            exec fish "$@"
+            exec bash "$@"
         fi
     fi
 
-    if ! [ -e ~/.noexec_zshrc ] && [[ $(hostname) == mini ]] && [[ $(uname -m) != arm64 ]] ; then
+    if ( ! [ -e ~/.noexec_zshrc ] ) && [[ $(hostname) == mini ]] && [[ $(uname -m) != arm64 ]] ; then
         echo "exec'ing to switch to arm64 architecture on mini"
         exec arch -arch arm64 zsh
     fi
     autoload -U compinit
     compinit
     alias n='nnn -dhQex'
-    source ~/.repos_completion.zsh
+    source ~/fs/etc/zsh_completion.d/repos_completion.zsh
     source ~/.git-prompt.sh
     source /opt/homebrew/opt/modules/init/zsh
+    [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+    source /Users/pcarphin/Repositories/github.com/philippecarphin/utils/etc/profile.d/git-colon-path-support.zsh
+    source /Users/pcarphin/Repositories/github.com/philippecarphin/bash-powerline/powerline.zsh
+    cd /Users/pcarphin/Repositories/github.com/philippecarphin/bash-powerline/
+    alias cd='wrap_command_colon_dirs cd'
+    alias vim='wrap_command_colon_paths vim'
+    # alias cd='phil_func cd'
 fi
 
 

@@ -54,8 +54,40 @@ if test -n "$MANPATH"
     # This would do the manpath mapping thing manually,
 	set MANPATH $MANPATH (string replace --regex --all '/bin/?$' '/share/man' $PATH)
 	# echo "MANPATH = '$MANPATH'"
+    set MANPATH $MANPATH /Library/Developer/CommandLineTools/usr/share/man
 end
 
 # set -e MANPATH
 # set -x MODULEPATH $MODULEPATH:$HOME/.modules
 # source $HOME/Documents/GitHub/stow-completion/stow_completion.fish
+alias make='make VERBOSE='
+# termcap terminfo
+# ks     smkx     make the keypad send commands
+# ke     rmkx     make the keypad send digits
+# vb     flash    emit visual bell
+# mb     blink    start blink
+# md     bold     start bold
+# me     sgr0     turn off bold, blink and underline
+# so     smso     start standout (reverse video)
+# se     rmso     stop standout
+# us     smul     start underline
+# ue     rmul     stop underline
+
+# Make the man colorful
+# Other color scheme for less
+export LESS_TERMCAP_mb=\e"[1;34m"
+export LESS_TERMCAP_md=\e"[1;36m"
+export LESS_TERMCAP_me=\e"[0m"
+export LESS_TERMCAP_se=\e"[0m"
+export LESS_TERMCAP_so=\e"[01;33m"
+export LESS_TERMCAP_ue=\e"[0m"
+export LESS_TERMCAP_us=\e"[1;4;31m"
+
+
+set PATH "/Users/pcarphin/perl5/bin" $PATH
+set -x PERL5LIB "/Users/pcarphin/perl5/lib/perl5:$PERL5LIB"
+set -x PERL_LOCAL_LIB_ROOT "/Users/pcarphin/perl5:$PERL_LOCAL_LIB_ROOT"
+set -x PERL_MB_OPT "--install_base \"/Users/pcarphin/perl5\""
+set -x PERL_MM_OPT "INSTALL_BASE=/Users/pcarphin/perl5"
+
+alias p.ps='ps -u pcarphin | cut -c -(tput cols) | sort -k 5'
