@@ -51,11 +51,7 @@ function orgman(){
 # WORK
 function p.myjobs()
 {
-    (
-        _p.require_ordenv
-        jobst | grep "${USER}" -n
-        exec 1>/dev/null
-    )
+    jobst | grep "${USER}" -n
 }
 
 # WORK
@@ -622,9 +618,9 @@ for l in sys.stdin:
     else:
         bytes = size
     total_bytes += int(bytes)
-for p in [3,6,9,12]:
-    if total_bytes < 10**p:
-        total_str = f'{total_bytes/(10**(p-3)):.1f}{letters[p-3]}'
+for p in [12,9,6,3]:
+    if total_bytes > 10**p:
+        total_str = f'{total_bytes/(10**p):.1f}{letters[p]}'
         break
 else:
     total_str = str(total_bytes)
@@ -812,10 +808,6 @@ trace(){
     )
 }
 
-
-p.type(){
-    type "$@" | bat -l bash
-}
 complete -A function p.type
 
 p.do-login-nodes(){

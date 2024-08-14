@@ -147,7 +147,7 @@ function maybe-source(){
 #   - parent : detaches child and exits, causing r.cleanup_tmpdir to delete
 #              TMPDIR
 #   - child : has a TMPDIR which does not exist.
-# 
+#
 ################################################################################
 configure_vscode_server_environment(){
     # Dump environment to file at very beginning to see what the env looks
@@ -221,6 +221,18 @@ function configure_vim(){
             /usr/bin/vim -p "$@"
             return
         fi
+
+        if [[ "${1}" == */* ]] ; then
+            if ! [[ -d "${1%/*}" ]] ; then
+                printf "vim(): \033[1;31mERROR\033[0m: dirname(\$1) = '${1%/*}' is not a directory\n"
+                return 1
+            fi
+        fi
+
+        if [[ "$#" == 0 ]] ; then
+            set -- .
+        fi
+
         #
         # Add $d/include for all the directories of CMAKE_PREFIX_PATH
         # and for all environment variables of the form <X>_DIR
@@ -377,8 +389,169 @@ _p.find_path_var(){
     fi
 }
 complete -F _p.find_path_var p.find_path_var
+p.go-build(){
+    local builds
+    if ! builds=($(p.find-build)) ; then
+        return 1
+    fi
+
+    case ${#builds[@]} in
+        0) echo "No builds" ; return 1 ;;
+        1) printf "\033[33mcd %s\n" "${builds[0]}"
+           cd ${builds[0]} ; return ;;
+    esac
+
+    local -A map
+    for build in "${builds[@]}" ; do
+        local base=${build##*/}
+        map[${base}]=${build}
+    done
+
+    local choice
+    select choice in "${!map[@]}" ; do
+        printf "\033[33mcd %s\n" "${map[${choice}]}"
+        cd ${map[${choice}]}
+        return
+    done
+}
+alias gb=p.go-build
+
+p.find-build(){
+    local super
+    if ! super=$(git superproject-root) ; then
+        return 1
+    fi
+
+    while read result ; do
+        echo ${result%%/CMakeCache.txt}
+    done < <(find ${super} -maxdepth 2 -name CMakeCache.txt)
+}
+utc-to-local(){
+    local date=$1 ; shift
+    TZ=America/Toronto date -d "$date UTC" "$@"
+}
+utc-now(){
+    date -u "$@"
+}
+local-to-utc(){
+    local date=$1 ; shift
+    TZ=America/Toronto date -u -d "$date EDT" "$@"
+}
+
+rsync-help(){
+
+    local bold=$'\033[1;37m'
+    local clear=$'\033[0m'
+    cat <<- EOF
+
+	Only the trailing slash on the source argument(s) makes a difference.
+
+	These two will copy the ${bold}content${clear} of some/dir/ ${bold}into${clear}
+	some/dir/ on host:
+
+	    rsync -r some/dir/ host:some/dir
+	    rsync -r some/dir/ host:some/dir/
+
+	These two copy the ${bold}directory${clear} some/dir ${bold}into${clear} some/
+	on host:
+
+	    rsync -r some/dir host:some
+	    rsync -r some/dir host:some/
+
+	All four of the above commands will create dir on host.
+
+	The commands
+
+	    rsync -r some/dir host:some/dir
+	    rsync -r some/dir host:some/dir/
+
+	will leave you with some/dir/dir on host whose content will be the content
+	of some/dir at the source.
+
+	EOF
+}
+
+rsync(){
+
+    #
+    # Normalize arguments using getopt
+    #
+    eval local normalized_args=($(getopt -n "" --longoptions recursive -o "ra" -- "$@" 2>/dev/null || true))
+
+    #
+    # Check if there is a '-r' in the arguments
+    #
+    local -i i=0
+    while (( i < ${#normalized_args[@]} )) ; do
+        case "${normalized_args[i]}" in
+            -r|--recursive) has_r=true ;;
+            --) ((i++)) ; break ;;
+        esac
+        ((i++))
+    done
+
+    #
+    # Collect positional argumetns
+    #
+    local posargs=()
+    while (( i < ${#normalized_args[@]} )) ; do
+        posargs+=("${normalized_args[i]}")
+        ((i++))
+    done
+
+    #
+    # If no '-r', just do the command without checks
+    #
+    if ! ${has_r} ; then
+        command rsync "$@"
+        return
+    fi
+
+    #
+    # Warn of probably unwanted situation: for example,
+    #   rsync localhost:/some/path/model_data remote_host:/some/path/model_data
+    # which would leave us with /some/path/model_data/model_data.
+    #
+    # No trailing slash on first arg means we copy first arg *into* second arg.
+    if [[ "${posargs[0]}" != */ ]] ; then
+        # We consider it to probably not be what the user wants if the
+        # basenames of both arguments match.
+        local base0=${posargs[0]##*/} # Garanteed no trailing slash
+        local base1="$(basename ${posargs[1]})" # Could have a trailing slash,
+                                                # basename takes care of that.
+        if [[ "${base0}" == "${base1}" ]] ; then
+            if [[ "${posargs[1]}" == *:* ]] ; then
+                local dest_host=${posargs[1]%%:*}
+            else
+                local dest_host=localhost
+            fi
+            local location_at_dest=${posargs[1]##*:}
+            echo "This will create ${location_at_dest}/${base1} on ${dest_host}"
+            local answer
+            read -p "are you sure you want to continue? [y/n] > " answer
+            if [[ "${answer}" == "n" ]] ; then
+                return 1
+            fi
+        fi
+    fi
+
+    command rsync "$@"
+}
 
 
+# I always forget whether it's SSMUSE_VERBOSE_XTRACE or SSMUSE_XTRACE_VERBOSE
+# plus ssmuse-sh checks if the value is == 1, not empty vs non-empty which would
+# be more standard.  Every time, it took me like 3 tries to get it so I made
+# this function.
+p.verbose_ssm(){
+    export SSMUSE_XTRACE_VERBOSE=1
+}
+
+p.upstream_compare(){
+    # Don't think I'll use this very frequently but I thought it would be
+    # useful to know.
+    git rev-list --count --left-right @{upstream}...HEAD
+}
 
 ###################### KEEP THIS AT THE END ####################################
 p.profile.main

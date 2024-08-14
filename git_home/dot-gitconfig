@@ -9,7 +9,7 @@
     dss = "!f(){ printf '+   -   FILE\n' ; git diff --numstat ; } ; f"
     logl   = log --oneline --graph
     loglu  = log --oneline --graph                  HEAD HEAD@{u}
-    logd   = log --oneline --graph --format=std
+    logd   = log --oneline --graph --format=logd
     logdu  = log --oneline --graph --format=std     HEAD HEAD@{u}
     logd2  = log --oneline --graph --format=std2
     logd3  = log --oneline --graph --format=std3
@@ -114,7 +114,7 @@
     excludeDecoration = refs/remotes/private*
 
 [pretty]
-    std = %C(yellow)%h%C(reset)%C(auto)%d%C(reset) %C(bold white)%<|(90,trunc)%s %<(17)%C(cyan)%ad%Creset %C(blue)%an%C(reset)
+    logd = %C(yellow)%h%C(reset)%C(auto)%d%C(reset) %C(bold white)%<|(90,trunc)%s %<(17)%C(cyan)%ad%Creset %C(blue)%an%C(reset)
     std2 = %C(yellow)%h%C(reset)%C(auto)%C(reset) %C(bold white)%<|(90,trunc)%s %<(17)%C(cyan)%ad%Creset %C(blue)%<(17,trunc)%an%C(auto)%d
     std3 = %C(auto)%d%C(reset) %C(bold white)%<|(90,trunc)%s %<(17)%C(cyan)%ad%Creset %C(blue)%an%C(reset)
     stdnarrow = %C(auto)%d%C(reset) %C(bold white)%<|(70,trunc)%s %<(17)%C(cyan)%ad%Creset %C(blue)%an%C(reset)

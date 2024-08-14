@@ -6,9 +6,10 @@ set colored-completion-prefix on
 set visible-stats on
 
 $if Bash
-    # Causes references to previous commands to be expanded when pressing
-    # space after something like '!3:1' to get the first argument of the
-    # 3rd previous command in the history
+    # Causes references to previous commands to be expanded when pressing space
+    # after something like `!!`  to be expanded as soon as a space is inserted.
+    # Useful to confirm that it's the right thing for things like `!3:1` to get
+    # the first argument of the 3rd previous command in the history
     #
     # It needs to be in a conditionnal so that it only happens with Bash
     # otherwise it will disable your ability to enter spaces in other things
@@ -17,7 +18,12 @@ $if Bash
 
     # color folder/files during completion
     # Only for Bash because otherwise we would get potentially weird coloring
-    # in Python
+    # since in Python, pressing <TAB><TAB> will yield completion candidates
+    # that are assuredly not paths to files that exist.  They will get the
+    # coloring of missing files which is usually flashing white on red background.
+    #
+    # In bash, we ensure that when readline is initialized, there is no coloring
+    # specification for missing files.
     set colored-stats on
 $endif
 
@@ -55,3 +61,6 @@ $if mode=emacs
     "\e\C-m": '\C-a "$(\C-e)"\C-a'
     "\C-xr": "source ~/.profile_phil\n"
 $endif
+
+# NOTE
+# - \e\C-e: Expand subshell on command line
