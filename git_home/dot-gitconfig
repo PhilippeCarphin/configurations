@@ -127,6 +127,8 @@
 
 [submodule]
     # recurse = true
+[push]
+    recurseSubmodules = on-demand
 
 [safe]
     directory = *
