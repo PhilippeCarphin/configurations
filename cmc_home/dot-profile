@@ -63,6 +63,10 @@ function p.profile.main_interactive(){
     alias git=git-enforce-rules-of-philippes
     complete -o default -o nospace -o filenames -F _DottableCompletion source .
     shopt -s direxpand # Merci Philippe Blain :D
+    # Stolen from gil000: Processes Per User
+    alias ppu='ps hax -o user | sort -n | uniq -c | sort -n'
+    # Stolen from gil000: Running Processes Per User
+    alias rppu='ps haxr -o user | sort -n | uniq -c | sort -n'
     check-alert-file ~sici000/alert
     check-alert-file ~/alert
     maybe_cd_to_pbs_o_workdir
