@@ -1,3 +1,5 @@
+#!/bin/bash
+
 
 #
 # Since I put my gitlab access token in an environment variable, and for
@@ -191,55 +193,6 @@ p.get-cursor(){
     echo -en "\E[6n"
     read -sdR CURPOS
     echo ${CURPOS#*[}
-}
-
-#
-# Lifted from /usr/share/bash-completion/completions/make
-#
-p.get-make-targets(){
-    words=("$@")
-    # before we check for makefiles, see if a path was specified
-    # with -C/--directory
-    local -a makef_dir
-    for (( i=0; i < ${#words[@]}; i++ )); do
-        if [[ ${words[i]} == -@(C|-directory) ]]; then
-            # eval for tilde expansion
-            eval makef_dir=( -C "${words[i+1]}" )
-            break
-        fi
-    done
-
-    # before we scan for targets, see if a Makefile name was
-    # specified with -f/--file/--makefile
-    local -a makef
-    for (( i=0; i < ${#words[@]}; i++ )); do
-        if [[ ${words[i]} == -@(f|-?(make)file) ]]; then
-            # eval for tilde expansion
-            eval makef=( -f "${words[i+1]}" )
-            break
-        fi
-    done
-
-    if [[ "$(type -t _make)" != function ]] ; then
-        _completion_loader make
-    fi
-
-    #
-    # shopt -po <opt> prints a command to set <opt> to its current value
-    #
-    local reset=$(shopt -po posix)
-
-    #
-    # 'make -npq' prints all info from parsing the makefile with potential
-    # '-f somefile' or '-C somedir'.  This output is passed through a sed
-    # command with sed script produced by _make_target_extract_script which
-    # filters out everything except target names.
-    #
-    set +o posix
-    LC_ALL=C make -npq __BASH_MAKE_COMPLETION__=1 "${makef_dir[@]}" "${makef[@]}" .DEFAULT 2>/dev/null \
-        | command sed -nf <(_make_target_extract_script -- "${cur}") \
-        | sort
-    $reset
 }
 
 make(){
@@ -810,50 +763,6 @@ trace(){
 
 complete -A function p.type
 
-p.do-login-nodes(){
-    local reset_pipefail=$(shopt -po pipefail)
-    set -o pipefail
-    local interactive=false
-    local login=""
-    local quiet=false
-    local -a posargs=()
-    while (($# > 0)) ; do
-        case $1 in
-            --interactive) interactive=true ; shift ;;
-            --login) login=--login ; shift ;;
-            --quiet) quiet=true ; shift ;;
-            --) shift ; posargs+=("$@") ; break ;;
-            *) posargs+=("$1") ; shift ;;
-        esac
-    done
-
-    local -A statuses
-    for i in 5 6 ; do
-        for j in 1 2 3 ; do
-            if ${interactive} ; then
-                ssh -t -J ppp${i} ppp${i}login-00${j} "eval echo ${posargs[@]} | bash ${login} -i" \
-                    | grep -v '^Warning: Permanently added .*to the list of known hosts.$'
-            else
-                ${quiet} || printf "\033[1;32m==> \033[1;37mDoing node '%s'\033[0m\n" ppp${i}login-00${j}
-                ${quiet} || echo "$ ${posargs[*]}"
-                if ${quiet} ; then
-                    ssh -t -J ppp${i} ppp${i}login-00${j} echo "${posargs[*]}" \| bash ${login} &>/dev/null
-                    statuses[ppp${i}login${j}]=$?
-                else
-                    ssh -t -J ppp${i} ppp${i}login-00${j} echo "${posargs[*]}" \| bash ${login} \
-                        |& command grep -v '^Warning: Permanently added .*to the list of known hosts\..\?$'
-                    local status=$?
-                    if ((status == 0)) ; then
-                        printf "\033[1;34m  --> \033[1;32m${status}\033[0m\n"
-                    else
-                        printf "\033[1;34m  --> \033[1;31m${status}\033[0m\n"
-                    fi
-                fi
-            fi
-        done
-    done
-    ${reset_pipefail}
-}
 
 p.whowho(){
     who | sort | awk '{print $1}' | uniq | while read u ; do finger $u | head -n 1 ; done | sort -k 4

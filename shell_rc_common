@@ -1,0 +1,41 @@
+#!/bin/bash
+
+source ~/.git-prompt.sh
+
+alias n='nnn -dhQex'
+alias cd='wrap_command_colon_dirs cd'
+alias vim='wrap_command_colon_paths vim'
+alias ls='ls --color -h'
+alias grep='grep -n --color'
+alias tree='tree -C'
+alias rmb='rm -rf ../build/*'
+alias rg='rg --no-heading --color=auto'
+alias gdb='~phb001/.local_rhel-8-icelake-64/bin/gdb -q -tui'
+alias gdbserver='~phb001/.local_rhel-8-icelake-64/bin/gdbserver'
+alias diff='diff -u --color'
+alias :wqa='exit 0'
+alias :q='exit 0'
+alias :qa='exit 0'
+alias :wq='exit 0'
+alias :cq='exit 1'
+alias cd='gcps_wrap_command_colon_paths cd'
+GIT_CD_VERBOSE=yessir
+alias git='git-enforce-rules-of-philippes'
+alias diff='diff -u --color'
+alias rmb='rm -rf ../build/*'
+alias update_repos='repos find ~/Repositories --recursive --merge --cleanup'
+# Stolen from gil000: Processes Per User
+alias ppu='ps hax -o user | sort -n | uniq -c | sort -n'
+# Stolen from gil000: Running Processes Per User
+alias rppu='ps haxr -o user | sort -n | uniq -c | sort -n'
+
+. "$HOME/.cargo/env"
+
+source-dir(){
+    local dir=$1
+    local files=($(find -L ${dir} -maxdepth 1 -type f -name '*.bash' -o -name '*.sh'))
+    for f in "${files[@]}" ; do
+        source ${f}
+    done
+}
+

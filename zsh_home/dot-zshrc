@@ -1,6 +1,5 @@
 #!/bin/zsh
 
-
 if [[ "$TERM" == "dumb" ]] ; then
   unsetopt zle
   unsetopt prompt_cr
@@ -15,36 +14,14 @@ if [[ "$TERM" == "dumb" ]] ; then
   return
 fi
 
-
-# From https://fish-users.narkive.com/qmgw3G37/ls-colors-with-fish
-# set -Ux LSCOLORS Exfxcxdxbxegedabagacad
-# From https://apple.stackexchange.com/a/33679
-export LSCOLORS=ExGxBxDxCxEgEdxbxgxcxd
-export CLICOLOR=true
-export CLICOLOR_FORCE=true
-
-source ~/.philconfig/environment/path.sh
-
 if [[ "$-" == *i* ]] ; then
-    export STOW_DIR=$HOME/fs
-    export LANG=en_US.UTF-8
-    export TERM=screen-256color
-
-    PATH="/Users/pcarphin/perl5/bin${PATH:+:${PATH}}"; export PATH;
-    PERL5LIB="/Users/pcarphin/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
-    PERL_LOCAL_LIB_ROOT="/Users/pcarphin/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
-    PERL_MB_OPT="--install_base \"/Users/pcarphin/perl5\""; export PERL_MB_OPT;
-    PERL_MM_OPT="INSTALL_BASE=/Users/pcarphin/perl5"; export PERL_MM_OPT;
 
 
-    [ -f "/Users/pcarphin/.ghcup/env" ] && source "/Users/pcarphin/.ghcup/env" # ghcup-env
-    # which bash >&2
-    export PS4='+ \033[35m${BASH_SOURCE[0]}\033[36m:\033[1;37m${FUNCNAME[0]}\033[22;36m:\033[32m${LINENO}\033[0m'
     if ! [ -e ~/.normal_mode ] && ! [ -e ~/.noexec_zshrc ] && ! [[ -v NORMAL_MODE ]] ; then
         if [[ $(hostname) == mini ]] ; then
-            exec arch -arch arm64 bash "$@"
+            exec arch -arch arm64 /opt/homebrew/bin/bash "$@"
         else
-            exec bash "$@"
+            exec /opt/homebrew/bin/bash "$@"
         fi
     fi
 
@@ -52,33 +29,10 @@ if [[ "$-" == *i* ]] ; then
         echo "exec'ing to switch to arm64 architecture on mini"
         exec arch -arch arm64 zsh
     fi
+
     autoload -U compinit
     compinit
-    alias n='nnn -dhQex'
-    source ~/fs/etc/zsh_completion.d/repos_completion.zsh
-    source ~/.git-prompt.sh
-    source /opt/homebrew/opt/modules/init/zsh
-    [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-    source /Users/pcarphin/Repositories/github.com/philippecarphin/utils/etc/profile.d/git-colon-path-support.zsh
-    source /Users/pcarphin/Repositories/github.com/philippecarphin/bash-powerline/powerline.zsh
-    cd /Users/pcarphin/Repositories/github.com/philippecarphin/bash-powerline/
-    alias cd='wrap_command_colon_dirs cd'
-    alias vim='wrap_command_colon_paths vim'
-    # alias cd='phil_func cd'
+    source ~/.philconfig/shell_rc_common
+    source ~/.philconfig/shell_rc.zsh
+
 fi
-
-
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-# __conda_setup="$('/Users/pcarphin/miniforge3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-# if [ $? -eq 0 ]; then
-#     eval "$__conda_setup"
-# else
-#     if [ -f "/Users/pcarphin/miniforge3/etc/profile.d/conda.sh" ]; then
-#         . "/Users/pcarphin/miniforge3/etc/profile.d/conda.sh"
-#     else
-#         export PATH="/Users/pcarphin/miniforge3/bin:$PATH"
-#     fi
-# fi
-# unset __conda_setup
-# <<< conda initialize <<<

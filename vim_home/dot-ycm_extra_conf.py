@@ -113,6 +113,7 @@ def find_cmake_lists():
     last_cmake_lists = None
     while True:
         cmake_lists = os.path.join(current, 'CMakeLists.txt')
+        log(f"cmake_lists={cmake_lists}")
         if os.path.isfile(cmake_lists):
             last_cmake_lists = cmake_lists
         elif current == '/':

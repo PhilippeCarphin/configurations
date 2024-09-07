@@ -1,0 +1,16 @@
+#!/bin/bash
+
+_load_homebrew(){
+    if [[ -r "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] ; then
+        . "/opt/homebrew/etc/profile.d/bash_completion.sh"
+    fi
+
+    if [[ -r "$HOME/Repositories/github.com/git/git/contrib/completion/git-completion.bash" ]] ; then
+        . "$HOME/Repositories/github.com/git/git/contrib/completion/git-completion.bash"
+    else
+        echo "git-completion not found"
+    fi
+}
+eval "$(/opt/homebrew/bin/brew shellenv)"
+# _load_homebrew ; unset -f $_
+

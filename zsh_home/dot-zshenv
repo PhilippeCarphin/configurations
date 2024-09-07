@@ -1,8 +1,4 @@
 export PHILRC_ZSHENV_SOURCED="$(date)"
-export MANPATH=:
 
-source $HOME/.philconfig/environment/path.sh
-eval "$(/opt/homebrew/bin/brew shellenv)"
-
-# Load rust stuff
-. "$HOME/.cargo/env"
+source ~/.philconfig/env_common_home.sh
+source ~/.philconfig/env_specific_home.sh
