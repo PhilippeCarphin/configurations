@@ -3,22 +3,17 @@
 source ~/.git-prompt.sh
 
 alias n='nnn -dhQex'
-alias cd='wrap_command_colon_dirs cd'
-alias vim='wrap_command_colon_paths vim'
 alias ls='ls --color -h'
 alias grep='grep -n --color'
 alias tree='tree -C'
 alias rmb='rm -rf ../build/*'
 alias rg='rg --no-heading --color=auto'
-alias gdb='~phb001/.local_rhel-8-icelake-64/bin/gdb -q -tui'
-alias gdbserver='~phb001/.local_rhel-8-icelake-64/bin/gdbserver'
 alias diff='diff -u --color'
 alias :wqa='exit 0'
 alias :q='exit 0'
 alias :qa='exit 0'
 alias :wq='exit 0'
 alias :cq='exit 1'
-alias cd='gcps_wrap_command_colon_paths cd'
 GIT_CD_VERBOSE=yessir
 alias git='git-enforce-rules-of-philippes'
 alias diff='diff -u --color'
@@ -39,3 +34,7 @@ source-dir(){
     done
 }
 
+
+p.error(){
+    printf "${FUNCNAME[1]}: \033[1;31mERROR\033[0m: $*\n" >&2
+}

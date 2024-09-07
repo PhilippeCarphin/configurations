@@ -16,7 +16,6 @@ fi
 
 if [[ "$-" == *i* ]] ; then
 
-
     if ! [ -e ~/.normal_mode ] && ! [ -e ~/.noexec_zshrc ] && ! [[ -v NORMAL_MODE ]] ; then
         if [[ $(hostname) == mini ]] ; then
             exec arch -arch arm64 /opt/homebrew/bin/bash "$@"

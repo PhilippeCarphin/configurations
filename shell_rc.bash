@@ -1,5 +1,4 @@
 PROMPT_COMMAND=()
-export PS4='+ \033[35m${BASH_SOURCE[0]}\033[36m:\033[1;37m${FUNCNAME[0]}\033[22;36m:\033[32m${LINENO}\033[0m -- '
 source $(repos -get-dir bash-powerline)/powerline.sh
 source $(repos -get-dir env-diff)/env-diff-cmd.bash
 source "$HOME/.philconfig/shell_lib/view-rev-file.sh"
@@ -12,8 +11,10 @@ source "$HOME/.philconfig/shell_lib/functions.sh"
 case ${BASH_VERSION} in
     4*|5*)
         source /opt/homebrew/share/bash-completion/bash_completion
-        source $HOME/.philconfig/shell_lib/get_make_targets.sh ;;
-    *) printf "\033[1;33mWARNING\033[0m: bash ${BASH_VERSION}: not loading bash_completion\n" ;;
+        source $HOME/.philconfig/shell_lib/get_make_targets.sh
+        shopt -s direxpand # Merci Philippe Blain :D
+        ;;
+    *) printf "${BASH_SOURCE[0]}: \033[1;33mWARNING\033[0m: bash ${BASH_VERSION}\n" ;;
 esac
 
 # Should have already been set but if not
@@ -23,7 +24,9 @@ fi
 complete -F _gcps_complete_colon_dirs cd
 complete -F _gcps_complete_colon_paths vim
 
-shopt -s direxpand # Merci Philippe Blain :D
+alias vim='gcps_wrap_command_colon_paths vim'
+alias cd='gcps_wrap_command_colon_paths cd'
+
 
 configure_fs1_env(){
     # See code of __load_completion from /usr/share/bash-completion/bash_completion ...
@@ -93,22 +96,20 @@ configure_history(){
     if [[ ${BASH_VERSION} == 4*  || ${BASH_VERSION} == 5* ]] ; then
         HISTSIZE=-1
     else
-        HISTTIMEFORMAT=$'\033[1;32m%Y-%m-%d \033[1;33m%H:%M:%S\033[0m '
-        HISTFILESIZE=-1
-        HISTFILE=~/.eternal_bash_history
-        HISTIGNORE="rm -rf *"
-        PROMPT_COMMAND+=("history -a")
         printf "${FUNCNAME[0]}: \033[1;33mWARNING\033[0m: BASH_VERSION not 4 or 5\n"
     fi
+    HISTTIMEFORMAT=$'\033[1;32m%Y-%m-%d \033[1;33m%H:%M:%S\033[0m '
+    HISTFILESIZE=-1
+    HISTFILE=~/.eternal_bash_history
+    HISTIGNORE="rm -rf *"
+    PROMPT_COMMAND+=("history -a")
 }
 configure_history ; unset $_
-
-
 
 function configure_vim(){
     complete -o default -F _gcps_complete_colon_paths vim
     function vim()(
-        if [[ $(hostname) != ppp* ]] ; then
+        if [[ "${USER}" == phc001 ]] && [[ $(hostname) != ppp* ]] ; then
             /usr/bin/vim -p "$@"
             return
         fi
@@ -125,9 +126,8 @@ function configure_vim(){
         fi
 
         #
-        # Add $d/include for all the directories of CMAKE_PREFIX_PATH
-        # and for all environment variables of the form <X>_DIR
-        # so that YouCompleteMe will look in those directories
+        # Help YouCompleteMe find header files even if compile_commands.json
+        # is not there.
         #
         for d in ${CMAKE_PREFIX_PATH//:/ } ; do
             C_INCLUDE_PATH=${d}/include${C_INCLUDE_PATH:+:${C_INCLUDE_PATH}}

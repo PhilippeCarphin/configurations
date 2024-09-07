@@ -1,0 +1,32 @@
+#!/bin/bash
+
+glcurl-project-job(){
+    if [[ "$1" == -h ]] || (( $# != 2 )); then
+        echo "${FUNCNAME[0]} PROJECT_ID JOB_ID"
+        echo ""
+        echo "Show subset of job information using jq"
+        if [[ "$1" == -h ]] ; then
+            return 0
+        else
+            echo "ERROR: Two arguments required"
+            return 1
+        fi
+    fi
+    resp="$(glcurl /projects/$1/jobs/$2)"
+    if [[ "${resp}" != {\"id\"* ]] ; then
+        jq <<< ${resp}
+        return 1
+    fi
+    jq '{id,stage,name,web_url,ref,tag,pipeline:.pipeline|{id,web_url},user:.user|{id,name,location,organization},commit:.commit|{short_id,message,author_name}}' <<< "${resp}"
+}
+
+alias gdb='~phb001/.local_rhel-8-icelake-64/bin/gdb -q -tui'
+alias gdbserver='~phb001/.local_rhel-8-icelake-64/bin/gdbserver'
+
+# I always forget whether it's SSMUSE_VERBOSE_XTRACE or SSMUSE_XTRACE_VERBOSE
+# plus ssmuse-sh checks if the value is == 1, not empty vs non-empty which would
+# be more standard.  Every time, it took me like 3 tries to get it so I made
+# this function.
+p.verbose_ssm(){
+    export SSMUSE_XTRACE_VERBOSE=1
+}

@@ -114,5 +114,22 @@ function f.use(){
     x.use ~for000/.profile.d/interactive/pack "$@"
 }
 
+function x.use_set_command_not_found_handle(){
+    function command_not_found_handle(){
+        local pack=$HOME/.profile.d/interactive/pack/$1
+        if [[ -f "${pack}" ]] ; then
+            p.use $1
+            unset -f command_not_found_handle
+            "$@"
+        else
+            echo "bash: $1: command not found" >&2
+            return 127
+        fi
+    }
+}
+
+
+
+
 complete -F _p.use p.use p.view-pack
 complete -F _f.use f.use f.view-pack p.ftake

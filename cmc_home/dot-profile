@@ -1,9 +1,5 @@
 #!/bin/bash
 
-p.error(){
-    printf "${FUNCNAME[1]}: \033[1;31mERROR\033[0m: $*\n" >&2
-}
-
 
 function p.profile.main(){
     source ~/.philconfig/shell_rc_common
@@ -22,9 +18,10 @@ function p.profile.main_interactive(){
     set_ls_colors_for_readline_and_ls
     source "$HOME/.ssh/ssh_functions.sh"
     source "$HOME/.philconfig/shell_lib/x.use"
-    check-alert-file ~sici000/alert
-    check-alert-file ~/alert
-    maybe_cd_to_pbs_o_workdir
+    x.use_set_command_not_found_handle
+    check-alert-files ; unset $_
+    maybe_cd_to_pbs_o_workdir ; unset $_
+    complete -o default -o nospace -o filenames -F _DottableCompletion source .
 }
 
 maybe_cd_to_pbs_o_workdir(){
@@ -38,7 +35,19 @@ maybe_cd_to_pbs_o_workdir(){
     fi
 }
 
-complete -o default -o nospace -o filenames -F _DottableCompletion source .
+function check-alert-file(){
+    local alert_file="$1"
+    if [ -e "${alert_file}" ] ; then
+        printf "\033[1;31m Alert from %s\n" "${alert_file}" >&2
+        cat "${alert_file}"
+    fi
+}
+
+check_alert_files(){
+    check-alert-file ~sici000/alert
+    check-alert-file ~/alert
+    unset check-alert-file
+}
 
 
 ################################################################################
@@ -78,16 +87,6 @@ configure_spack(){
     if [[ -n "${SPACK_SKIP_MODULES}" ]] ; then echo "WARNING: SPACK_SKIP_MODULES is set" >&2 ; fi
     . $(repos -get-dir spack)/share/spack/setup-env.sh
 }
-
-function check-alert-file(){
-    local alert_file="$1"
-    if [ -e "${alert_file}" ] ; then
-        printf "\033[1;31m Alert from %s\n" "${alert_file}" >&2
-        cat "${alert_file}"
-    fi
-}
-
-
 
 ################################################################################
 # PROBLEM: If you have 'set colored-stats on' in your ~/.inputrc, readline will
@@ -139,48 +138,6 @@ set_ls_colors_for_readline_and_ls(){
     LS_COLORS="${my_ls_colors}"
 }
 
-glcurl-project-job(){
-    if [[ "$1" == -h ]] || (( $# != 2 )); then
-        echo "${FUNCNAME[0]} PROJECT_ID JOB_ID"
-        echo ""
-        echo "Show subset of job information using jq"
-        if [[ "$1" == -h ]] ; then
-            return 0
-        else
-            echo "ERROR: Two arguments required"
-            return 1
-        fi
-    fi
-    resp="$(glcurl /projects/$1/jobs/$2)"
-    if [[ "${resp}" != {\"id\"* ]] ; then
-        jq <<< ${resp}
-        return 1
-    fi
-    jq '{id,stage,name,web_url,ref,tag,pipeline:.pipeline|{id,web_url},user:.user|{id,name,location,organization},commit:.commit|{short_id,message,author_name}}' <<< "${resp}"
-}
-
-
-command_not_found_handle(){
-    local pack=$HOME/.profile.d/interactive/pack/$1
-    if [[ -f "${pack}" ]] ; then
-        p.use $1
-        unset -f command_not_found_handle
-        "$@"
-    else
-        echo "bash: $1: command not found" >&2
-        return 127
-    fi
-}
-
-
-
-# I always forget whether it's SSMUSE_VERBOSE_XTRACE or SSMUSE_XTRACE_VERBOSE
-# plus ssmuse-sh checks if the value is == 1, not empty vs non-empty which would
-# be more standard.  Every time, it took me like 3 tries to get it so I made
-# this function.
-p.verbose_ssm(){
-    export SSMUSE_XTRACE_VERBOSE=1
-}
 ###################### KEEP THIS AT THE END ####################################
 p.profile.main
 unset -f p.profile.main
