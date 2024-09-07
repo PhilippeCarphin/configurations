@@ -8,6 +8,6 @@ PERL_LOCAL_LIB_ROOT="/Users/pcarphin/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_L
 PERL_MB_OPT="--install_base \"/Users/pcarphin/perl5\""; export PERL_MB_OPT;
 PERL_MM_OPT="INSTALL_BASE=/Users/pcarphin/perl5"; export PERL_MM_OPT;
 
-echo "Prepending homebrew path"
+# echo "Prepending homebrew path"
 export PATH=/opt/homebrew/bin:${PATH}
 

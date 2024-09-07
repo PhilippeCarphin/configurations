@@ -2,9 +2,9 @@
 
 # NOTE: MUST BE VALID ZSH AND BASH!!!
 if [[ -n $ZSH_VERSION ]] ; then
-    echo "$0 sourced by ZSH"
+    : echo "$0 sourced by ZSH"
 elif [[ -n $BASH_VERSION ]] ; then
-    echo "${BASH_SOURCE[0]} sourced by bash"
+    : echo "${BASH_SOURCE[0]} sourced by bash"
 fi
 if [[ ${_env_common_home_sourced} == 1 ]] ; then
     printf "\033[1;31m%s\033[0m: %s\n" "ERROR" "$0 has been sourced twice"

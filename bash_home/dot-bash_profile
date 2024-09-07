@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# TODO: This line is in two places
+export PS4='+ \033[35m${BASH_SOURCE[0]}\033[36m:\033[1;37m${FUNCNAME[0]}\033[22;36m:\033[32m${LINENO}\033[0m -- '
+echo "PISS"
+export BASH_SILENCE_DEPRECATION_WARNING=1
+echo "SOUCING BASH_PROFILE" >&2
+if [[ "$TERM" == dumb ]] ; then
+  export PS1='$'
+  return
+fi
+if [[ -r "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] ; then
+    . "/opt/homebrew/etc/profile.d/bash_completion.sh"
+fi
+
+source ~/.philconfig/env_common_home.sh
+source ~/.philconfig/env_specific_home.sh
+
+echo "BUCKET"

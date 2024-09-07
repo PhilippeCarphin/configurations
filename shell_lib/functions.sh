@@ -195,24 +195,6 @@ p.get-cursor(){
     echo ${CURPOS#*[}
 }
 
-make(){
-    if ! [ -t 1 ] ; then
-        command make "$@"
-    else
-        local subst
-        subst+="s/error/\x1b[1;31m&\x1b[0m/g; "
-        subst+="s/warning/\x1b[1;33m&\x1b[0m/g; "
-        subst+="s/undefined reference/\x1b[1;35m&\x1b[0m/g; "
-        subst+="s/^make.*/\x1b[1;36m&\x1b[0m/g;"
-        # For debugging
-        # echo "subst = '$subst'"
-        (
-            set -o pipefail
-            CLICOLOR_FORCE=yes_please command make --no-print-directory "$@" 2>&1 | sed --unbuffered "${subst}"
-        )
-    fi
-}
-
 # WORK-ish
 p.pr(){
     vim ~/.profile_phil
@@ -523,24 +505,8 @@ function p.unansi(){
     sed 's/\x1b\[[0-9;]*m//g' "$@"
 }
 
-function make(){
-    if [[ -t 1 ]] ; then
-        local subst
-        subst+="s/error/$(tput bold)$(tput setaf 1)&$(tput sgr 0)/g; "
-        subst+="s/warning/$(tput bold)$(tput setaf 3)&$(tput sgr 0)/g; "
-        subst+="s/undefined reference/$(tput bold)$(tput setaf 5)&$(tput sgr 0)/g; "
-        subst+="s/^make.*/$(tput bold)$(tput setaf 6)&$(tput sgr 0)/g;"
-        # For debugging
-        # echo "subst = '$subst'"
-        (
-            set -o pipefail
-            CLICOLOR_FORCE=yes_please command make --no-print-directory "$@" 2>&1 | sed --unbuffered "${subst}"
-        )
-    else
-        command make "$@"
-    fi
-}
 function wye(){
+    # Like like tee for the letter T, wye for the letter Y
     while read l ; do
         echo "$l" >&2
         echo "$l" >&1

@@ -1,6 +1,8 @@
 #!/bin/bash
 
 
+export PS4='+ \033[35m${BASH_SOURCE[0]}\033[36m:\033[1;37m${FUNCNAME[0]}\033[22;36m:\033[32m${LINENO}\033[0m -- '
+
 function p.profile.main(){
     source ~/.philconfig/shell_rc_common
     source ~/.philconfig/shell_rc.bash
@@ -67,7 +69,7 @@ configure_vscode_server_environment(){
     #
     # env -0 | sort -z | tr '\0' '\n' > ~/env_$(date +%Y-%m-%d_%H.%M.%S)
     #
-    if [[ -v VSCODE_AGENT_FOLDER ]] ; then
+    if [[ -n $VSCODE_AGENT_FOLDER ]] ; then
         export GO111MODULES=off
         export TMPDIR=/tmp/$USER/vscode-server
         mkdir -p ${TMPDIR}

@@ -1,17 +1,16 @@
 PROMPT_COMMAND=()
-source $(repos -get-dir bash-powerline)/powerline.sh
-source $(repos -get-dir env-diff)/env-diff-cmd.bash
+source $HOME/Repositories/github.com/philippecarphin/bash-powerline/powerline.sh
 source "$HOME/.philconfig/shell_lib/view-rev-file.sh"
+source ~/Repositories/github.com/philippecarphin/rust-workout-log/_workout.sh
 FZF_COMPLETION_OPT="--preview 'bat --color=always {}'"
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
-source ~/Repositories/github.com/philippecarphin/rust-workout-log/_workout.sh
 [ -d $HOME/.bash_completion.d ] && source-dir "$HOME/.bash_completion.d"
 source "$HOME/.philconfig/shell_lib/functions.sh"
 
 case ${BASH_VERSION} in
     4*|5*)
-        source /opt/homebrew/share/bash-completion/bash_completion
         source $HOME/.philconfig/shell_lib/get_make_targets.sh
+        source $HOME/Repositories/github.com/philippecarphin/env-diff/env-diff-cmd.bash
         shopt -s direxpand # Merci Philippe Blain :D
         ;;
     *) printf "${BASH_SOURCE[0]}: \033[1;33mWARNING\033[0m: bash ${BASH_VERSION}\n" ;;
@@ -26,6 +25,7 @@ complete -F _gcps_complete_colon_paths vim
 
 alias vim='gcps_wrap_command_colon_paths vim'
 alias cd='gcps_wrap_command_colon_paths cd'
+alias zsh='NORMAL_MODE=1 zsh'
 
 
 configure_fs1_env(){
