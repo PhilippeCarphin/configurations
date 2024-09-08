@@ -1,5 +1,6 @@
 #!/bin/zsh
-
+# echo "ZSH_RC" >&2
+# echo $PATH | tr ':' '\n'
 if [[ "$TERM" == "dumb" ]] ; then
   unsetopt zle
   unsetopt prompt_cr

@@ -111,6 +111,20 @@ trace(){
     )
 }
 
+# WORK
+function p.set-web-proxy(){
+    # From ~sbf000/.profile.d/interactive/post
+    # except that I he had https_proxy=http://  and HTTPS_PROXY=http://
+    # and I did            https_proxy=https:// and HTTPS_PROXY=https://
+    # EDIT: Turns out my extra 's' at the end was making
+    # things not work.
+    local p=http://webproxy.science.gc.ca:8888/
+    export http_proxy=${p}
+    export https_proxy=${p}
+    export HTTP_PROXY=${p}
+    export HTTPS_PROXY=${p}
+}
+
 
 p.voir(){
     voir "$@" | sed '/   \*.*\*$/d'

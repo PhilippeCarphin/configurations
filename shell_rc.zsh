@@ -10,17 +10,18 @@ export PS4=$'+ \033[35m%N\033[0m:\033[32m%i\033[0m '
 alias vim='wrap_command_colon_paths vim -p'
 alias cd='wrap_command_colon_dirs cd'
 
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-# __conda_setup="$('/Users/pcarphin/miniforge3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-# if [ $? -eq 0 ]; then
-#     eval "$__conda_setup"
-# else
-#     if [ -f "/Users/pcarphin/miniforge3/etc/profile.d/conda.sh" ]; then
-#         . "/Users/pcarphin/miniforge3/etc/profile.d/conda.sh"
-#     else
-#         export PATH="/Users/pcarphin/miniforge3/bin:$PATH"
-#     fi
-# fi
-# unset __conda_setup
-# <<< conda initialize <<<
+# Set emacs keybindings.  ZSH looks at the EDITOR environment
+# variable and since I have it set to vim, I need to do this.
+bindkey -e
+
+print-list(){
+    (
+        setopt sh_word_split
+        eval "IFS=':' local a=(\${$1[@]})"
+        local i=1
+        for x in "${a[@]}" ; do
+            printf "\033[35m%s\033[0m%s\033[36m%d\033[0m%s\033[32m%s\033[0m%s\n" \
+                "elements" "[" "$((i++))" "]='" "$x" "'"
+        done
+    )
+}

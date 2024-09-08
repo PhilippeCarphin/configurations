@@ -25,20 +25,6 @@ p.env(){
     | tr '\0' '\n'
 }
 
-# WORK
-function p.set-web-proxy(){
-    # From ~sbf000/.profile.d/interactive/post
-    # except that I he had https_proxy=http://  and HTTPS_PROXY=http://
-    # and I did            https_proxy=https:// and HTTPS_PROXY=https://
-    # EDIT: Turns out my extra 's' at the end was making
-    # things not work.
-    local p=http://webproxy.science.gc.ca:8888/
-    export http_proxy=${p}
-    export https_proxy=${p}
-    export HTTP_PROXY=${p}
-    export HTTPS_PROXY=${p}
-}
-
 function gitk(){
     command gitk --all "$@" &
 }
@@ -948,4 +934,11 @@ rsync(){
     fi
 
     command rsync "$@"
+}
+
+p.notes(){
+    echo '${X@P}: The value of X passed through prompt evaluation'
+    echo '${X@Q}: Quote the value of X for use as unquoted input'
+    echo '${X@a}: Attributes of variable X as printed by declare -p X'
+    echo '${X:_Y}: (_ is -,=,+,?): Do something if X is unset or null, but without the colon, it just checks for unset.'
 }
