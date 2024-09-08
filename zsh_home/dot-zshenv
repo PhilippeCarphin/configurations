@@ -1,4 +1,5 @@
 export PHILRC_ZSHENV_SOURCED="$(date)"
+# echo "ZSH_ENV" >&2
 
 source ~/.philconfig/env_common_home.sh
 source ~/.philconfig/env_specific_home.sh

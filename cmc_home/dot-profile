@@ -1,16 +1,15 @@
 #!/bin/bash
 
-
 export PS4='+ \033[35m${BASH_SOURCE[0]}\033[36m:\033[1;37m${FUNCNAME[0]}\033[22;36m:\033[32m${LINENO}\033[0m -- '
 
 function p.profile.main(){
     source ~/.philconfig/shell_rc_common
     source ~/.philconfig/shell_rc.bash
     source ~/.philconfig/shell_rc.bash.work
-    configure_spack
-    configure_vscode_server_environment
+    configure_spack ; unset -f $_
+    configure_vscode_server_environment ; unset -f $_
     if [[ "$-" == *i* ]] ; then
-        p.profile.main_interactive
+        p.profile.main_interactive ; unset -f $_
     fi
 }
 
@@ -37,18 +36,18 @@ maybe_cd_to_pbs_o_workdir(){
     fi
 }
 
+check_alert_files(){
+    check-alert-file ~sici000/alert
+    check-alert-file ~/alert
+    unset -f check-alert-file
+}
+
 function check-alert-file(){
     local alert_file="$1"
     if [ -e "${alert_file}" ] ; then
         printf "\033[1;31m Alert from %s\n" "${alert_file}" >&2
         cat "${alert_file}"
     fi
-}
-
-check_alert_files(){
-    check-alert-file ~sici000/alert
-    check-alert-file ~/alert
-    unset check-alert-file
 }
 
 
@@ -141,6 +140,4 @@ set_ls_colors_for_readline_and_ls(){
 }
 
 ###################### KEEP THIS AT THE END ####################################
-p.profile.main
-unset -f p.profile.main
-unset -f p.profile.main_interactive
+p.profile.main ; unset -f $_
