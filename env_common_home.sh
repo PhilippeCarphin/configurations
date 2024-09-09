@@ -13,11 +13,7 @@ _env_common_home_sourced=1
 
 export CLICOLOR=true
 export PATH=$HOME/go/bin:$PATH
-export PATH=$HOME/fs/bin:$PATH
 export PATH=$HOME/.local/bin:$PATH
-export PATH=$HOME/.philconfig/utils:$PATH
-export PATH=$HOME/.gem/ruby/2.6.0/bin:$PATH
-export PATH=/opt/homebrew/share/perl6/site/bin/:$PATH
 export CLICOLOR_FORCE=true
 export EDITOR=vim
 export CMAKE_EXPORT_COMPILE_COMMANDS=TRUE
