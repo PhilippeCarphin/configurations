@@ -426,8 +426,8 @@ Run the command and launch the corresponding configuration in VSCode.  It should
         return 1
     fi
     echo "Make sure python3 gets a 3.7+ version"
-    port=${port:-5678}
-    cmd=(python3.8 -m debugpy --wait-for-client --listen $port "$@")
+    local port=${port:-5678}
+    local cmd=(python3.8 -m debugpy --wait-for-client --listen $port "$@")
     printf "Launching waiting debugger: \033[1;32m%s\033[0m\n" "${cmd[*]}"
     "${cmd[@]}"
 
