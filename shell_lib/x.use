@@ -1,41 +1,49 @@
 #!/bin/bash
 
 function x.use(){
-    local pack_dir="${1}"
-    shift
+    if ! [[ -v x_use_depth ]] ; then
+        local x_use_depth=1
+    else
+        x_use_depth=$((x_use_depth+1))
+    fi
+
+    local pack_dir="${1}" ; shift
     if [[ -z "${1}" ]] ; then
-        p.error "An argument must be provided"
+        printf "\033[1m${FUNCNAME[1]}(${x_use_depth})\033[0m: \033[1;31mERROR\033[0m: An argument must be provided\n"
+        x_use_depth=$((x_use_depth-1))
         return 1
     fi
 
-    local pack_name="${1}"
+    local pack_name="${1}" ; shift
     if ! [[ -f ${pack_dir}/${pack_name} ]] ; then
-        p.error "No package named '${pack_name}' in ${pack_dir}"
+        printf "\033[1m${FUNCNAME[1]}(${x_use_depth})\033[0m: \033[1;31mERROR\033[0m: No package named '${pack_name}' in ${pack_dir}\n"
+        x_use_depth=$((x_use_depth-1))
         return 1
     fi
 
-    shift
     local status
     local i=0
     while IFS= read -r line ; do
-        : $((i++))
+        ((i++)) # i needs to be always incremented even for lines that we skip
         if [[ -z "${line}" ]] ; then
             continue
         fi
-        printf "\033[1m${FUNCNAME[1]}: "
+        printf "\033[1m${FUNCNAME[1]}(${x_use_depth}): "
         if [[ ${line} == \#* ]] ; then
             printf "\033[22;34m$(echo ${line})\033[0m\n"
         else
             printf "\033[1;32m$(eval echo ${line})\033[0m\n"
         fi
         if ! eval ${line} ; then
-            p.error "error on line ${i} of ${pack_dir}/${pack_name}"
+            printf "\033[1m${FUNCNAME[1]}(${x_use_depth})\033[0m: \033[1;31mERROR\033[0m: line ${i} of ${pack_dir}/${pack_name}\n"
         fi
     done < ${pack_dir}/${pack_name}
+
     status=$?
     if [[ ${status} != 0 ]] ; then
         p.error "Sourcing '${pack_dir}/${pack_name}' returned an error : $?"
     fi
+    x_use_depth=$((x_use_depth-1))
     return ${status}
 }
 
@@ -127,9 +135,5 @@ function x.use_set_command_not_found_handle(){
         fi
     }
 }
-
-
-
-
 complete -F _p.use p.use p.view-pack
 complete -F _f.use f.use f.view-pack p.ftake
