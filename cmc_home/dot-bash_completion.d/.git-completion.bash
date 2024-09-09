@@ -1,1 +1,0 @@
-/home/phb001/.git-completion.bash

@@ -1,5 +1,8 @@
 #!/bin/bash
 
+[ -d $HOME/.bash_completion.d ] && source-dir "$HOME/.bash_completion.d"
+source ~phb001/.git-completion.bash
+
 glcurl-project-job(){
     if [[ "$1" == -h ]] || (( $# != 2 )); then
         echo "${FUNCNAME[0]} PROJECT_ID JOB_ID"
