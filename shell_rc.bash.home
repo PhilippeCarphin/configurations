@@ -13,6 +13,9 @@ _load_homebrew(){
 }
 eval "$(/opt/homebrew/bin/brew shellenv)"
 # _load_homebrew ; unset -f $_
+. "$HOME/.cargo/env"
+
+source ~/Repositories/github.com/philippecarphin/rust-workout-log/_workout.sh
 
 case ${BASH_VERSION} in
     4*|5*)

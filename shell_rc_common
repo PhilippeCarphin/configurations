@@ -24,8 +24,6 @@ alias ppu='ps hax -o user | sort -n | uniq -c | sort -n'
 # Stolen from gil000: Running Processes Per User
 alias rppu='ps haxr -o user | sort -n | uniq -c | sort -n'
 
-. "$HOME/.cargo/env"
-
 source-dir(){
     local dir=$1
     local files=($(find -L ${dir} -maxdepth 1 -type f -name '*.bash' -o -name '*.sh'))
