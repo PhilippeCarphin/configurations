@@ -23,8 +23,8 @@ function p.profile.main_interactive(){
     source "$HOME/.ssh/ssh_functions.sh"
     source "$HOME/.philconfig/shell_lib/x.use"
     x.use_set_command_not_found_handle
-    check-alert-files ; unset $_
-    maybe_cd_to_pbs_o_workdir ; unset $_
+    check-alert-files ; unset -f $_
+    maybe_cd_to_pbs_o_workdir ; unset -f $_
     complete -o default -o nospace -o filenames -F _DottableCompletion source .
 }
 
@@ -47,10 +47,10 @@ function check-alert-file(){
     fi
 }
 
-check_alert_files(){
+check-alert-files(){
     check-alert-file ~sici000/alert
     check-alert-file ~/alert
-    unset check-alert-file
+    unset -f check-alert-file
 }
 
 
