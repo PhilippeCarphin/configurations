@@ -87,12 +87,18 @@ configure_vscode_server_environment(){
 }
 
 configure_spack(){
+    local spack_dir=$HOME/Repositories/github.com/spack/spack
+    if ! [[ -d ${spack_dir} ]] ; then
+        return
+    fi
+
     export SPACK_SKIP_MODULES=y
     if [[ -n "${SPACK_SKIP_MODULES}" ]] ; then
         echo "WARNING: SPACK_SKIP_MODULES is set" >&2
     fi
+    # setup-env.sh uses cmd as a temporary variable without making it local
     local cmd
-    . $(repos -get-dir spack)/share/spack/setup-env.sh
+    . ${spack_dir}/share/spack/setup-env.sh
 }
 
 ################################################################################
