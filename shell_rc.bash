@@ -2,7 +2,7 @@ PROMPT_COMMAND=()
 source $HOME/Repositories/github.com/philippecarphin/bash-powerline/powerline.sh
 source "$HOME/.philconfig/shell_lib/view-rev-file.sh"
 FZF_COMPLETION_OPT="--preview 'bat --color=always {}'"
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash # Initializes readline!!!
 source "$HOME/.philconfig/shell_lib/functions.sh"
 
 case ${BASH_VERSION} in

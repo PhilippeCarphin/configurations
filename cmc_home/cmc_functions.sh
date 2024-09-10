@@ -44,3 +44,74 @@ p.do-login-nodes(){
     done
     ${reset_pipefail}
 }
+
+p.app-log-level(){
+    if [[ -z "${1:-}" ]] ; then
+        printf "${FUNCNAME[0]}: \033[1;31mERROR\033[0m: One argument is required\n"
+        return 1
+    fi
+
+    local level="${1}"
+    local app_log_levels=(ALWAYS FATAL SYSTEM ERROR WARNING INFO TRIVIAL DEBUG EXTRA QUIET)
+    if ! p.value_is_in "${level^^}" "${app_log_levels[@]}" ; then
+        printf "${FUNCNAME[0]}: \033[1;31mERROR\033[0m: log level must be one of (${app_log_levels[*]})\n"
+        return 1
+    fi
+
+    local cmd=(export APP_VERBOSE=${1})
+    printf "\033[33m%s\033[0m\n" "${cmd[*]}"
+    "${cmd[@]}"
+}
+
+_p.app-log-level(){
+    if (( COMP_CWORD > 1 )) ; then
+        return 0
+    fi
+    local cur=${COMP_WORDS[COMP_CWORD]}
+    local app_log_levels=(ALWAYS FATAL SYSTEM ERROR WARNING INFO TRIVIAL DEBUG EXTRA QUIET)
+    COMPREPLY=()
+    local x
+    for x in "${app_log_levels[@]}" ; do
+        if [[ "${x}" == "${cur^^}"* ]] ; then
+            COMPREPLY+=("${x}")
+        fi
+    done
+}
+complete -F _p.app-log-level p.app-log-level
+
+p.prepend(){
+    local -n var=$1 ; shift
+    local IFS=:
+    var="$*${var:+:${var}}"
+}
+_p.prepend(){
+    local cur=${COMP_WORDS[COMP_CWORD]}
+    if (( COMP_CWORD > 1 )) ; then
+        compopt -o default
+        return 0
+    fi
+    COMPREPLY=($(compgen -v -- "${cur}"))
+}
+complete -F _p.prepend p.prepend
+
+
+# I always forget whether it's SSMUSE_VERBOSE_XTRACE or SSMUSE_XTRACE_VERBOSE
+# plus ssmuse-sh checks if the value is == 1, not empty vs non-empty which would
+# be more standard.  Every time, it took me like 3 tries to get it so I made
+# this function.
+p.verbose_ssm(){
+    export SSMUSE_XTRACE_VERBOSE=1
+}
+
+trace(){
+    (
+        set -x
+        SSMUSE_XTRACE_VERBOSE=1
+        eval "$@"
+    )
+}
+
+
+p.voir(){
+    voir "$@" | sed '/   \*.*\*$/d'
+}

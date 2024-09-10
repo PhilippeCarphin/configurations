@@ -719,13 +719,6 @@ man(){
     )
 }
 
-trace(){
-    (
-        set -x
-        SSMUSE_XTRACE_VERBOSE=1
-        eval "$@"
-    )
-}
 
 complete -A function p.type
 
@@ -734,7 +727,225 @@ p.whowho(){
     who | sort | awk '{print $1}' | uniq | while read u ; do finger $u | head -n 1 ; done | sort -k 4
 }
 
+p.upstream_compare(){
+    # Don't think I'll use this very frequently but I thought it would be
+    # useful to know.
+    git rev-list --count --left-right @{upstream}...HEAD
+}
 
-p.voir(){
-    voir "$@" | sed '/   \*.*\*$/d'
+p.find_readable(){
+    # Not really robust since it can only handle one path,
+    # making this function so I remember find can do this
+    # https://gitlab.science.gc.ca/CMDS/Support/-/issues/949#note_1028252
+    # Find returns !0 if it encounters any problem searching and
+    # this includes permission denied on any of the directories it comes
+    # across.
+    local dir=$1 ; shift
+    find $dir ! -readable -prune "$@"
+}
+
+p.value_is_in(){
+    local value="$1" ; shift
+    local l
+    for l in "$@"; do
+        if [[ "${l}" == "${value}" ]] ; then
+            return 0
+        fi
+    done
+    return 1
+}
+
+
+p.unresolved-repodir(){
+    local candidate=$(
+        local prev=$PWD
+        while true ; do
+            if ! git rev-parse --is-inside-work-tree &>/dev/null ; then
+                echo "${prev}"
+                return 1
+            fi
+            prev=$PWD
+            cd ..
+        done
+    )
+    local true_repo_dir
+    if ! true_repo_dir=$(git rev-parse --show-toplevel 2>/dev/null) ; then
+        return 1
+    fi
+
+    local candidate_inode=$(stat --format=%i ${candidate})
+    local repo_inode=$(stat --format=%i ${true_repo_dir})
+    if [[ ${candidate_inode} == ${repo_inode} ]] ; then
+        echo ${candidate}
+    else
+        echo "Unresolved root '${candidate}' is not the same directory as true repo root" >&2
+        echo "${true_repo_dir}"
+    fi
+}
+
+p.find_path_var(){
+    local -n path_var=$1 ; shift
+    # local to_find=$2
+    find ${path_var//[:, ;]/ } "$@"
+}
+_p.find_path_var(){
+    local cur prev words cword
+    _init_completion || return
+    echo "cword=${cword}" >> ~/.log.txt
+    if ((cword > 1)) ; then
+        if ! _find 2>/dev/null ; then
+            __load_completion find && _find
+        fi
+    else
+        COMPREPLY=($(compgen -v -- "${cur}"))
+    fi
+}
+complete -F _p.find_path_var p.find_path_var
+p.go-build(){
+    local builds
+    if ! builds=($(p.find-build)) ; then
+        return 1
+    fi
+
+    case ${#builds[@]} in
+        0) echo "No builds" ; return 1 ;;
+        1) printf "\033[33mcd %s\n" "${builds[0]}"
+           cd ${builds[0]} ; return ;;
+    esac
+
+    local -A map
+    for build in "${builds[@]}" ; do
+        local base=${build##*/}
+        map[${base}]=${build}
+    done
+
+    local choice
+    select choice in "${!map[@]}" ; do
+        printf "\033[33mcd %s\n" "${map[${choice}]}"
+        cd ${map[${choice}]}
+        return
+    done
+}
+alias gb=p.go-build
+
+p.find-build(){
+    local super
+    if ! super=$(git superproject-root) ; then
+        return 1
+    fi
+
+    while read result ; do
+        echo ${result%%/CMakeCache.txt}
+    done < <(find ${super} -maxdepth 2 -name CMakeCache.txt)
+}
+utc-to-local(){
+    local date=$1 ; shift
+    TZ=America/Toronto date -d "$date UTC" "$@"
+}
+utc-now(){
+    date -u "$@"
+}
+local-to-utc(){
+    local date=$1 ; shift
+    TZ=America/Toronto date -u -d "$date EDT" "$@"
+}
+
+rsync-help(){
+
+    local bold=$'\033[1;37m'
+    local clear=$'\033[0m'
+    cat <<- EOF
+
+	Only the trailing slash on the source argument(s) makes a difference.
+
+	These two will copy the ${bold}content${clear} of some/dir/ ${bold}into${clear}
+	some/dir/ on host:
+
+	    rsync -r some/dir/ host:some/dir
+	    rsync -r some/dir/ host:some/dir/
+
+	These two copy the ${bold}directory${clear} some/dir ${bold}into${clear} some/
+	on host:
+
+	    rsync -r some/dir host:some
+	    rsync -r some/dir host:some/
+
+	All four of the above commands will create dir on host.
+
+	The commands
+
+	    rsync -r some/dir host:some/dir
+	    rsync -r some/dir host:some/dir/
+
+	will leave you with some/dir/dir on host whose content will be the content
+	of some/dir at the source.
+
+	EOF
+}
+
+rsync(){
+
+    #
+    # Normalize arguments using getopt
+    #
+    eval local normalized_args=($(getopt -n "" --longoptions recursive -o "ra" -- "$@" 2>/dev/null || true))
+
+    #
+    # Check if there is a '-r' in the arguments
+    #
+    local -i i=0
+    while (( i < ${#normalized_args[@]} )) ; do
+        case "${normalized_args[i]}" in
+            -r|--recursive) has_r=true ;;
+            --) ((i++)) ; break ;;
+        esac
+        ((i++))
+    done
+
+    #
+    # Collect positional argumetns
+    #
+    local posargs=()
+    while (( i < ${#normalized_args[@]} )) ; do
+        posargs+=("${normalized_args[i]}")
+        ((i++))
+    done
+
+    #
+    # If no '-r', just do the command without checks
+    #
+    if ! ${has_r} ; then
+        command rsync "$@"
+        return
+    fi
+
+    #
+    # Warn of probably unwanted situation: for example,
+    #   rsync localhost:/some/path/model_data remote_host:/some/path/model_data
+    # which would leave us with /some/path/model_data/model_data.
+    #
+    # No trailing slash on first arg means we copy first arg *into* second arg.
+    if [[ "${posargs[0]}" != */ ]] ; then
+        # We consider it to probably not be what the user wants if the
+        # basenames of both arguments match.
+        local base0=${posargs[0]##*/} # Garanteed no trailing slash
+        local base1="$(basename ${posargs[1]})" # Could have a trailing slash,
+                                                # basename takes care of that.
+        if [[ "${base0}" == "${base1}" ]] ; then
+            if [[ "${posargs[1]}" == *:* ]] ; then
+                local dest_host=${posargs[1]%%:*}
+            else
+                local dest_host=localhost
+            fi
+            local location_at_dest=${posargs[1]##*:}
+            echo "This will create ${location_at_dest}/${base1} on ${dest_host}"
+            local answer
+            read -p "are you sure you want to continue? [y/n] > " answer
+            if [[ "${answer}" == "n" ]] ; then
+                return 1
+            fi
+        fi
+    fi
+
+    command rsync "$@"
 }

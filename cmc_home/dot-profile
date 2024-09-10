@@ -18,10 +18,11 @@ function p.profile.main(){
 
 function p.profile.main_interactive(){
     export PYTHONSTARTUP=~/.pyrc
+    export PACK_DIR=${HOME}/.profile.d/interactive/pack
 
-    set_ls_colors_for_readline_and_ls
     source "$HOME/.ssh/ssh_functions.sh"
     source "$HOME/.philconfig/shell_lib/x.use"
+    set_ls_colors_for_readline_and_ls
     x.use_set_command_not_found_handle
     check-alert-files ; unset -f $_
     maybe_cd_to_pbs_o_workdir ; unset -f $_

@@ -16,7 +16,7 @@ function x.use(){
 
     local pack_name="${1}" ; shift
     if ! [[ -f ${pack_dir}/${pack_name} ]] ; then
-        printf "\033[1m${FUNCNAME[1]}(${x_use_depth})\033[0m: \033[1;31mERROR\033[0m: No package named '${pack_name}' in ${pack_dir}\n"
+        printf "\033[1m${FUNCNAME[1]}(${x_use_depth})\033[0m: \033[1;31mERROR\033[0m: No package named '${pack_name}' in '${pack_dir}'\n"
         x_use_depth=$((x_use_depth-1))
         return 1
     fi
@@ -115,7 +115,7 @@ function p.ftake(){
 
 
 function p.use(){
-    x.use ${PACK_DIR} "$@"
+    x.use "${PACK_DIR}" "$@"
 }
 
 function f.use(){
