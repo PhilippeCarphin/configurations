@@ -27,7 +27,6 @@ shell_rc.bash.main(){
     alias vim='gcps_wrap_command_colon_paths vim'
     alias cd='gcps_wrap_command_colon_paths cd'
     alias zsh="NORMAL_MODE=1 PS4=$'+ \033[35m%N\033[0m:\033[32m%i\033[0m ' zsh"
-    export PS4=$'+ \033[35m%N\033[0m:\033[32m%i\033[0m '
     configure_fs1_env ; unset -f $_
     configure_history ; unset -f $_
     configure_vim ; unset -f $_
