@@ -82,3 +82,14 @@ function debug-traps(){
     done
 }
 
+p.ps4(){
+    case "$1" in
+        no-color) export PS4='+ ${BASH_SOURCE[0]}:${FUNCNAME[0]}:${LINENO} -- ' ;;
+        short) export PS4='+ ${BASH_SOURCE[0]##*/}:${FUNCNAME[0]}:${LINENO} -- ' ;;
+    esac
+}
+_p.ps4(){
+    COMPREPLY=( $(compgen -W "no-color short" -- ${COMP_WORDS[COMP_CWORD]}) )
+}
+complete -F _p.ps4 p.ps4
+

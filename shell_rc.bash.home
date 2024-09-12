@@ -16,6 +16,10 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 . "$HOME/.cargo/env"
 
 source ~/Repositories/github.com/philippecarphin/rust-workout-log/_workout.sh
+if [[ "$-" == *i* ]] ; then
+    FZF_COMPLETION_OPT="--preview 'bat --color=always {}'"
+    [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+fi
 
 case ${BASH_VERSION} in
     4*|5*)

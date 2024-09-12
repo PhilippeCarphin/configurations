@@ -3,8 +3,6 @@ shell_rc.bash.main(){
 
     source $HOME/Repositories/github.com/philippecarphin/bash-powerline/powerline.sh
     source "$HOME/.philconfig/shell_lib/view-rev-file.sh"
-    FZF_COMPLETION_OPT="--preview 'bat --color=always {}'"
-    [ -f ~/.fzf.bash ] && source ~/.fzf.bash
     [ -d $HOME/.bash_completion.d ] && source-dir "$HOME/.bash_completion.d"
     source "$HOME/.philconfig/shell_lib/functions.sh"
 

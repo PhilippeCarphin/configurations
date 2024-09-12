@@ -1,6 +1,5 @@
 #!/bin/bash
 
-export PS4='+ \033[35m${BASH_SOURCE[0]}\033[36m:\033[1;37m${FUNCNAME[0]}\033[22;36m:\033[32m${LINENO}\033[0m -- '
 
 function p.profile.main(){
     source ~/.philconfig/env_common_home.sh
@@ -11,7 +10,10 @@ function p.profile.main(){
     configure_spack ; unset -f $_
     configure_vscode_server_environment ; unset -f $_
     if [[ "$-" == *i* ]] ; then
+        export PS4='+ \033[35m${BASH_SOURCE[0]}\033[36m:\033[1;37m${FUNCNAME[0]}\033[22;36m:\033[32m${LINENO}\033[0m -- '
         p.profile.main_interactive ; unset -f $_
+    else
+        export PS4='+ ${BASH_SOURCE[0]}:${FUNCNAME[0]}:\033[32m${LINENO}: '
     fi
 }
 
@@ -21,7 +23,9 @@ function p.profile.main_interactive(){
 
     source "$HOME/.ssh/ssh_functions.sh"
     source "$HOME/.philconfig/shell_lib/x.use"
-    set_ls_colors_for_readline_and_ls
+    set_ls_colors_for_readline_and_ls ; unset $_ # Needs to be before fzf because fzf causes readline initialization
+    FZF_COMPLETION_OPT="--preview 'bat --color=always {}'"
+    [ -f ~/.fzf.bash ] && source ~/.fzf.bash
     x.use_set_command_not_found_handle
     check-alert-files ; unset -f $_
     maybe_cd_to_pbs_o_workdir ; unset -f $_

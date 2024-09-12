@@ -129,3 +129,4 @@ function p.set-web-proxy(){
 p.voir(){
     voir "$@" | sed '/   \*.*\*$/d'
 }
+
