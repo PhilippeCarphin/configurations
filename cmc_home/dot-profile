@@ -9,6 +9,7 @@ function p.profile.main(){
     source ~/.philconfig/shell_rc.bash.work
     configure_spack ; unset -f $_
     configure_vscode_server_environment ; unset -f $_
+    set_and_goto_true_home ; unset -f $_
     if [[ "$-" == *i* ]] ; then
         export PS4='+ \033[35m${BASH_SOURCE[0]}\033[36m:\033[1;37m${FUNCNAME[0]}\033[22;36m:\033[32m${LINENO}\033[0m -- '
         p.profile.main_interactive ; unset -f $_
@@ -152,6 +153,12 @@ set_ls_colors_for_readline_and_ls(){
     # # read LS_COLORS.  Anyway, we don't want show-colored-stats in Python so
     # # that is totally OK.
     LS_COLORS="${my_ls_colors}"
+}
+
+
+# Open this file
+p.pr(){
+    vim ~/.config/cmc_home/dot-profile
 }
 
 ###################### KEEP THIS AT THE END ####################################

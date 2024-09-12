@@ -181,11 +181,6 @@ p.get-cursor(){
     echo ${CURPOS#*[}
 }
 
-# WORK-ish
-p.pr(){
-    vim ~/.profile_phil
-}
-
 p.print_ps1(){
     # In "", \ is used to escape, if we want our string to contain
     # an actual backslash, we need to put \\.  Sed also interprets \
