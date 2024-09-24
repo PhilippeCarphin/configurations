@@ -155,5 +155,18 @@
 [init]
     defaultBranch = main
 
-[include]
-    path = ~/.gitconfig.specific
+################################################################################
+# Specific settings: Leave this at the end to ensure that specific settings
+# override less specific ones
+################################################################################
+# Order is important: settings in later includes override settings in earlier
+# ones.  So if a repo has a github.com remote and a gitlab.science.gc.ca
+# remote, it is therefore a work repo so it should have the work email
+[includeIf "hasconfig:remote.*.url:**github.com**/*"]
+    path = ~/.philconfig/git_home/personal-email.gitconfig
+[includeIf "hasconfig:remote.*.url:**gitlab.com**/*"]
+    path = ~/.philconfig/git_home/personal-email.gitconfig
+[includeIf "hasconfig:remote.*.url:**github.com/ECCC-ASTD-MRD/*"]
+    path = ~/.philconfig/git_home/work-email.gitconfig
+[includeIf "hasconfig:remote.*.url:**gitlab.science.gc.ca**/*"]
+    path = ~/.philconfig/git_home/work-email.gitconfig
