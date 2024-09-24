@@ -58,36 +58,29 @@ function check-alert-file(){
 }
 
 ################################################################################
-# Certain things about our environment setup don't jive well with vscode-server
-# so we override them for that case.
-# - TMPDIR: contains the PID of the process that loaded ordenv. Otherwise:
-#   - parent : lauches a child
-#   - child : has TMPDIR which contains PID of parent
-#   - parent : detaches child and exits, causing r.cleanup_tmpdir to delete
-#              TMPDIR
-#   - child : has a TMPDIR which does not exist.
-#
+# Regular setup is that HOME=/home/$USER which is a link to where your home
+# really is but this causes some annoying little things:
+# - #{pane_current_path} in TMUX is always the physical path so when we create
+#   a new pane with `split-window "#{pane_current_path}"`, PWD in the new shell
+#   is different from in the pane that we split from.  Without this, starting
+#   in `~/Documents (/home/$USER/Documents)` and splitting gives a new pane in
+#   `/some/path/x/y/abcd/efgh/$USER/Documents` which is annoying.
+#   This trick is mainly so that I can see a tilde instead of that long prefix.
+# - With VSCode debugger, when it opens files for you, it won't notice that
+#   the file is already open because the open file is `/home/$USER/.../file.c`
+#   but the file where the debugger stopped is `/some/path/x/y/abcd/$USER/.../file.c`
+#   so you get the file opened in two tabs which is also annoying.
 ################################################################################
-configure_vscode_server_environment(){
-    # Dump environment to file at very beginning to see what the env looks
-    # like when vscode server logs in.
-    #
-    # env -0 | sort -z | tr '\0' '\n' > ~/env_$(date +%Y-%m-%d_%H.%M.%S)
-    #
-    if [[ -n $VSCODE_AGENT_FOLDER ]] ; then
-        export GO111MODULES=off
-        export TMPDIR=/tmp/$USER/vscode-server
-        mkdir -p ${TMPDIR}
-    fi
-
-    # At work, the sshd config is has a slight problem.  The expected behavior
-    # is that sshd creates /run/user/$(id -u) and sets XDG_RUNTIME_DIR to that
-    # value.  The observed behavior is that it sets XDG_RUNTIME_DIR but does
-    # not always create the directory.  Only sshd can create this directory, the
-    # user cannot.  To mitigate this, I set it to something else.
-    export XDG_RUNTIME_DIR=/tmp/$USER/xdg_runtime_dir
-    mkdir -p ${XDG_RUNTIME_DIR}
+function set_and_goto_true_home(){
+    return
+    local old_home=$HOME
+    local true_home=$(realpath $HOME)
+    HOME=${true_home}
+    case $PWD in ${old_home}|${old_home}/*)
+        cd ${true_home}/${PWD##${old_home}} ;;
+    esac
 }
+
 
 configure_spack(){
     local spack_dir=$HOME/Repositories/github.com/spack/spack
