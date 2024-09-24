@@ -32,7 +32,12 @@ export PATH
 
 export STOW_DIR=$HOME/fs1
 
+# Controls sorting
+export LANG=en_US.UTF-8
+export LC_COLLATE=C
+export LC_ADDRESS=en_CA.UTF-8
+export LC_TIME=en_CA.UTF-8
+
 if [[ "$-" == *i* ]] ; then
-    export LANG=en_US.UTF-8
     export TERM=screen-256color
 fi
