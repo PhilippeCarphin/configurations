@@ -33,13 +33,27 @@ function p.profile.main_interactive(){
 }
 
 maybe_cd_to_pbs_o_workdir(){
-    if [[ "${PBS_ENVIRONMENT}" == PBS_INTERACTIVE ]] ; then
-        printf "PBS_ENVIRONMENT detected, cd'ing to \$PBS_O_WORKDIR=${PBS_O_WORKDIR}\n" >&2
-        if ! cd "${PBS_O_WORKDIR}" ; then
-            p.error "Could not CD to '$PBS_O_WORKDIR', perhaps it is not on a network filesystem"
-        fi
+    if [[ -z "${PBS_JOBID}" ]] ; then
+        return 0
+    fi
+
+    local jobid dir
+    if [[ "${PBS_JOBID}" == *,* ]] ; then
+        # Coming from sshj
+        jobid=${PBS_JOBID%%,*}
+        dir=${PBS_JOBID##*,}
+        export PBS_JOBID=${jobid}
+        export PBS_O_WORKDIR=${dir}
+        echo "Coming from sshj, PBS_JOBID=${PBS_JOBID}, PBS_O_WORKDIR=${PBS_O_WORKDIR}" >&2
+    elif [[ "${PBS_ENVIRONMENT}" == PBS_INTERACTIVE ]] ; then
+        # Coming from qsub -I
         echo "${PBS_JOBID}" > ~/.ssh/current_job
         echo "JOBID ${PBS_JOBID} written in ~/.ssh/current_job" >&2
+        echo "${PBS_O_WORKDIR}" >> ~/.ssh/current_job
+    fi
+
+    if ! cd "${PBS_O_WORKDIR}" ; then
+        p.error "Could not CD to '$PBS_O_WORKDIR', perhaps it is not on a network filesystem"
     fi
 }
 
