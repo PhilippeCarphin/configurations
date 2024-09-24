@@ -944,3 +944,27 @@ p.notes(){
     echo '${X:_Y}: (_ is -,=,+,?): Do something if X is unset or null, but without the colon, it just checks for unset.'
 }
 
+p.pytrace(){
+    # https://stackoverflow.com/questions/15760381/what-is-the-python-equivalent-of-set-x-in-shell
+    # ANSWER: Using python3 -m trace FILE
+    local file=$1
+    local restrict=$2
+    local extra_args=()
+    if [[ -n ${restrict} ]] ; then
+        local sys_path=$(python3 -c 'import os; import sys; print(os.pathsep.join(sys.path))')
+        extra_args=(--ignore-dir ${sys_path})
+    fi
+    python3 -m trace "${extra_args[@]}" -t ${file}
+}
+
+p.atexit(){
+    eval local arr=("$(trap -p EXIT)")
+    local exit_trap_code="${arr[2]}"
+    printf "Trap=--%s--\n" "${exit_trap_code}"
+    local new_trap_code="${exit_trap_code}
+printf '\033[38;5;240m ${FUNCNAME[0]}: $*\n'
+$*
+printf '\033[0m'"
+    trap "${new_trap_code}" EXIT
+}
+
