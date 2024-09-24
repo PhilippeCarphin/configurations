@@ -64,7 +64,6 @@
     insteadOf = me:
 
 [core]
-    excludesfile = ~/.gitignore.global
     pager = diff-so-fancy | less --tabs=4 -RFX
     # pager = /home/phc001/Repositories/github.com/dandavison/delta/localinstall/bin/delta -n
 
