@@ -1,4 +1,11 @@
 #!/bin/bash
+if [[ -n $ZSH_VERSION ]] ; then
+    this_file=$0
+    # echo "$0 sourced by ZSH"
+elif [[ -n $BASH_VERSION ]] ; then
+    # echo "${BASH_SOURCE[0]} sourced by bash"
+    this_file=${BASH_SOURCE[0]}
+fi
 
 export LSCOLORS=ExGxBxDxCxEgEdxbxgxcxd
 
