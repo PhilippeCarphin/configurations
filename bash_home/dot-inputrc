@@ -59,7 +59,6 @@ $if mode=emacs
     # - insert '"'
     # - go to start
     "\e\C-m": '\C-a "$(\C-e)"\C-a'
-    "\C-xr": "source ~/.profile_phil\n"
 $endif
 
 # NOTE

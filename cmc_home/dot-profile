@@ -158,7 +158,9 @@ set_ls_colors_for_readline_and_ls(){
 
 # Open this file
 p.pr(){
-    vim ~/.config/cmc_home/dot-profile
+    local this_file=${BASH_SOURCE[0]}
+    vim ${this_file}
+    source ${this_file}
 }
 
 ###################### KEEP THIS AT THE END ####################################
