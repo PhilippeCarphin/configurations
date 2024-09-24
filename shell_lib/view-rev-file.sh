@@ -89,7 +89,7 @@ _p.view-rev-file-complete-files(){
     # ${cur#./} to match
     local prefix
     if [[ "${cur}" == ./* ]] ; then
-        prefix="-P ./"
+        prefix=(-P "./")
     fi
     local newcur=${cur#./}
 
@@ -97,7 +97,7 @@ _p.view-rev-file-complete-files(){
     # Relative to the repo root
     # Relative to PWD, the actual function will need to to change the path
     # to one that is relative to the git repo.
-    COMPREPLY=( $(compgen ${prefix} -W "$(git ls-tree --name-only ${rev} ${dirname})" -- ${newcur}) )
+    COMPREPLY=( $(compgen "${prefix[@]}" -W "$(git ls-tree --name-only ${rev} ${dirname})" -- ${newcur}) )
 
     #
     # Handle single candidate
