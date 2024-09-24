@@ -37,11 +37,17 @@ install_philconfig_group(){
         echo "$0 ERROR : function install_philconfig_group requires one argument" >&2
         return 1
     fi
-    local group=$1
+    local group_dir="${this_dir}/${1}_home"
 
-    if ! [ -d ${this_dir}/${1}_home ] ; then
+    if ! [ -d ${group_dir} ] ; then
         echoerr "$0 ERROR : no such group ${1} (${1}_home)"
         return 1
+    fi
+
+    if [[ -x ${group_dir}/install.sh ]] ; then
+        echo "Group group_dir has its own install.sh, running that instead"
+        ${group_dir}/install.sh
+        return 0
     fi
 
     # Make the $HOME look like ${this_dir}/${1}_home
