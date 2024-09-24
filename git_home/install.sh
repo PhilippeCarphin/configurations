@@ -18,4 +18,5 @@ ln -sfv ${this_dir_rel}/dot-gitconfig ~/.gitconfig
 
 mkdir -p ~/.config/git
 ln -sfv ../../${this_dir_rel}/dot-config/git/ignore ~/.config/git/ignore
+ln -sfv ../../${this_dir_rel}/dot-config/git/attributes ~/.config/git/ignore
 
