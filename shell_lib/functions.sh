@@ -498,14 +498,6 @@ function p.unansi(){
     sed 's/\x1b\[[0-9;]*m//g' "$@"
 }
 
-function wye(){
-    # Like like tee for the letter T, wye for the letter Y
-    while read l ; do
-        echo "$l" >&2
-        echo "$l" >&1
-    done
-}
-
 function p.dusage(){
     (
         shopt -s nullglob
