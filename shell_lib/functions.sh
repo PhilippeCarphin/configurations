@@ -937,6 +937,7 @@ rsync(){
 
 p.notes(){
     echo 'Use the mapfile builtin to read a file into an array'
+    echo 'ESC C-e expands $()'
     echo '${X@P}: The value of X passed through prompt evaluation'
     echo '${X@Q}: Quote the value of X for use as unquoted input'
     echo '${X@a}: Attributes of variable X as printed by declare -p X'
