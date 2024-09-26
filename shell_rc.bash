@@ -1,4 +1,3 @@
-PROMPT_COMMAND=()
 shell_rc.bash.main(){
 
     source $HOME/Repositories/github.com/philippecarphin/bash-powerline/powerline.sh
@@ -104,7 +103,11 @@ configure_history(){
     HISTFILESIZE=-1
     HISTFILE=~/.eternal_bash_history
     HISTIGNORE="rm -rf *"
-    PROMPT_COMMAND+=("history -a")
+    if (( BASH_VERSINFO[0] > 4 )) ; then
+        PROMPT_COMMAND+=("history -a")
+    else
+        PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND ; }history -a"
+    fi
 }
 
 function configure_vim(){
