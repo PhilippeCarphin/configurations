@@ -508,7 +508,7 @@ function p.dusage(){
     #        since the previous expression excluded all files beginning with
     #        '..'
     # . : To give the total for this directory
-    du -sh * .[!.]* ..?* | sort -h | python3 -c "
+    exec du -sh * .[!.]* ..?* | sort -h | python3 -c "
 import sys
 multiplier = { 'K': 10**3, 'M':10**6, 'G': 10**9, 'T':10**12 }
 letters = {0: '', 3:'K', 6:'M', 9:'G', 12:'T'}
