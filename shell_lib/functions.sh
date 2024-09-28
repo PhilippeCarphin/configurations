@@ -619,13 +619,24 @@ function echo-nth-arg(){
     echo "${!n}"
 }
 
+# Linux / Darwin
 man(){
-    (
-        if (( COLUMNS >= 80 )) ; then
-            export MANWIDTH=80
-        fi
-        command man --no-justification "$@"
-    )
+    # Run man with no justification and a maximum width of 80 columns
+
+    local cmd=(command man)
+
+    case $(uname) in
+        Linux) cmd+=(--no-justification) ;;
+        Darwin) ;;
+        *) echo "Unhandled OS in ${FUNCNAME[0]}" ;;
+    esac
+
+    if ((COLUMNS < 80 )) ; then
+        "${cmd[@]}" "$@"
+        return
+    fi
+
+    MANWIDTH=80 "${cmd[@]}" "$@"
 }
 
 
