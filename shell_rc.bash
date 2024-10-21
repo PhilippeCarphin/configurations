@@ -19,7 +19,7 @@ shell_rc.bash.main(){
         printf "\033[1;31mERROR\033[0m: .bashrc:$LINENO STOW_DIR not set"
     fi
     complete -F _gcps_complete_colon_dirs cd
-    complete -F _gcps_complete_colon_paths vim
+    complete -F _complete_vim vim
 
     alias vim='gcps_wrap_command_colon_paths vim'
     alias cd='gcps_wrap_command_colon_paths cd'
@@ -111,7 +111,6 @@ configure_history(){
 }
 
 function configure_vim(){
-    complete -o default -F _gcps_complete_colon_paths vim
     function vim()(
         if [[ "${USER}" == phc001 ]] && [[ $(hostname) != ppp* ]] ; then
             /usr/bin/vim -p "$@"
@@ -146,7 +145,30 @@ function configure_vim(){
         # echo "C_INCLUDE_PATH=${C_INCLUDE_PATH}"
         gcps_wrap_command_colon_paths command vim -p "$@"
     )
+
+    # Little addition for to help creating new fiels with vim.  If normal filename
+    # completion and colon path completion produces no results, then propose
+    # names from a list of files that we commonly want to create.
+    _complete_vim(){
+
+        _gcps_complete_colon_paths
+        compopt -o nospace # TMP
+        local cur=${COMP_WORDS[COMP_CWORD]}
+        if [[ "${COMPREPLY[0]}" != */* ]] ; then
+            COMPREPLY+=($(compgen -W "CMakeLists.txt Makefile README.md README.org" -- "${cur}"))
+            return
+        fi
+
+        local complete_dir=${COMPREPLY[0]%%/*}
+        echo "complete_dir=${complete_dir}" >> ~/.log.txt
+        echo "Adding to compreply" >> ~/.log.txt
+        COMPREPLY+=($(compgen -P "${dir}" -W "CMakeLists.txt Makefile README.md README.org" -- "${cur}"))
+        declare -p COMPREPLY >> ~/.log.txt
+        echo "" >> ~/.log.txt
+    }
+    complete -F _complete_vim vim
 }
+
 
 shell_rc.bash.main ; unset -f $_
 
