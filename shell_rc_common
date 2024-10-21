@@ -24,6 +24,39 @@ alias ppu='ps hax -o user | sort -n | uniq -c | sort -n'
 # Stolen from gil000: Running Processes Per User
 alias rppu='ps haxr -o user | sort -n | uniq -c | sort -n'
 
+################################################################################
+# Base functions used in other places
+################################################################################
+add_to_prompt_command(){
+    local bash_major_version=${BASH_VERSINFO[0]}
+    if (( bash_major_version > 4 )) ; then # WIP Change back to 4
+        #
+        # Turn PROMPT_COMMAND into an array
+        #
+        if ! [[ ${PROMPT_COMMAND@a} == *a* ]] ; then # is an array
+            #
+            # PROMPT_COMMAND may have be 'history -a ; echo 'string containing a ;.' ; echo ";"'
+            # which seems to be basically impossible to correctly split into
+            # 3 commands.  So if PROMPT_COMMAND was not an array, we don't split
+            # its original value into multiple elements of the new array, we
+            # just put the original value as the first element of the new array.
+            #
+            # I have however taken it as a challenge and my tests repo does
+            # have a custom builtin that can do it reliably by calling some of
+            # the internal C functions of the BASH parser.
+            #
+            PROMPT_COMMAND=("${PROMPT_COMMAND}")
+        fi
+        PROMPT_COMMAND+=("$1")
+    else
+        if [[ -z ${PROMPT_COMMAND} ]] ; then
+            PROMPT_COMMAND="$1"
+        else
+            PROMPT_COMMAND="${PROMPT_COMMAND} ; ${1}"
+        fi
+    fi
+}
+
 source-dir(){
     local dir=$1
     local files=($(find -L ${dir} -maxdepth 1 -type f -name '*.bash' -o -name '*.sh'))
