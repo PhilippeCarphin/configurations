@@ -23,7 +23,7 @@
 .cache
 
 # -- Build and install directories for CMake projects
-build*
+build*/
 localinstall*
 install-dir
 compile_commands.json
