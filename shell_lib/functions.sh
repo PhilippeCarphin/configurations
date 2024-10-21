@@ -17,24 +17,30 @@ p.env(){
     # whole sequence.  This needs to be done as the very first thing so that
     # we only do this to ansi sequences that are part of the value of a variable
     # and not to the ansi sequences added by the following substitutions.
-    replace_ansi_with_chars='s/\x1b\(\[[0-9;]*m\)/\x1b[1;37m\\x1b\1\x1b[0m\x1b\1/g'
+    local replace_ansi_with_chars='s/\x1b\(\[[0-9;]*m\)/\x1b[1;37m\\x1b\1\x1b[0m\x1b\1/g'
     # Hide bash function bodies.  Needs to be done before colorizing the variable
     # names otherwise we won't have a match because there will be an ansi sequence
     # between the last '%' and the '='.
-    hide_bash_func_body='s/\(BASH_FUNC_.*%%\)=.*/\1=\x1b[1;38;5;245m{...}\x1b[0m/'
+    local hide_bash_func_body='s/\(BASH_FUNC_.*%%\)=.*/\1=\x1b[1;38;5;245m{...}\x1b[0m/'
     # Colorize variable names.
-    colorize_var_names='s/\([a-zA-Z_%]\+\)=\(.*\)/\x1b[34m\1\x1b[1;36m=\x1b[0m\2/'
+    local colorize_var_names='s/\([a-zA-Z_%]\+\)=\(.*\)/\x1b[34m\1\x1b[1;36m=\x1b[0m\2/'
     # Replace gitlab access token with a string of big dots of the same length
-    hide_gitlab_access_token="s/^GITLAB_ACCESS_TOKEN=.*/GITLAB_ACCESS_TOKEN=$(dots "$GITLAB_ACCESS_TOKEN")/"
-    append_sgr0='s/$/\x1b[0m/'
+    local hide_gitlab_access_token="s/^GITLAB_ACCESS_TOKEN=.*/GITLAB_ACCESS_TOKEN=$(dots "$GITLAB_ACCESS_TOKEN")/"
+    local append_sgr0='s/$/\x1b[0m/'
 
-    env -0 \
-    | sort -z \
-    | sed -z -e "${replace_ansi_with_chars}" -e "${hide_bash_func_body}" \
-             -e "${colorize_var_names}" -e "${hide_gitlab_access_token}" \
-             -e "${append_sgr0}" \
-    | tr '\0' '\n'
-    echo ${PS4@P}
+    if [[ -t 1 ]] ; then
+        env -0 \
+        | sort -z \
+        | sed -z -e "${replace_ansi_with_chars}" -e "${hide_bash_func_body}" \
+                 -e "${colorize_var_names}" -e "${hide_gitlab_access_token}" \
+                 -e "${append_sgr0}" \
+        | tr '\0' '\n'
+    else
+        env -0 \
+        | sort -z \
+        | sed -z -e "${replace_ansi_with_chars}" -e "${hide_bash_func_body}" \
+        | tr '\0' '\n'
+    fi
 }
 
 function gitk(){
