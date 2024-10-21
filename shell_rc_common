@@ -3,7 +3,7 @@
 source ~/.git-prompt.sh
 
 alias n='nnn -dhQex'
-alias ls='ls --color -h'
+alias ls='ls --color=auto -h'
 alias grep='grep -n --color'
 alias tree='tree -C'
 alias rmb='rm -rf ../build/*'
