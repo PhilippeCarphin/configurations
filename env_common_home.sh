@@ -38,6 +38,10 @@ export LC_COLLATE=C
 export LC_ADDRESS=en_CA.UTF-8
 export LC_TIME=en_CA.UTF-8
 
-if [[ "$-" == *i* ]] ; then
-    export TERM=screen-256color
-fi
+# TERM should probably be set by whatever is launching shells, not by
+# a startup file that has no idea what terminal emulator the shell
+# is running in.
+echo "${this_file}: TERM=${TERM}" >&2
+# if [[ "$-" == *i* ]] ; then
+#     export TERM=screen-256color
+# fi
