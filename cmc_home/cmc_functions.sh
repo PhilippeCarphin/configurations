@@ -112,7 +112,7 @@ trace(){
 }
 
 # WORK
-function p.set-web-proxy(){
+p.set-web-proxy(){
     # From ~sbf000/.profile.d/interactive/post
     # except that I he had https_proxy=http://  and HTTPS_PROXY=http://
     # and I did            https_proxy=https:// and HTTPS_PROXY=https://

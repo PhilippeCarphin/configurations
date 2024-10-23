@@ -26,7 +26,7 @@ PROMPT_COMMAND=my_git_ps1
 # Uses the 3 argument form which results in PS1=$1$(printf -- $3 $gitstring)$2
 # Note only the 2 and 3 argument forms set PS1.
 ################################################################################
-function my_git_ps1(){
+my_git_ps1(){
     # save exit code of previous command to use in prompt
     previous_exit_code=$?
 
@@ -81,7 +81,7 @@ function my_git_ps1(){
 # Output white on green 'SM' if we are inside a repo that is a submodule of
 # a super-repo.
 ################################################################################
-function is_git_submodule(){
+is_git_submodule(){
     submod=$(git rev-parse --show-superproject-working-tree 2>/dev/null || true) # '|| true' is to prevent making the code exit if 'errexit' is on.
     if [[ "${submod}" != "" ]] ; then
         echo "\[\033[1;42m\]SM\[\033[0m\]"
@@ -101,7 +101,7 @@ function is_git_submodule(){
 # to
 #    my-git-repo/a/b/c
 ################################################################################
-function git_pwd() {
+git_pwd() {
     if [[ $(git rev-parse --is-inside-work-tree 2>/dev/null) == true ]] ; then
         local repo_dir=$(git rev-parse --show-toplevel 2>/dev/null)
         local outer=$(basename $repo_dir)
@@ -116,7 +116,7 @@ function git_pwd() {
 # Print an exit code supplied as an argument.
 # Zero is printed in bold green, anything else is printed in bold red
 ################################################################################
-function __ps1_format_exit_code(){
+__ps1_format_exit_code(){
 	local previous_exit_code=$1
 	if [[ $previous_exit_code == 0 ]] ; then
 		color="\[\033[1;32m\]"
