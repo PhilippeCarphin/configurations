@@ -4,22 +4,24 @@
 
 [alias]
     st = status
-    discard = restore -p
-    ds = diff --stat
+    sts = -c status.submoduleSummary=false status
     dss = "!f(){ printf '+   -   FILE\n' ; git diff --numstat ; } ; f"
-    logl   = log --oneline --graph
-    loglu  = log --oneline --graph                  HEAD HEAD@{u}
+    remote-head = "!f(){ for r in $(git remote) ; do git remote set-head --auto $r ; done ; } ; f"
+    # Show the sha of the submodule commit registered to the currently checked out super-project commit
+    submodule-sha = "!f(){ : git rev-parse ; submod=$1; shift ; git rev-parse :${submod} \"$@\" ; } ; f"
+    # Show log entry of the submodule commit registered to the currently checked out super-project commit
+    submodule-commit = "!f(){ : git rev-parse ; cd -- \"${GIT_PREFIX}\" ; submod=$1; shift ; sha=$(git rev-parse :${submod}) ; env -C ${submod} git log --format=logd -n 1 ${sha} ; } ; f"
+    submodule-self-sha = "!f(){ super=$(git rev-parse --show-superproject-working-tree) ; if [[ -z ${super} ]] ; then return 1 ; fi ; submod=${PWD##${super}/} ; env GIT_DIR=${super}/.git  git rev-parse :${submod} ; } ; f"
+    # Show the log entry of the commit of the current repo registered to the currently checked out commit of its super-project
+    submodule-self-commit = "!f(){ super=$(git rev-parse --show-superproject-working-tree) ; if [[ -z ${super} ]] ; then return 1 ; fi ; submod=${PWD##${super}/} ; sha=$(env GIT_DIR=${super}/.git  git rev-parse :${submod}) ; git log --format=logd -n 1 ${sha} ; } ; f"
+    # Git status of the current repo from the point of view of the super-project
+    submodule-self-status = "!f(){ super=$(git rev-parse --show-superproject-working-tree) ; if [[ -z ${super} ]] ; then return 1 ; fi ; submod=${PWD##${super}/} ; sha=$(env GIT_DIR=${super}/.git  git rev-parse :${submod}) ; env -C ${super} GIT_DIR=${super}/.git git -c status.submoduleSummary=true status ${submod} ; } ; f"
     logd   = log --oneline --graph --format=logd
+    logdw  = log --oneline --graph --format=logdw
     logdu  = log --oneline --graph --format=std     HEAD HEAD@{u}
-    logd2  = log --oneline --graph --format=std2
-    logd3  = log --oneline --graph --format=std3
-    logdw  = log --oneline --graph --format=stdwide
-    logdn  = log --oneline --graph --format=stdnarrow
 
-    # For Philippe Blain's log-series, also requires format ol in [pretty] section
 	logo = log --abbrev-commit --decorate --format=ol
 	logu = logo @{upstream}..
-    # log-series = ! git tag UPSTREAM @{u} && git logu --format=\"- [PATCH %(describe:tags=true,match=UPSTREAM)/$(git rev-list @{u}.. | wc -l)] %s  \" --reverse  | sed -e \"s/UPSTREAM-//\" -e \"s|-g[a-f0-9]\\+/|/|\" && git tag -d UPSTREAM > /dev/null
 	log-series = ! git tag UPSTREAM @{u} && git logu --topo-order --format=\"- [PATCH %(describe:tags=true,match=UPSTREAM)/$(git rev-list @{u}.. | wc -l)] %s  \" --reverse  | sed -e \"s/UPSTREAM-//\" -e \"s|-g[a-f0-9]\\+/|/|\" && git tag -d UPSTREAM > /dev/null
 
     grepr = grep --recurse-submodules
@@ -114,10 +116,7 @@
 
 [pretty]
     logd = %C(yellow)%h%C(reset)%C(auto)%d%C(reset) %C(bold white)%<|(90,trunc)%s %<(17)%C(cyan)%ad%Creset %C(blue)%an%C(reset)
-    std2 = %C(yellow)%h%C(reset)%C(auto)%C(reset) %C(bold white)%<|(90,trunc)%s %<(17)%C(cyan)%ad%Creset %C(blue)%<(17,trunc)%an%C(auto)%d
-    std3 = %C(auto)%d%C(reset) %C(bold white)%<|(90,trunc)%s %<(17)%C(cyan)%ad%Creset %C(blue)%an%C(reset)
-    stdnarrow = %C(auto)%d%C(reset) %C(bold white)%<|(70,trunc)%s %<(17)%C(cyan)%ad%Creset %C(blue)%an%C(reset)
-    stdwide = %C(yellow)%h%C(reset)%C(auto)%d%C(reset) %C(bold white)%<|(140,trunc)%s %<(17)%C(cyan)%ad%Creset %C(blue)%an%C(reset)
+    logdw = %C(yellow)%h%C(reset)%C(auto)%d%C(reset) %C(bold white)%<|(140,trunc)%s %<(17)%C(cyan)%ad%Creset %C(blue)%an%C(reset)
 	# similar to '--oneline' but with additional information (author, author date, (notes truncated at 2 chars) )
 	ol = %C(yellow)%h%C(reset) %C(normal)%s%C(reset) %C(dim white)%an%C(reset) %C(dim blue)(%ad)%C(reset) %C(auto)%d%C(reset)
 
@@ -127,7 +126,10 @@
 [submodule]
     # recurse = true
 [push]
-    recurseSubmodules = on-demand
+    default = current
+    recurseSubmodules = check
+[remote]
+	pushDefault = origin
 
 [safe]
     directory = *
