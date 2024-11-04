@@ -37,7 +37,7 @@ make(){
         # echo "subst = '$subst'"
         (
             set -o pipefail
-            CLICOLOR_FORCE=yes_please command make --no-print-directory "$@" 2>&1 | sed --unbuffered "${subst}"
+            CLICOLOR_FORCE=yes_please command make --no-print-directory VERBOSE= "$@" 2>&1 | sed --unbuffered "${subst}"
         )
     fi
 }

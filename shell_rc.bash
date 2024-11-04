@@ -1,3 +1,5 @@
+#!/bin/bash
+
 shell_rc.bash.main(){
 
     source $HOME/Repositories/github.com/philippecarphin/bash-powerline/powerline.sh
@@ -10,6 +12,7 @@ shell_rc.bash.main(){
             source $HOME/.philconfig/shell_lib/get_make_targets.sh
             source $HOME/Repositories/github.com/philippecarphin/env-diff/env-diff-cmd.bash
             shopt -s direxpand # Merci Philippe Blain :D
+            shopt -s checkhash # Perform PATH search if command from hash table is not found
             ;;
         *) printf "${BASH_SOURCE[0]}: \033[1;33mWARNING\033[0m: bash ${BASH_VERSION}\n" ;;
     esac
@@ -152,19 +155,11 @@ function configure_vim(){
     _complete_vim(){
 
         _gcps_complete_colon_paths
-        compopt -o nospace # TMP
         local cur=${COMP_WORDS[COMP_CWORD]}
-        if [[ "${COMPREPLY[0]}" != */* ]] ; then
+        if (( ${#COMPREPLY[0]} == 0 )) ; then
             COMPREPLY+=($(compgen -W "CMakeLists.txt Makefile README.md README.org" -- "${cur}"))
             return
         fi
-
-        local complete_dir=${COMPREPLY[0]%%/*}
-        echo "complete_dir=${complete_dir}" >> ~/.log.txt
-        echo "Adding to compreply" >> ~/.log.txt
-        COMPREPLY+=($(compgen -P "${dir}" -W "CMakeLists.txt Makefile README.md README.org" -- "${cur}"))
-        declare -p COMPREPLY >> ~/.log.txt
-        echo "" >> ~/.log.txt
     }
     complete -F _complete_vim vim
 }

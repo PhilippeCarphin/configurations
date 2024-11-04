@@ -20,7 +20,8 @@ p.env(){
     local replace_ansi_with_chars='s/\x1b\(\[[0-9;]*m\)/\x1b[1;37m\\x1b\1\x1b[0m\x1b\1/g'
     # Hide bash function bodies.  Needs to be done before colorizing the variable
     # names otherwise we won't have a match because there will be an ansi sequence
-    # between the last '%' and the '='.
+    # between the last '%' and the '='.  Note that we are using -z mode with
+    # sed so this will match multiple lines.
     local hide_bash_func_body='s/\(BASH_FUNC_.*%%\)=.*/\1=\x1b[1;38;5;245m{...}\x1b[0m/'
     # Colorize variable names.
     local colorize_var_names='s/\([a-zA-Z_%]\+\)=\(.*\)/\x1b[34m\1\x1b[1;36m=\x1b[0m\2/'
