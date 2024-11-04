@@ -199,24 +199,6 @@ p.get-cursor(){
     echo ${CURPOS#*[}
 }
 
-p.print_ps1(){
-    # In "", \ is used to escape, if we want our string to contain
-    # an actual backslash, we need to put \\.  Sed also interprets \
-    # so to match an actual \, sed needs to receive two backslashes
-    # The string needs to contain two backslashes, and to create this
-    # string, we need to put four backslashes in our text file.
-    bs="\\\\" # Create a string that contains two backslashes
-    ob="\["   # \[ which sed will interpret as the character '['
-    cb="\]"   # \] which sed will interpret as the character ']'
-    subst="s/${bs}${ob}\|${bs}${cb}//g; "
-    subst+="s/${bs}h/${HOSTNAME}/;"
-    subst+="s/${bs}u/${USER}/"
-    printf "$(echo "$PS1" | sed "${subst}")"
-    if ! [[ "${1}" = -n ]] ; then
-        printf "\n"
-    fi
-}
-
 p.cmake_asm(){
     cat <<- EOF
 		If <source_dir>/<d>/CMakeLists.txt creates a target with the
