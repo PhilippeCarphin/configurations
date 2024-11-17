@@ -1,0 +1,172 @@
+#!/bin/bash
+
+#
+# Output BASH code to transmit a base environment
+# for use in things like TMUX default command:
+#
+#   set -g default-command 'eval env -i $(vars) bash -l'
+#
+# or in other contexts.
+#
+# Note, there must not be quotes around "$(vars)" because
+#
+# Conditional logic is required for variables that
+# may not exist in the original environment. For
+# example, XAUTHORITY.  If the variable exists and
+# has empty value, this is different from the
+# variable not existing at all.
+
+function transmit_var(){
+    local varname=${1}
+    # Note: -v not available in BASH 3
+    if ! [[ -v ${varname} ]] ; then
+        return
+    fi
+    # https://superuser.com/a/1354441/914017 (where I found out about ${_@a})
+    if ! [[ ${!varname@a} == *x* ]] ; then
+        return
+    fi
+    # Note, if the value contains single quotes we need to deal with them
+    # however we cannot escape single quote characters inside a single quoted
+    # string like we can with double quotes ("asdf\"\"xyz").
+    #
+    #       asdf''xyz
+    #
+    # gets quoted to
+    #
+    #       'asdf'\'''\''xyz'
+    #       o....cqqocqqo...c
+    #
+    # where `o` is an opening single quote, `qq` is an actual single quote
+    # character and `c` is a closing single quote.
+    # echo "${varname}='${!varname//\'/\'\\\'\'}'"
+
+    # BASH already has us covered starting at bash 4.something
+    # printf "${varname}=${!varname@Q} "
+    printf "${varname}=${!varname@Q} "
+}
+
+function main(){
+    declare -a varlist2=(
+        DISPLAY
+        XAUTHORITY
+        HOME
+        LANG
+        LC_TERMINAL
+        LC_TERMINAL_VERSION
+        LOGNAME
+        MAIL
+        PBS_JOBID
+        SHELL
+        SSH_CLIENT
+        SSH_CONNECTION
+        TERM
+        TMUX
+        USER
+    )
+    declare -a varlist=(
+        BUCKET
+        PWD
+        COLORFGBG
+        COLORTERM
+        DBUS_SESSION_BUS_ADDRESS
+        DESKTOP_SESSION
+        DISPLAY
+        ENV
+        GS_LIB
+        GTK2_RC_FILES
+        GTK_RC_FILES
+        HOME
+        IM_CONFIG_PHASE
+        KDE_FULL_SESSION
+        KDE_SESSION_UID
+        KDE_SESSION_VERSION
+        KONSOLE_DBUS_SERVICE
+        KONSOLE_DBUS_SESSION
+        KONSOLE_DBUS_WINDOW
+        KONSOLE_PROFILE_NAME
+        LANG
+        LANGUAGE
+        LC_TERMINAL
+        LC_TERMINAL_VERSION
+        # LD_LIBRARY_PATH
+        LOGNAME
+        MAIL
+        MODULEPATH
+        MODULEPATH_modshare
+        MODULES_CMD
+        MODULESHOME
+        # PATH Causes weird stuff
+        PBS_ENVIRONMENT
+        PBS_JOBCOOKIE
+        PBS_JOBDIR
+        PBS_JOBID
+        PBS_JOBNAME
+        PBS_MOMPORT
+        PBS_NODEFILE
+        PBS_NODENUM
+        PBS_O_HOME
+        PBS_O_HOST
+        PBS_O_LANG
+        PBS_O_LOGNAME
+        PBS_O_MAIL
+        PBS_O_PATH
+        PBS_O_QUEUE
+        PBS_O_SHELL
+        PBS_O_SYSTEM
+        PBS_O_TZ
+        PBS_O_WORKDIR
+        PBS_QUEUE
+        PBS_TASKNUM
+        PBSTMPFSDIR
+        PCSCTUN_COOKIE
+        PCSCTUN_SERVER
+        PROFILEHOME
+        PULSE_COOKIE
+        PULSE_RUNTIME_PATH
+        PULSE_SERVER
+        QT_AUTO_SCREEN_SCALE_FACTOR
+        S_COLORS
+        SESSION_MANAGER
+        SHELL_SESSION_ID
+        SHLVL
+        SSH_CLIENT
+        SSH_CONNECTION
+        SSH_TTY
+        TERM
+        TEXTDOMAIN
+        TEXTDOMAINDIR
+        TLPREFIX
+        TLPROFILE
+        TLSESSIONDATA
+        TMUX
+        USER
+        USERNAME
+        VSCODE_GIT_ASKPASS_EXTRA_ARGS
+        VSCODE_GIT_ASKPASS_NODE
+        VSCODE_IPC_HOOK_CLI
+        VSCODE_GIT_ASKPASS_MAIN
+        VSCODE_GIT_IPC_HANDLE
+        WINDOWID
+        XAUTHORITY
+        XCURSOR_THEME
+        XDG_CURRENT_DESKTOP
+        # XDG_DATA_DIRS # is set during profile load
+        # XDG_RUNTIME_DIR # is set during profile load
+        XDG_SESSION_CLASS
+        XDG_SESSION_DESKTOP
+        XDG_SESSION_ID
+        XDG_SESSION_TYPE
+    )
+    for varname in "${varlist[@]}" ; do
+        transmit_var ${varname}
+    done
+    # We don't normally transmit PATH because it gets set from scratch
+    # during startup for a login shell.  But if we are in vscode integrated
+    # shell we do want to have the `code` command that it injected available
+    if [[ -v VSCODE_GIT_ASKPASS_NODE ]] ; then
+        echo "PATH=${VSCODE_GIT_ASKPASS_NODE%%/node}/bin/remote-cli:/usr/local/bin:/usr/bin"
+    fi
+}
+
+main "$@"

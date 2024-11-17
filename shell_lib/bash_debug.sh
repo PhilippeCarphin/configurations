@@ -21,7 +21,11 @@
 # - Stores it in a variable
 # - Doesn't have that weird expansior interaction that requires an eval.
 
-export PS4='+ \033[35m${BASH_SOURCE[0]}\033[36m:\033[1;37m${FUNCNAME[0]}\033[22;36m:\033[32m${LINENO}\033[0m '
+# Note: ${FUNCNAME:+${FUNCNAME[0]}} is so that we only attempt to dereference
+# FUNCNAME if it is set.  This way we can use this PS4 in scripts that have
+# `set -o nounset`
+
+export PS4='+ \033[35m${BASH_SOURCE[0]}\033[36m:\033[1;37m${FUNCNAME:+${FUNCNAME[0]}}\033[22;36m:\033[32m${LINENO}\033[0m '
 
 function debug(){
     case $1 in -h|--help)
@@ -56,15 +60,16 @@ function undebug(){
 }
 
 ps4(){
+    local funcname='${FUNCNAME:+${FUNCNAME[0]}}'
     case "$1" in
-        full) export PS4='+ \033[35m${BASH_SOURCE[0]}\033[36m:\033[1;37m${FUNCNAME[0]}\033[22;36m:\033[32m${LINENO}\033[0m ' ;;
-        short) export PS4='+ \033[35m${BASH_SOURCE[0]##*/}\033[36m:\033[1;37m${FUNCNAME[0]}\033[22;36m:\033[32m${LINENO}\033[0m ' ;;
-        no-color) export PS4='+ ${BASH_SOURCE[0]}:${FUNCNAME[0]}:${LINENO} -- ' ;;
-        short-no-color) export PS4='+ ${BASH_SOURCE[0]##*/}:${FUNCNAME[0]}:${LINENO} -- ' ;;
+        full) export PS4='+ \033[35m${BASH_SOURCE[0]}\033[36m:\033[1;37m'${funcname}'\033[22;36m:\033[32m${LINENO}\033[0m ' ;;
+        short) export PS4='+ \033[35m${BASH_SOURCE[0]##*/}\033[36m:\033[1;37m'${funcname}'\033[22;36m:\033[32m${LINENO}\033[0m ' ;;
+        no-color) export PS4='+ ${BASH_SOURCE[0]}:'${funcname}':${LINENO} -- ' ;;
+        short-no-color) export PS4='+ ${BASH_SOURCE[0]##*/}:'${funcname}':${LINENO} -- ' ;;
     esac
 }
 _ps4(){
-    COMPREPLY=( $(compgen -W "full short no-color short-no-color" -- ${COMP_WORDS[COMP_CWORD]}) )
+    COMPREPLY=( $(compgen -W "full short no-color short-no-color" -- "${COMP_WORDS[COMP_CWORD]}") )
 }
-complete -F ps4 _ps4
+complete -F _ps4 ps4
 

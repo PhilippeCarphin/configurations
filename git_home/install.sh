@@ -24,5 +24,7 @@ ln -sfv ../../${this_dir_rel}/dot-config/git/ignore ~/.config/git/ignore
 ln -sfv ../../${this_dir_rel}/dot-config/git/attributes ~/.config/git/ignore
 
 git submodule update --init --recursive
-ln -s ../../.philconfig/git_home/diff-so-fancy ~/fs1/Cellar/diff-so-fancy
+if ! [[ -L ~/fs1/Cellar/diff-so-fancy ]] ; then
+    ln -s ../../.philconfig/git_home/diff-so-fancy ~/fs1/Cellar/diff-so-fancy
+fi
 quickstow -R diff-so-fancy

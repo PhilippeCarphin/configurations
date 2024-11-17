@@ -18,10 +18,18 @@ env_specific_home(){
     export PATH=$HOME/tools/go/bin:$PATH
     export PATH=$HOME/bin:$PATH
 
-    local p=http://webproxy.science.gc.ca:8888/
-    export http_proxy=${p}
-    export https_proxy=${p}
-    export HTTP_PROXY=${p}
-    export HTTPS_PROXY=${p}
+    local p
+    host=$(hostname -f)
+    case ${host} in
+        *.collab.science.gc.ca) p=http://webproxy.collab.science.gc.ca:8888/ ;;
+        *.science.gc.ca) p=http://webproxy.science.gc.ca:8888/ ;;
+        *) : ;;
+    esac
+    if [[ -n ${p} ]] ; then
+        export http_proxy=${p}
+        export https_proxy=${p}
+        export HTTP_PROXY=${p}
+        export HTTPS_PROXY=${p}
+    fi
 }
 env_specific_home ; unset $_

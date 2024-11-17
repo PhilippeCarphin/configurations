@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # TODO: This line is in two places
-export PS4='+ \033[35m${BASH_SOURCE[0]}\033[36m:\033[1;37m${FUNCNAME[0]}\033[22;36m:\033[32m${LINENO}\033[0m -- '
+export PS4='+ \033[35m${BASH_SOURCE[0]}\033[36m:\033[1;37m${FUNCNAME:+${FUNCNAME[0]}}\033[22;36m:\033[32m${LINENO}\033[0m -- '
 export BASH_SILENCE_DEPRECATION_WARNING=1
 echo "SOUCING BASH_PROFILE" >&2
 if [[ "$TERM" == dumb ]] ; then
