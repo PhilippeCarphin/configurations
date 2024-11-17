@@ -15,8 +15,14 @@ case $USER in
 esac
 
 ln -sfv ${this_dir_rel}/dot-gitconfig ~/.gitconfig
+wget https://raw.githubusercontent.com/git/git/refs/heads/master/contrib/completion/git-prompt.sh -O ~/.git-prompt.sh
+
+wget https://raw.githubusercontent.com/git/git/refs/heads/master/contrib/completion/git-completion.bash -O ~/.git-completion.bash
 
 mkdir -p ~/.config/git
 ln -sfv ../../${this_dir_rel}/dot-config/git/ignore ~/.config/git/ignore
 ln -sfv ../../${this_dir_rel}/dot-config/git/attributes ~/.config/git/ignore
 
+git submodule update --init --recursive
+ln -s ../../.philconfig/git_home/diff-so-fancy ~/fs1/Cellar/diff-so-fancy
+quickstow -R diff-so-fancy

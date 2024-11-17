@@ -1,0 +1,234 @@
+#!/bin/bash
+
+# This script is my personal wrapper for git.  It is certainly not meant to
+# encapsulate git operations but to disable certain git operations or augment
+# others.
+#
+# - Disable the use of '-m' in 'git commit' because I want to use the editor
+#   instead.  The habit was too ingrained so I wrote this script to help break
+#   it.
+# - Disable the use of 'git pull' since you should never do 'git pull'
+# - Disable the use of 'git reset --hard' since I should always use
+#   'git reset --keep' to ensure I never lose uncommitted changes and
+#   'git stash' followed not-immediately by 'git stash drop' is a safer way
+#   to get rid of uncommitted changes.
+# - Augment 'git clean' by creating an archive of the files to be deleted
+#   before really deleting them.
+
+if [[ -f ~/.phil_deactivate_git_rules ]] ; then
+    command git "$@"
+    exit
+fi
+
+################################################################################
+# Check if a long argument is used
+# NOTE: -n is important for getopt otherwise it will use the first element of
+# $@ as the name of the program for which options are being parsed
+# NOTE: -o "" is important because without it,
+#     1.  getopt optstring parameters
+#     2.  getopt [options] [--] optstring parameters
+#     3.  getopt [options] -o|--options optstring [options] [--] parameters
+# the 1 or 2 interfaces get used which means getopt will eat one of the
+# arguments as the optstring.
+################################################################################
+function has_arg(){
+    # echo "@=$@" >&2
+    local arg=$1; shift
+    local normalized_args=($(getopt -n "" --longoptions ${arg#--} -o "" -- "$@" 2>/dev/null || true))
+    # echo "normalized_args=${normalized_args[@]}" >&2
+    # echo "@=$@" >&2
+    for a in "${normalized_args[@]}" ; do
+        # echo "MATCH: a='$a', arg='${arg}'" >&2
+        if [[ "${a}" == "${arg}" ]] ; then
+            return 0
+        fi
+    done
+    return 1
+}
+
+################################################################################
+# Check if a short argument is used.
+# NOTE: getopt *-n ""*, this is important because otherwise, the first of
+# the arguments is used as the program name.
+# NOTE: For short args, the spec must be provided otherwise, 
+# or an optional argument, the argument could be mistaken for an option.  For
+# example, the command 'git commit' has the short option '-c' that takes an
+# argument.  Then without the spec getopt -n "" -o m -- commit -cm would output
+# -m -- 'commit' # with 'unrecognized option "-c"' on STDERR.
+# NOTE: I think the full arg_spec of the command is not necessary.  Just the one
+# for the argument we want to check for.
+################################################################################
+function has_short_arg(){
+    local arg=$1 ; shift
+    local short_arg_spec=$1 ; shift
+    # echo "short_arg_spec=${short_arg_spec}" >&2
+    eval local normalized_args=($(getopt -n "" -o ${short_arg_spec} -- "$@" 2>/dev/null || true))
+    # eval local normalized_args=($(getopt -n "" -o ${arg#-} -- "$@" 2>/dev/null || true))
+    # echo "normalized_args=${normalized_args[@]}" >&2
+    local retval=1
+    for a in "${normalized_args[@]}" ; do
+        # echo "a='${a}'"
+        if [[ "${a}" == ${arg} ]] ; then
+            retval=0
+        fi
+    done
+    return ${retval}
+}
+
+################################################################################
+# Succeed if repository is clean
+################################################################################
+function repo_is_clean(){
+    git diff --no-ext-diff --quiet 2>/dev/null \
+    && git diff --no-ext-diff --staged --quiet 2>/dev/null
+}
+
+################################################################################
+# Do the game of thrones shame thing
+################################################################################
+game_of_thrones_shame(){
+    # trap 'reasons-commit' SIGINT
+    trap 'stty echo' EXIT
+    stty -echo
+    echo "The penalty for violating this rule is the Game of Thrones 'shame' thing"
+    trap 'echo "sorry, you gotta wait through the whole thing"' SIGINT
+    for((n=0;n<5;n++)); do
+        echo -n $'ding\a'
+        sleep 0.5
+        echo -n $' ding\a'
+        sleep 0.5
+        echo ""
+        sleep 1
+        echo -n "          shame!"
+        sleep 0.5
+        echo ""
+        sleep 0.5
+    done
+    echo "y'know, like they did to Cercei Lannister"
+    stty echo
+}
+
+################################################################################
+# Uninterruptible 5 second sleep
+################################################################################
+bold=0
+function five_second_uninterruptible_sleep(){
+    trap 'stty echo' EXIT
+    trap 'bold=$(( (bold+1) % 2)); if [[ ${bold} == 1 ]] ; then c="\033[1m" ; else c="\033[0m" ; fi ; printf "    ${c}sorry, the more you struggle, the longer you wait: setting counter back to 0\033[0m"; n=0' SIGINT
+    stty -echo
+    for((n=0;n<=5;n++)); do
+        printf "\r${n}"
+        sleep 1
+    done
+    echo ""
+    stty echo
+}
+
+################################################################################
+# Obtain the git command
+################################################################################
+# Copied straight from git-completion.bash to determine the git command
+# with minor adaptations.
+git_args=()
+declare i c=1 git_command
+while [ $c -le ${#} ]; do
+    i=${!c}
+    case "$i" in
+    --git-dir=*)  ;;
+    --git-dir) git_args+=(${!c}) ; ((c++)) ;;
+    --bare) ;;
+    --help) git_command="help"; break ;;
+    -c|--work-tree|--namespace) git_args+=(${!c}) ; ((c++)) ;;
+    -C) ((c++)) ;;
+    -*) ;;
+    *) git_command="$i"; break ;;
+    esac
+    git_args+=(${!c})
+    ((c++))
+done
+
+((c++))
+while [ $c -le $# ] ; do
+    args_after_command+=(${!c})
+    ((c++))
+done
+
+# echo "git_command=${git_command}"
+# echo "git_args=${git_args[@]}"
+# echo "args_after_command=${args_after_command[@]}"
+
+
+################################################################################
+# Disable the use of 'git commit -m'
+# NOTE: --message can also be used for commit message but I've never done that
+# in my life so there is no need to prevent it.
+################################################################################
+commit_short_arg_spec=apc:C:zF:m:t:sneiou::vqS:: # From man page of git 2.39
+if [[ ${git_command} == commit ]] ; then
+    if has_short_arg "-m" ${commit_short_arg_spec} "${args_after_command[@]}" ; then
+        echo "I want to break the habit of doing commits on the command line"
+        if [[ -n ${GIT_RULES_FUNNY} ]] ; then
+            game_of_thrones_shame
+        else
+            five_second_uninterruptible_sleep
+        fi
+        exit 1
+    fi
+fi
+
+################################################################################
+# Disable the use of 'git pull' even though I've never used that command
+# since 2016
+################################################################################
+if [[ ${git_command} == pull ]] ; then
+    echo "The Rule of Philippe Carphin says to never pull (and always"
+    echo "use 'git fetch', look at what got fetched, then 'git merge' or"
+    echo "something else). "
+    if [[ -n ${GIT_RULES_FUNNY} ]] ; then
+        game_of_thrones_shame
+    else
+        five_second_uninterruptible_sleep
+    fi
+    exit 1
+fi
+
+################################################################################
+# Disable the use of git reset --hard when there are any uncommited changes
+################################################################################
+if [[ ${git_command} == reset ]] ; then
+    if has_arg --hard "${args_after_command[@]}" && ! repo_is_clean ; then
+        echo "Never use git reset --hard, always use git reset --keep. If you want"
+        echo "to get rid of uncommitted changes, use 'git stash', take a breath,"
+        echo "then when you know you didn't mess up, use git stash drop."
+        if [[ -n ${GIT_RULES_FUNNY} ]] ; then
+            game_of_thrones_shame
+        else
+            five_second_uninterruptible_sleep
+        fi
+        exit 1
+    fi
+fi
+
+
+################################################################################
+# Adapt git clean: when 'git clean ...' is used intercept it and do the same
+# command with the '-n' flag to output the list of what would get removed and
+# create an archive with those files, and then delete the files for real.
+# Do not intercept if -n or --dry-run flags are used in the original command.
+################################################################################
+clean_short_arg_spec=dfinqe:xX # From manpage of git 2.39
+if [[ ${git_command} == clean ]] ; then
+    if ! has_short_arg "-n" ${clean_short_arg_spec} "${args_after_command[@]}" && ! has_arg "--dry-run" "${args_after_command[@]}" ; then
+        echo "Use git-save-clean instead"
+        exit 1
+    fi
+    # If it does have the dryrun flag, then we just let the command through
+fi
+
+if ! (return 0 2>/dev/null) ; then
+    if [[ -v __shell_grayscale ]] ; then
+        command git -c color.ui=false "$@"
+    else
+        command git "$@"
+    fi
+fi

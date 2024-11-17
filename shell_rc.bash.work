@@ -1,7 +1,7 @@
 #!/bin/bash
 
 [ -d $HOME/.bash_completion.d ] && source-dir "$HOME/.bash_completion.d"
-source ~phb001/.git-completion.bash
+source ~/.git-completion.bash
 source ~/.philconfig/cmc_home/cmc_functions.sh
 
 glcurl-project-job(){
