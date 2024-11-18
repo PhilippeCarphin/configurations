@@ -286,12 +286,15 @@ glcurl(){
     # Keep unevaluated for printing then evaluate
     local header='PRIVATE-TOKEN: $(<~/.ssh/gitlab-access-token)'
     local url="https://gitlab.science.gc.ca/api/v4${1}"
-printf 'curl --header "%s" %s\n' "${header}" "${url}" >&2
+    printf 'curl --header "%s" %s\n' "${header}" "${url}" >&2
     curl --header "$(eval echo ${header})" ${url}
 }
 
 glccurl(){
-    curl --header "PRIVATE-TOKEN: $(cat ~/.ssh/gitlab-com-access-token)" https://gitlab.com/api/v4$1
+    local header='PRIVATE-TOKEN: $(<~/.ssh/gitlab-com-access-token)'
+    local url="https://gitlab.com/api/v4${1}" ; shift
+    printf 'curl "$@" --header "%s" %s\n' "${header}" "${url}" >&2
+    curl "$@" --header "$(eval echo ${header})" ${url}
 }
 
 ################################################################################

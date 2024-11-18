@@ -152,13 +152,15 @@ function configure_vim(){
     # Little addition for to help creating new fiels with vim.  If normal filename
     # completion and colon path completion produces no results, then propose
     # names from a list of files that we commonly want to create.
+    # Add extra files if current directory is empty and cur does not contain '/'
     _complete_vim(){
-
         _gcps_complete_colon_paths
         local cur=${COMP_WORDS[COMP_CWORD]}
-        if (( ${#COMPREPLY[0]} == 0 )) ; then
-            COMPREPLY+=($(compgen -W "CMakeLists.txt Makefile README.md README.org" -- "${cur}"))
-            return
+        if (( ${#COMPREPLY[0]} == 0 )) && [[ ${cur} != */* ]] ; then
+            local c=$(find $PWD -mindepth 1 -maxdepth 1 -printf .)
+            if (( ${#c} == 0 )) ; then
+                COMPREPLY+=($(compgen -W "CMakeLists.txt Makefile README.md README.org" -- "${cur}"))
+            fi
         fi
     }
     complete -F _complete_vim vim

@@ -3,14 +3,17 @@
     # email set in specific files at the end
 
 [alias]
-    st = status
+    st = "!f(){ : git status ; git -C \"${GIT_PREFIX}\" -c color.ui=always status \"$@\" | python3 -u ~/.philconfig/git_home/status-filter.py ; } ; f"
     sts = -c status.submoduleSummary=false status
     dss = "!f(){ printf '+   -   FILE\n' ; git diff --numstat ; } ; f"
+    # Additionnal remotes do not have <remote>/HEAD by default.  This config alias
+    # makes it so that fetches also get <remote>/HEAD
     remote-head = "!f(){ for r in $(git remote) ; do git remote set-head --auto $r ; done ; } ; f"
     # Show the sha of the submodule commit registered to the currently checked out super-project commit
     submodule-sha = "!f(){ : git rev-parse ; submod=$1; shift ; git rev-parse :${submod} \"$@\" ; } ; f"
     # Show log entry of the submodule commit registered to the currently checked out super-project commit
     submodule-commit = "!f(){ : git rev-parse ; cd -- \"${GIT_PREFIX}\" ; submod=$1; shift ; sha=$(git rev-parse :${submod}) ; env -C ${submod} git log --format=logd -n 1 ${sha} ; } ; f"
+    # submodule-self-* are for use inside a submodule to show what commit of this submodule is registered to the currently checked out commit of the superproject
     submodule-self-sha = "!f(){ super=$(git rev-parse --show-superproject-working-tree) ; if [[ -z ${super} ]] ; then return 1 ; fi ; submod=${PWD##${super}/} ; env GIT_DIR=${super}/.git  git rev-parse :${submod} ; } ; f"
     # Show the log entry of the commit of the current repo registered to the currently checked out commit of its super-project
     submodule-self-commit = "!f(){ super=$(git rev-parse --show-superproject-working-tree) ; if [[ -z ${super} ]] ; then return 1 ; fi ; submod=${PWD##${super}/} ; sha=$(env GIT_DIR=${super}/.git  git rev-parse :${submod}) ; git log --format=logd -n 1 ${sha} ; } ; f"

@@ -62,14 +62,20 @@ function undebug(){
 ps4(){
     local funcname='${FUNCNAME:+${FUNCNAME[0]}}'
     case "$1" in
-        full) export PS4='+ \033[35m${BASH_SOURCE[0]}\033[36m:\033[1;37m'${funcname}'\033[22;36m:\033[32m${LINENO}\033[0m ' ;;
-        short) export PS4='+ \033[35m${BASH_SOURCE[0]##*/}\033[36m:\033[1;37m'${funcname}'\033[22;36m:\033[32m${LINENO}\033[0m ' ;;
-        no-color) export PS4='+ ${BASH_SOURCE[0]}:'${funcname}':${LINENO} -- ' ;;
-        short-no-color) export PS4='+ ${BASH_SOURCE[0]##*/}:'${funcname}':${LINENO} -- ' ;;
+        full) PS4='+ \033[35m${BASH_SOURCE[0]}\033[36m:\033[1;37m'${funcname}'\033[22;36m:\033[32m${LINENO}\033[0m ' ;;
+        short) PS4='+ \033[35m${BASH_SOURCE[0]##*/}\033[36m:\033[1;37m'${funcname}'\033[22;36m:\033[32m${LINENO}\033[0m ' ;;
+        no-color) PS4='+ ${BASH_SOURCE[0]}:'${funcname}':${LINENO} -- ' ;;
+        short-no-color) PS4='+ ${BASH_SOURCE[0]##*/}:'${funcname}':${LINENO} -- ' ;;
+        time) if [[ ${BASH_VERSINFO[0]} < 5 ]] ; then echo "ERROR: BASH < 5 does not have \$EPOCHREALTIME" ; return 1 ; fi
+              PS4=$'+ \033[35m${EPOCHREALTIME}\033[36m:\033[1;37m'${funcname}'\033[22;36m:\033[32m${LINENO}\033[36m:\033[0m ' ;;
     esac
+    # Note: PS4 is normally a shell variable and is not exported but exporting
+    # it is useful for doing stuff like `bash -x some-script.sh` to run a script
+    # with xtrace and have it use this PS4 without needing to modify the script.
+    export PS4
 }
 _ps4(){
-    COMPREPLY=( $(compgen -W "full short no-color short-no-color" -- "${COMP_WORDS[COMP_CWORD]}") )
+    COMPREPLY=( $(compgen -W "full short no-color short-no-color time" -- "${COMP_WORDS[COMP_CWORD]}") )
 }
 complete -F _ps4 ps4
 
