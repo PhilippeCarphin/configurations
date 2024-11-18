@@ -22,7 +22,7 @@ else
         *ec.gc.ca)
             ln -svf ${this_dir_rel}/dot-tmux.conf.colors.work.ec ~/.tmux.conf.colors ;;
         *)
-            echo "$0: Unknown domain" ;;
+            echo "$0: Unknown domain: '$host'" ;;
     esac
 fi
 
