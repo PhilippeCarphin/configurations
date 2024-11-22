@@ -9,7 +9,7 @@ function p.profile.main(){
     source ~/.philconfig/shell_rc.bash.work
     configure_spack ; unset -f $_
     set_and_goto_true_home ; unset -f $_
-    export PS4='+ \033[35m${BASH_SOURCE[0]}\033[36m:\033[1;37m${FUNCNAME:+${FUNANAME[0]}}\033[22;36m:\033[32m${LINENO}\033[0m -- '
+    export PS4='+ \033[35m${BASH_SOURCE[0]}\033[36m:\033[1;37m${FUNCNAME:+${FUNCNAME[0]}}\033[22;36m:\033[32m${LINENO}\033[36m:\033[0m '
     if [[ "$-" == *i* ]] ; then
         p.profile.main_interactive ; unset -f $_
     fi

@@ -9,7 +9,7 @@ bind W split-window -h \
         env -i \
             $(~/.philconfig/tmux_home/vars) \
             SSMUSE_XTRACE_VERBOSE=1 \
-            PS4="\"+ \\033[35m\\\${BASH_SOURCE[0]}\\033[36m:\\033[1;37m\\\${FUNCNAME:+${FUNANAME[0]}}\\033[22;36m:\\033[32m\\\${LINENO}\\033[0m \"" \
+            PS4="\"+ \\033[35m\\\${BASH_SOURCE[0]}\\033[36m:\\033[1;37m\\\${FUNCNAME:+${FUNCNAME[0]}}\\033[22;36m:\\033[32m\\\${LINENO}\\033[36m:\\033[0m \"" \
         /bin/bash --login -x'
 
 bind X split-window -h \
@@ -30,5 +30,5 @@ bind Y split-window -h \
         TERM=$TERM \
         DISPLAY=$DISPLAY \
         LANG=$LANG \
-        PS4="\"+ \\033[35m\\\${BASH_SOURCE[0]}\\033[36m:\\033[1;37m\\\${FUNCNAME:+${FUNANAME[0]}}\\033[22;36m:\\033[32m\\\${LINENO}\\033[0m \"" \
+        PS4="\"+ \\033[35m\\\${BASH_SOURCE[0]}\\033[36m:\\033[1;37m\\\${FUNCNAME:+${FUNCNAME[0]}}\\033[22;36m:\\033[32m\\\${LINENO}\\033[36m:\\033[0m \"" \
     /bin/bash --rcfile $HOME/.profile_phil -x'

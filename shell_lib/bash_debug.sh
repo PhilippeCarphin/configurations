@@ -62,10 +62,10 @@ function undebug(){
 ps4(){
     local funcname='${FUNCNAME:+${FUNCNAME[0]}}'
     case "$1" in
-        full) PS4='+ \033[35m${BASH_SOURCE[0]}\033[36m:\033[1;37m'${funcname}'\033[22;36m:\033[32m${LINENO}\033[0m ' ;;
-        short) PS4='+ \033[35m${BASH_SOURCE[0]##*/}\033[36m:\033[1;37m'${funcname}'\033[22;36m:\033[32m${LINENO}\033[0m ' ;;
-        no-color) PS4='+ ${BASH_SOURCE[0]}:'${funcname}':${LINENO} -- ' ;;
-        short-no-color) PS4='+ ${BASH_SOURCE[0]##*/}:'${funcname}':${LINENO} -- ' ;;
+        full) PS4='+ \033[35m${BASH_SOURCE[0]}\033[36m:\033[1;37m'${funcname}'\033[22;36m:\033[32m${LINENO}\033[36m:\033[0m ' ;;
+        short) PS4='+ \033[35m${BASH_SOURCE[0]##*/}\033[36m:\033[1;37m'${funcname}'\033[22;36m:\033[32m${LINENO}\033[36m:\033[0m ' ;;
+        no-color) PS4='+ ${BASH_SOURCE[0]}:'${funcname}':${LINENO}: ' ;;
+        short-no-color) PS4='+ ${BASH_SOURCE[0]##*/}:'${funcname}':${LINENO}: ' ;;
         time) if [[ ${BASH_VERSINFO[0]} < 5 ]] ; then echo "ERROR: BASH < 5 does not have \$EPOCHREALTIME" ; return 1 ; fi
               PS4=$'+ \033[35m${EPOCHREALTIME}\033[36m:\033[1;37m'${funcname}'\033[22;36m:\033[32m${LINENO}\033[36m:\033[0m ' ;;
     esac
