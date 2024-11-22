@@ -919,3 +919,10 @@ printf '\033[0m'"
     trap "${new_trap_code}" EXIT
 }
 
+p.cmake(){
+    cmd=(cmake .. -DCMAKE_INSTALL_PREFIX=../localinstall -DCMAKE_BUILD_TYPE=Debug -DCMAKE_VERBOSE_MAKEFILE=FALSE "$@")
+    printf "%q " "${cmd[@]}"
+    printf "\033[K\n"
+    "${cmd[@]}"
+}
+
