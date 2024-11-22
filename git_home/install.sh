@@ -21,7 +21,7 @@ wget https://raw.githubusercontent.com/git/git/refs/heads/master/contrib/complet
 
 mkdir -p ~/.config/git
 ln -sfv ../../${this_dir_rel}/dot-config/git/ignore ~/.config/git/ignore
-ln -sfv ../../${this_dir_rel}/dot-config/git/attributes ~/.config/git/ignore
+ln -sfv ../../${this_dir_rel}/dot-config/git/attributes ~/.config/git/attributes
 
 git submodule update --init --recursive
 if ! [[ -L ~/fs1/Cellar/diff-so-fancy ]] ; then
