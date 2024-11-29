@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # This script is my personal wrapper for git.  It is certainly not meant to
 # encapsulate git operations but to disable certain git operations or augment
