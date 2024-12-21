@@ -1,0 +1,92 @@
+#!/usr/bin/env bash
+
+PACK_DIR="${HOME}/.profile.d/interactive/pack"
+# Some people have aliases like
+# alias loadrmn='. r.load.dot <bla bla>'
+# which works fine but this system is still quite simple and has some benefits
+# - :q
+#
+
+# Print and source a file named '$1' inside ${PACK_DIR}
+function p.load(){
+    local file="${PACK_DIR}/$1"
+    if ! [[ -f "${file}" ]] ; then
+        printf "%s: \033[1;31mERROR\033[0m: %s\n" "${FUNCNAME[0]}" "No file named '$1' in '${PACK_DIR}'"
+        return 1
+    fi
+
+    # Printing is useful: I can do 'p.load intel' to load the intel compiler
+    # and copy-paste the output from my shell into a Teams message
+    # to tell someone how to load Intel compiler
+    printf "\033[1;37m%s\033[0m\n" "$file"
+    cat "$file" > >(sed 's/^\s*[^#].*/\x1b[1;32m\0\x1b[0m/;   s/^\s*#.*/\x1b[34m\0\x1b[0m/g;')
+    source $file
+}
+# Creates links in ${PACK_DIR}.  voir -> utils makes it so that if I try to
+# run voir and I don't have it in my PATH, the command_not_found_handle
+# will load utils which gives voir
+function p.load-gives(){
+    local giver="$1"
+    local program="$2"
+    local file="${PACK_DIR}/${giver}"
+    if ! [[ -f "${file}" ]] ; then
+        printf "%s: \033[1;31mERROR\033[0m: %s\n" "${FUNCNAME[0]}" "No file named '$1' in '${PACK_DIR}'"
+        return 1
+    fi
+    env -C "${PACK_DIR}" ln -svf "${giver}" "${program}"
+}
+# View a file from ${PACK_DIR}.  Even if I open the file by absolute path,
+# running from ${PACK_DIR} makes it so that I once in Vim, I can do
+# ':tabnew <filename>' to create a new file in ${PACK_DIR}.
+p.load-view(){
+    if [[ -L ${PACK_DIR}/$1 ]] ; then
+        echo "$1 -> $(readlink ${PACK_DIR}/$1)"
+        sleep 1
+    fi
+    env -C ${PACK_DIR} vim "${PACK_DIR}/$1"
+}
+# Autocomplete with basenames of files in ${PACK_DIR}
+function _p.load(){
+    if (( COMP_CWORD > 1 )) ; then
+        return 1
+    fi
+    local cur=${COMP_WORDS[COMP_CWORD]}
+    COMPREPLY=( $(cd "${PACK_DIR}" ; compgen -f -- "${cur}"))
+}
+complete -F _p.load p.load p.load-gives p.load-view
+
+# Everything comes together with command_not_found_handle: (see `man bash`)
+# - invoked when first word on the command line does not contain '/' and
+#   the command is not found in PATH.
+# - Invoked in a subshell which allows us to do `unset` the function
+#   to preven infinite recursion without unsetting command_not_found_handle
+#   in the main shell.
+function command_not_found_handle(){
+    local file="${PACK_DIR}/$1"
+    if [[ -f "${file}" ]] ; then
+        p.load "$1"
+        unset -f command_not_found_handle
+        "$@"
+    else
+        echo "bash: $1: command not found" >&2
+        return 127
+    fi
+}
+
+# SSMUSE adapter that adds the package directory to CMAKE_PREFIX_PATH
+# which makes us not need to set 'rmn_DIR'.
+p.ssmuse(){
+    case "$1" in
+        -x|-p|-f|-d) ;;
+        *) echo "${FUNCNAME[0]}: ERROR: first arg needs to be '-x|-p|-f|-d'" >&2 ; return 1 ;;
+    esac
+    if ! [[ -d $2 ]] ; then
+        echo "${FUNCNAME[0]}: ERROR: Second arg to ssmuse command is not an existing directory" >&2
+        return 1
+    fi
+    if ! . ssmuse-sh $1 $2 ; then
+        echo "${FUNCNAME[0]}: ERROR in ssmuse command" >&2
+        return 1
+    fi
+    export CMAKE_PREFIX_PATH=$2${CMAKE_PREFIX_PATH:+:${CMAKE_PREFIX_PATH}}
+}

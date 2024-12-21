@@ -20,11 +20,10 @@ function p.profile.main_interactive(){
     export PACK_DIR=${HOME}/.profile.d/interactive/pack
 
     source "$HOME/.ssh/ssh_functions.sh"
-    source "$HOME/.philconfig/shell_lib/x.use"
+    source "$HOME/.philconfig/shell_lib/p.load"
     set_ls_colors_for_readline_and_ls ; unset $_ # Needs to be before fzf because fzf causes readline initialization
     FZF_COMPLETION_OPT="--preview 'bat --color=always {}'"
     [ -f ~/.fzf.bash ] && source ~/.fzf.bash
-    x.use_set_command_not_found_handle
     check-alert-files ; unset -f $_
     maybe_cd_to_pbs_o_workdir ; unset -f $_
     complete -o default -o nospace -o filenames -F _DottableCompletion source .
