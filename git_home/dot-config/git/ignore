@@ -37,3 +37,6 @@ fortls_debug.log
 
 # -- MacOS thumbnail files
 .DS_Store
+
+# -- Saved output from commands
+*.log

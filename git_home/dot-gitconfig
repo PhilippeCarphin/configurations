@@ -2,13 +2,20 @@
     name = "Philippe Carphin"
     # email set in specific files at the end
 
+[color "status"]
+    unmerged  = magenta
+    untracked = red bold
 [alias]
-    st = "!f(){ : git status ; git -C \"${GIT_PREFIX}\" -c color.ui=always status \"$@\" | python3 -u ~/.philconfig/git_home/status-filter.py ; } ; f"
+    submodule-upgrade = "!f(){ if [[ -z \"$1\" ]] ; then return 1 ; fi ; cd \"${GIT_PREFIX}\" && git submodule update --remote \"$1\" && cd \"${1}\" && git submodule update --init --recursive ; } ; f"
+    #                                                                                                         submodule section                              submod header bold white        missing commits red           new commits green             untracked bold red
+    st = "!f(){ : git status ; git -C \"${GIT_PREFIX}\" -c color.ui=always status \"$@\" | sed --unbuffered \"s/^Submodules changed.*/\\x1b[4;36m&\\x1b[0m/; s/^\\*.*/\\x1b[1;37m&\\x1b[0m/; s/^  <.*/\\x1b[31m&\\x1b[0m/; s/^  >.*/\\x1b[32m&\\x1b[0m/; s/^Untracked.*/\\x1b[37;41m&\\x1b[0m/;\" ; } ; f"
+    # Same as above but flashing bold white on red background for untracked files
+    # st = "!f(){ : git status ; git -C \"${GIT_PREFIX}\" -c color.ui=always status \"$@\" | sed --unbuffered \"s/^Submodules changed.*/\\x1b[4;36m&\\x1b[0m/; s/^\\*.*/\\x1b[1;37m&\\x1b[0m/; s/^  <.*/\\x1b[31m&\\x1b[0m/; s/^  >.*/\\x1b[32m&\\x1b[0m/; s/^Untracked.*/\\x1b[37;5;41m&\\x1b[0m/;\" ; } ; f"
     sts = -c status.submoduleSummary=false status
     dss = "!f(){ printf '+   -   FILE\n' ; git diff --numstat ; } ; f"
     # Additionnal remotes do not have <remote>/HEAD by default.  This config alias
     # makes it so that fetches also get <remote>/HEAD
-    remote-head = "!f(){ for r in $(git remote) ; do git remote set-head --auto $r ; done ; } ; f"
+    set-remote-head = "!f(){ for r in $(git remote) ; do git remote set-head --auto $r ; done ; } ; f"
     # Show the sha of the submodule commit registered to the currently checked out super-project commit
     submodule-sha = "!f(){ : git rev-parse ; submod=$1; shift ; git rev-parse :${submod} \"$@\" ; } ; f"
     # Show log entry of the submodule commit registered to the currently checked out super-project commit
@@ -22,6 +29,8 @@
     logd   = log --oneline --graph --format=logd
     logdw  = log --oneline --graph --format=logdw
     logdu  = log --oneline --graph --format=std     HEAD HEAD@{u}
+    diff-search = "!f(){ git log --oneline --graph --format=logd -S \"$@\" ; } ; f"
+    log-pickaxe-s  = "!f() { : git log;  [[ \"$*\" == *\"--pickaxe-regex\"* ]] && export PICKAXE_REGEX=1; GREPDIFF_REGEX=\"$1\" git -C \"${GIT_PREFIX}\" --work-tree=$PWD -c diff.external=pickaxe-diff log  -p --ext-diff -S \"$@\"; }; f"
 
 	logo = log --abbrev-commit --decorate --format=ol
 	logu = logo @{upstream}..
@@ -36,8 +45,11 @@
     detach = "!f() { echo \"Just use 'git checkout --detach'\" ; git checkout --detach ; } ; f"
     suir = submodule update --init --recursive
     # view = "!f() { revision_and_line=\"$1\"; blob_revision=$(echo \"$revision_and_line\" | cut -d: -f1-2); line=$(echo \"$revision_and_line\" | cut -d: -f3); git show $blob_revision | vim -R - -c \"doautocmd BufRead $blob_revision\" +$line ; }; f"
+    # NOTE: I don't think I really need these aliases because it seems that when
+    # output is not a tty, git doesn't use the pager
     rawdiff = "-c \"core.pager=less --tabs=4 -RFX\" diff"
     rawshow = "-c \"core.pager=less --tabs=4 -RFX\" show"
+    rawlog = "-c \"core.pager=less --tabs=4 -RFX\" log"
     xd = difftool --dir-diff
     dt = difftool --dir-diff
     ydiff = difftool -x 'ydiff -s -w0 -c auto'
@@ -55,6 +67,7 @@
     #        ^^^^      ^            ^^^^^^    ^^^^^^^^      ^            ^
     to-http = "!f(){ remote=origin ; if [[ $# == 1 ]] ; then remote=$1 ; fi ;  git remote get-url $remote | sed -e 's/:/\\//' -e 's/^git@/https:\\/\\//' -e 's/\\.git$//' ; } ; f"
 	grep-call = "!f() { : git grep ; pattern=\"$1\"; shift; git -C \"$GIT_PREFIX\" --work-tree=$PWD grep -i -p -E -e \"call[ ]+$pattern([ ]+|\\()*\" \"$@\" ; }; f"
+    alias = "!f(){ if [[ -z $1 ]] ; then git config --list | grep alias | sed 's/alias.\\([^=]\\+\\)=.*/\\1/' ; else a=\"$(git config --get alias.$1)\" ; echo \"alias.$1=${a@Q}\" ; fi ; } ; f"
 
 [diff "fortran-namelist"]
 	xfuncname = "^[ \\t]*&.*$"
