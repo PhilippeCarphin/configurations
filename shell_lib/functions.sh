@@ -523,14 +523,18 @@ p.dusage(){
     # ..?* : All files beginning with '..' plus at least one character.
     exec du -sh * .[!.]* ..?* | sort -h | python3 -c "
 import sys
-multiplier = { 'K': 10**3, 'M':10**6, 'G': 10**9, 'T':10**12 }
+multiplier = { 'B': 1, 'K': 10**3, 'M':10**6, 'G': 10**9, 'T':10**12 }
 letters = {0: '', 3:'K', 6:'M', 9:'G', 12:'T'}
 total_bytes = 0.0
 for l in sys.stdin:
     print(l.strip())
-    size, filename = l.split()
+    try:
+        size, filename = l.split('\t', maxsplit=1)
+    except ValueError as e:
+        print(f'Invalid line from stdin ({l}): {e}')
+        sys.exit(1)
     # print(f'size: {size}, filename: {filename}')
-    if size[-1] in 'KMGTP':
+    if size[-1] in 'KMGTPB':
         bytes = float(size[:-1]) * multiplier.get(size[-1], 1)
     else:
         bytes = size
