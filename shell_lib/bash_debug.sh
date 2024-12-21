@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # Note, when doing 'true >&${debug_fd}', debug_fd=8, and 8 is
 # not a file descriptor, bash will print
 # 'bash: ${debug_fd}: bad file descriptor'

@@ -5,11 +5,6 @@ _load_homebrew(){
         . "/opt/homebrew/etc/profile.d/bash_completion.sh"
     fi
 
-    if [[ -r "$HOME/Repositories/github.com/git/git/contrib/completion/git-completion.bash" ]] ; then
-        . "$HOME/Repositories/github.com/git/git/contrib/completion/git-completion.bash"
-    else
-        echo "git-completion not found"
-    fi
 }
 eval "$(/opt/homebrew/bin/brew shellenv)"
 # _load_homebrew ; unset -f $_
@@ -21,9 +16,18 @@ if [[ "$-" == *i* ]] ; then
     [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 fi
 
+if [[ -r "$HOME/Repositories/github.com/git/git/contrib/completion/git-completion.bash" ]] ; then
+    . "$HOME/Repositories/github.com/git/git/contrib/completion/git-completion.bash"
+else
+    echo "git-completion not found"
+fi
+
 case ${BASH_VERSION} in
     4*|5*)
         source /opt/homebrew/share/bash-completion/bash_completion
         ;;
     *) printf "${BASH_SOURCE[0]}: \033[1;33mWARNING\033[0m: bash ${BASH_VERSION}\n" ;;
 esac
+
+source ~/user-venv/bin/activate
+source ~/.philconfig/shell_lib/bash_debug.sh
