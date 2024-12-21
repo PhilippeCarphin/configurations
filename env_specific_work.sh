@@ -22,7 +22,7 @@ env_specific_home(){
     host=$(hostname -f)
     case ${host} in
         *.collab.science.gc.ca) p=http://webproxy.collab.science.gc.ca:8888/ ;;
-        *.science.gc.ca) p=http://webproxy.science.gc.ca:8888/ ;;
+        ppp[56]*|sc[56]*) p=http://webproxy.science.gc.ca:8888/ ;;
         *) : ;;
     esac
     if [[ -n ${p} ]] ; then
