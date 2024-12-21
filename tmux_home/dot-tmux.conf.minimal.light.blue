@@ -1,0 +1,96 @@
+
+#
+# Bits extracted from PHILIPPE CARPHIN's .tmux.conf
+# with different colors
+#
+
+# Sane scrolling (I don't know where I got this or what it does)
+set -g terminal-overrides 'xterm*:smcup@:rmcup@'
+
+set -g default-command \
+    'env -i \
+        LOGNAME=$LOGNAME \
+        USER=$USER \
+        HOME=$HOME \
+        TERM=$TERM \
+        DISPLAY=$DISPLAY \
+        LANG=$LANG \
+        PS4="\"+ \\033[35m\\\${BASH_SOURCE[0]}\\033[36m:\\033[1;37m\\\${FUNCNAME:+${FUNCNAME[0]}}\\033[22;36m:\\033[32m\\\${LINENO}\\033[36m:\\033[0m \"" \
+    /bin/bash --login'
+
+# Split windows, the regular key to split horizontally is '%' which is annoying
+# because the pinky needs to switch from CTRL to SHIFT.  This is better and more
+# intuitive
+bind / split-window -h -c "#{pane_current_path}"
+bind é split-window -h -c "#{pane_current_path}" # / does 'é' when I'm in CanadianMultilingualStandard keyboard
+bind - split-window    -c "#{pane_current_path}"
+
+# Set prefix to be 'C-a'.  By itself this prevents you from using 'C-a' to go
+# to the start of the line in BASH.  The second line makes 'prefix C-a' send
+# the key 'C-a' to the underlying process.  Therefore, pressing 'C-a C-a'
+# brings us to the start of the line.
+set -g prefix C-a
+bind C-a send-keys C-a
+
+set -s escape-time 100
+
+bind r display 'Sourcing config file ~/.tmux.conf' \; source-file ~/.tmux.conf
+
+set -g status-right 'ORJI CASPAR #(whoami)@#(hostname)  #(TZ="America/Toronto" date "+%%Y-%%m-%%d %%H:%%M")'
+
+set -g default-terminal "xterm-256color"
+
+# Ref : https://gitlab.science.gc.ca/hpc/support/-/issues/851
+# set -g default-command "env -u PATH -u TMPDIR -u FIX_THE_PATHS -u ORDENV_SETUP -u ORDENV_USER_PROFILE_FILENAMES /bin/bash --login"
+set -g default-command \
+    'env -i \
+        LOGNAME=$LOGNAME \
+        USER=$USER \
+        HOME=$HOME \
+        TERM=$TERM \
+        DISPLAY=$DISPLAY \
+        LANG=$LANG \
+        PS4="\"+ \\033[35m\\\${BASH_SOURCE[0]}\\033[36m:\\033[1;37m\\\${FUNCNAME:+${FUNCNAME[0]}}\\033[22;36m:\\033[32m\\\${LINENO}\\033[36m:\\033[0m \"" \
+    /bin/bash --login'
+
+################################################################################
+# Pane and window numbering, creation, selection, and manipulation
+################################################################################
+# Window numbering options
+set -g base-index 1
+set -g renumber-window on
+
+bind k select-pane -U # switch to panel Up
+bind j select-pane -D # switch to panel Down
+bind h select-pane -L # switch to panel Left
+bind l select-pane -R # switch to panel Right
+
+# resize panes like vim but easier
+bind -r C-h resize-pane -L 4
+bind -r C-l resize-pane -R 4
+bind -r C-j resize-pane -D 4
+bind -r C-k resize-pane -U 4
+
+set -g mode-keys vi
+# Cause if my keybaord is in Canadian, [ is dead ^ which doesn't send a key right away
+bind Enter copy-mode
+bind ç paste-buffer
+
+# Scrollback:  Increase the size to a ridiculous amount
+# Suppose very long lines of 400chars, 400*100000 = 80_000_000 = 40M/pane
+# Say 5 windows with 4 panes, that's 20 panes.  That gives 800M and we're being
+# very pecimistic with the 400 chars per line and assuming that all the panes
+# have a completely full history.
+set -g history-limit 100000
+
+# Clear history
+bind -n C-l send-keys C-l \; run 'sleep 0.1' \; clear-history
+
+# Colors to help keep track of where this tmux session is
+set -g pane-border-bg "#00afff" #45
+set -g pane-border-fg "#00ffff" # 51
+set -g pane-active-border-fg "#00ffff" # 51
+set -g pane-active-border-bg "#00d7ff" # 27
+set -g status-bg "#0087ff"
+
+set -g mouse on
