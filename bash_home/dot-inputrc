@@ -59,6 +59,8 @@ $if mode=emacs
     # - insert '"'
     # - go to start
     "\e\C-m": '\C-a "$(\C-e)"\C-a'
+    # shell-expand-line is bound by default to '\e\C-e' but I like this better
+    "\C- ": shell-expand-line
 $endif
 
 # NOTE
