@@ -41,7 +41,7 @@ function debug(){
         mkdir ${debug_dir}
     fi
 
-    local debug_file=$(mktemp bash_debug_session_$(date +%Y-%m-%d_%H-%M)_XXX.txt --tmpdir=${debug_dir})
+    local debug_file=$(mktemp -p ${debug_dir} bash_debug_session_$(date +%Y-%m-%d_%H-%M)_XXXXXX)
     ln -sf ${debug_file} ${debug_dir}/latest
 
     exec {BASH_XTRACEFD}>${debug_file}
