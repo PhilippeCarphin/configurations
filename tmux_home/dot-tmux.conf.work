@@ -1,7 +1,7 @@
 ################################################################################
 # Various ways of starting new shells
 ################################################################################
-set -g default-command 'eval env -i $(~/.philconfig/tmux_home/vars) /bin/bash -l'
+set -g default-command 'eval env -i $(~/.philconfig/tmux_home/vars) $HOME/fs1/bin/bash -l'
 
 # Start a shell with maximum
 bind W split-window -h \

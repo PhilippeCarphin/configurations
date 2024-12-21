@@ -517,13 +517,10 @@ p.unansi(){
 p.dusage(){
     (
         shopt -s nullglob
+    # Geting all files except exactly '..'
     # * : All files not beginning with '.'
-    # .[!.]* : Files starting with a dot, followed by not-a-dot, followed by
-    #          anything.
-    # ..?* : File names beginning with '..' folowed by at least one character
-    #        since the previous expression excluded all files beginning with
-    #        '..'
-    # . : To give the total for this directory
+    # .[!.]* : All files beginning with '.' but not beginning with '..'
+    # ..?* : All files beginning with '..' plus at least one character.
     exec du -sh * .[!.]* ..?* | sort -h | python3 -c "
 import sys
 multiplier = { 'K': 10**3, 'M':10**6, 'G': 10**9, 'T':10**12 }
