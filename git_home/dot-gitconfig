@@ -8,9 +8,9 @@
 [alias]
     submodule-upgrade = "!f(){ if [[ -z \"$1\" ]] ; then return 1 ; fi ; cd \"${GIT_PREFIX}\" && git submodule update --remote \"$1\" && cd \"${1}\" && git submodule update --init --recursive ; } ; f"
     #                                                                                                         submodule section                              submod header bold white        missing commits red           new commits green             untracked bold red
-    st = "!f(){ : git status ; git -C \"${GIT_PREFIX}\" -c color.ui=always status \"$@\" | sed --unbuffered \"s/^Submodules changed.*/\\x1b[4;36m&\\x1b[0m/; s/^\\*.*/\\x1b[1;37m&\\x1b[0m/; s/^  <.*/\\x1b[31m&\\x1b[0m/; s/^  >.*/\\x1b[32m&\\x1b[0m/; s/^Untracked.*/\\x1b[37;41m&\\x1b[0m/;\" ; } ; f"
+    st = "!f(){ : git status ; git -C \"${GIT_PREFIX}\" -c color.ui=always status \"$@\" | sed -u \"s/^Submodules changed.*/\\x1b[4;36m&\\x1b[0m/; s/^\\*.*/\\x1b[1;37m&\\x1b[0m/; s/^  <.*/\\x1b[31m&\\x1b[0m/; s/^  >.*/\\x1b[32m&\\x1b[0m/; s/^Untracked.*/\\x1b[37;41m&\\x1b[0m/;\" ; } ; f"
     # Same as above but flashing bold white on red background for untracked files
-    # st = "!f(){ : git status ; git -C \"${GIT_PREFIX}\" -c color.ui=always status \"$@\" | sed --unbuffered \"s/^Submodules changed.*/\\x1b[4;36m&\\x1b[0m/; s/^\\*.*/\\x1b[1;37m&\\x1b[0m/; s/^  <.*/\\x1b[31m&\\x1b[0m/; s/^  >.*/\\x1b[32m&\\x1b[0m/; s/^Untracked.*/\\x1b[37;5;41m&\\x1b[0m/;\" ; } ; f"
+    # st = "!f(){ : git status ; git -C \"${GIT_PREFIX}\" -c color.ui=always status \"$@\" | sed -u \"s/^Submodules changed.*/\\x1b[4;36m&\\x1b[0m/; s/^\\*.*/\\x1b[1;37m&\\x1b[0m/; s/^  <.*/\\x1b[31m&\\x1b[0m/; s/^  >.*/\\x1b[32m&\\x1b[0m/; s/^Untracked.*/\\x1b[37;5;41m&\\x1b[0m/;\" ; } ; f"
     sts = -c status.submoduleSummary=false status
     dss = "!f(){ printf '+   -   FILE\n' ; git diff --numstat ; } ; f"
     # Additionnal remotes do not have <remote>/HEAD by default.  This config alias
