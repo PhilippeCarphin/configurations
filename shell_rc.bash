@@ -157,13 +157,13 @@ function configure_vim(){
         _gcps_complete_colon_paths
         local cur=${COMP_WORDS[COMP_CWORD]}
         if (( ${#COMPREPLY[0]} == 0 )) && [[ ${cur} != */* ]] ; then
-            local c=$(find $PWD -mindepth 1 -maxdepth 1 -printf .)
+            local c=$(find $PWD -mindepth 1 -maxdepth 1 -print -quit)
             if (( ${#c} == 0 )) ; then
                 COMPREPLY+=($(compgen -W "CMakeLists.txt Makefile README.md README.org" -- "${cur}"))
             fi
         fi
     }
-    complete -F _complete_vim vim
+    complete -o nospace -F _complete_vim vim
 }
 
 
