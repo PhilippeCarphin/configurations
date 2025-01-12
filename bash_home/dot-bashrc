@@ -7,6 +7,7 @@ source ~/.philconfig/shell_lib/functions.sh
 
 export PS4='+ \033[35m${BASH_SOURCE[0]}\033[36m:\033[1;37m${FUNCNAME:+${FUNCNAME[0]}}\033[22;36m:\033[32m${LINENO}\033[36m:\033[0m '
 
-
-cat ~/apple-mini.txt >&2
+if [[ -t 0 ]] ; then
+    cat ~/apple-mini.txt >&2
+fi
 . "$HOME/.cargo/env"
