@@ -18,6 +18,7 @@ fi
 
 if [[ -r "$HOME/Repositories/github.com/git/git/contrib/completion/git-completion.bash" ]] ; then
     . "$HOME/Repositories/github.com/git/git/contrib/completion/git-completion.bash"
+    . "$HOME/.philconfig/git_home/git-completion-extras.bash"
 else
     echo "git-completion not found"
 fi
