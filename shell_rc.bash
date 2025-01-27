@@ -171,7 +171,7 @@ function configure_vim(){
             fi
         fi
     }
-    complete -o nospace -F _complete_vim vim
+    complete -o nospace -F _complete_vim vim pvim
 }
 
 
