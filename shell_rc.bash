@@ -27,9 +27,14 @@ shell_rc.bash.main(){
     alias vim='gcps_wrap_command_colon_paths vim'
     alias cd='gcps_wrap_command_colon_paths cd'
     alias zsh="NORMAL_MODE=1 PS4=$'+ \033[35m%N\033[0m:\033[32m%i\033[0m ' zsh"
+    # GNU xargs runs the command even with empty input.  The BSD version does
+    # not by default.  The BSD version does accept -r for compatibility but it
+    # already behaves as if -r has been profided.
+    alias xargs='xargs -r'
     configure_fs1_env ; unset -f $_
     configure_history ; unset -f $_
     configure_vim ; unset -f $_
+    export EDITOR=ec
 }
 
 
@@ -114,7 +119,10 @@ configure_history(){
 }
 
 function configure_vim(){
-    function vim()(
+    function vim(){
+        ec -t $@
+    }
+    function pvim()(
         if [[ "${USER}" == phc001 ]] && [[ $(hostname) != ppp* ]] ; then
             /usr/bin/vim -p "$@"
             return
