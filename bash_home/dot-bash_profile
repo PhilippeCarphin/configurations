@@ -15,4 +15,4 @@ fi
 source ~/.philconfig/env_common_home.sh
 source ~/.philconfig/env_specific_home.sh
 
-echo "BUCKET"
+. "$HOME/.cargo/env"

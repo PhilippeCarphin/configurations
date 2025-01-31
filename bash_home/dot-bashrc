@@ -9,3 +9,4 @@ export PS4='+ \033[35m${BASH_SOURCE[0]}\033[36m:\033[1;37m${FUNCNAME:+${FUNCNAME
 
 
 cat ~/apple-mini.txt >&2
+. "$HOME/.cargo/env"
