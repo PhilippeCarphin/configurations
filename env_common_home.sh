@@ -16,7 +16,6 @@ _env_common_home_sourced=1
 export CLICOLOR=true
 export PATH=$HOME/go/bin:$PATH
 export PATH=$HOME/.local/bin:$PATH
-export CLICOLOR_FORCE=true
 export EDITOR=vim
 export CMAKE_EXPORT_COMPILE_COMMANDS=TRUE
 
