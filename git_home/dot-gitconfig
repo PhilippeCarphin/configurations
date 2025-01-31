@@ -28,7 +28,7 @@
     submodule-self-status = "!f(){ super=$(git rev-parse --show-superproject-working-tree) ; if [[ -z ${super} ]] ; then return 1 ; fi ; submod=${PWD##${super}/} ; sha=$(env GIT_DIR=${super}/.git  git rev-parse :${submod}) ; env -C ${super} GIT_DIR=${super}/.git git -c status.submoduleSummary=true status ${submod} ; } ; f"
     logd   = log --oneline --graph --format=logd
     logdw  = log --oneline --graph --format=logdw
-    logdu  = log --oneline --graph --format=std     HEAD HEAD@{u}
+    logdu  = log --oneline --graph --format=logd     HEAD HEAD@{u}
     diff-search = "!f(){ git log --oneline --graph --format=logd -S \"$@\" ; } ; f"
     log-pickaxe-s  = "!f() { : git log;  [[ \"$*\" == *\"--pickaxe-regex\"* ]] && export PICKAXE_REGEX=1; GREPDIFF_REGEX=\"$1\" git -C \"${GIT_PREFIX}\" --work-tree=$PWD -c diff.external=pickaxe-diff log  -p --ext-diff -S \"$@\"; }; f"
 
