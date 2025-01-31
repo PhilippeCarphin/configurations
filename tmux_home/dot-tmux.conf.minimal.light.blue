@@ -7,17 +7,6 @@
 # Sane scrolling (I don't know where I got this or what it does)
 set -g terminal-overrides 'xterm*:smcup@:rmcup@'
 
-set -g default-command \
-    'env -i \
-        LOGNAME=$LOGNAME \
-        USER=$USER \
-        HOME=$HOME \
-        TERM=$TERM \
-        DISPLAY=$DISPLAY \
-        LANG=$LANG \
-        PS4="\"+ \\033[35m\\\${BASH_SOURCE[0]}\\033[36m:\\033[1;37m\\\${FUNCNAME:+${FUNCNAME[0]}}\\033[22;36m:\\033[32m\\\${LINENO}\\033[36m:\\033[0m \"" \
-    /bin/bash --login'
-
 # Split windows, the regular key to split horizontally is '%' which is annoying
 # because the pinky needs to switch from CTRL to SHIFT.  This is better and more
 # intuitive
@@ -50,7 +39,7 @@ set -g default-command \
         TERM=$TERM \
         DISPLAY=$DISPLAY \
         LANG=$LANG \
-        PS4="\"+ \\033[35m\\\${BASH_SOURCE[0]}\\033[36m:\\033[1;37m\\\${FUNCNAME:+${FUNCNAME[0]}}\\033[22;36m:\\033[32m\\\${LINENO}\\033[36m:\\033[0m \"" \
+        PS4="+ \033[35m\${BASH_SOURCE[0]}\033[36m:\033[1;37m\${FUNCNAME:+${FUNCNAME[0]}}\033[22;36m:\033[32m\${LINENO}\033[36m:\033[0m " \
     /bin/bash --login'
 
 ################################################################################
