@@ -16,6 +16,10 @@ else
     echo "git-completion not found"
 fi
 
+if [[ -r "$HOME/Repositories/github.com/spack/spack/share/spack/setup-env.sh" ]] ; then
+    source "$HOME/Repositories/github.com/spack/spack/share/spack/setup-env.sh"
+fi
+
 case ${BASH_VERSION} in
     4*|5*)
         if [[ -r "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] then
