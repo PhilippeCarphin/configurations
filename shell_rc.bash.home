@@ -1,13 +1,6 @@
 #!/bin/bash
 
-_load_homebrew(){
-    if [[ -r "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] ; then
-        . "/opt/homebrew/etc/profile.d/bash_completion.sh"
-    fi
-
-}
 eval "$(/opt/homebrew/bin/brew shellenv)"
-# _load_homebrew ; unset -f $_
 . "$HOME/.cargo/env"
 
 source ~/Repositories/github.com/philippecarphin/rust-workout-log/_workout.sh
@@ -25,7 +18,11 @@ fi
 
 case ${BASH_VERSION} in
     4*|5*)
-        source /opt/homebrew/share/bash-completion/bash_completion
+        if [[ -r "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] then
+            . "/opt/homebrew/etc/profile.d/bash_completion.sh"
+        else
+            printf "${BASH_SOURCE[0]}: \033[1;33mWARNING: bash_completion not loaded\n"
+        fi
         ;;
     *) printf "${BASH_SOURCE[0]}: \033[1;33mWARNING\033[0m: bash ${BASH_VERSION}\n" ;;
 esac
