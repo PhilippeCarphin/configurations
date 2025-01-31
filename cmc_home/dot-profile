@@ -94,7 +94,7 @@ function set_and_goto_true_home(){
 
 
 configure_spack(){
-    local spack_dir=$HOME/Repositories/github.com/spack/spack
+    local spack_dir=$HOME/site6/spack
     if ! [[ -d ${spack_dir} ]] ; then
         return
     fi
