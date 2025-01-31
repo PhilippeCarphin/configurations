@@ -16,6 +16,7 @@ env_specific_home(){
     export GONOSUMDB=gitlab.science.gc.ca
     export PATH=$HOME/tools/rust/bin:$PATH
     export PATH=$HOME/tools/go/bin:$PATH
+    export PATH=$HOME/tools/tmux-3.5a/bin:$PATH
     export PATH=$HOME/bin:$PATH
 
     local p

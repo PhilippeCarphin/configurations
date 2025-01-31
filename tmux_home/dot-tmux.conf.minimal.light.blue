@@ -86,11 +86,8 @@ set -g history-limit 100000
 # Clear history
 bind -n C-l send-keys C-l \; run 'sleep 0.1' \; clear-history
 
-# Colors to help keep track of where this tmux session is
-set -g pane-border-bg "#00afff" #45
-set -g pane-border-fg "#00ffff" # 51
-set -g pane-active-border-fg "#00ffff" # 51
-set -g pane-active-border-bg "#00d7ff" # 27
-set -g status-bg "#0087ff"
+set -g pane-active-border-style 'bg=color45 fg=color51'
+set -g pane-border-style 'bg=color27 fg=color51'
+set -g status-bg color33
 
 set -g mouse on
