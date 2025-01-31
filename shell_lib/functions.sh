@@ -932,3 +932,63 @@ p.cmake(){
     "${cmd[@]}"
 }
 
+# Wrapper for clj that sets a colored prompt
+clj(){
+  (if
+     (( $# != 0 )) ; then
+     command clj "$@"
+     else exec command clj -M -e '(clojure.main/repl :prompt (fn [] (printf "\033[1;32m%s=>\033[0m " (ns-name *ns*))))';fi;);}
+
+macos_theme(){
+    # By running `defaults read -g`, we get results in something that looks
+    # like JSON but is slightly different
+    #
+    # We run this while in dark mode and while in light mode
+    # and diff the outputs.
+    #
+    # What we see is that in dark mode the key
+    #
+    #   AppleInterfaceStyle = "dark"
+    #
+    # and in light mode, that key is not there and doing
+    #
+    #   defaults read -g AppleInterfaceStyle
+    #
+    # will print `dark` in dark mode and in light mode the command will fail
+    # because the key doesn't exist.
+    if defaults read -g AppleInterfaceStyle &>/dev/null ; then
+        echo "dark"
+    else
+        echo "light"
+    fi
+}
+
+set_macos_theme(){
+    case "${1}" in
+        dark) osascript -l JavaScript -e "Application('System Events').appearancePreferences.darkMode = true" ;;
+        light) osascript -l JavaScript -e "Application('System Events').appearancePreferences.darkMode = false" ;;
+        *) echo "Argmuent must be either 'dark' or 'light'" ;;
+    esac
+}
+
+toggle_macos_theme(){
+    case "$(macos_theme)" in
+        dark) set_macos_theme "light" ;;
+        light) set_macos_theme "dark" ;;
+        *) echo "ERROR: macos_theme() should return either light or dark"
+    esac
+}
+
+macos_discord_time(){
+    # -j print, don't set the time
+    # -f input format has to have minutes and seconds otherwise it
+    # it will use the current minute and the current second
+    if [[ -n $2 ]] ; then
+        timestamp=$(TZ=$2 date -j -f %H:%M:%S $1 +%s)
+    else
+        timestamp=$(date -j -f %H:%M:%S $1 +%s)
+    fi
+    echo "<t:${timestamp}:t>"
+}
+
+
