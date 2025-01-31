@@ -28,18 +28,23 @@ p.env(){
     # Replace gitlab access token with a string of big dots of the same length
     local hide_gitlab_access_token="s/^GITLAB_ACCESS_TOKEN=.*/GITLAB_ACCESS_TOKEN=$(dots "$GITLAB_ACCESS_TOKEN")/"
     local append_sgr0='s/$/\x1b[0m/'
+    if [[ $(uname) == Darwin ]] ; then
+        sed=gsed
+    else
+        sed=sed
+    fi
 
     if [[ -t 1 ]] ; then
         env -0 \
         | sort -z \
-        | sed -z -e "${replace_ansi_with_chars}" -e "${hide_bash_func_body}" \
+        | ${sed} -z -e "${replace_ansi_with_chars}" -e "${hide_bash_func_body}" \
                  -e "${colorize_var_names}" -e "${hide_gitlab_access_token}" \
                  -e "${append_sgr0}" \
         | tr '\0' '\n'
     else
         env -0 \
         | sort -z \
-        | sed -z -e "${replace_ansi_with_chars}" -e "${hide_bash_func_body}" \
+        | ${sed} -z -e "${replace_ansi_with_chars}" -e "${hide_bash_func_body}" \
         | tr '\0' '\n'
     fi
 }
@@ -511,7 +516,7 @@ $//' "$@"
 }
 
 p.unansi(){
-    sed 's/\x1b\[[0-9;]*m//g' "$@"
+    gsed 's/\x1b\[[0-9;]*m//g' "$@"
 }
 
 p.dusage(){
