@@ -7,8 +7,8 @@ shell_rc.bash.main(){
     [ -d $HOME/.bash_completion.d ] && source-dir "$HOME/.bash_completion.d"
     source "$HOME/.philconfig/shell_lib/functions.sh"
 
-    case ${BASH_VERSION} in
-        4*|5*)
+    case ${BASH_VERSINFO[0]} in
+        4|5)
             source $HOME/.philconfig/shell_lib/get_make_targets.sh
             source $HOME/Repositories/github.com/philippecarphin/env-diff/env-diff-cmd.bash
             shopt -s direxpand # Merci Philippe Blain :D

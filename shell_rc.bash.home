@@ -20,8 +20,8 @@ if [[ -r "$HOME/Repositories/github.com/spack/spack/share/spack/setup-env.sh" ]]
     source "$HOME/Repositories/github.com/spack/spack/share/spack/setup-env.sh"
 fi
 
-case ${BASH_VERSION} in
-    4*|5*)
+case ${BASH_VERSINFO[0]} in
+    4|5)
         if [[ -r "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] ; then
            . "/opt/homebrew/etc/profile.d/bash_completion.sh"
         else
