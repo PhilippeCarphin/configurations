@@ -22,8 +22,8 @@ fi
 
 case ${BASH_VERSION} in
     4*|5*)
-        if [[ -r "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] then
-            . "/opt/homebrew/etc/profile.d/bash_completion.sh"
+        if [[ -r "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] ; then
+           . "/opt/homebrew/etc/profile.d/bash_completion.sh"
         else
             printf "${BASH_SOURCE[0]}: \033[1;33mWARNING: bash_completion not loaded\n"
         fi
