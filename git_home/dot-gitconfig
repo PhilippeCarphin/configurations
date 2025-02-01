@@ -190,12 +190,14 @@
     path = ~/.philconfig/git_home/work-email.gitconfig
 
 
+################################################################################
+# Define completion of git URLs
+################################################################################
 [gitcomp]
     domains = github.com gitlab.com
 [gitcomp-domain "github.com"]
     users = philippecarphin itsgifnotjiff
     users = ECCC-ASTD-MRD
-
 [gitcomp]
     domains = gitlab.science.gc.ca
 [gitcomp-domain "github.com"]
