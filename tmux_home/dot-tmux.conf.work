@@ -20,7 +20,7 @@ bind X split-window -h \
         TERM=$TERM \
         DISPLAY=$DISPLAY \
         LANG=$LANG \
-    /bin/bash --login"
+    $HOME/fs1/bin/bash --login"
 
 bind Y split-window -h \
     'env -i \

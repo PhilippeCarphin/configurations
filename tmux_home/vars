@@ -72,12 +72,14 @@ function main(){
         DBUS_SESSION_BUS_ADDRESS
         DESKTOP_SESSION
         DISPLAY
+        EMACS_VTERM_PATH
         ENV
         GS_LIB
         GTK2_RC_FILES
         GTK_RC_FILES
         HOME
         IM_CONFIG_PHASE
+        INSIDE_EMACS
         KDE_FULL_SESSION
         KDE_SESSION_UID
         KDE_SESSION_VERSION

@@ -1,0 +1,3 @@
+#!/bin/bash
+this_dir=$(cd -P $(dirname $0) && pwd)
+eval env -i $(${this_dir}/vars) bash --login
