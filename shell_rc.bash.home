@@ -5,6 +5,7 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 
 source ~/Repositories/github.com/philippecarphin/rust-workout-log/_workout.sh
 if [[ "$-" == *i* ]] ; then
+    export FZF_DEFAULT_OPTS="--height=10 --border"
     FZF_COMPLETION_OPT="--preview 'bat --color=always {}'"
     [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 fi
