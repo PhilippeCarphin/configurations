@@ -466,9 +466,15 @@ p.org-tangle(){
     #
     local file=$1
     shift
-    cmd='emacs --batch -l org --eval "(setq org-src-preserve-indentation t)" ${file} -f org-babel-tangle "$@"'
-    printf "Emacs batch command : \033[1;32m%s\033[0m\n" "$(eval echo $cmd)"
-    eval $cmd
+    if ! [[ -f ${file} ]] ; then
+        printf "\033[31mERROR\033[0m: '$file' is not a file or doesn't exist\n"
+        return 1
+    fi
+    cmd=(emacs --batch -l org --eval "(setq org-src-preserve-indentation t)" "${file}" -f org-babel-tangle "$@")
+    printf "Emacs batch command : \033[1;32m"
+    printf "'%s' " "${cmd[@]}"
+    printf "\033[0m\n"
+    "${cmd[@]}"
 }
 
 p.org-export(){
