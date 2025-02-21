@@ -587,7 +587,7 @@ p.qsubi(){
         ncpu=${1}
         shift
     fi
-    cmd=(qsub -I -lselect=1:ncpus=80:mem=100gb "$@")
+    cmd=(qsub -I -lselect=1:ncpus=80:mem=150gb "$@")
     printf "Running cmd '\033[1m%s\033[0m'\n" "${cmd[*]}"
     "${cmd[@]}"
 }
