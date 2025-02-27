@@ -35,6 +35,7 @@ shell_rc.bash.main(){
     configure_history ; unset -f $_
     configure_vim ; unset -f $_
     export EDITOR=ec
+    export PYTHONSTARTUP=$HOME/.pyrc
 }
 
 

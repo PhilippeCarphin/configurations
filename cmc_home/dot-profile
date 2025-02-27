@@ -16,7 +16,6 @@ function p.profile.main(){
 }
 
 function p.profile.main_interactive(){
-    export PYTHONSTARTUP=~/.pyrc
     export PACK_DIR=${HOME}/.profile.d/interactive/pack
 
     source "$HOME/.ssh/ssh_functions.sh"
