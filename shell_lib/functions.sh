@@ -998,3 +998,16 @@ macos_discord_time(){
 }
 
 
+clip(){
+    # Ref: https://invisible-island.net/xterm/ctlseqs/ctlseqs.html#h3-Operating-System-Commands
+    # Won't work in all terminals
+    if [[ -n $TMUX ]] ; then
+        local set_clipboard="$(tmux show-option set-clipboard)"
+        if [[ "${set_clipboard}" != "set-clipboard on" ]] ; then
+           echo "You are inside TMUX and set-clipboard is not on."
+           echo "Check https://github.com/tmux/tmux/wiki/Clipboard"
+           return 1
+        fi
+    fi
+    printf "\033]52;c;%s\007" "$(base64)"
+}
