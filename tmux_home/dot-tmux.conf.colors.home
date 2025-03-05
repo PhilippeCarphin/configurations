@@ -1,3 +1,5 @@
 set -g pane-border-style 'bg=color57 fg=color39'
 set -g pane-active-border-style 'bg=color69 fg=color39'
 set -g status-bg color69
+set -g window-status-current-format "#[bg=color99]#I:#W#F"
+if-shell "[ $(hostname) == mini.local ]" " set -g status-right '#(whoami)@#[bg=color196]#(hostname)#[default]  #(TZ=\"America/Toronto\" date \"+%%Y-%%m-%%d %%H:%%M\")'
