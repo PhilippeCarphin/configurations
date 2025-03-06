@@ -131,9 +131,6 @@ _git_submodule ()
 	add,*)
 		__gitextras_add_or_set-url
 		;;
-	#set-url,*)
-	#	__gitextras_add_or_set-url
-	#	;;
 	status,--*)
 		__gitcomp "--cached --recursive"
 		;;
