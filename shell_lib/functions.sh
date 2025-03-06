@@ -1011,3 +1011,15 @@ clip(){
     fi
     printf "\033]52;c;%s\007" "$(base64)"
 }
+
+jq-help(){
+    cat <<-EOF
+		| jq '.[2]'                    # Get object at index 2 in array
+		| jq '.k1'                     # Get value of key k1
+		| jq '{"k1": .k1, "k2": .k2'}' # Form an object using incoming object's values
+		| jq '{k1,k2}'                 # Shorthand for above if we want to use the same key names
+		| jq '.[]'                     # Turn single array of objects into stream of many objects
+		| jq '.[] | {k1,k2}'           # Array of objects to stream to only selected fields
+		| jq '[ .[] | {k1,k2} ]'       # Same as above but put back into an array
+	EOF
+}
