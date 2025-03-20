@@ -199,14 +199,12 @@
 ################################################################################
 [gitcomp]
     domains = github.com gitlab.com
+    domains = gitlab.science.gc.ca
 [gitcomp-domain "github.com"]
     users = philippecarphin itsgifnotjiff
     users = ECCC-ASTD-MRD
-[gitcomp]
-    domains = gitlab.science.gc.ca
-[gitcomp-domain "github.com"]
-    #users = philippecarphin itsgifnotjiff
-[gitcomp-domain "gitlab.science.gc.ca"]
-    users = phc001 RPN-SI CMDS
 [gitcomp-domain "gitlab.com"]
-    users = phc001 RPN-SI
+    users = philippecarphin gitlab-org
+[gitcomp-domain "gitlab.science.gc.ca"]
+    users = phc001 RPN-SI CMDS yor000 CMOI
+
