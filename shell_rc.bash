@@ -120,10 +120,7 @@ configure_history(){
 }
 
 function configure_vim(){
-    function vim(){
-        ec -t "$@"
-    }
-    function pvim()(
+    function vim()(
         if [[ "${USER}" == phc001 ]] && [[ $(hostname) != ppp* ]] ; then
             /usr/bin/vim -p "$@"
             return
