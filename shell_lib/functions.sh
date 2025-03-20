@@ -1023,3 +1023,36 @@ jq-help(){
 		| jq '[ .[] | {k1,k2} ]'       # Same as above but put back into an array
 	EOF
 }
+
+# Do `rm -rf ./*` but only if the current directory starts with `build`.  This
+# is for deleting CMake build directories and ensuring I don't delete other
+# things which has happened to me many times.
+rmb(){
+    (
+        set -o errexit -o nounset -o errtrace -o pipefail
+        shopt -s inherit_errexit
+        if ! directory_to_empty=$(builtin pwd -P) ; then
+            echo "${FUNCNAME[0]}: ERROR: Cannot get current directory"
+            exit 1
+        fi
+
+        if [[ -z "${directory_to_empty}" ]] ; then
+            echo "${FUNCNAME[0]}: ERROR: Empty variable: directory_to_empty"
+            exit 1
+        fi
+
+        if [[ $(basename "$directory_to_empty") != build* ]] ; then
+            echo "${FUNCNAME[0]}: ERROR: You are not in a directory whose name starts with 'build'"
+            exit 1
+        fi
+
+        local answer
+        builtin read -p "${FUNCNAME[0]}: Running 'rm -rf ${directory_to_empty}/*', are you sure [y/n]> " answer
+        if [[ ${answer} == y ]] ; then
+            set -x
+            rm -rf "${directory_to_empty}"/*
+        else
+            exit 1
+        fi
+    )
+}
