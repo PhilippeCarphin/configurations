@@ -6,6 +6,10 @@
     unmerged  = magenta
     untracked = red bold
 [alias]
+    # For each file in the current directory, show the last commit to have touched this file
+    last-commits = "!f(){ : git ls-tree ; git -C \"${GIT_PREFIX}\" ls-tree -r --name-only HEAD -z | TZ=UTC xargs -0 -IFILE git --no-pager log -1 --date=iso-local --format=\"%C(blue)%ad %C(yellow)%h %C(green)FILE %C(white)%s\" -- \"${GIT_PREFIX}/FILE\" ; } ; f"
+    # Same as above but from the repo root
+    last-commits-root = "!f(){ : git ls-tree ; git ls-tree -r --name-only HEAD -z | TZ=UTC xargs -0 -IFILE git --no-pager log -1 --date=iso-local --format=\"%C(blue)%ad %C(yellow)%h %C(green)FILE %C(white)%s\" -- \"FILE\" ; } ; f"
     submodule-upgrade = "!f(){ if [[ -z \"$1\" ]] ; then return 1 ; fi ; cd \"${GIT_PREFIX}\" && git submodule update --remote \"$1\" && cd \"${1}\" && git submodule update --init --recursive ; } ; f"
     #                                                                                                         submodule section                              submod header bold white        missing commits red           new commits green             untracked bold red
     st = "!f(){ : git status ; git -C \"${GIT_PREFIX}\" -c color.ui=always status \"$@\" | sed -u \"s/^Submodules changed.*/\\x1b[4;36m&\\x1b[0m/; s/^\\*.*/\\x1b[1;37m&\\x1b[0m/; s/^  <.*/\\x1b[31m&\\x1b[0m/; s/^  >.*/\\x1b[32m&\\x1b[0m/; s/^Untracked.*/\\x1b[37;41m&\\x1b[0m/;\" ; } ; f"
