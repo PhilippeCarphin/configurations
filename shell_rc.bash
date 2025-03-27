@@ -112,6 +112,8 @@ configure_history(){
     HISTFILESIZE=-1
     HISTFILE=~/.eternal_bash_history
     HISTIGNORE="rm -rf *"
+    # At work this is set by /etc/profile
+    HISTCONTROL=ignoredups
     if (( BASH_VERSINFO[0] > 4 )) ; then
         PROMPT_COMMAND+=("history -a")
     else
