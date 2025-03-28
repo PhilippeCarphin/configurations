@@ -19,7 +19,7 @@ function p.load(){
     # and copy-paste the output from my shell into a Teams message
     # to tell someone how to load Intel compiler
     printf "\033[1;37m%s\033[0m\n" "$file"
-    cat "$file" > >(sed 's/^\s*[^#].*/\x1b[1;32m\0\x1b[0m/;   s/^\s*#.*/\x1b[34m\0\x1b[0m/g;')
+    cat "$file" > >(command grep -v '^##' | command sed 's/^\s*[^#].*/\x1b[1;32m\0\x1b[0m/;   s/^\s*#.*/\x1b[34m\0\x1b[0m/g;')
     source $file
 }
 # Creates links in ${PACK_DIR}.  voir -> utils makes it so that if I try to
