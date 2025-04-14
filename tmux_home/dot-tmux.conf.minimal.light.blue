@@ -80,3 +80,10 @@ set -g pane-border-style 'bg=color27 fg=color51'
 set -g status-bg color33
 
 set -g mouse on
+
+#
+# More sophisticated solutions also use an IF to check if we are in mouse
+# mode but since this doesn't need to be general, I'm not doing that because
+# the of the quoting nightmare that would entail.
+bind-key -T root WheelDownPane "if-shell -Ft= \"#{alternate_on}\" \"send-keys -t= down; send-keys -t= down ; send-keys -t= down\"   \"send-keys -t= -M\""
+bind-key -T root WheelUpPane   "if-shell -Ft= \"#{alternate_on}\" \"send-keys -t= up; send-keys -t= up ; send-keys -t= up\"         \"copy-mode -e ; send-keys -t= -M\""
