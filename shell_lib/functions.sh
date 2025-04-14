@@ -831,6 +831,17 @@ rsync-help(){
 	EOF
 }
 
+cmake-help(){
+    cat <<-EOF
+		Build an auxiliary file like assembler or preprocessor output
+		- Look of the path of the .o file that gets built:
+		    a/b/c/CMakeFiles/<target-name>.dir/d/e/f/file.F90.o
+		- CD progressively into this path to the last directory that has a Makefile
+		- Run \`make d/e/f/file.F90.s\` or \`make d/e/f/file.F90.i\` to generate
+		  assembler or preprocessor output respectively.
+	EOF
+}
+
 rsync(){
 
     #
