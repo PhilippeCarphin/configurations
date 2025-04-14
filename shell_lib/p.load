@@ -1,27 +1,59 @@
 #!/usr/bin/env bash
-
-PACK_DIR="${HOME}/.profile.d/interactive/pack"
+#
 # Some people have aliases like
 # alias loadrmn='. r.load.dot <bla bla>'
 # which works fine but this system is still quite simple and has some benefits
-# - :q
+# - It works with `command_not_found_handle` to load a package if the command
+#   doesn't exist
+# - It has an autocomplete
+# - It always prints what it runs so the information can be given to someone
+#   else
+# - It provides a function for adding adding and editing files quickly
+# - A function for creating links inside pack dir quickly for use by the
+#   command_not_found_handle
 #
+
+PACK_DIR="${HOME}/.profile.d/interactive/pack"
 
 # Print and source a file named '$1' inside ${PACK_DIR}
 function p.load(){
+    if ! [[ -v p_load_depth ]] ; then
+        local p_load_depth=1
+    else
+        local p_load_depth=$((p_load_depth+1))
+    fi
     local file="${PACK_DIR}/$1"
     if ! [[ -f "${file}" ]] ; then
-        printf "%s: \033[1;31mERROR\033[0m: %s\n" "${FUNCNAME[0]}" "No file named '$1' in '${PACK_DIR}'"
+        printf "\033[35mp.load(${p_load_depth}): \033[1;31mERROR\033[0m: %s\n" "No file named '$1' in '${PACK_DIR}'"
         return 1
     fi
+    if [[ -z ${P_LOAD_PRINT_SIMPLE} ]] ; then
+        # This is nicer because each line is printed then evaluated but it means
+        # that we can't have things like 'if's on multiple lines.  The purpose
+        # of these files is not to have any logic so I thing this is an
+        # acceptable drawback
+        while read l ; do
+            if [[ "${l}" == '##'* ]] || [[ "${l}" == "" ]] ; then
+                continue
+            fi
 
-    # Printing is useful: I can do 'p.load intel' to load the intel compiler
-    # and copy-paste the output from my shell into a Teams message
-    # to tell someone how to load Intel compiler
-    printf "\033[1;37m%s\033[0m\n" "$file"
-    cat "$file" > >(command grep -v '^##' | command sed 's/^\s*[^#].*/\x1b[1;32m\0\x1b[0m/;   s/^\s*#.*/\x1b[34m\0\x1b[0m/g;')
-    source $file
+            if [[ "${l}" == '#'* ]] ; then
+                printf "\033[35mp.load(%d): \033[34m%s\033[0m\n" "${p_load_depth}" "${l}"
+                continue
+            fi
+
+            printf "\033[35mp.load(%d): \033[1;32m%s\033[0m\n" "${p_load_depth}" "${l}"
+            </dev/null eval "${l}"
+        done < ${file}
+    else
+        # However we can still have this way we will just source the file
+        # which means we can use any BASH syntax but it's doesn't look as cool
+        printf "\033[1;37m%s\033[0m\n" "$file"
+        cat "$file" > >(command grep -v '^##' | command sed 's/^\s*[^#].*/\x1b[1;32m\0\x1b[0m/;   s/^\s*#.*/\x1b[34m\0\x1b[0m/g;')
+        source $file
+    fi
 }
+
 # Creates links in ${PACK_DIR}.  voir -> utils makes it so that if I try to
 # run voir and I don't have it in my PATH, the command_not_found_handle
 # will load utils which gives voir
@@ -35,6 +67,7 @@ function p.load-gives(){
     fi
     env -C "${PACK_DIR}" ln -svf "${giver}" "${program}"
 }
+
 # View a file from ${PACK_DIR}.  Even if I open the file by absolute path,
 # running from ${PACK_DIR} makes it so that I once in Vim, I can do
 # ':tabnew <filename>' to create a new file in ${PACK_DIR}.
@@ -45,6 +78,7 @@ p.load-view(){
     fi
     env -C ${PACK_DIR} vim "${PACK_DIR}/$1"
 }
+
 # Autocomplete with basenames of files in ${PACK_DIR}
 function _p.load(){
     if (( COMP_CWORD > 1 )) ; then
@@ -61,6 +95,8 @@ complete -F _p.load p.load p.load-gives p.load-view
 # - Invoked in a subshell which allows us to do `unset` the function
 #   to preven infinite recursion without unsetting command_not_found_handle
 #   in the main shell.
+# - Makes it so that the automatic sourcing of a file by this function does
+#   not mess with our environment.
 function command_not_found_handle(){
     local file="${PACK_DIR}/$1"
     if [[ -f "${file}" ]] ; then
@@ -75,6 +111,7 @@ function command_not_found_handle(){
 
 # SSMUSE adapter that adds the package directory to CMAKE_PREFIX_PATH
 # which makes us not need to set 'rmn_DIR'.
+# See issue https://gitlab.science.gc.ca/ssm/ssmuse/-/issues/4
 p.ssmuse(){
     case "$1" in
         -x|-p|-f|-d) ;;
@@ -83,6 +120,9 @@ p.ssmuse(){
     if ! [[ -d $2 ]] ; then
         echo "${FUNCNAME[0]}: ERROR: Second arg to ssmuse command is not an existing directory" >&2
         return 1
+    fi
+    if [[ $2 != */* ]] ; then
+        echo "${FUNCNAME[0]}: ERROR: Second arg to ssmuse needs to have a '/' otherwise ssmuse-sh will fail" >&2
     fi
     if ! . ssmuse-sh $1 $2 ; then
         echo "${FUNCNAME[0]}: ERROR in ssmuse command" >&2
