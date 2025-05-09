@@ -314,3 +314,90 @@ __gitextras_complete_relative_url(){
 	#   ex C : There is no point
 	#
 }
+
+_git_show ()
+{
+	__git_has_doubledash && return
+
+	case "$cur" in
+	--pretty=*|--format=*)
+		__gitcomp "$__git_log_pretty_formats $(__git_pretty_aliases)
+			" "" "${cur#*=}"
+		return
+		;;
+	--diff-algorithm=*)
+		__gitcomp "$__git_diff_algorithms" "" "${cur##--diff-algorithm=}"
+		return
+		;;
+	--submodule=*)
+		__gitcomp "$__git_diff_submodule_formats" "" "${cur##--submodule=}"
+		return
+		;;
+	--*)
+		__gitcomp "--pretty= --format= --abbrev-commit --no-abbrev-commit
+			--oneline --show-signature --patch
+			--expand-tabs --expand-tabs= --no-expand-tabs
+			$__git_diff_common_options
+			"
+		return
+		;;
+	*)                               # EXTRA
+		_gitextras_show          # EXTRA
+		return ;;                # EXTRA
+
+	esac
+	__git_complete_revlist_file
+}
+
+_gitextra_dir_is_empty(){
+	[[ -z $(find "$1" -mindepth 1 -maxdepth 1 -print -quit) ]]
+}
+_gitextra_single_file_candidate(){
+	local rel_to=$1
+	if ((${#COMPREPLY[@]} != 1)) ; then
+		return
+	fi
+
+	if [[ -d ${rel_to}/${COMPREPLY[0]} ]] ; then
+		if _gitextra_dir_is_empty ${rel_to}/${COMPREPLY[0]}; then
+			COMPREPLY[0]+="/ "
+		else
+			COMPREPLY[0]+=/
+		fi
+	elif [[ -f ${rel_to}/${COMPREPLY[0]} ]] ; then
+		COMPREPLY[0]+=" "
+	fi
+}
+
+_gitextras_show()
+{
+	compopt +o default
+	# Assumes that COMP_WORDBREAKS contains ':'
+	if [[ "${cur}" != *:* ]] ; then
+		__git_complete_refs
+	else
+		rev=${cur%%:*}
+		rev=${rev:-HEAD}
+		file=${cur#*:}
+
+		# git show A:B where B is a path can work in two different ways
+		# depending on whether B starts with './'
+		# - YES: Interpret it relative to PWD
+		# - NO: Interpret relative to the root of the repo
+		if [[ ${file} == ./* ]] ; then
+			COMPREPLY=( $(compgen -P "./" -W "$(git ls-tree --name-only ${rev} ${file%/*}/)" -- ${file#./}) )
+			_gitextra_single_file_candidate "."
+		else
+			local repo_root=$(git rev-parse --show-toplevel)
+			local dir=""
+			if [[ ${file} == */* ]] ; then
+				# Remove the partial path component and ensure
+				# that we have a trailing slash so that git ls-tree
+				# gives us files *inside* ${dir}.
+				dir=${file%/*}/
+			fi
+			COMPREPLY=( $(cd ${repo_root} && compgen -W "$(git ls-tree --name-only ${rev} ${dir})" -- ${file}))
+			_gitextra_single_file_candidate ${repo_root}
+		fi
+	fi
+}
