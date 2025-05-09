@@ -1060,7 +1060,6 @@ rmb(){
         local answer
         builtin read -p "${FUNCNAME[0]}: Running 'rm -rf ${directory_to_empty}/*', are you sure [y/n]> " answer
         if [[ ${answer} == y ]] ; then
-            set -x
             rm -rf "${directory_to_empty}"/*
         else
             exit 1

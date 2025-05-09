@@ -14,7 +14,6 @@
 # set the tmpdir to something else and therefore the `r.cleanup_tmpdir` ran
 # when exiting those shells will not erase the TMPDIR set here.
 ################################################################################
-date >> $HOME/vscode-file
 # Dump environment to file at very beginning to see what the env looks
 # like when vscode server logs in.
 #

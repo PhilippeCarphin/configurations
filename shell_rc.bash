@@ -36,6 +36,34 @@ shell_rc.bash.main(){
     configure_vim ; unset -f $_
     export EDITOR=ec
     export PYTHONSTARTUP=$HOME/.pyrc
+    remove_dot_from_path
+}
+
+#
+# Verify this at home but at work, I tried to find why I have a '.' as one of
+# the components of my PATH but I couldn't find it.  When I have my TMUX
+# default-command set to '... /bin/bash -l' (BASH4) I don't have this but when
+# I have it set to '$HOME/fs1/bin/bash' (which is a BASH5 compiled from source)
+# I end up with this '.'.  I have also tried launching BASH with -x (env -i
+# ${b} -lx) and I get the same result, doesn't happen with /bin/bash but does
+# happen with my bash.  The first time the xtrace output shows one of the files
+# adding to PATH, the dot is already there.
+remove_dot_from_path(){
+    local IFS=':'
+    local trailing_colon=false
+    if [[ "${PATH}" == *: ]] ; then
+        trailing_colon=true
+    fi
+    p=($PATH)
+    newpath=()
+    for d in "${p[@]}" ; do
+        if [[ ${d} == "." ]] ; then
+            echo "Removing '.' from PATH" >&2
+            continue
+        fi
+        newpath+=("${d}")
+    done
+    PATH="${newpath[*]}"
 }
 
 
