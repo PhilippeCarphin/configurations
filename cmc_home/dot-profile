@@ -27,7 +27,7 @@ function p.profile.main_interactive(){
     check-alert-files ; unset -f $_
     maybe_cd_to_pbs_o_workdir ; unset -f $_
     complete -o default -o nospace -o filenames -F _DottableCompletion source .
-    unalias which # rhel aliases which to something that includes aliases, but I know that 'type' exists
+    if alias which 2>/dev/null ; then unalias which ; fi # rhel aliases which to something that includes aliases, but I know that 'type' exists
 }
 
 maybe_cd_to_pbs_o_workdir(){
