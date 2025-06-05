@@ -603,38 +603,32 @@ p.last-finger(){
     echo "$(date --date=@${epoch}) (atime of ~/.plan (may be inacurrate))"
 }
 
-print_array(){
+print-array(){
     local -n  ref=$1
     local     name=$1
     local fmt="\033[35m%s\033[0m[\033[36m%s\033[0m]='\033[32m%s\033[0m'\n"
+    if ((${#ref[@]} == 0)) ; then
+        printf "Array '%s' is empty\n" ${name}
+    fi
     for k in ${!ref[@]} ; do
         printf "${fmt}" "${name}" "$k" "${ref[$k]}"
     done
 }
+complete -A arrayvar print-array
 
-print_list(){
+print-list(){
     if (( $# == 2 )) ; then
         local sep=$1 ; shift
     else
         local sep=:
     fi
     local -n ref=$1
-
-    # echo "${ref}" | tr "${sep}" "\n" | awk "{print NR\": '\"\$0\"'\"}"
-
     local IFS="${sep}"
     local -a elements=(${ref})
     unset IFS
-    print_array elements
+    print-array elements
 }
-
-_print_array(){
-    local cur="${COMP_WORDS[COMP_CWORD]}"
-    local arrays=($(compgen -A arrayvar))
-    arrays+=($(declare -A | cut -d ' ' -f 3 | cut -d = -f 1))
-    COMPREPLY=($(compgen -W "${arrays[*]}" -- "${cur}"))
-}
-complete -c _print_array print_array
+complete -A variable print-list
 
 # Some functions like 'trap -p SIG' print their output in such a way that it
 # can be manually copy-pasted into a shell to set the same trap:
