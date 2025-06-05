@@ -42,7 +42,7 @@ function transmit_var(){
     # echo "${varname}='${!varname//\'/\'\\\'\'}'"
 
     # BASH already has us covered starting at bash 4.something
-    # printf "${varname}=${!varname@Q} "
+    # printf "Transmitting var: ${varname}=${!varname@Q}\n" >&2
     printf "${varname}=${!varname@Q} "
 }
 
