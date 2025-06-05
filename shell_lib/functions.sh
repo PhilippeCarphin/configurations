@@ -1049,6 +1049,20 @@ jq-help(){
 	EOF
 }
 
+nopwdpath(){
+    local -n varname=${1:-PATH}
+    local IFS=${2:-:}
+    local newpath=()
+    for p in ${varname} ; do
+        case "${p}" in
+            ""|.) ;;
+            *) newpath+=("${p}") ;;
+        esac
+    done
+    varname="${newpath[*]}"
+}
+
+
 # Do `rm -rf ./*` but only if the current directory starts with `build`.  This
 # is for deleting CMake build directories and ensuring I don't delete other
 # things which has happened to me many times.
