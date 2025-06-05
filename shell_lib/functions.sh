@@ -842,31 +842,20 @@ cmake-help(){
 }
 
 rsync(){
-
     #
-    # Normalize arguments using getopt
-    #
-    eval local normalized_args=($(getopt -n "" --longoptions recursive -o "ra" -- "$@" 2>/dev/null || true))
-
-    #
-    # Check if there is a '-r' in the arguments
-    #
-    local -i i=0
-    while (( i < ${#normalized_args[@]} )) ; do
-        case "${normalized_args[i]}" in
-            -r|--recursive) has_r=true ;;
-            --) ((i++)) ; break ;;
-        esac
-        ((i++))
-    done
-
-    #
-    # Collect positional argumetns
+    # Unhandled options cause error messages from getopt but we don't care, all
+    # we want is to know if --recursive/-r was used and get the positional arguments.
+    # The only problem is options that take arguments: the argument will be taken
+    # as a posarg.  This is super unlikely and if it happens
     #
     local posargs=()
-    while (( i < ${#normalized_args[@]} )) ; do
-        posargs+=("${normalized_args[i]}")
-        ((i++))
+    eval local normalized_args=($(getopt -n "" --longoptions recursive -o "ra" -- "$@" 2>/dev/null || true))
+    local -i i=0
+    for(( ;i<${#normalized_args[@]}; i++)) ; do
+        case "${normalized_args[i]}" in
+            -r|--recursive) has_r=true ;;
+            --) posargs=("${normalized_args[@]:$((++i))}") ; break ;;
+        esac
     done
 
     #
@@ -878,30 +867,54 @@ rsync(){
     fi
 
     #
-    # Warn of probably unwanted situation: for example,
-    #   rsync localhost:/some/path/model_data remote_host:/some/path/model_data
-    # which would leave us with /some/path/model_data/model_data.
+    # When there is a / at the end of the source posarg, there is no chance it
+    # won't do what we want.
     #
-    # No trailing slash on first arg means we copy first arg *into* second arg.
-    if [[ "${posargs[0]}" != */ ]] ; then
-        # We consider it to probably not be what the user wants if the
-        # basenames of both arguments match.
-        local base0=${posargs[0]##*/} # Garanteed no trailing slash
-        local base1="$(basename ${posargs[1]})" # Could have a trailing slash,
-                                                # basename takes care of that.
-        if [[ "${base0}" == "${base1}" ]] ; then
-            if [[ "${posargs[1]}" == *:* ]] ; then
-                local dest_host=${posargs[1]%%:*}
-            else
-                local dest_host=localhost
-            fi
-            local location_at_dest=${posargs[1]##*:}
-            echo "This will create ${location_at_dest}/${base1} on ${dest_host}"
-            local answer
-            read -p "are you sure you want to continue? [y/n] > " answer
-            if [[ "${answer}" == "n" ]] ; then
-                return 1
-            fi
+    if [[ "${posargs[0]}" == */ ]] ; then
+        command rsync "$@"
+        return
+    fi
+
+    local base_src="$(basename ${posargs[0]})"
+    local base_dst="$(basename ${posargs[1]})"
+    if [[ "${base_src}" == "${base_dst}" ]] ; then
+        echo "This will create ${posargs[1]##*:}/${base1} at the destination"
+        local answer
+        read -p "are you sure you want to continue? [y/n] > " answer
+        if [[ "${answer}" == "n" ]] ; then
+            return 1
+        fi
+    fi
+
+    command rsync "$@"
+}
+################################################################################
+# When doing
+#     rsync -r /a/b/my-dir somehost:/c/d/my-dir
+# where we have the same basename for both arguments we most likely want
+# '/a/b/my-dir' and /c/d/my-dir to have the same *content*
+################################################################################
+rsync(){
+    # Assume that the last two arguments are the source and destination
+    local src="${@: -2:1}" # Space before '-' is necessary
+    local src_base="$(basename "${src}")"
+    local src_path="${src##*:}"
+    local dst="${@: -2:1}" # Space before '-' is necessary
+    local dst_base="$(basename "${dst}")"
+    local dst_path="${dst##*:}"
+
+    # With no trailing slash, rsync copies SRC *into* DST which surely not what
+    # you want when SRC and DST have the same basenames because you want to make
+    # two directories have the same content, not copy one directory into the
+    # other.
+    if [[ "${src}" != */ ]] \
+       && [[ "${src_base}" == "${dst_base}" ]] \
+       && [[ -d "${src##*:}" ]] ; then
+        echo "This will create ${posargs[1]##*:}/${base1} at the destination"
+        local answer
+        read -p "are you sure you want to continue? [y/n] > " answer
+        if [[ "${answer}" == "n" ]] ; then
+            return 1
         fi
     fi
 
