@@ -9,7 +9,7 @@ function p.profile.main(){
     source ~/.philconfig/shell_rc.bash.work
     configure_spack ; unset -f $_
     set_and_goto_true_home ; unset -f $_
-    export PS4='+ \033[35m${BASH_SOURCE[0]}\033[36m:\033[1;37m${FUNCNAME:+${FUNCNAME[0]}}\033[22;36m:\033[32m${LINENO}\033[36m:\033[0m '
+
     if [[ "$-" == *i* ]] ; then
         p.profile.main_interactive ; unset -f $_
     fi
@@ -27,7 +27,7 @@ function p.profile.main_interactive(){
     check-alert-files ; unset -f $_
     maybe_cd_to_pbs_o_workdir ; unset -f $_
     complete -o default -o nospace -o filenames -F _DottableCompletion source .
-    if alias which 2>/dev/null ; then unalias which ; fi # rhel aliases which to something that includes aliases, but I know that 'type' exists
+    if alias which >/dev/null 2>&1 ; then unalias which ; fi # rhel aliases which to something that includes aliases, but I know that 'type' exists
 }
 
 maybe_cd_to_pbs_o_workdir(){
@@ -37,17 +37,20 @@ maybe_cd_to_pbs_o_workdir(){
 
     local jobid dir
     if [[ "${PBS_JOBID}" == *,* ]] ; then
-        # Coming from sshj
-        jobid=${PBS_JOBID%%,*}
-        dir=${PBS_JOBID##*,}
-        export PBS_JOBID=${jobid}
-        export PBS_O_WORKDIR=${dir}
+        # Coming from sshj variables are injected using PBS_JOBID because it is
+        # one of the variables that can be sent over SSH with -oSendEnv
+        local IFS=","
+        local vars=( ${PBS_JOBID} )
+        export PBS_JOBID=${vars[0]}
+        export PBS_O_WORKDIR=${vars[1]}
+        export PBSTMPFSDIR=${vars[2]}
         echo "Coming from sshj, PBS_JOBID=${PBS_JOBID}, PBS_O_WORKDIR=${PBS_O_WORKDIR}" >&2
     elif [[ "${PBS_ENVIRONMENT}" == PBS_INTERACTIVE ]] ; then
         # Coming from qsub -I
         echo "${PBS_JOBID}" > ~/.ssh/current_job
-        echo "JOBID ${PBS_JOBID} written in ~/.ssh/current_job" >&2
         echo "${PBS_O_WORKDIR}" >> ~/.ssh/current_job
+        echo "${PBS_TMPFSDIR}" >> ~/.ssh/current_job
+        echo "JOBID ${PBS_JOBID} written in ~/.ssh/current_job" >&2
     fi
 
     if ! cd "${PBS_O_WORKDIR}" ; then
