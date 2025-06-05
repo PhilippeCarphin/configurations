@@ -522,7 +522,12 @@ $//' "$@"
 }
 
 p.unansi(){
-    gsed 's/\x1b\[[0-9;]*m//g' "$@"
+    local repl='s/\x1b\[[0-9;]*m//g'
+    if type gsed >/dev/null 2>&1 ; then
+        gsed "${repl}" "$@"
+    else
+        sed "${repl}" "$@"
+    fi
 }
 
 p.dusage(){
