@@ -1032,7 +1032,9 @@ clip(){
            return 1
         fi
     fi
-    printf "\033]52;c;%s\007" "$(base64)"
+    local clip_file=$1
+    # man base64: with no file or when file is '-', read from stdin
+    printf "\033]52;c;%s\007" "$(base64 $clip_file)"
 }
 
 jq-help(){
