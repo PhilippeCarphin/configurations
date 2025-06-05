@@ -27,27 +27,33 @@ $if Bash
     set colored-stats on
 $endif
 
+$if Python
+    # Surround the current input with help(_) and hit enter
+    # - C-a to go to beginning of line
+    # - Type "help("
+    # - C-e to go to end of line
+    # - Type ")" and Enter
+    "\C-h": "\C-ahelp(\C-e)\n"
+$endif
+
 
 $if mode=emacs
+    # Change C-f and C-b to move by shell words
     # Originally, C-f is forward-char and M-f is forward-word but I use
     # the Fn-' to produce right-arrow.
     "\C-f": shell-forward-word # Originally forward-char
     "\C-b": shell-backward-word # Originally backward-char
+
     "\el": forward-word
     "\eh": backward-word
-    "\eL": shell-forward-word
-    "\eH": shell-backward-word
 
     # "\C-t": dynamic-complete-history
     # "\C-s": '\C-a \C-f \C-w' # Can't use C-s because it "freezes the probram"
     # "\C-'": '\C-a\C-f\C-w'   # Also unusable for some reason
-    "\C-t": '\C-a\C-f\C-w'
-    #
-    "\C-xp": "\C-aPATH=\C-e:${PATH}\C-a\ef\e[C"
-    # "\C-v": "\e\C-e" # WEIRD: Causes segfault in python3 interactive shell
 
-    # "\e[Z": forward-word
-    # "\C-h": backward-word
+    # Delete command (first word on command line)
+    "\C-y": '\C-a\C-f\C-w'
+
     "\C-x \C-r": re-read-init-file
     # "\C-n": non-incremental-forward-history-search
     # Takes what you already have, puts it in "$(...)" and ends with your cursor
