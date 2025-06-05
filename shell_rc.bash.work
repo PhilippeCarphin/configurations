@@ -3,6 +3,7 @@
 [ -d $HOME/.bash_completion.d ] && source-dir "$HOME/.bash_completion.d"
 source ~/.git-completion.bash
 source ~/.philconfig/cmc_home/cmc_functions.sh
+_powerline_decorations=("" 🐧)
 
 glcurl-project-job(){
     if [[ "$1" == -h ]] || (( $# != 2 )); then
