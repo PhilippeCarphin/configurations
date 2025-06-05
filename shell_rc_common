@@ -68,3 +68,31 @@ source-dir(){
 p.error(){
     printf "${FUNCNAME[1]}: \033[1;31mERROR\033[0m: $*\n" >&2
 }
+
+_setup_ps0(){
+    _ps0_phrases=()
+    _ps0_color_cube_path=(21 57 93 129 165 201 200 199 198 197 196 202 208 214 220 226 190 154 118 82 46 40 39 33 27)
+    _ps0_color_cube_index=0
+    # Ps0
+    if [[ -f ~/ps0 ]] ; then
+        <~/ps0 readarray _ps0_phrases
+    fi
+
+    _set_ps0(){
+        _ps0_color_cube_index=$(( (${_ps0_color_cube_index} + 1) % ${#_ps0_color_cube_path[@]} ))
+        local c=${_ps0_color_cube_path[_ps0_color_cube_index]}
+        printf -v PS0 "\001\033[1;38;5;${c}m\002%s\001\033[0m\002" "${_ps0_phrases[$(( $RANDOM % ${#_ps0_phrases[@]} ))]}"
+    }
+    if ((${BASH_VERSINFO[0]} >= 5)) && [[ "${PROMPT_COMMAND@a}" == *a* ]] ; then
+        PROMPT_COMMAND+=(_set_ps0)
+    else
+        PROMPT_COMMAND=${PROMPT_COMMAND:+${PROMPT_COMMAND};}_set_ps0
+    fi
+}
+
+_unset_ps0(){
+    unset PS0
+    _set_ps0(){
+        :
+    }
+}
