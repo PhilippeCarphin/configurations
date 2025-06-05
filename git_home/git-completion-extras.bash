@@ -211,8 +211,11 @@ __gitextras_add_or_set-url(){
 __gitextras_complete_url(){
 	compopt -o nospace
 	local url=${1:-${cur}}
-	#local url="${words[cword]}"
 	case "${url}" in
+		/*)
+			# Assume that a path starting with '/' is a filesystem path
+			_filedir ;
+			return ;;
 		..*)
 			__gitextras_complete_relative_url ; return ;;
 		git@*:*/*|https://*/*/)
@@ -385,6 +388,7 @@ _gitextras_show()
 		# - YES: Interpret it relative to PWD
 		# - NO: Interpret relative to the root of the repo
 		if [[ ${file} == ./* ]] ; then
+			# Assumes that COMP_WORDBREAKS contains ':'
 			COMPREPLY=( $(compgen -P "./" -W "$(git ls-tree --name-only ${rev} ${file%/*}/)" -- ${file#./}) )
 			_gitextra_single_file_candidate "."
 		else
@@ -396,6 +400,7 @@ _gitextras_show()
 				# gives us files *inside* ${dir}.
 				dir=${file%/*}/
 			fi
+			# Assumes that COMP_WORDBREAKS contains ':'
 			COMPREPLY=( $(cd ${repo_root} && compgen -W "$(git ls-tree --name-only ${rev} ${dir})" -- ${file}))
 			_gitextra_single_file_candidate ${repo_root}
 		fi
