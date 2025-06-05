@@ -2,7 +2,7 @@
 
 p.view-rev-file(){
     case "${1}" in -h|--help)
-        printf "Show a file at a certain revision.  Convenience wrapper for 'git show <rev>:<file>'\n\n"
+        printf "Show a file at a certain revision.  Convenience wrapper for 'git show <rev>:<file>' with powerful autocomplete which opens the file in Vim\n\n"
         printf "\t${FUNCNAME[0]} <rev> <file> [vim-args...]\n"
         printf "\t${FUNCNAME[0]} <rev>:<file>:<line>\n\n"
         printf "The one argument form is meant to take the output\n"
