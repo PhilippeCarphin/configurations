@@ -32,6 +32,7 @@ function p.load(){
         # that we can't have things like 'if's on multiple lines.  The purpose
         # of these files is not to have any logic so I thing this is an
         # acceptable drawback
+        local l
         while read l ; do
             if [[ "${l}" == '##'* ]] || [[ "${l}" == "" ]] ; then
                 continue
