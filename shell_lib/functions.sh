@@ -387,7 +387,7 @@ xflow(){
 }
 
 # WORK
-p.view_listing(){
+p.view-listing(){
     local compressed_listing=$1
     if ! [[ -f "${compressed_listing}" ]] ; then
         p.error "Listing '${compressed_listing}' does not exist"
