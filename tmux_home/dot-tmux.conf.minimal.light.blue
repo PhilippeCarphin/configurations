@@ -7,13 +7,6 @@
 # Sane scrolling (I don't know where I got this or what it does)
 set -g terminal-overrides 'xterm*:smcup@:rmcup@'
 
-# Split windows, the regular key to split horizontally is '%' which is annoying
-# because the pinky needs to switch from CTRL to SHIFT.  This is better and more
-# intuitive
-bind / split-window -h -c "#{pane_current_path}"
-bind é split-window -h -c "#{pane_current_path}" # / does 'é' when I'm in CanadianMultilingualStandard keyboard
-bind - split-window    -c "#{pane_current_path}"
-
 # Set prefix to be 'C-a'.  By itself this prevents you from using 'C-a' to go
 # to the start of the line in BASH.  The second line makes 'prefix C-a' send
 # the key 'C-a' to the underlying process.  Therefore, pressing 'C-a C-a'
@@ -28,6 +21,17 @@ bind r display 'Sourcing config file ~/.tmux.conf' \; source-file ~/.tmux.conf
 set -g status-right 'ORJI CASPAR #(whoami)@#(hostname)  #(TZ="America/Toronto" date "+%%Y-%%m-%%d %%H:%%M")'
 
 set -g default-terminal "xterm-256color"
+
+# Scrollback:  Increase the size to a ridiculous amount
+# Suppose very long lines of 400chars, 400*100000 = 80_000_000 = 40M/pane
+# Say 5 windows with 4 panes, that's 20 panes.  That gives 800M and we're being
+# very pecimistic with the 400 chars per line and assuming that all the panes
+# have a completely full history.
+set -g history-limit 100000
+
+# Clear history
+bind -n C-l send-keys C-l \; run 'sleep 0.1' \; clear-history
+
 
 # Ref : https://gitlab.science.gc.ca/hpc/support/-/issues/851
 # set -g default-command "env -u PATH -u TMPDIR -u FIX_THE_PATHS -u ORDENV_SETUP -u ORDENV_USER_PROFILE_FILENAMES /bin/bash --login"
@@ -60,27 +64,38 @@ bind -r C-l resize-pane -R 4
 bind -r C-j resize-pane -D 4
 bind -r C-k resize-pane -U 4
 
+# Split windows, the regular key to split horizontally is '%' which is annoying
+# because the pinky needs to switch from CTRL to SHIFT.  This is better and more
+# intuitive
+bind / split-window -h -c "#{pane_current_path}"
+bind é split-window -h -c "#{pane_current_path}" # / does 'é' when I'm in CanadianMultilingualStandard keyboard
+bind - split-window    -c "#{pane_current_path}"
+
+################################################################################
+# Copy-mode configuration
+################################################################################
 set -g mode-keys vi
 # Cause if my keybaord is in Canadian, [ is dead ^ which doesn't send a key right away
 bind Enter copy-mode
 bind ç paste-buffer
+bind -T copy-mode-vi v send -X begin-selection
+bind -T copy-mode-vi y send -X copy-selection-and-cancel
+# Add extra keys to quit copy-mode (default is just 'q' and Enter)
+bind -T copy-mode-vi Escape send -X cancel
+bind -T copy-mode-vi C-g send -X cancel
+bind -T copy-mode-vi C-c send -X cancel
 
-# Scrollback:  Increase the size to a ridiculous amount
-# Suppose very long lines of 400chars, 400*100000 = 80_000_000 = 40M/pane
-# Say 5 windows with 4 panes, that's 20 panes.  That gives 800M and we're being
-# very pecimistic with the 400 chars per line and assuming that all the panes
-# have a completely full history.
-set -g history-limit 100000
-
-# Clear history
-bind -n C-l send-keys C-l \; run 'sleep 0.1' \; clear-history
-
+################################################################################
+# Copy-mode configuration
+################################################################################
 set -g pane-active-border-style 'bg=color45 fg=color51'
 set -g pane-border-style 'bg=color27 fg=color51'
 set -g status-bg color33
 
+################################################################################
+# Mouse configuration
+################################################################################
 set -g mouse on
-
 #
 # More sophisticated solutions also use an IF to check if we are in mouse
 # mode but since this doesn't need to be general, I'm not doing that because
