@@ -1094,3 +1094,8 @@ rmb(){
         fi
     )
 }
+
+find1(){
+    local dir=$1 ; shift
+    find -L "$dir" -mindepth 1 -maxdepth 1 "$@"
+}
