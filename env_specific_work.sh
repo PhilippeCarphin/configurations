@@ -19,6 +19,7 @@ env_specific_home(){
     export PATH=$HOME/tools/tmux-3.5a/bin:$PATH
     export PATH=$HOME/tools/node/bin:$PATH
     export PATH=$HOME/bin:$PATH
+    export PATH="/home/phc001/.pixi/bin:$PATH"
 
     local p
     host=$(hostname -f)
