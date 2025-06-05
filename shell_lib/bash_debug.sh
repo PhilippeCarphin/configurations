@@ -26,9 +26,6 @@
 # Note: ${FUNCNAME:+${FUNCNAME[0]}} is so that we only attempt to dereference
 # FUNCNAME if it is set.  This way we can use this PS4 in scripts that have
 # `set -o nounset`
-
-export PS4='+ \033[35m${BASH_SOURCE[0]}\033[36m:\033[1;37m${FUNCNAME:+${FUNCNAME[0]}}\033[22;36m:\033[32m${LINENO}\033[0m '
-
 function debug(){
     case $1 in -h|--help)
         echo "Run this command to enable xtrace (set -x) with trace output going to a file in ~/.bash_debug.d"
@@ -68,8 +65,12 @@ ps4(){
         short) PS4='+ \033[35m${BASH_SOURCE[0]##*/}\033[36m:\033[1;37m'${funcname}'\033[22;36m:\033[32m${LINENO}\033[36m:\033[0m ' ;;
         no-color) PS4='+ ${BASH_SOURCE[0]}:'${funcname}':${LINENO}: ' ;;
         short-no-color) PS4='+ ${BASH_SOURCE[0]##*/}:'${funcname}':${LINENO}: ' ;;
-        time) if [[ ${BASH_VERSINFO[0]} < 5 ]] ; then echo "ERROR: BASH < 5 does not have \$EPOCHREALTIME" ; return 1 ; fi
+        time) if [[ ${BASH_VERSINFO[0]} < 5 ]] ; then
+                  echo "ERROR: BASH < 5 does not have \$EPOCHREALTIME"
+                  return 1
+              fi
               PS4=$'+ \033[35m${EPOCHREALTIME}\033[36m:\033[1;37m'${funcname}'\033[22;36m:\033[32m${LINENO}\033[36m:\033[0m ' ;;
+        *) printf "Unknown value: '%s'.  Should be full|short|no-color|short-no-color|time\n" "$1" ; return 1 ;;
     esac
     # Note: PS4 is normally a shell variable and is not exported but exporting
     # it is useful for doing stuff like `bash -x some-script.sh` to run a script
@@ -81,3 +82,8 @@ _ps4(){
 }
 complete -F _ps4 ps4
 
+if [[ -t 2 ]] ; then
+    ps4 full
+else
+    ps4 no-color
+fi
