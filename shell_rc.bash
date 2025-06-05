@@ -143,6 +143,9 @@ configure_history(){
     # At work this is set by /etc/profile
     HISTCONTROL=ignoredups
     if (( BASH_VERSINFO[0] > 4 )) ; then
+        # This makes non-array variables become an array with the original value
+        # of the variable as the 0-th element and "history -a" as the 1-st element
+        # and if the variable is an array, then it does the normal thing.
         PROMPT_COMMAND+=("history -a")
     else
         PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND ; }history -a"
