@@ -33,4 +33,3 @@ case ${BASH_VERSINFO[0]} in
 esac
 
 source ~/user-venv/bin/activate
-source ~/.philconfig/shell_lib/bash_debug.sh
