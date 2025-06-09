@@ -628,6 +628,29 @@ print-list(){
     unset IFS
     print-array elements
 }
+list-remove(){
+    local -n list=$1
+    local to_remove=$2
+    local sep=':'
+    local IFS="${sep}"
+
+    local in_array=(${list})
+    local result_array=()
+    for a in "${in_array[@]}" ; do
+        if [[ "${a}" == ${to_remove} ]] ; then
+            echo "${FUNCNAME[0]}: Removing '$a' from ${!list}" >&2
+            continue
+        fi
+        result_array+=("${a}")
+    done
+
+    if [[ "${list}" == *${sep} ]] && [[ "${to_remove}" != "" ]] ; then
+        result_array+=("")
+    fi
+
+    list="${result_array[*]}"
+}
+
 complete -A variable print-list
 
 # Some functions like 'trap -p SIG' print their output in such a way that it
@@ -1098,4 +1121,13 @@ rmb(){
 find1(){
     local dir=$1 ; shift
     find -L "$dir" -mindepth 1 -maxdepth 1 "$@"
+}
+
+findbl(){
+    local dir=$1 ; shift
+    find "${dir}" -type l "$@" | while read l ; do
+        if ! [[ -e $l ]] ; then
+            echo "${l}"
+        fi
+    done
 }
