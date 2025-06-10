@@ -1131,3 +1131,7 @@ findbl(){
         fi
     done
 }
+
+ssh-key-signature(){
+    ssh-keygen -lf "$@"
+}
