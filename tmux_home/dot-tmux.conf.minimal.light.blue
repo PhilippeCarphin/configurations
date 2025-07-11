@@ -44,7 +44,7 @@ set -g default-command \
         DISPLAY=$DISPLAY \
         LANG=$LANG \
         PS4="+ \033[35m\${BASH_SOURCE[0]}\033[36m:\033[1;37m\${FUNCNAME:+${FUNCNAME[0]}}\033[22;36m:\033[32m\${LINENO}\033[36m:\033[0m " \
-    /bin/bash --login'
+    /bin/bash --init-file /home/phc001/.philconfig/tmux_home/init-file.sh'
 
 ################################################################################
 # Pane and window numbering, creation, selection, and manipulation
