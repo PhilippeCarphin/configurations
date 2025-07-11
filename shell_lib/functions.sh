@@ -1117,6 +1117,35 @@ rmb(){
         fi
     )
 }
+print-seconds(){
+    local seconds=$1
+    local hours=$((seconds/3600))
+    local minutes=$((seconds%3600/60))
+    local seconds=$((seconds%60))
+    if ((hours > 0)) ; then
+        printf "%dh" ${hours}
+        if ((minutes > 0)) ; then
+            printf %02dm ${minutes}
+            if ((seconds > 0)) ; then
+                printf %02ds ${seconds}
+            fi
+        else
+            if ((seconds > 0)) ; then
+                printf 00m%02ds ${seconds}
+            fi
+        fi
+    else
+        if ((minutes > 0 )) ; then
+            printf %dm ${minutes}
+            if ((seconds > 0)) ; then
+                printf %02ds ${seconds}
+            fi
+        else
+            printf %d ${seconds}
+        fi
+    fi
+    printf $'\n'
+}
 
 find1(){
     local dir=$1 ; shift
