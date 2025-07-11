@@ -290,9 +290,9 @@ complete -F _p.list-prepend p.list-prepend
 glcurl(){
     # Keep unevaluated for printing then evaluate
     local header='PRIVATE-TOKEN: $(<~/.ssh/gitlab-access-token)'
-    local url="https://gitlab.science.gc.ca/api/v4${1}"
+    local url="https://gitlab.science.gc.ca/api/v4${1}" ; shift
     printf 'curl --header "%s" %s\n' "${header}" "${url}" >&2
-    curl --header "$(eval echo ${header})" ${url}
+    curl --header "$(eval echo ${header})" ${url} "$@"
 }
 
 glccurl(){
