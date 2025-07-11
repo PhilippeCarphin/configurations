@@ -6,6 +6,9 @@ shell_rc.bash.main(){
     source "$HOME/.philconfig/shell_lib/view-rev-file.sh"
     [ -d $HOME/.bash_completion.d ] && source-dir "$HOME/.bash_completion.d"
     source "$HOME/.philconfig/shell_lib/functions.sh"
+    if command which glab &>/dev/null ; then
+        eval "$(glab completion)"
+    fi
 
     case ${BASH_VERSINFO[0]} in
         4|5)
