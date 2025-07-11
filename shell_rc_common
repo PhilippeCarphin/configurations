@@ -21,6 +21,8 @@ alias update_repos='repos find ~/Repositories --recursive --merge --cleanup'
 alias ppu='ps hax -o user | sort -n | uniq -c | sort -n'
 # Stolen from gil000: Running Processes Per User
 alias rppu='ps haxr -o user | sort -n | uniq -c | sort -n'
+# Use function because of expand_aliases option
+function ln(){ command ln -nv "$@" ; }
 
 ################################################################################
 # Base functions used in other places
