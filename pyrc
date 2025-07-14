@@ -1,0 +1,151 @@
+#!/usr/bin/env python3
+
+# Requires the environment variable PYTHONSTARTUP to be set to the path of this
+# file
+
+import os
+if "PY_NORC" not in os.environ:
+    # Always import sys, os, subproces in interactive python shells
+    # because it's convenient
+    import sys
+    import os
+    import subprocess
+    import psutil
+    print(f"~/.pyrc: Imported sys, os, subprocess, psutil")
+    #
+    # Define prompts as '██ ' with the colors from the python logo
+    #
+    # Note \x01 or \001 and \x02 and \002 serve the same purpose
+    # as \[ and \] in Bash's PS1, PS2 evaluation.
+    # See https://stackoverflow.com/a/9468954/5795941
+
+    # The darker of the two yellows in the python logo
+    __ps1_color = '255;212;59'
+
+    # The darker of the two blues.  It doen't come out right at all
+    __ps2_color = '48;105;152'
+
+    # The lighter of the two blues, this one comes out OK
+    __ps2_color = '75;139;190'  # This is the true light blue from the logo
+                                # but in a non 24-bit color, it comes out meh
+    __ps2_color = '00;135;255'  # This is color 33 which looks pretty good
+    __ps2_color = '95;135;255'  # This is color 75 which looks closer
+    __ps2_color = '95;135;215'  # This is color 81 which looks best
+
+
+    sys.ps1 = f"\x01\033[38;2;{__ps1_color}m\033[48;2;{__ps1_color}m\x02" \
+              + "\U0001f40d\x01\033[49m\x02\ue0b0\x01\033[0m\x02 "
+    sys.ps2 = f"\001\033[38;5;81m\002\u2588\u2588\ue0b0\001\033[0m\002 "
+
+    # del sys.modules['sys'] # Causes "module sys has no attribute 'modules'" when trying to import, very weird
+    # Anyway, if you do print sys.modules, you see there are 66 modules in there
+    del __ps1_color, __ps2_color
+
+    def view_code(obj):
+        if hasattr(obj, "__code__"):
+            print(f"Object {obj}'s code is in {obj.__code__.co_filename} at line {obj.__code__.co_firstlineno}")
+            subprocess.run(['vim', obj.__code__.co_filename, f'+{obj.__code__.co_firstlineno}'])
+        elif hasattr(obj, "__file__"):
+            print(f"Object {obj} has does not have a __code__ attribute but does have a __file__ attribute: {obj.__file__}")
+            subprocess.run(['vim', obj.__file__])
+        else:
+            print(f"Object {obj} does not have a __code__ or a __file__ attribute, we're out of luck")
+
+    def factors_gen(n):
+        for i in range(1, int(n ** 0.5) + 1):
+            div, mod = divmod(n, i)
+            if mod == 0:
+                yield from (i, div)
+    def factors(n):
+        return list(sorted(set(factors_gen(n))))
+
+    def get_process_memory_usage():
+        import sys
+        import os
+        process = psutil.Process(os.getpid())
+        return process.memory_info().rss
+
+# === NOTE on sys.modules vs globals() ===
+#
+# I used to do `if 'subprocess' not in sys.modules:` but that had a
+# problem that if subprocess was not imported, doing this
+#
+#     >>> 'subprocess' in sys.modules
+#     False
+#     >>> subprocess
+#     NameError: name 'subprocess' is not defined
+#     >>> 'subprocess' in sys.modules
+#     True
+#
+# So without importing, 'subprocess' could still make its way
+# into sys.modules in a weird way.  So instead, I use the
+# check that 'subprocess' not in globals()'.
+
+# === NOTE on global ===
+#
+# Initially, I had given up on un-importing because checking
+# if importing was necessary with sys.modules was giving me
+# weird stuff so I decided to just check if importing was necessary
+#
+# This had another problem which is that when doing
+#
+#     if 'subprocess' not in sys.modules
+#         import subprocess
+#
+# inside a function, the subprocess module was referenced
+# only by a local variable of the function.  It went out of
+# scope at the end causing some stuff to be destroyed while
+# sys.modules sitll contained the key 'subprocess'
+#
+# Making subprocess a global variable solved this problem
+# however now that I am checking using membership in globals()
+# instead, this is OK and it makes it so that I don't have
+# to have a 'del subprocess' at the end.
+#
+# Importing still adds to sys.modules so we still need to
+# delete it from there.
+#
+# === OTHER NOTE ON GLOBAL ===
+#
+# Because of the 'import sys' in the function, this causes
+# other places where 'sys' is used to refer to a local
+# variable unless 'global' is used.
+#
+# For example,
+#
+#     >>> import sys
+#     >>> view_code(os.path.split)
+#     Traceback (most recent call last):
+#       File "<stdin>", line 1, in <module>
+#       File "/home/phc001/.pyrc", line 48, in view_code
+#         del sys.modules['subprocess']
+#     UnboundLocalError: local variable 'sys' referenced before assignment
+#
+# NOTE: If I want to guard against global variables named subprocess or sys
+#
+# On top of that, there was the possibility that I define a
+# global variable with name `sys` or `subprocess`.  Even though
+# that's the most rediculous thing to do, I found a way to 
+# deal with it which is to do
+#
+#        old_sys = None
+#        del_sys = False
+#        global sys  # See note on global
+#        if 'sys' in globals() and not isinstance(sys, type(__builtins__)):
+#                old_sys = sys
+#                print("IMPORTING SYS")
+#                import sys
+#        else:  # See note on sys.modules
+#            print("IMPORTING SYS")
+#            import sys
+#            del_sys = True
+#
+# and do this at the end of the function
+#
+#         if old_sys:
+#             sys = old_sys
+#         if del_sys:
+#             del sys
+#
+# But that's so crazy that I'm bringing it back to the
+# more simple thing.
