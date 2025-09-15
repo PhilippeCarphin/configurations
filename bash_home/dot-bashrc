@@ -2,8 +2,8 @@
 
 source ~/.philconfig/shell_lib/bash_debug.sh
 source ~/.philconfig/shell_rc_common
-source ~/.philconfig/shell_rc.bash
 source ~/.philconfig/shell_rc.bash.home
+source ~/.philconfig/shell_rc.bash
 source ~/.philconfig/shell_lib/functions.sh
 
 if [[ -t 0 ]] ; then

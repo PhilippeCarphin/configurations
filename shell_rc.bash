@@ -24,11 +24,13 @@ shell_rc.bash.main(){
     if [ -z "$STOW_DIR" ] ; then
         printf "\033[1;31mERROR\033[0m: .bashrc:$LINENO STOW_DIR not set"
     fi
-    complete -F _gcps_complete_colon_dirs cd
+
+    source ~/Repositories/github.com/philippecarphin/git-colon-paths/etc/profile.d/git-colon-path-support.bash
+    # complete -F _gcps_complete_dirs cd
     complete -F _complete_vim vim
 
-    alias vim='gcps_wrap_command_colon_paths vim'
-    alias cd='gcps_wrap_command_colon_paths cd'
+    alias vim='_gcps_wrap_command vim'
+    alias cd='_gcps_wrap_command cd'
     alias zsh="NORMAL_MODE=1 PS4=$'+ \033[35m%N\033[0m:\033[32m%i\033[0m ' zsh"
     # GNU xargs runs the command even with empty input.  The BSD version does
     # not by default.  The BSD version does accept -r for compatibility but it
@@ -188,7 +190,11 @@ function configure_vim(){
         done < <(env -0)
         export C_INCLUDE_PATH
         # echo "C_INCLUDE_PATH=${C_INCLUDE_PATH}"
-        gcps_wrap_command_colon_paths command vim -p "$@"
+        if type -f _gcps_wrap_command 2>/dev/null ; then
+            _gcps_wrap_command command vim -p "$@"
+        else
+            command vim -p "$@"
+        fi
     )
 
     # Little addition for to help creating new fiels with vim.  If normal filename
@@ -196,7 +202,7 @@ function configure_vim(){
     # names from a list of files that we commonly want to create.
     # Add extra files if current directory is empty and cur does not contain '/'
     _complete_vim(){
-        _gcps_complete_colon_paths
+        _gcps_complete_files
         local cur=${COMP_WORDS[COMP_CWORD]}
         if (( ${#COMPREPLY[0]} == 0 )) && [[ ${cur} != */* ]] ; then
             local c=$(find $PWD -mindepth 1 -maxdepth 1 -print -quit)
