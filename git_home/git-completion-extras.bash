@@ -40,7 +40,7 @@ _git_clone ()
 		;;
 	*)                                           # EXTRA
 		if ! __gitextras_has_url ; then        # EXTRA
-			__gitextras_complete_url     # EXTRA
+			__gitextras_complete_url ${cur} -d    # EXTRA
 		fi                                   # EXTRA
 		return                               # EXTRA
 		;;                                   # EXTRA
@@ -192,7 +192,8 @@ __gitextras_add_or_set-url(){
 		*,*,0) ;; # Can't happen
 
 		# git remote add <new-name> <URL>
-		remote,add,1) COMPREPLY+=( $(compgen -W "$(git config --get-all gitcomp.remoteNames)" -- "${cur}") )
+		remote,add,1) COMPREPLY+=( $(compgen -W "$(git config --get-all gitcomp.remoteNames)" -- "${cur}") ) ;;
+
 		remote,add,2) __gitextras_complete_url ;;
 
 		# git remote set-url <existing-remote> <URL>
@@ -212,10 +213,14 @@ __gitextras_add_or_set-url(){
 __gitextras_complete_url(){
 	compopt -o nospace
 	local url=${1:-${cur}}
+	local dir=${2}
 	case "${url}" in
 		..*|/*|.*)
 			_filedir -d
-			__gitextras_complete_relative_url ; return ;;
+			if [[ ${dir} != "-d" ]] ; then
+				__gitextras_complete_relative_url
+			fi
+			return ;;
 		git@*:*/*|https://*/*/)
 			# Complete project names
 			return ;;
@@ -255,17 +260,19 @@ __gitextras_complete_relative_url(){
 	#   - ${cur} == ".." -> complete to "../"
 	#   - ${cur} == "../.." -> complete to "../../"
 	case ${cur} in
-		..) COMPREPLY+=(../) ; return ;;
-		../..) COMPREPLY+=(../../) ; return ;;
+		..) COMPREPLY=(../) ; return ;;
+		../..) COMPREPLY=(../../) ; return ;;
 		# ../../../<domain>/<user>/<project> doesn't even work
 		# so I wasted 15 minutes coming up with completion for it
-		../../..) COMPREPLY+=(../../../) ; return ;;
+		../../..) COMPREPLY=(../../../) ; return ;;
 		../../*) ;;
 		*) return ;; # ../ : completing projects of the same user/group
 	esac
 	# Assume relative path is ../../___
-	# TODO Find out the default push remote for the current branch
-	local abs_url=$(git remote get-url origin)
+	# TODO: Completing relative URLs requires knowing what the URL's are
+	# relative to and it may not be the URL of the remote 'origin', and for that
+	# matter, the repo may not even have a remote named 'origin'
+	local abs_url=$(git remote get-url origin 2>/dev/null)
 	local domain
 	local user
 	case ${abs_url} in
