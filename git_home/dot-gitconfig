@@ -204,6 +204,7 @@
 [gitcomp]
     domains = github.com gitlab.com
     domains = gitlab.science.gc.ca
+    remotes = upstream origin phb jp
 [gitcomp-domain "github.com"]
     users = philippecarphin itsgifnotjiff
     users = ECCC-ASTD-MRD

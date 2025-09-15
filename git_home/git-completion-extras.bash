@@ -7,6 +7,7 @@
 #
 #	[gitcomp]
 #		domains = github.com gitlab.com
+#		remoteNames = origin upstream
 # And username suggestions are configured per domain with
 #	[gitcomp-domain "github.com"]
 #		users = torvalds philippecarphin bminor ECCC_ASTD_MRD
@@ -191,7 +192,7 @@ __gitextras_add_or_set-url(){
 		*,*,0) ;; # Can't happen
 
 		# git remote add <new-name> <URL>
-		remote,add,1) ;;
+		remote,add,1) COMPREPLY+=( $(compgen -W "$(git config --get-all gitcomp.remoteNames)" -- "${cur}") )
 		remote,add,2) __gitextras_complete_url ;;
 
 		# git remote set-url <existing-remote> <URL>
