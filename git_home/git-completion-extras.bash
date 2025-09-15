@@ -176,7 +176,7 @@ __gitextras_add_or_set-url(){
 	# git submodule add <repo> [<path>]
 	# git remote add <name> <url>
 	# git remote set-url <name> <url>
-	# So we cound from the end how many words we have go through until
+	# So we count from the end how many words we have go through until
 	# we reach the subcommand.  This will fail if there are options
 	local words_after_subcommand=0
 	local i=${cword}
@@ -213,11 +213,8 @@ __gitextras_complete_url(){
 	compopt -o nospace
 	local url=${1:-${cur}}
 	case "${url}" in
-		/*)
-			# Assume that a path starting with '/' is a filesystem path
-			_filedir ;
-			return ;;
-		..*)
+		..*|/*|.*)
+			_filedir -d
 			__gitextras_complete_relative_url ; return ;;
 		git@*:*/*|https://*/*/)
 			# Complete project names
@@ -258,11 +255,11 @@ __gitextras_complete_relative_url(){
 	#   - ${cur} == ".." -> complete to "../"
 	#   - ${cur} == "../.." -> complete to "../../"
 	case ${cur} in
-		..) COMPREPLY=(../) ; return ;;
-		../..) COMPREPLY=(../../) ; return ;;
+		..) COMPREPLY+=(../) ; return ;;
+		../..) COMPREPLY+=(../../) ; return ;;
 		# ../../../<domain>/<user>/<project> doesn't even work
 		# so I wasted 15 minutes coming up with completion for it
-		../../..) COMPREPLY=(../../../) ; return ;;
+		../../..) COMPREPLY+=(../../../) ; return ;;
 		../../*) ;;
 		*) return ;; # ../ : completing projects of the same user/group
 	esac
