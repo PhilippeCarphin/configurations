@@ -7,7 +7,7 @@
     untracked = red bold
 [alias]
     # Pipe git show into vim
-    view = "!f(){ : git show ; git -C \"${GIT_PREFIX}\" show $1 | vim -R - -c \"doautocmd BufRead ${1##*:}\" ; } ; f"
+    view = "!f(){ : git show ; git -C \"${GIT_PREFIX}\" show \"$@\" | vim -R - -c \"doautocmd BufRead ${1##*:}\" ; } ; f"
     # For each file in the current directory, show the last commit to have touched this file
     last-commits = "!f(){ : git ls-tree ; git -C \"${GIT_PREFIX}\" ls-tree -r --name-only HEAD -z | TZ=UTC xargs -0 -IFILE git --no-pager log -1 --date=iso-local --format=\"%C(blue)%ad %C(yellow)%h %C(green)FILE %C(white)%s\" -- \"${GIT_PREFIX}/FILE\" ; } ; f"
     # Same as above but from the repo root
