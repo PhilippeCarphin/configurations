@@ -22,10 +22,27 @@
 # - Finds an unused FD
 # - Stores it in a variable
 # - Doesn't have that weird expansior interaction that requires an eval.
+# and that syntax is
+#
+#       `exec {var}>${file}`
+#
+# and note the absence of dollar sign in front of `{var}`.  With this, BASH
+# finds an available file descriptor, uses that for `${file}` and *stores* this
+# file descriptor in the the variable `var`.  It's in the `REDIRECTION` section
+# of `man bash`.
 
 # Note: ${FUNCNAME:+${FUNCNAME[0]}} is so that we only attempt to dereference
 # FUNCNAME if it is set.  This way we can use this PS4 in scripts that have
-# `set -o nounset`
+# `set -o nounset`.
+#
+xtrace-to-file(){
+    case ${1:-} in -h|--help)
+        echo "${FUNCNAM[0]} [-h|--help] FILENAME" ; return 0 ;;
+    esac
+
+    exec {BASH_XTRACEFD}>${1:-bash_xtrace_$$}
+}
+
 function debug(){
     case $1 in -h|--help)
         echo "Run this command to enable xtrace (set -x) with trace output going to a file in ~/.bash_debug.d"
