@@ -1,69 +1,53 @@
 #!/usr/bin/env python3
 
 # Requires the environment variable PYTHONSTARTUP to be set to the path of this
-# file
+# file.  This file does a few things for my interactive shell
 
+
+# Import a few modules so that I don't have to do it manually
+import sys
 import os
-if "PY_NORC" not in os.environ:
-    # Always import sys, os, subproces in interactive python shells
-    # because it's convenient
+import subprocess
+import psutil
+print(f"~/.pyrc: Imported sys, os, subprocess, psutil")
+
+# Set a nicer prompt with colors from the Python logo and a snake emoji
+__ps1_color = '255;212;59'
+__ps2_color = '95;135;215'  # This is color 81 which looks best
+sys.ps1 = f"\x01\033[38;2;{__ps1_color}m\033[48;2;{__ps1_color}m\x02" \
+          + "\U0001f40d\x01\033[49m\x02\ue0b0\x01\033[0m\x02 "
+sys.ps2 = f"\001\033[38;5;81m\002\u2588\u2588\ue0b0\001\033[0m\002 "
+del __ps1_color, __ps2_color
+
+# A quick function to open the code where any python object is defined (function,
+# module, class etc.
+def view_code(obj):
+    if hasattr(obj, "__code__"):
+        print(f"Object {obj}'s code is in {obj.__code__.co_filename} at line {obj.__code__.co_firstlineno}")
+        subprocess.run(['vim', obj.__code__.co_filename, f'+{obj.__code__.co_firstlineno}'])
+    elif hasattr(obj, "__file__"):
+        print(f"Object {obj} has does not have a __code__ attribute but does have a __file__ attribute: {obj.__file__}")
+        subprocess.run(['vim', obj.__file__])
+    else:
+        print(f"Object {obj} does not have a __code__ or a __file__ attribute, we're out of luck")
+
+#
+# And a few python functions that I find useful
+#
+def factors(n):
+    results = set()
+    for i in range(1, int(n ** 0.5) + 1):
+        div, mod = divmod(n, i)
+        if mod == 0:
+            results.add(i)
+            results.add(mod)
+    return results
+
+def get_process_memory_usage():
     import sys
     import os
-    import subprocess
-    import psutil
-    print(f"~/.pyrc: Imported sys, os, subprocess, psutil")
-    #
-    # Define prompts as '██ ' with the colors from the python logo
-    #
-    # Note \x01 or \001 and \x02 and \002 serve the same purpose
-    # as \[ and \] in Bash's PS1, PS2 evaluation.
-    # See https://stackoverflow.com/a/9468954/5795941
-
-    # The darker of the two yellows in the python logo
-    __ps1_color = '255;212;59'
-
-    # The darker of the two blues.  It doen't come out right at all
-    __ps2_color = '48;105;152'
-
-    # The lighter of the two blues, this one comes out OK
-    __ps2_color = '75;139;190'  # This is the true light blue from the logo
-                                # but in a non 24-bit color, it comes out meh
-    __ps2_color = '00;135;255'  # This is color 33 which looks pretty good
-    __ps2_color = '95;135;255'  # This is color 75 which looks closer
-    __ps2_color = '95;135;215'  # This is color 81 which looks best
-
-
-    sys.ps1 = f"\x01\033[38;2;{__ps1_color}m\033[48;2;{__ps1_color}m\x02" \
-              + "\U0001f40d\x01\033[49m\x02\ue0b0\x01\033[0m\x02 "
-    sys.ps2 = f"\001\033[38;5;81m\002\u2588\u2588\ue0b0\001\033[0m\002 "
-
-    # del sys.modules['sys'] # Causes "module sys has no attribute 'modules'" when trying to import, very weird
-    # Anyway, if you do print sys.modules, you see there are 66 modules in there
-    del __ps1_color, __ps2_color
-
-    def view_code(obj):
-        if hasattr(obj, "__code__"):
-            print(f"Object {obj}'s code is in {obj.__code__.co_filename} at line {obj.__code__.co_firstlineno}")
-            subprocess.run(['vim', obj.__code__.co_filename, f'+{obj.__code__.co_firstlineno}'])
-        elif hasattr(obj, "__file__"):
-            print(f"Object {obj} has does not have a __code__ attribute but does have a __file__ attribute: {obj.__file__}")
-            subprocess.run(['vim', obj.__file__])
-        else:
-            print(f"Object {obj} does not have a __code__ or a __file__ attribute, we're out of luck")
-
-    def factors_gen(n):
-        for i in range(1, int(n ** 0.5) + 1):
-            div, mod = divmod(n, i)
-            if mod == 0:
-                yield from (i, div)
-    def factors(n):
-        return list(sorted(set(factors_gen(n))))
-
-    def get_process_memory_usage():
-        import sys
-        import os
-        process = psutil.Process(os.getpid())
-        return process.memory_info().rss
+    process = psutil.Process(os.getpid())
+    return process.memory_info().rss
 
 # === NOTE on sys.modules vs globals() ===
 #
