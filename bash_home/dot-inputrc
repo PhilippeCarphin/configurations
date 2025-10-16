@@ -6,6 +6,13 @@ set colored-completion-prefix on
 set visible-stats on
 
 $if Bash
+    set keyseq-timeout 100
+    # set vi-ins-mode-string \001\033[1;42;37m\002 I \001\033[21;24;32;44m\002\001\033[0m\002
+    # set vi-cmd-mode-string \001\033[1;43;37m\002 N \001\033[21;24;33;44m\002\001\033[0m\002
+    set emacs-mode-string  ""
+    # \001\033[1;44;31m\002E\001\033[0m\002
+    set show-mode-in-prompt on
+
     # Causes references to previous commands to be expanded when pressing space
     # after something like `!!`  to be expanded as soon as a space is inserted.
     # Useful to confirm that it's the right thing for things like `!3:1` to get
