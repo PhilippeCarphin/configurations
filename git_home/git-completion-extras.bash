@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# vim: noet:ts=8:sw=8:sts=8:listchars=lead\:x,trail\:y,tab\:\ \ :
 #
 # Adds to git-completion.bash by overriding `_git_clone` and `_git_remote`
 # to give URL completion that is configurable in the gitconfig file.
@@ -192,7 +193,7 @@ __gitextras_add_or_set-url(){
 		*,*,0) ;; # Can't happen
 
 		# git remote add <new-name> <URL>
-		remote,add,1) COMPREPLY+=( $(compgen -W "$(git config --get-all gitcomp.remoteNames)" -- "${cur}") ) ;;
+		remote,add,1) compopt +o nospace ; COMPREPLY+=( $(compgen -W "$(git config --get-all gitcomp.remoteNames)" -- "${cur}") ) ;;
 
 		remote,add,2) __gitextras_complete_url ;;
 
@@ -245,6 +246,10 @@ __gitextras_complete_url(){
 			COMPREPLY+=( $(compgen -P "https://" -S / -W "$(git config --get-all gitcomp.domains)" -- "${domain}") )
 			;;
 		*)
+			# compopt -o filenames
+			# _filedir -d
+			# __gitextras_complete_relative_url
+			compopt +o filenames
 			# Complete the protocol
 			COMPREPLY+=( $(compgen -W "https:// git@" -- "${url}") )
 			if [[ "${command}" == submodule ]] ; then
@@ -260,11 +265,12 @@ __gitextras_complete_relative_url(){
 	#   - ${cur} == ".." -> complete to "../"
 	#   - ${cur} == "../.." -> complete to "../../"
 	case ${cur} in
-		..) COMPREPLY=(../) ; return ;;
-		../..) COMPREPLY=(../../) ; return ;;
+		..) COMPREPLY+=(../) ; return ;;
+		../) ;;
+		../..) COMPREPLY+=(../../) ; return ;;
 		# ../../../<domain>/<user>/<project> doesn't even work
 		# so I wasted 15 minutes coming up with completion for it
-		../../..) COMPREPLY=(../../../) ; return ;;
+		../../..) COMPREPLY+=(../../../) ; return ;;
 		../../*) ;;
 		*) return ;; # ../ : completing projects of the same user/group
 	esac
@@ -343,48 +349,13 @@ _gitextra_single_file_candidate(){
 	fi
 }
 
-_gitextras_show()
-{
+_git_view(){
 	compopt +o default
+	compopt +o bashdefault
 	# Assumes that COMP_WORDBREAKS contains ':'
 	if [[ "${cur}" != *:* ]] ; then
-		__git_complete_refs
+		__git_complete_refs --sfx=:
 	else
-		rev=${cur%%:*}
-		rev=${rev:-HEAD}
-		file=${cur#*:}
-
-		# git show A:B where B is a path can work in two different ways
-		# depending on whether B starts with './'
-		# - YES: Interpret it relative to PWD
-		# - NO: Interpret relative to the root of the repo
-		if [[ ${file} == ./* ]] ; then
-			# Assumes that COMP_WORDBREAKS contains ':'
-			COMPREPLY=( $(compgen -P "./" -W "$(git ls-tree --name-only ${rev} ${file%/*}/)" -- ${file#./}) )
-			_gitextra_single_file_candidate "."
-		else
-			local repo_root=$(git rev-parse --show-toplevel)
-			local dir=""
-			if [[ ${file} == */* ]] ; then
-				# Remove the partial path component and ensure
-				# that we have a trailing slash so that git ls-tree
-				# gives us files *inside* ${dir}.
-				dir=${file%/*}/
-			fi
-			# Assumes that COMP_WORDBREAKS contains ':'
-			COMPREPLY=( $(cd ${repo_root} && compgen -W "$(git ls-tree --name-only ${rev} ${dir})" -- ${file}))
-			_gitextra_single_file_candidate ${repo_root}
-		fi
+		__git_complete_revlist_file
 	fi
-}
-
-_git_view(){
-    local cur prev words cword
-    _init_completion -n : || return
-
-    if [[ "${cur}" == *:* ]] ; then
-        __git_complete_rev_file
-    else
-        __git_complete_refs --pfx=:
-    fi
 }
