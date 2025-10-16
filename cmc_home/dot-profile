@@ -2,6 +2,11 @@
 
 
 function p.profile.main(){
+
+    if [[ "$-" == *i* ]] ; then
+        p.profile.main_interactive ; unset -f $_
+    fi
+    source ~/.philconfig/shell_lib/bash_debug.sh
     source ~/.philconfig/env_common_home.sh
     source ~/.philconfig/env_specific_work.sh
     source ~/.philconfig/shell_rc_common
@@ -9,9 +14,13 @@ function p.profile.main(){
     source ~/.philconfig/shell_rc.bash.work
     configure_spack ; unset -f $_
     set_and_goto_true_home ; unset -f $_
-
-    if [[ "$-" == *i* ]] ; then
-        p.profile.main_interactive ; unset -f $_
+    local waiting_job=$(cat ~/.waiting_job 2>/dev/null)
+    if [[ -n ${waiting_job} ]] && [[ $PBS_JOBID == ${waiting_job}* ]] ; then
+        mail -s "Logged into job $PBS_JOBID" phil103@hotmail.com <<- EOF
+			Job $PBS_JOBID has started on $(hostname --fqdn)
+			- Phil's profile
+		EOF
+        echo "Job Start email sent for ${PBS_JOBID}" >&2
     fi
 }
 
@@ -138,10 +147,10 @@ configure_spack(){
 # - In realine.c:354 Function readline(), rl_initialize() is called everytime
 #   but after the first time, it only does the "other stuff".
 #
-# IMPORTANT: This needs to be done before anything else causes the otherwise
-# the initialization will already have happened with whatever LS_COLORS was at
-# that time.  For example, fzf initialization does many 'bind x y' commands
-# which initializes readline
+# IMPORTANT: This needs to be done before anything else causes the
+# initialization of readline otherwise the initialization will already have
+# happened with whatever LS_COLORS was at that time.  For example, fzf
+# initialization does many 'bind x y' commands which initializes readline
 ################################################################################
 set_ls_colors_for_readline_and_ls(){
 
