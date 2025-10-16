@@ -1,13 +1,19 @@
 [user]
-    name = "Philippe Carphin"
-    # email set in specific files at the end
+	name = "Philippe Carphin"
+	# email set in specific files at the end
 
 [color "status"]
-    unmerged  = magenta
-    untracked = red bold
+	unmerged  = magenta
+	untracked = red bold
 [alias]
+    # begin Merci Philippe Blain
+    bra = "!f() { git branch --color --format='%(align:30,left)%(color:red)%(refname:short)%(color:reset)%(end)|%(color:yellow bold)%(objectname:short)%(color:reset)|%(color:dim blue)%(creatordate:relative)%(color:reset)|%(if)%(upstream)%(then)[%(color:blue)%(upstream:short)%(color:reset)%(upstream:trackshort)%(if)%(upstream:track)%(then): %(upstream:track,nobracket)%(end)] %(end)%(if:notequals=gone)%(push:track,nobracket)%(then){%(color:green)%(push:short)%(color:reset)%(push:trackshort)%(if)%(push:track)%(then): %(push:track,nobracket)%(end)} %(end)%(contents:subject) %(color:dim white) %(authorname)' "$@" | column -t -s '|'; }; f"
+    stb = "!f() { : git status ; git -C \"${GIT_PREFIX}\" --work-tree=$PWD status \"$@\"; git for-each-ref $(git rev-parse --symbolic-full-name HEAD) --format='%(if:notequals=gone)%(push:track,nobracket)%(then){%(color:green)%(push:short)%(color:reset)%(push:trackshort)%(if)%(push:track)%(then): %(push:track,nobracket)%(end)} %(end)'; }; f"
+    find =  "!f() { : git ls-files ; pattern=\"$1\"; shift; git -C \"${GIT_PREFIX}\" --work-tree=$PWD ls \"$@\" :/\\*\"$pattern\"\\*; }; f"
+    findi =  "!f() { : git ls-files ; pattern=\"$1\"; shift; git -C \"${GIT_PREFIX}\" --work-tree=$PWD ls \"$@\":\\(icase,top\\)\\*\"$pattern\"\\*; }; f"
+    # end Merci Philippe Blain
     # Pipe git show into vim
-    view = "!f(){ : git show ; git -C \"${GIT_PREFIX}\" show \"$@\" | vim -R - -c \"doautocmd BufRead ${1##*:}\" ; } ; f"
+    view = "!f(){ git -C \"${GIT_PREFIX}\" show $1 | vim -R - -c \"doautocmd BufRead ${1##*:}\" ; } ; f"
     # For each file in the current directory, show the last commit to have touched this file
     last-commits = "!f(){ : git ls-tree ; git -C \"${GIT_PREFIX}\" ls-tree -r --name-only HEAD -z | TZ=UTC xargs -0 -IFILE git --no-pager log -1 --date=iso-local --format=\"%C(blue)%ad %C(yellow)%h %C(green)FILE %C(white)%s\" -- \"${GIT_PREFIX}/FILE\" ; } ; f"
     # Same as above but from the repo root
@@ -40,9 +46,9 @@
     diff-search = "!f(){ git log --oneline --graph --format=logd -S \"$@\" ; } ; f"
     log-pickaxe-s  = "!f() { : git log;  [[ \"$*\" == *\"--pickaxe-regex\"* ]] && export PICKAXE_REGEX=1; GREPDIFF_REGEX=\"$1\" git -C \"${GIT_PREFIX}\" --work-tree=$PWD -c diff.external=pickaxe-diff log  -p --ext-diff -S \"$@\"; }; f"
 
-	logo = log --abbrev-commit --decorate --format=ol
-	logu = logo @{upstream}..
-	log-series = ! git tag UPSTREAM @{u} && git logu --topo-order --format=\"- [PATCH %(describe:tags=true,match=UPSTREAM)/$(git rev-list @{u}.. | wc -l)] %s  \" --reverse  | sed -e \"s/UPSTREAM-//\" -e \"s|-g[a-f0-9]\\+/|/|\" && git tag -d UPSTREAM > /dev/null
+    logo = log --abbrev-commit --decorate --format=ol
+    logu = logo @{upstream}..
+    log-series = ! git tag UPSTREAM @{u} && git logu --topo-order --format=\"- [PATCH %(describe:tags=true,match=UPSTREAM)/$(git rev-list @{u}.. | wc -l)] %s  \" --reverse  | sed -e \"s/UPSTREAM-//\" -e \"s|-g[a-f0-9]\\+/|/|\" && git tag -d UPSTREAM > /dev/null
 
     grepr = grep --recurse-submodules
     find =  "!f() { : git ls-files ; git -C \"${GIT_PREFIX}\" --work-tree=$PWD ls-files :/\\*\"$1\"\\*; }; f"
@@ -65,52 +71,53 @@
     xxdiff = difftool -x 'xxdiff' --dir-diff
     meld = difftool -x 'meld'
     meld2 = difftool --dir-diff -x 'meld'
-	# With --dir-diff it seems like it doens't work if the version
-	# of git is not recent enough saying "<paht> : Is a directory
-	comparedir = difftool --dir-diff -x 'meld'
-	comparetxt = difftool -x 'meld'
+    # With --dir-diff it seems like it doens't work if the version
+    # of git is not recent enough saying "<paht> : Is a directory
+    comparedir = difftool --dir-diff -x 'meld'
+    comparetxt = difftool -x 'meld'
 
-	hist = log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short
+    hist = log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short
     # Change git@domain:project-path[.git] to https://domain/project-path
-    #        ^^^^      ^            ^^^^^^    ^^^^^^^^      ^            ^
+    #		^^^^	  ^			^^^^^^	^^^^^^^^	  ^			^
     to-http = "!f(){ remote=origin ; if [[ $# == 1 ]] ; then remote=$1 ; fi ;  git remote get-url $remote | sed -e 's/:/\\//' -e 's/^git@/https:\\/\\//' -e 's/\\.git$//' ; } ; f"
-	grep-call = "!f() { : git grep ; pattern=\"$1\"; shift; git -C \"$GIT_PREFIX\" --work-tree=$PWD grep -i -p -E -e \"call[ ]+$pattern([ ]+|\\()*\" \"$@\" ; }; f"
+    grep-call = "!f() { : git grep ; pattern=\"$1\"; shift; git -C \"$GIT_PREFIX\" --work-tree=$PWD grep -i -p -E -e \"call[ ]+$pattern([ ]+|\\()*\" \"$@\" ; }; f"
     alias = "!f(){ if [[ -z $1 ]] ; then git config --list | grep alias | sed 's/alias.\\([^=]\\+\\)=.*/\\1/' ; else a=\"$(git config --get alias.$1)\" ; echo \"alias.$1=${a@Q}\" ; fi ; } ; f"
 
 [diff "fortran-namelist"]
 	xfuncname = "^[ \\t]*&.*$"
 
 [credential]
-    helper = cache --timeout 36000
+	helper = cache --timeout 36000
 
 [pull]
-    # ff = only
+	# ff = only
 
 [url "https://github.com/PhilippeCarphin/"]
-    insteadOf = me:
+	insteadOf = me:
 
 [core]
-    pager = diff-so-fancy | less --tabs=4 -RFX
-    # pager = /home/phc001/Repositories/github.com/dandavison/delta/localinstall/bin/delta -n
+	pager = diff-so-fancy | less --tabs=4 -RFX
+	# pager = /home/phc001/Repositories/github.com/dandavison/delta/localinstall/bin/delta -n
 
 # [interactive]
-#     diffFilter = /home/phc001/Repositories/github.com/dandavison/delta/localinstall/bin/delta --color-only --features=interactive
+#	 diffFilter = /home/phc001/Repositories/github.com/dandavison/delta/localinstall/bin/delta --color-only --features=interactive
 # 
 # [delta]
-#     navigate = true    # use n and N to move between diff sections
-#     light = false      # set to true if you're in a terminal w/ a light background color (e.g. the default macOS terminal)
+#	 navigate = true	# use n and N to move between diff sections
+#	 light = false	  # set to true if you're in a terminal w/ a light background color (e.g. the default macOS terminal)
 # 
 # [merge]
-#     conflictstyle = diff3
+#	 conflictstyle = diff3
 # 
-# [diff]
-#     colorMoved = default
+[diff]
+	colorMoved = true
+	colorMovedWS = allow-indentation-change
 
 ################################################################################
 # difftool options
 ################################################################################
 [difftool]
-    prompt = false
+	prompt = false
 # Add the following to your .gitconfig file.
 # https://stackoverflow.com/questions/34119866/setting-up-and-using-meld-as-your-git-difftool-and-mergetool
 ######################### xxdiff ###############################################
@@ -122,9 +129,9 @@
 ######################### ydiff ################################################
 # For viewing side-by-side diff in the shell
 # [diff]
-#     tool = ydiff
+#	 tool = ydiff
 # [difftool "ydiff"]
-#     cmd = ydiff -s -w0 -c auto
+#	 cmd = ydiff -s -w0 -c auto
 # NOTE: We can have multiple difftool options configured by creating aliases
 # like `ydiff = difftool -x 'ydiff -s -w0 -c auto'` and these allow for extra
 # options like `xxdiff = difftool -x xxdiff --dir-diff`
@@ -133,45 +140,46 @@
 	fontui = -family \".SF NS Text\" -size 18 -weight normal -slant roman -underline 0 -overstrike 0
 	fontdiff = -family \"DejaVu Sans Mono\" -size 16 -weight normal -slant roman -underline 0 -overstrike 0
 # [http "https://gitlab.science.gc.ca/"]
-#        proxy = socks5h://127.0.0.1:8080
+#		proxy = socks5h://127.0.0.1:8080
 [log]
-    date = human
-    excludeDecoration = refs/remotes/private*
+	date = human
+	excludeDecoration = refs/remotes/private*
 
 [pretty]
-    logd = %C(yellow)%h%C(reset)%C(auto)%d%C(reset) %C(bold white)%<|(90,trunc)%s %<(17)%C(cyan)%ad%Creset %C(blue)%an%C(reset)
-    logdw = %C(yellow)%h%C(reset)%C(auto)%d%C(reset) %C(bold white)%<|(140,trunc)%s %<(17)%C(cyan)%ad%Creset %C(blue)%an%C(reset)
+	logd = %C(yellow)%h%C(reset)%C(auto)%d%C(reset) %C(bold white)%<|(90,trunc)%s %<(17)%C(cyan)%ad%Creset %C(blue)%an%C(reset)
+	logdw = %C(yellow)%h%C(reset)%C(auto)%d%C(reset) %C(bold white)%<|(140,trunc)%s %<(17)%C(cyan)%ad%Creset %C(blue)%an%C(reset)
 	# similar to '--oneline' but with additional information (author, author date, (notes truncated at 2 chars) )
 	ol = %C(yellow)%h%C(reset) %C(normal)%s%C(reset) %C(dim white)%an%C(reset) %C(dim blue)(%ad)%C(reset) %C(auto)%d%C(reset)
 
 [status]
-    submoduleSummary = true
+	submoduleSummary = true
+	submodule = log
 
 [submodule]
-    # recurse = true
+	# recurse = true
 [push]
-    default = current
-    recurseSubmodules = check
+	default = current
+	recurseSubmodules = check
 [remote]
 	pushDefault = origin
 
 [safe]
-    directory = *
+	directory = *
 
 
 # Merci Philippe Blain!
 [color "grep"]
-    filename = magenta
-    linenumber = green
-    column = green
-    function = 146 bold
+	filename = magenta
+	linenumber = green
+	column = green
+	function = 146 bold
 [grep]
-    lineNumber = true
-    column = true
-    fallbackToNoIndex = true
+	lineNumber = true
+	column = true
+	fallbackToNoIndex = true
 [commit]
-    # Show diffs in COMMIT_EDITMSG
-    verbose = 2
+	# Show diffs in COMMIT_EDITMSG
+	verbose = 2
 # End merci Philippe Blain!
 
 [advice]
@@ -179,7 +187,12 @@
 [merge]
 	tool = meld
 [init]
-    defaultBranch = main
+	defaultBranch = main
+
+[remote "origin"]
+	tagopt = --tags
+[diff]
+	submodule = log
 
 ################################################################################
 # Specific settings: Leave this at the end to ensure that specific settings
@@ -189,13 +202,13 @@
 # ones.  So if a repo has a github.com remote and a gitlab.science.gc.ca
 # remote, it is therefore a work repo so it should have the work email
 [includeIf "hasconfig:remote.*.url:**github.com**/*"]
-    path = ~/.philconfig/git_home/personal-email.gitconfig
+	path = ~/.philconfig/git_home/personal-email.gitconfig
 [includeIf "hasconfig:remote.*.url:**gitlab.com**/*"]
-    path = ~/.philconfig/git_home/personal-email.gitconfig
+	path = ~/.philconfig/git_home/personal-email.gitconfig
 [includeIf "hasconfig:remote.*.url:**github.com/ECCC-ASTD-MRD/*"]
-    path = ~/.philconfig/git_home/work-email.gitconfig
+	path = ~/.philconfig/git_home/work-email.gitconfig
 [includeIf "hasconfig:remote.*.url:**gitlab.science.gc.ca**/*"]
-    path = ~/.philconfig/git_home/work-email.gitconfig
+	path = ~/.philconfig/git_home/work-email.gitconfig
 
 
 ################################################################################
@@ -204,12 +217,23 @@
 [gitcomp]
     domains = github.com gitlab.com
     domains = gitlab.science.gc.ca
-    remoteNames = upstream origin phb jp
+    remoteNames = upstream origin phb jp github gitlab
+	domains = github.com gitlab.com
+	domains = gitlab.science.gc.ca
 [gitcomp-domain "github.com"]
-    users = philippecarphin itsgifnotjiff
-    users = ECCC-ASTD-MRD
+	users = philippecarphin torvalds phil-blain itsgifnotjiff
+	users = ECCC-ASTD-MRD
 [gitcomp-domain "gitlab.com"]
-    users = philippecarphin gitlab-org
+	users = philippecarphin gitlab-org phil-blain
 [gitcomp-domain "gitlab.science.gc.ca"]
-    users = phc001 RPN-SI CMDS yor000 CMOI
+	users = phc001 RPN-SI CMDS yor000 CMOI phb001
 
+[blame]
+	# ignoreRevsFile = ignoreRevsFile
+	markUnblamableLines = true
+	markIgnoredLines = true
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
