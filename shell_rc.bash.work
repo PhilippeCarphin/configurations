@@ -39,6 +39,12 @@ make(){
         # echo "subst = '$subst'"
         (
             set -o pipefail
+            # VERBOSE= is because some of our project's CMakeLists.txt have
+            # `CMAKE_VERBOSE_MAKEFILE=True` which makes spotting warnings more
+            # difficult so always have VERBOSE=, except if I want VERBOSE=1
+            # which if I specify it in the arguments, then with "$@", that
+            # expands to 'VERBOSE= VERBOSE=1 and make will take the last value
+            # on the command line.
             CLICOLOR_FORCE=yes_please command make --no-print-directory VERBOSE= "$@" 2>&1 | sed --unbuffered "${subst}"
         )
     fi

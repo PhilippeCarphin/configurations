@@ -26,7 +26,7 @@ shell_rc.bash.main(){
     fi
 
     source ~/Repositories/github.com/philippecarphin/git-colon-paths/etc/profile.d/git-colon-path-support.bash
-    # complete -F _gcps_complete_dirs cd
+    complete -F _gcps_complete_cd cd
     complete -F _complete_vim vim
 
     alias vim='_gcps_wrap_command vim'
@@ -40,6 +40,8 @@ shell_rc.bash.main(){
     configure_history ; unset -f $_
     configure_vim ; unset -f $_
     export EDITOR=ec
+    # For commit messages, ec is good but for fc, we need extreme speed
+    export FCEDIT=vim
     export PYTHONSTARTUP=$HOME/.pyrc
     remove_dot_from_path
 }
@@ -114,7 +116,7 @@ configure_fs1_env(){
     # like share would be more appropriate.
     #
     export STOW_DIR=$HOME/fs1
-    XDG_DATA_DIRS=${XDG_DATA_DIRS:+${XDG_DATA_DIRS}:}${STOW_DIR}/share:${STOW_DIR}/etc
+    XDG_DATA_DIRS=${XDG_DATA_DIRS:+${XDG_DATA_DIRS}:}$HOME/.local/share:${STOW_DIR}/share:${STOW_DIR}/etc
     export PACKAGE_DIR="$STOW_DIR/Cellar"
     export LD_LIBRARY_PATH="${STOW_DIR}/lib:${STOW_DIR}/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
     export PATH=${STOW_DIR}/bin${PATH:+:${PATH}}

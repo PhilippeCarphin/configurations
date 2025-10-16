@@ -5,7 +5,7 @@ source ~/.git-prompt.sh
 alias n='nnn -dhQex'
 alias ls='ls --color=auto -h'
 alias grep='grep -n --color'
-alias tree='tree -C'
+# alias tree='tree -C'
 alias rg='rg --no-heading --color=auto'
 alias diff='diff -u --color'
 alias :wqa='exit 0'
