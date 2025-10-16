@@ -11,6 +11,12 @@ dots(){
     sed 's/./●/g' <<< "$1"
 }
 
+p.explicit-ascii(){
+    # Same value as in p.env except for the '\1' in the replacement
+    local replace_ansi_with_chars='s/\x1b\(\[[0-9;]*m\)/\x1b[1;37m\\x1b\1\x1b[0m\x1b/g'
+    sed -e "${replace_ansi_with_chars}"
+}
+
 p.env(){
     # Make ansi sequences into printed characters by replacing the ESCAPE
     # character \x1b with the characters '\', 'x', '1', 'b' and highlight the
@@ -40,20 +46,19 @@ p.env(){
         | ${sed} -z -e "${replace_ansi_with_chars}" -e "${hide_bash_func_body}" \
                  -e "${colorize_var_names}" -e "${hide_gitlab_access_token}" \
                  -e "${append_sgr0}" \
+        | command grep -z "$1" \
         | tr '\0' '\n'
     else
         env -0 \
         | sort -z \
         | ${sed} -z -e "${replace_ansi_with_chars}" -e "${hide_bash_func_body}" \
+        | command grep -z "$1" \
         | tr '\0' '\n'
     fi
 }
 
 gitk(){
     command gitk --all "$@" &
-}
-tig(){
-    command tig --all "$@"
 }
 
 orgman(){
@@ -94,14 +99,22 @@ p.normpath(){
 }
 
 p.relpath(){
-    if [[ "$1" == "" ]] ; then
-        echo "${FUNCNAME[0]}: ERROR: Missing argument
-
-USAGE: ${FUNCNAME[0]} PATH [START]" >&2
-        return 1
+    local target=${1}
+    local start=${2}
+    if [[ -z ${target} ]] ; then
+        printf "ERROR: missing argument TARGET\n"
+        return 2
     fi
-    local pyfunc="${FUNCNAME[0]##p.}"
-    python3 -c "import os; print(os.path.${pyfunc}('$1', start='$2'))"
+    if [[ -z ${start} ]] ; then
+        printf "ERROR: missing argument START\n"
+        return 2
+    fi
+
+    if [[ "${target}" != /* ]] ; then
+        target=$PWD/$target
+    fi
+
+    python3 -c "import os; print(os.path.relpath('$target', start='$start'))"
 }
 
 vimf(){
@@ -374,16 +387,6 @@ p.dotgraph-helper(){
 # WORK
 p.clear-exp-sitestore(){
     rm -rf ~/site5/rm_hind_seas_hub/work/*
-}
-
-# WORK
-xflow(){
-    if ! [[ -d hub ]] && [[ -d listings ]] && [[ -L EntryModule ]] ; then
-        printf "phil xflow adapter: \033[1;31mERROR\033[0m: Please run inside an experiment\n"
-        return 1
-    fi
-    printf "\033[1;33mSetting SEQ_EXP_HOME before starting xflow because otherwise I get errors when using Right-click->Info->Evaluated node config\033[0m\n"
-    SEQ_EXP_HOME=$PWD command xflow
 }
 
 # WORK
@@ -1163,4 +1166,150 @@ findbl(){
 
 ssh-key-signature(){
     ssh-keygen -lf "$@"
+}
+
+tree(){
+    # command tree -C "$@" | tr "$(printf '\xa0')" ' '
+    command tree -C "$@" | tr $'\xa0' ' '
+}
+
+pandoc(){
+    cmd=(pandoc -s)
+    echo "doing '${cmd[*]} \"$@\"' because I always forget the '-s'" >&2
+    command "${cmd[@]}" "$@"
+}
+
+# the real converts between datestamps like 20250928033020 (2025-09-28 03:30:00)
+# and converts it to an int that's something like the number of half hours since the epoch or something
+r.date(){
+    case "${1:-}" in
+        "") echo "function ${FUNCNAME[0]}: An argument is required" ; return 1 ;;
+    esac
+    local in=${1#=}
+    local out=""
+
+    if (( ${in:0:1} >= 3 )) || [[ ${1} == '='* ]] ; then
+        # First digit >= 3 means it's a timestamp for me because I won't be
+        # doing anything in the year 3000 or it is for sure a stamp if it
+        # starts with '='.
+        out=$(command r.date =${in})
+        printf "%s-%s-%s.%s:%s:%s\n" \
+            "${out:0:4}" "${out:4:2}" "${out:6:2}" \
+            "${out:8:2}" "${out:10:2}" "${out:12:2}"
+    else
+        # Otherwise assume it's a date like 2021-12-01.003000 with or
+        # without '-',':','.'
+        out=$(command r.date ${in//[-.: ]})
+        printf "%s\n" "${out}"
+    fi
+}
+
+
+cmakeh(){
+    cmake --help-command $1 | less
+}
+_cmakeh(){
+    COMPREPLY=($(compgen -W "$(cmake --help-command-list)" -- "${COMP_WORDS[COMP_CWORD]}"))
+}
+complete -F _cmakeh cmakeh
+cmakehm(){
+    cmake --help-module $1 | less
+}
+_cmakehm(){
+    COMPREPLY=($(compgen -W "$(cmake --help-module-list)" -- "${COMP_WORDS[COMP_CWORD]}"))
+}
+complete -F _cmakehm cmakehm
+
+
+ldaps(){
+    case "${1}" in -h|--help)
+        echo "${FUNCNAME[0]} PROP=VALUE [PROP=VALUE...] [DISPLAY_PROP...]" ; return 0 ;;
+    esac
+
+    local filter="(&"
+    while [[ "$1" == *=* ]] ; do
+        filter+="(${1%%=*}=*${1#*=}*)" ; shift
+    done
+    filter+=")"
+
+    local cmd=(ldapsearch -xLLL "${filter}" "$@")
+    printf "filter='${filter}'\n"
+    printf "cmd: " ; declare -p cmd
+    "${cmd[@]}"
+}
+
+finger(){
+    ldapsearch -xLLL "(|(cn=*${1}*)(uid=*${1}*))" cn uid mail loginShell
+}
+
+_killu(){
+    local cur prev words cword
+    _init_completion || return
+
+    case $prev in
+        -s) _signals ; return ;;
+        -l) return ;;
+    esac
+
+    if (( cword == 1 )) && [[ "$cur" == -* ]] ; then
+        _signals -
+        COMPREPLY+=( $(compgen -W "-s -l" -- "$cur") )
+    else
+        #COMPREPLY=( $(compgen -W '$(pgrep -u $USER)' -- "$cur") )
+        _psu
+    fi
+}
+complete -F _killu kill
+psu(){
+    ps -au $USER
+}
+_psu(){
+    COMPREPLY=( $(compgen -W '$(pgrep -u $USER)' -- "${COMP_WORDS[COMP_CWORD]}") )
+}
+complete -F _psu psu
+
+pycalc(){
+    python3 -c "print($*)"
+}
+
+cringe(){
+    if ! cowthink "cringe" 2>/dev/null ; then
+		cat <<-\EOF
+			 ________
+			( cringe )
+			 --------
+			        o   ^__^
+			         o  (oo)\_______
+			            (__)\       )\/\
+			                ||----w |
+			                ||     ||
+		EOF
+    fi
+}
+
+semver-lt(){
+    case $1 in -h|--help)
+        printf "${FUNCNAME[0]} A B\nsuccess if A <= B\n"
+        return 0 ;;
+    esac
+    local -a va=(${1//./ })
+    local -a vb=(${2//./ })
+    local i
+    for((i=0; i<=${#va[@]};i++)); do
+        if (( va[i] != vb[i] )) ; then
+            ((va[i] < vb[i])) ; return
+        fi
+    done
+    # Versions are equal or effectively equal (5.2 == 5.2.0)
+    return 1
+}
+
+bash-check(){
+    local i v=(${1//./ })
+    for((i=0;i<${#v[@]};i++)) ; do
+        if ((v[i] < BASH_VERSINFO[i] )) ; then
+            return 1
+        fi
+    done
+    return 0
 }
