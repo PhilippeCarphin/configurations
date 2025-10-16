@@ -23,10 +23,13 @@
 .cache
 
 # -- Build and install directories for CMake projects
-build*/
+build*
 localinstall*
 install-dir
 compile_commands.json
+
+# -- Common build directory name for sphinx documentation
+_build*/
 
 # -- VSCode stuff
 .vscode
@@ -40,3 +43,6 @@ fortls_debug.log
 
 # -- Saved output from commands
 *.log
+
+# -- Revisions to ignore in git blame
+ignoreRevsFile
