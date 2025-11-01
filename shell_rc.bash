@@ -36,6 +36,7 @@ shell_rc.bash.main(){
     # not by default.  The BSD version does accept -r for compatibility but it
     # already behaves as if -r has been profided.
     alias xargs='xargs -r'
+    alias ncdu='ncdu --show-itemcount --color dark --confirm-quit'
     configure_fs1_env ; unset -f $_
     configure_history ; unset -f $_
     configure_vim ; unset -f $_
