@@ -148,7 +148,7 @@ configure_history(){
     HISTFILE=~/.eternal_bash_history
     HISTIGNORE="rm -rf *"
     # At work this is set by /etc/profile
-    HISTCONTROL=ignoredups
+    HISTCONTROL=ignoredups:ignorespace
     if (( BASH_VERSINFO[0] > 4 )) ; then
         # This makes non-array variables become an array with the original value
         # of the variable as the 0-th element and "history -a" as the 1-st element
