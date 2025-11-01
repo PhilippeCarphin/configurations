@@ -925,7 +925,7 @@ rsync(){
     local src="${@: -2:1}" # Space before '-' is necessary
     local src_base="$(basename "${src}")"
     local src_path="${src##*:}"
-    local dst="${@: -2:1}" # Space before '-' is necessary
+    local dst="${@: -1:1}" # Space before '-' is necessary
     local dst_base="$(basename "${dst}")"
     local dst_path="${dst##*:}"
 
