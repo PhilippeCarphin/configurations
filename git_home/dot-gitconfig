@@ -201,6 +201,9 @@
 # Order is important: settings in later includes override settings in earlier
 # ones.  So if a repo has a github.com remote and a gitlab.science.gc.ca
 # remote, it is therefore a work repo so it should have the work email
+# NOTE: This seems to only work for remote URLS of the form
+# git@github.com:philippecarphin/...  and not for ones of the form
+# https://github.com/philippecarphin/...
 [includeIf "hasconfig:remote.*.url:**github.com**/*"]
 	path = ~/.philconfig/git_home/personal-email.gitconfig
 [includeIf "hasconfig:remote.*.url:**gitlab.com**/*"]

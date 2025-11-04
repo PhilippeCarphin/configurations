@@ -152,19 +152,23 @@ xargso(){
         return 1
     fi
     if [[ "${1}" == -h ]] ; then
-        printf "${FUNCNAME[0]} does the equivalent of 'xargs -o' on BSD"
-        printf "which is to reopen STDIN as /dev/tty in the child process\n"
-        printf "This is useful to when opening an interactive application\n"
-        printf "like vim\n"
+        cat <<-EOF
+			${FUNCNAME[0]} does the equivalent of 'xargs -o' on BSD"
+			which is to reopen STDIN as /dev/tty in the child process\n"
+			This is useful to when opening an interactive application\n"
+			like vim\n"
+		EOF
         return 0
     fi
-    cmd="$@ \"\$@\" </dev/tty"
+    # The call is expected to be 'xargs PROG_NAME <OTHER_ARGS>'
+    cmd=("$@" "\"\$@\"" "</dev/tty")
+    prog_name=$1
 
     # print_args xargs sh -c "${cmd}"
     printf "===============================\n"
     print_args xargs sh -c "${cmd}"
     printf "===============================\n"
-    xargs sh -c "${cmd}"
+    xargs sh -c "${cmd[*]}" "${prog_name}"
     # xargs sh -c "${cmd}" "$@"
     # this does not work :
     # xargs sh -c "$@ \"\$@\" </dev/tty"
@@ -301,11 +305,24 @@ complete -F _p.list-prepend p.list-prepend
 ################################################################################
 # WORK
 glcurl(){
-    # Keep unevaluated for printing then evaluate
+    local request="$1" ; shift
+    if [[ -z ${request} ]] ; then
+        printf "${FUNCNAME[0]}: ERROR: Empty request\n"
+        return 1
+    fi
+    if [[ ${request} != /* ]] ; then
+        printf "${FUNCNAME[0]}: ERROR: Requests must start with '/' to match documentation\n"
+        return 1
+    fi
+    if ! [[ -f ~/.ssh/gitlab-access-token ]] ; then
+        printf "${FUNCNAME[0]}: ERROR: File \~/.ssh/gitlab-access-token must and be a single line containing a gitlab access token\n"
+        return 1
+    fi
+
     local header='PRIVATE-TOKEN: $(<~/.ssh/gitlab-access-token)'
-    local url="https://gitlab.science.gc.ca/api/v4${1}" ; shift
-    printf 'curl --header "%s" %s\n' "${header}" "${url}" >&2
-    curl --header "$(eval echo ${header})" ${url} "$@"
+    local url="https://gitlab.science.gc.ca/api/v4${request}"
+    printf 'curl --header "%s" %s %s\n' "${header}" "${url}" "$*" >&2
+    curl --header "$(eval echo $header)" ${url} "$@"
 }
 
 glccurl(){
@@ -1053,12 +1070,12 @@ clip(){
     if [[ -n $TMUX ]] ; then
         local set_clipboard="$(tmux show-option set-clipboard)"
         if [[ "${set_clipboard}" != "set-clipboard on" ]] ; then
-           echo "You are inside TMUX and set-clipboard is not on."
-           echo "Check https://github.com/tmux/tmux/wiki/Clipboard"
+           printf "You are inside TMUX and set-clipboard is not on.\n" >&2
+           printf "Check https://github.com/tmux/tmux/wiki/Clipboard\n" >&2
            return 1
         fi
     fi
-    local clip_file=$1
+    local clip_file=${1:-}
     # man base64: with no file or when file is '-', read from stdin
     printf "\033]52;c;%s\007" "$(base64 $clip_file)"
 }
@@ -1072,16 +1089,57 @@ jq-help(){
 		| jq '.[]'                     # Turn single array of objects into stream of many objects
 		| jq '.[] | {k1,k2}'           # Array of objects to stream to only selected fields
 		| jq '[ .[] | {k1,k2} ]'       # Same as above but put back into an array
+		| jq '[ .[] | {id, projects: ([ .projects | .[] | .web_url ])]'
+		   # Input is an array of the form
+		   # [
+		   #   {
+		   #       "id": 1234,
+		   #       <PLENTY OF FIELDS>
+		   #       "projects: [
+		   #           {
+		   #               "id": 4567,
+		   #               "web_url": "https://github.com/user/project_one",
+		   #               <PLENTY OF OTHER FIELDS>
+		   #           },
+		   #           {   "id": 8910,
+		   #               "web_url": "https://github.com/user/project_two",
+		   #               <PLENTY OF OTHER FIELDS>
+		   #           },
+		   #           <and more projects>
+		   #       ]
+		   #   },
+		   #   <and more elemnts>
+		   # ]
+		   #
+		   # Unwrap array, for each item, keep the 'id' field and for the project
+		   # key, the value should be the array formed by unwrapping the value
+		   # of the project key, and for each project, taking the value of the
+		   # web_url key.  The final object is an array of objects with a field
+		   # ID, and a key "projects" whose value is an array of URLs.
+		   # [
+		   #     {
+		   #       "id": 1234,
+		   #       "projects": [
+		   #           "https://github.com/user/project_one",
+		   #           "https://github.com/user/project_two",
+		   #           <and more project URL's>
+		   #       ]
+		   #     }
+		   #     <and more elements>
+		   # ]
 	EOF
 }
 
+# Remove PWD from PATH
+# - Remove empty elements (leading, trailing, or double colon)
+# - Elements equal to '.'
 nopwdpath(){
     local -n varname=${1:-PATH}
     local IFS=${2:-:}
     local newpath=()
     for p in ${varname} ; do
         case "${p}" in
-            ""|.) ;;
+            ""|.) continue ;;
             *) newpath+=("${p}") ;;
         esac
     done
@@ -1313,3 +1371,138 @@ bash-check(){
     done
     return 0
 }
+
+tui-jobsel(){
+    local user="${1:-$USER}"
+    local qjobs=($(qselect -u "${user}"))
+    if (( ${#qjobs} == 0 )) ; then
+        printf "No jobs for user '$USER'\n" >&2
+        return 0
+    fi
+
+    local code=$(cat <<-EOF
+		import json
+		import sys
+		j = json.load(sys.stdin)
+		jobs = j['Jobs']
+		for k,v in jobs.items():
+		    print(f"{k} {v['job_state']} {v['Job_Name']}")
+	EOF
+    )
+    qstat -f -F json "${qjobs[@]}" | python3 -c "${code}" | tui-selector
+}
+
+tui-jobdel(){
+    set -x
+    local job
+    job=$(tui-jobsel $1)
+    if [[ -n "${job}" ]] ; then
+        qdel "${job}"
+    fi
+    set +x
+}
+
+fqstat1(){
+    # No need to get crazy, we can just pipe your lines into FZF to select one
+    job_line=$(qstat -w "$@" | fzf)
+    # Once we've selected a line, we grab the Job ID from it however we want
+    jobid=$(echo "${job_line}" | awk '{print $1}')
+    echo "The jobid is '${jobid}'"
+}
+
+fqstat2(){
+    # Tell FZF how many lines are headers and don't count as choices
+    job_line=$(qstat -w "$@" | fzf --header-lines=2)
+    jobid=$(echo "${job_line}" | awk '{print $1}')
+    echo "The jobid is '${jobid}'"
+}
+
+fqstaty(){
+    # Give FZF a command to run on the currently selected line to show
+    # in the preview window.
+    qstat -w "$@" \
+         | fzf \
+            --header-lines=2 \
+            --preview="echo '{}' | awk '{print \$1}' | xargs qstat -f -F json" \
+         | awk '{print $1}'
+}
+
+fqdel(){
+    local jobid=$(fqstat "$@")
+    if [[ -n ${jobid} ]] ; then
+        qdel ${jobid}
+    fi
+}
+
+fqstat4(){
+    # Use jq to make the preview window nicer.  Note that when output is not
+    # a terminal, JQ needs to be given a filter, we use '.' the indentity filter.
+    fzf_cmd=(fzf
+        --header-lines=2
+        --preview="echo '{}' | awk '{print \$1}' | xargs qstat -f -F json | jq --color-output ."
+    )
+    job_line=$(qstat -w "$@" | "${fzf_cmd[@]}")
+    jobid=$(echo "${job_line}" | awk '{print $1}')
+    echo "The jobid is '${jobid}'"
+}
+fqstat5(){
+    # Use a filter for JQ so it shows only what we want to see
+    # - Grab the jobs key from the main object
+    # - Pass that into .[] which gives the inside of every job
+    fzf_cmd=(fzf
+        --header-lines=2
+        --preview="echo '{}' | awk '{print \$1}' | xargs qstat -f -F json | jq --color-output ' .Jobs | .[]'"
+    )
+    job_line=$(qstat -w "$@" | "${fzf_cmd[@]}")
+    jobid=$(echo "${job_line}" | awk '{print $1}')
+    echo "The jobid is '${jobid}'"
+}
+fqstat7(){
+    qstat -w \
+        | fzf \
+            --header-lines=2 \
+            --preview="echo '{}' | awk '{print \$1}' | xargs qstat -f -F json | jq --color-output ' .Jobs | .[]'" \
+        | awk '{print $1}' \
+        | xargs -r qdel
+}
+
+fqstat(){
+    local header_lines=2
+    local a
+    for a in "$@" ; do if [[ $a == -u ]] ; then header_lines=5 ; fi ; done
+    qstat -w "$@" | fzf \
+        --header-lines=${header_lines} \
+        --preview-window=right,40%,wrap \
+        --preview="echo '{}' | awk '{print \$1}' | xargs qstat -f -F json | jq --color-output ' .Jobs | .[]'"
+}
+
+
+fqdel(){
+    local j=$(fqstat "$@" | awk '{print $1}')
+    if [[ -n $j ]] ; then
+        echo "qdel $j"
+        qdel $j
+    fi
+}
+
+
+_qdel(){
+    sc=$HOME/Repositories/github.com/philippecarphin/tests/BASH_tests/fancy_completion/square_choices.sh
+    if true || [[ -n ${FANCY_COMPLETION} ]] ; then
+        res=$($sc $(qselect -u anb007))
+        printf "\033[A\r%s%s" "${PS1@P}" "${COMP_LINE}"
+        COMPREPLY=($res)
+        return
+    fi
+    if (( BASH_VERSINFO[0] >= 5 && BASH_VERSINFO[1] >= 3 )) ; then
+        compgen -V COMPREPLY -W "$(qselect -u anb007)" -- "${COMP_WORDS[COMP_CWORD]}"
+    else
+        COMPREPLY=($(compgen -W "$(qselect -u anb007)" -- "${COMP_WORDS[COMP_CWORD]}"))
+    fi
+}
+
+sshpwd(){
+    ssh localhost -t "cd $PWD ; bash -l"
+}
+complete -F _qdel qdel
+

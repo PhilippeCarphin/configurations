@@ -238,12 +238,12 @@ __gitextras_complete_url(){
 		https://*/*)
 			# Complete usernames for https://<domain>/___
 			domain_user=${url#https://} ; user=${domain_user##*/} ; domain=${domain_user%%/${user}}
-			COMPREPLY+=( $(compgen -P "https://${domain}/" -S / -W "$(git config --get-all gitcomp-domain.${domain}.users)" -- "${user}") )
+			COMPREPLY+=( $(compgen -P "//${domain}/" -S / -W "$(git config --get-all gitcomp-domain.${domain}.users)" -- "${user}") )
 			;;
 		https://*)
 			# Complete domains for https://___
 			domain=${url#https://}
-			COMPREPLY+=( $(compgen -P "https://" -S / -W "$(git config --get-all gitcomp.domains)" -- "${domain}") )
+			COMPREPLY+=( $(compgen -P "//" -S / -W "$(git config --get-all gitcomp.domains)" -- "${domain}") )
 			;;
 		*)
 			# compopt -o filenames

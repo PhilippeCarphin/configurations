@@ -8,7 +8,7 @@ elif [[ -n $BASH_VERSION ]] ; then
 fi
 
 env_specific_work(){
-    export LOG_LEVEL=ERROR # For r.load
+    export LOG_LEVEL=ERROR # NOTE: I see errors I wouldn't normally see with LOG_LEVEL=INFO due to weirdness in shortcut-tools
     export TZ=America/Toronto
     export LANG=en_US.UTF-8
     export SSM_DEV=/home/ords/cmdd/cmds/nil000/ssm

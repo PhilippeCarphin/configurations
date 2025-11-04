@@ -9,16 +9,19 @@ shell_rc.bash.main(){
     if command which glab &>/dev/null ; then
         eval "$(glab completion)"
     fi
-
-    case ${BASH_VERSINFO[0]} in
-        4|5)
-            source $HOME/.philconfig/shell_lib/get_make_targets.sh
-            source $HOME/Repositories/github.com/philippecarphin/env-diff/env-diff-cmd.bash
-            shopt -s direxpand # Merci Philippe Blain :D
-            shopt -s checkhash # Perform PATH search if command from hash table is not found
-            ;;
-        *) printf "${BASH_SOURCE[0]}: \033[1;33mWARNING\033[0m: bash ${BASH_VERSION}\n" ;;
-    esac
+    if (( BASH_VERSINFO[0] < 4 )) ; then
+        printf "${BASH_SOURCE[0]}: \033[1;33mWARNING\033[0m: bash ${BASH_VERSION}\n"
+    else
+        source $HOME/.philconfig/shell_lib/get_make_targets.sh
+        source $HOME/Repositories/github.com/philippecarphin/env-diff/env-diff-cmd.bash
+        shopt -s direxpand # Merci Philippe Blain :D
+        shopt -s checkhash # Perform PATH search if command from hash table is not found
+        if (( BASH_VERSINFO[0] >= 5 && BASH_VERSINFO[1] >= 3 )) ; then
+            shopt -s bash_source_fullpath # Store full paths in BASH_SOURCE array
+        else
+            printf "${BASH_SOURCE[0]}: \033[1;33mWARNING\033[0m: Not activating shell option bash_source_fullpath because version ${BASH_VERSION} does not have it\n" >&2
+        fi
+    fi
 
     # Should have already been set but if not
     if [ -z "$STOW_DIR" ] ; then
@@ -51,7 +54,7 @@ shell_rc.bash.main(){
 # Verify this at home but at work, I tried to find why I have a '.' as one of
 # the components of my PATH but I couldn't find it.  When I have my TMUX
 # default-command set to '... /bin/bash -l' (BASH4) I don't have this but when
-# I have it set to '$HOME/fs1/bin/bash' (which is a BASH5 compiled from source)
+# I have itset to '$HOME/fs1/bin/bash' (which is a BASH5 compiled from source)
 # I end up with this '.'.  I have also tried launching BASH with -x (env -i
 # ${b} -lx) and I get the same result, doesn't happen with /bin/bash but does
 # happen with my bash.  The first time the xtrace output shows one of the files
@@ -62,8 +65,9 @@ remove_dot_from_path(){
     if [[ "${PATH}" == *: ]] ; then
         trailing_colon=true
     fi
-    p=($PATH)
-    newpath=()
+    local p=($PATH)
+    local newpath=()
+    local d
     for d in "${p[@]}" ; do
         if [[ ${d} == "." ]] ; then
             echo "Removing '.' from PATH" >&2
