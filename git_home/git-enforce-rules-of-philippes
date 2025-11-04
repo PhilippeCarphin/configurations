@@ -157,6 +157,21 @@ done
 # echo "git_args=${git_args[@]}"
 # echo "args_after_command=${args_after_command[@]}"
 
+################################################################################
+# Push -f -> push --force-with-lease
+################################################################################
+push_short_arg_spec=f
+if [[ ${git_command} == push ]] ; then
+    if has_short_arg "-f" ${push_short_arg_spec} "${args_after_command[@]}" ; then
+        echo "Instead of using '-f', use '--force-with-lease' which is the same except that it will only do the force push if the remote tracking branch in my local clone points to the same commit as the actual branch on the remote"
+        if [[ -n ${GIT_RULES_FUNNY} ]] ; then
+            game_of_thrones_shame
+        else
+            five_second_uninterruptible_sleep
+        fi
+        exit 1
+    fi
+fi
 
 ################################################################################
 # Disable the use of 'git commit -m'
@@ -200,6 +215,22 @@ if [[ ${git_command} == reset ]] ; then
         echo "Never use git reset --hard, always use git reset --keep. If you want"
         echo "to get rid of uncommitted changes, use 'git stash', take a breath,"
         echo "then when you know you didn't mess up, use git stash drop."
+        if [[ -n ${GIT_RULES_FUNNY} ]] ; then
+            game_of_thrones_shame
+        else
+            five_second_uninterruptible_sleep
+        fi
+        exit 1
+    fi
+fi
+
+################################################################################
+# Disable `git stash save` in favor of git stash push.
+#           $0 $1    $2
+################################################################################
+if [[ ${git_command} == stash ]] ; then
+    if [[ "$2" == save ]] ; then
+        echo "\`git stash save\` is deprecated, use \`git stash push\` instead"
         if [[ -n ${GIT_RULES_FUNNY} ]] ; then
             game_of_thrones_shame
         else
