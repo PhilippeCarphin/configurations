@@ -126,7 +126,6 @@ configure_fs1_env(){
     export LD_LIBRARY_PATH="${STOW_DIR}/lib:${STOW_DIR}/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
     export PATH=${STOW_DIR}/bin${PATH:+:${PATH}}
     source-dir "$HOME/fs1/etc/bash_completion.d"
-    source-dir "$HOME/fs1/etc/profile.d"
 
     # Prefere this not being necessary
     local phil_bash_completion_dir=$STOW_DIR/etc/bash_completion.d
