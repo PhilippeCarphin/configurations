@@ -12,6 +12,8 @@ if [[ "$-" == *i* ]] ; then
     export FZF_DEFAULT_OPTS="--height=10 --border"
     FZF_COMPLETION_OPT="--preview 'bat --color=always {}'"
     [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+    # Needs to be after fzf because bot do `bind '"\C-t": ...'`
+    source ~/Repositories/github.com/philippecarphin/tests/BASH_tests/fancy_completion/file-selector-widget.sh
 fi
 
 if [[ -r "$HOME/Repositories/github.com/git/git/contrib/completion/git-completion.bash" ]] ; then

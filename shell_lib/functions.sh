@@ -1402,19 +1402,27 @@ tui-jobdel(){
     set +x
 }
 
-fqstat1(){
-    # No need to get crazy, we can just pipe your lines into FZF to select one
-    job_line=$(qstat -w "$@" | fzf)
-    # Once we've selected a line, we grab the Job ID from it however we want
-    jobid=$(echo "${job_line}" | awk '{print $1}')
-    echo "The jobid is '${jobid}'"
+fpselect(){
+    local user=${1:-$USER}
+    local pid=$(pgrep -u $user "$@" | xargs -r ps -f | fzf --header-lines=1 | awk '{print $2}')
+    if [[ -z ${pid} ]] ; then
+        return 1
+    fi
+    echo ${pid}
 }
 
-fqstat2(){
-    # Tell FZF how many lines are headers and don't count as choices
-    job_line=$(qstat -w "$@" | fzf --header-lines=2)
-    jobid=$(echo "${job_line}" | awk '{print $1}')
-    echo "The jobid is '${jobid}'"
+fkill(){
+    local pid
+    if pid=$(fpselect) ; then
+        kill "$@" ${pid}
+    fi
+}
+
+fgdb(){
+    local pid
+    if pid=$(fpselect) ; then
+        gdb -q -tui -p ${pid}
+    fi
 }
 
 fqstaty(){
@@ -1434,46 +1442,32 @@ fqdel(){
     fi
 }
 
-fqstat4(){
-    # Use jq to make the preview window nicer.  Note that when output is not
-    # a terminal, JQ needs to be given a filter, we use '.' the indentity filter.
-    fzf_cmd=(fzf
-        --header-lines=2
-        --preview="echo '{}' | awk '{print \$1}' | xargs qstat -f -F json | jq --color-output ."
-    )
-    job_line=$(qstat -w "$@" | "${fzf_cmd[@]}")
-    jobid=$(echo "${job_line}" | awk '{print $1}')
-    echo "The jobid is '${jobid}'"
-}
-fqstat5(){
-    # Use a filter for JQ so it shows only what we want to see
-    # - Grab the jobs key from the main object
-    # - Pass that into .[] which gives the inside of every job
-    fzf_cmd=(fzf
-        --header-lines=2
-        --preview="echo '{}' | awk '{print \$1}' | xargs qstat -f -F json | jq --color-output ' .Jobs | .[]'"
-    )
-    job_line=$(qstat -w "$@" | "${fzf_cmd[@]}")
-    jobid=$(echo "${job_line}" | awk '{print $1}')
-    echo "The jobid is '${jobid}'"
-}
-fqstat7(){
-    qstat -w \
-        | fzf \
-            --header-lines=2 \
-            --preview="echo '{}' | awk '{print \$1}' | xargs qstat -f -F json | jq --color-output ' .Jobs | .[]'" \
-        | awk '{print $1}' \
-        | xargs -r qdel
-}
-
 fqstat(){
     local header_lines=2
     local a
+    # Header is different when -u is used
     for a in "$@" ; do if [[ $a == -u ]] ; then header_lines=5 ; fi ; done
     qstat -w "$@" | fzf \
         --header-lines=${header_lines} \
         --preview-window=right,40%,wrap \
         --preview="echo '{}' | awk '{print \$1}' | xargs qstat -f -F json | jq --color-output ' .Jobs | .[]'"
+}
+
+fll(){
+    local dir=${1:-}
+    dir=${dir%/}
+    local result
+    if ! result=$(ls -lhrt ${dir} | fzf | awk '{print $9}') ; then
+        return 1
+    fi
+    echo "${dir:+${dir}/}${result}"
+}
+
+fldap(){
+    getent passwd | \
+        fzf \
+            --preview="echo '{}' | awk -F : '{print \$1}' | xargs -I UID ldapsearch -xLLL uid=UID | sed 's/\(.*\):\(.*\)/\x1b[1;34m\1\x1b[37m:\x1b[0;32m\2\x1b[0m/'" \
+            --preview-window=right,40%,wrap
 }
 
 
