@@ -164,19 +164,19 @@ xargso(){
     cmd=("$@" "\"\$@\"" "</dev/tty")
     prog_name=$1
 
-    # print_args xargs sh -c "${cmd}"
+    # print-args xargs sh -c "${cmd}"
     printf "===============================\n"
-    print_args xargs sh -c "${cmd}"
+    print-args xargs sh -c "${cmd}"
     printf "===============================\n"
     xargs sh -c "${cmd[*]}" "${prog_name}"
     # xargs sh -c "${cmd}" "$@"
     # this does not work :
     # xargs sh -c "$@ \"\$@\" </dev/tty"
-    print_args xargs sh -c "$@ \"\$@\" </dev/tty"
+    print-args xargs sh -c "$@ \"\$@\" </dev/tty"
 }
 
 
-print_args(){
+print-args(){
     # Useful to double check how arguments are given to a program.
     # For example, xargso above, the arguments get split /c
     local caller=${FUNCNAME[1]}
