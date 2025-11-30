@@ -637,24 +637,37 @@ print-array(){
 complete -A arrayvar print-array
 
 print-list(){
-    if (( $# == 2 )) ; then
-        local sep=$1 ; shift
-    else
-        local sep=:
+    local sep=':' OPTION OPTIND=1
+    while getopts 's:' OPTION "$@" ; do case $OPTION in
+        s) sep=$OPTARG ;;
+        *) echo "Unknown option $opt" ; return 1 ;;
+    esac ; done ; shift $(( OPTIND - 1))
+    if (($# < 1)) ; then
+        printf "ERROR: No list name provided"
+        return 1
     fi
     local -n ref=$1
     local IFS="${sep}"
     local -a elements=(${ref})
-    unset IFS
     print-array elements
 }
+
 list-remove(){
+    local sep=':' OPTION OPTIND=1
+    while getopts 's:' OPTION "$@" ; do case $OPTION in
+        s) sep=$OPTARG ;;
+        *) echo "Unknown option $opt" ; return 1 ;;
+    esac ; done ; shift $(( OPTIND - 1))
+    if (($# < 1)) ; then
+        printf "ERROR: No list name provided"
+        return 1
+    fi
+
     local -n list=$1
     local to_remove=$2
-    local sep=':'
     local IFS="${sep}"
-
     local in_array=(${list})
+
     local result_array=()
     for a in "${in_array[@]}" ; do
         if [[ "${a}" == ${to_remove} ]] ; then
