@@ -32,6 +32,8 @@ function p.profile.main_interactive(){
     set_ls_colors_for_readline_and_ls ; unset $_ # Needs to be before fzf because fzf causes readline initialization
     FZF_COMPLETION_OPT="--preview 'bat --color=always {}'"
     [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+    # Needs to be after fzf because bot do `bind '"\C-t": ...'`
+    source ~/Repositories/github.com/philippecarphin/tests/BASH_tests/fancy_completion/file-selector-widget.sh
     check-alert-files ; unset -f $_
     maybe_cd_to_pbs_o_workdir ; unset -f $_
     complete -o default -o nospace -o filenames -F _DottableCompletion source .
