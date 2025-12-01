@@ -108,9 +108,13 @@ function set_and_goto_true_home(){
 
 
 configure_spack(){
-    local spack_dir=$HOME/site6/spack
-    if ! [[ -d ${spack_dir} ]] ; then
-        return
+    local spack_dir
+    if [[ -d ${HOME}/site7 ]] ; then
+        spack_dir=$HOME/site7/spack
+    elif [[ -d ${HOME}/site6/ ]] ; then
+        spack_dir=$HOME/site7/spack
+    else
+        return 1
     fi
 
     export SPACK_SKIP_MODULES=y
