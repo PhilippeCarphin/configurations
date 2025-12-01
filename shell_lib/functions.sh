@@ -325,6 +325,27 @@ glcurl(){
     curl --header "$(eval echo $header)" ${url} "$@"
 }
 
+glscurl(){
+    local request="$1" ; shift
+    if [[ -z ${request} ]] ; then
+        printf "${FUNCNAME[0]}: ERROR: Empty request\n"
+        return 1
+    fi
+    if [[ ${request} != /* ]] ; then
+        printf "${FUNCNAME[0]}: ERROR: Requests must start with '/' to match documentation\n"
+        return 1
+    fi
+    if ! [[ -f ~/.ssh/gitlab-access-token ]] ; then
+        printf "${FUNCNAME[0]}: ERROR: File \~/.ssh/gitlab-access-token must and be a single line containing a gitlab access token\n"
+        return 1
+    fi
+
+    local header='PRIVATE-TOKEN: $(<~/.ssh/gitlab-stage-access-token)'
+    local url="https://gitlab-stage.science.gc.ca/api/v4${request}"
+    printf 'curl --header "%s" %s %s\n' "${header}" "${url}" "$*" >&2
+    curl --header "$(eval echo $header)" ${url} "$@"
+}
+
 glccurl(){
     local header='PRIVATE-TOKEN: $(<~/.ssh/gitlab-com-access-token)'
     local url="https://gitlab.com/api/v4${1}" ; shift
@@ -760,6 +781,13 @@ p.value_is_in(){
 
 
 p.unresolved-repodir(){
+    local true_repo_dir
+    if ! true_repo_dir=$(git rev-parse --show-toplevel 2>/dev/null) ; then
+        return 1
+    fi
+
+    # Get repo root without link resolution by just doing `cd ..` until we stop
+    # being inside a git repo.
     local candidate=$(
         local prev=$PWD
         while true ; do
@@ -771,14 +799,12 @@ p.unresolved-repodir(){
             cd ..
         done
     )
-    local true_repo_dir
-    if ! true_repo_dir=$(git rev-parse --show-toplevel 2>/dev/null) ; then
-        return 1
-    fi
 
+    # Ensure that the result is good by checking that the inode of the directory
+    # we will print is the same as that of true_repo_dir
     local candidate_inode=$(stat --format=%i ${candidate})
-    local repo_inode=$(stat --format=%i ${true_repo_dir})
-    if [[ ${candidate_inode} == ${repo_inode} ]] ; then
+    local true_repo_inode=$(stat --format=%i ${true_repo_dir})
+    if [[ ${candidate_inode} == ${true_repo_inode} ]] ; then
         echo ${candidate}
     else
         echo "Unresolved root '${candidate}' is not the same directory as true repo root" >&2
@@ -1167,6 +1193,8 @@ rmb(){
     (
         set -o errexit -o nounset -o errtrace -o pipefail
         shopt -s inherit_errexit
+
+        local directory_to_empty
         if ! directory_to_empty=$(builtin pwd -P) ; then
             echo "${FUNCNAME[0]}: ERROR: Cannot get current directory"
             exit 1
