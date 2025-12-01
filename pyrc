@@ -1,17 +1,23 @@
 #!/usr/bin/env python3
 
 # Requires the environment variable PYTHONSTARTUP to be set to the path of this
-# file.  This file does a few things for my interactive shell
+# file.  This file does a few things for my interactive shell to facilitate
+# common tasks
 
 # Import a few modules so that I don't have to do it manually
 import sys
+
+# For factors?
 sys.path.append('/home/phc001/fs1/libexec/philutils/')
 sys.path.append('/home/phc001/fs1/bin')
 import os
 import subprocess
 import psutil
+import math as m
 
-print(f"~/.pyrc: Imported sys, os, subprocess, psutil")
+from factors import *
+
+print(f"~/.pyrc: Imported sys, os, subprocess, psutil, factors.*")
 
 # Set a nicer prompt with colors from the Python logo and a snake emoji
 __ps1_color = '255;212;59'
@@ -26,104 +32,37 @@ del __ps1_color, __ps2_color
 def view_code(obj):
     if hasattr(obj, "__code__"):
         print(f"Object {obj}'s code is in {obj.__code__.co_filename} at line {obj.__code__.co_firstlineno}")
-        subprocess.run(['vim', obj.__code__.co_filename, f'+{obj.__code__.co_firstlineno}'])
+        vi_args = [obj.__code__.co_filename, f'+{obj.__code__.co_firstlineno}']
     elif hasattr(obj, "__file__"):
         print(f"Object {obj} has does not have a __code__ attribute but does have a __file__ attribute: {obj.__file__}")
-        subprocess.run(['vim', obj.__file__])
+        vi_args = [obj.__file__]
     else:
         print(f"Object {obj} does not have a __code__ or a __file__ attribute, we're out of luck")
+        return
+    subprocess.run(['vim', *vi_args])
 
-#
+def get_output(cmd, type=lambda x:x, dir=None):
+    res = subprocess.run(cmd, cwd=dir, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+    if res.returncode != 0:
+        print(f"Command '{cmd}' failed: {res.stderr}")
+    l = list(map(type, res.stdout.strip().splitlines()))
+    if len(l) == 1:
+        return l[0]
+    elif len(l) == 0:
+        return None
+    else:
+        return l
+
+def read(file):
+    if not os.path.isfile(file):
+        print(f"read('{file}'): File does not exist")
+        return
+    with open(file) as f:
+        return f.read()
+
 # And a few python functions that I find useful
-#
-
 def get_process_memory_usage():
     import sys
     import os
     process = psutil.Process(os.getpid())
     return process.memory_info().rss
-
-# === NOTE on sys.modules vs globals() ===
-#
-# I used to do `if 'subprocess' not in sys.modules:` but that had a
-# problem that if subprocess was not imported, doing this
-#
-#     >>> 'subprocess' in sys.modules
-#     False
-#     >>> subprocess
-#     NameError: name 'subprocess' is not defined
-#     >>> 'subprocess' in sys.modules
-#     True
-#
-# So without importing, 'subprocess' could still make its way
-# into sys.modules in a weird way.  So instead, I use the
-# check that 'subprocess' not in globals()'.
-
-# === NOTE on global ===
-#
-# Initially, I had given up on un-importing because checking
-# if importing was necessary with sys.modules was giving me
-# weird stuff so I decided to just check if importing was necessary
-#
-# This had another problem which is that when doing
-#
-#     if 'subprocess' not in sys.modules
-#         import subprocess
-#
-# inside a function, the subprocess module was referenced
-# only by a local variable of the function.  It went out of
-# scope at the end causing some stuff to be destroyed while
-# sys.modules sitll contained the key 'subprocess'
-#
-# Making subprocess a global variable solved this problem
-# however now that I am checking using membership in globals()
-# instead, this is OK and it makes it so that I don't have
-# to have a 'del subprocess' at the end.
-#
-# Importing still adds to sys.modules so we still need to
-# delete it from there.
-#
-# === OTHER NOTE ON GLOBAL ===
-#
-# Because of the 'import sys' in the function, this causes
-# other places where 'sys' is used to refer to a local
-# variable unless 'global' is used.
-#
-# For example,
-#
-#     >>> import sys
-#     >>> view_code(os.path.split)
-#     Traceback (most recent call last):
-#       File "<stdin>", line 1, in <module>
-#       File "/home/phc001/.pyrc", line 48, in view_code
-#         del sys.modules['subprocess']
-#     UnboundLocalError: local variable 'sys' referenced before assignment
-#
-# NOTE: If I want to guard against global variables named subprocess or sys
-#
-# On top of that, there was the possibility that I define a
-# global variable with name `sys` or `subprocess`.  Even though
-# that's the most rediculous thing to do, I found a way to 
-# deal with it which is to do
-#
-#        old_sys = None
-#        del_sys = False
-#        global sys  # See note on global
-#        if 'sys' in globals() and not isinstance(sys, type(__builtins__)):
-#                old_sys = sys
-#                print("IMPORTING SYS")
-#                import sys
-#        else:  # See note on sys.modules
-#            print("IMPORTING SYS")
-#            import sys
-#            del_sys = True
-#
-# and do this at the end of the function
-#
-#         if old_sys:
-#             sys = old_sys
-#         if del_sys:
-#             del sys
-#
-# But that's so crazy that I'm bringing it back to the
-# more simple thing.
