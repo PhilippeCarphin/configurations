@@ -108,7 +108,7 @@ class CompletionRunner:
         self.PS4 = PS4
         self.bash_command = bash_command if bash_command else "bash --norc"
         env = os.environ.copy()
-        env['TERM']='dumb'
+        # env['TERM']='dumb'
         env['PS1'] = self.PS1
         env['PS4'] = self.PS4
 
@@ -197,6 +197,7 @@ class CompletionRunner:
         try:
             self.bash.expect_exact(expected_completion, timeout=timeout)
             completion = self.bash.after
+            logging.debug(f"expect_exact did not time out after = '{self.bash.after}'")
         except pexpect.exceptions.TIMEOUT as t:
             logging.debug(f"Timeout reached")
             self.bash.sendintr()

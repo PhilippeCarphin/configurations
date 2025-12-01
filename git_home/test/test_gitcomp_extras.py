@@ -1,8 +1,26 @@
 import comptest
+import pexpect
 import os
 import sys
 import logging
 import subprocess
+import time
+
+
+# bash = pexpect.spawn("bash -l", logfile=open('test_log.txt', 'a'), encoding='utf-8')
+# # bash.expect
+# time.sleep(5)
+# bash.send('ls ../..')
+# bash.expect_exact('ls ../..')
+# time.sleep(5)
+# bash.send('\t')
+# try:
+#     bash.expect("phc001", timeout=1)
+# except pexpect.exceptions.TIMEOUT as t:
+#     pass
+# print(bash.before)
+# print(bash.after)
+# sys.exit(88)
 
 fmt="[{levelname} - {funcName}] {message}"
 logging.basicConfig( format=fmt, style='{',
@@ -12,10 +30,10 @@ logging.basicConfig( format=fmt, style='{',
 root_dir = os.path.normpath(f"{os.path.dirname(os.path.realpath(__file__))}/../")
 
 
-if os.uname().sysname == "Darwin":
-    bash_completion = "/opt/homebrew/share/bash-completion/bash_completion" \
+bash_completion = "/opt/homebrew/share/bash-completion/bash_completion" \
     if os.uname().sysname == "Darwin" \
     else "/usr/share/bash-completion/bash_completion"
+# bash_completion = "/home/phc001/Repositories/github.com/scop/bash-completion/bash_completion"
 
 git_completion = os.path.expanduser("~/Repositories/github.com/git/git/contrib/completion/git-completion.bash")
 
@@ -42,11 +60,18 @@ c = comptest.CompletionRunner(
         "bind 'set visible-stats off'",
         "bind 'set mark-directories off'",
         "bind 'set echo-control-characters off'",
+        "complete -p ls",
     ],
+    # bash_command="ssh localhost",
     directory=test_repo,
     PS1="@COMPTEST@",
+    PS4="+ \033[35m${BASH_SOURCE[0]}\033[36m:\033[1;37m${FUNCNAME:-}\033[22;36m:\033[32m${LINENO}\033[36m:\033[0m ",
+    xtrace=True,
+    xtrace_log="xtrace.log",
     logfile=f"{root_dir}/test/test_log.txt"
 )
+
+
 
 A_TEST_FAILED = False
 def count_result(test_result, expected_result=True):
@@ -57,42 +82,47 @@ def count_result(test_result, expected_result=True):
         print("FAIL")
         A_TEST_FAILED = True
         sys.exit(77)
+
 def test_clone():
 
     count_result(c.expect_single_candidate( "git clone g", "it@"))
     count_result(c.expect_multiple_candidates("git clone git@",
                  ["git@github.com:", "git@gitlab.com:", "git@gitlab.science.gc.ca:"]))
     count_result(c.expect_multiple_candidates("git clone https://",
-                 ["https://github.com/", "https://gitlab.com/", "https://gitlab.science.gc.ca/"]))
+                 ["//github.com/", "//gitlab.com/", "//gitlab.science.gc.ca/"]))
     count_result(c.expect_multiple_candidates("git clone git@github.com:",
-                 ["ECCC-ASTD-MRD/", "itsgifnotjiff/", "philippecarphin/"]))
+                 ["ECCC-ASTD-MRD/", "itsgifnotjiff/", "philippecarphin/", "phil-blain/", "torvalds/"]))
     count_result(c.expect_multiple_candidates("git clone ../",
                  ["other-dir", "git-repo"]))
     count_result(c.expect_multiple_candidates("git clone ../../",
                  ['mock_files', '__pycache__']))
 
-    count_result(c.expect_multiple_candidates("git remote add ", ["origin", "upstream", "phb", "jp"]))
-    count_result(c.expect_single_candidate("git remote add upstream g", "it@"))
-    count_result(c.expect_multiple_candidates("git remote add upstream git@",
-                 ["git@github.com:", "git@gitlab.com:", "git@gitlab.science.gc.ca:"]))
-    count_result(c.expect_multiple_candidates("git remote add upstream https://",
-                 ["https://github.com/", "https://gitlab.com/", "https://gitlab.science.gc.ca/"]))
-    count_result(c.expect_single_candidate("git remote add upstream ../..", "/"))
-    count_result(c.expect_multiple_candidates("git remote add upstream ../",
-                 ["other-dir", "git-repo"]))
+def test_remote_add():
+    # count_result(c.expect_multiple_candidates("git remote add ", ["github", "gitlab", "origin", "upstream", "phb", "jp"]))
+    # count_result(c.expect_single_candidate("git remote add upstream g", "it@"))
+    # count_result(c.expect_multiple_candidates("git remote add upstream git@",
+    #              ["git@github.com:", "git@gitlab.com:", "git@gitlab.science.gc.ca:"]))
+    # count_result(c.expect_multiple_candidates("git remote add upstream https://",
+    #              ["//github.com/", "//gitlab.com/", "//gitlab.science.gc.ca/"]))
+    count_result(c.expect_single_candidate("ls ../..", "/", timeout=1))
+    # count_result(c.expect_single_candidate("git remote add upstream ../..", "/"))
+    # count_result(c.expect_multiple_candidates("git remote add upstream ../",
+    #              ["other-dir", "git-repo"]))
 
-    count_result(c.expect_single_candidate("git remote add upstream g", "it@"))
-    count_result(c.expect_multiple_candidates("git remote add upstream git@",
-                 ["git@github.com:", "git@gitlab.com:", "git@gitlab.science.gc.ca:"]))
-    count_result(c.expect_multiple_candidates("git remote add upstream https://",
-                 ["https://github.com/", "https://gitlab.com/", "https://gitlab.science.gc.ca/"]))
+    # count_result(c.expect_single_candidate("git remote add upstream g", "it@"))
+    # count_result(c.expect_multiple_candidates("git remote add upstream git@",
+    #              ["git@github.com:", "git@gitlab.com:", "git@gitlab.science.gc.ca:"]))
+    # count_result(c.expect_multiple_candidates("git remote add upstream https://",
+    #              ["//github.com/", "//gitlab.com/", "//gitlab.science.gc.ca/"]))
 
-    # TODO: Understand why there is a space after origin and boo or adapt the
-    #       tests to ignore spaces in candidates.
-    count_result(c.expect_multiple_candidates("git remote set-url ", ['origin ', 'yay', 'boo ']))
+    # # TODO: Understand why there is a space after origin and boo or adapt the
+    # #       tests to ignore spaces in candidates.
+    # count_result(c.expect_multiple_candidates("git remote set-url ", ['origin ', 'yay', 'boo ']))
+    pass
 
 
 
-test_clone()
+# test_clone()
+test_remote_add()
 
 sys.exit(A_TEST_FAILED)

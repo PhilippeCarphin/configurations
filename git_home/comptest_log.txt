@@ -1,0 +1,476 @@
+source /usr/share/bash-completion/bash_completion
+@/source /usr/share/bash-completion/bash_completion
+@/echo $?
+echo $?
+0
+@/source git-completion-extras.bash
+source git-completion-extras.bash
+git-completion needs to be sourced first because this defines overrides for two of the functions it defines
+@/echo $?
+echo $?
+1
+@/source /usr/share/bash-completion/bash_completion
+@/source /usr/share/bash-completion/bash_completion
+@/echo $?
+echo $?
+0
+@/source git-completion-extras.bash
+source git-completion-extras.bash
+git-completion needs to be sourced first because this defines overrides for two of the functions it defines
+@/echo $?
+echo $?
+1
+@/source /usr/share/bash-completion/bash_completion
+@/source /usr/share/bash-completion/bash_completion
+@/echo $?
+echo $?
+0
+@/source /home/phc001/.git-completion.bash
+source /home/phc001/.git-completion.bash
+@/echo $?
+echo $?
+0
+@/source git-completion-extras.bash
+source git-completion-extras.bash
+@/echo $?
+echo $?
+0
+@/bind "set page-completions off"
+bind "set page-completions off"
+@/bind "set completion-query-items -1"
+bind "set completion-query-items -1"
+@/bind "set completion-display-width 0"
+bind "set completion-display-width 0"
+@/bind "set show-all-if-ambiguous"
+bind "set show-all-if-ambiguous"
+@/bind "set bell-style none"
+bind "set bell-style none"
+@/bind "set colored-completion-prefix off"
+bind "set colored-completion-prefix off"
+@/bind "set colored-stats off"
+bind "set colored-stats off"
+@/source /usr/share/bash-completion/bash_completion
+@/source /usr/share/bash-completion/bash_completion
+@/echo $?
+echo $?
+0
+@/source /home/phc001/.git-completion.bash
+source /home/phc001/.git-completion.bash
+@/echo $?
+echo $?
+0
+@/source git-completion-extras.bash
+source git-completion-extras.bash
+@/echo $?
+echo $?
+0
+@/bind "set page-completions off"
+bind "set page-completions off"
+@/bind "set completion-query-items -1"
+bind "set completion-query-items -1"
+@/bind "set completion-display-width 0"
+bind "set completion-display-width 0"
+@/bind "set show-all-if-ambiguous"
+bind "set show-all-if-ambiguous"
+@/bind "set bell-style none"
+bind "set bell-style none"
+@/bind "set colored-completion-prefix off"
+bind "set colored-completion-prefix off"
+@/bind "set colored-stats off"
+bind "set colored-stats off"
+@/git remote add 	git remote add 
+github
+gitlab
+jp
+origin
+phb
+upstream
+@/git remote add ^C
+@/source /usr/share/bash-completion/bash_completion
+@/source /usr/share/bash-completion/bash_completion
+@/echo $?
+echo $?
+0
+@/source /home/phc001/.git-completion.bash
+source /home/phc001/.git-completion.bash
+@/echo $?
+echo $?
+0
+@/source git-completion-extras.bash
+source git-completion-extras.bash
+@/echo $?
+echo $?
+0
+@/bind "set page-completions off"
+bind "set page-completions off"
+@/bind "set completion-query-items -1"
+bind "set completion-query-items -1"
+@/bind "set completion-display-width 0"
+bind "set completion-display-width 0"
+@/bind "set show-all-if-ambiguous"
+bind "set show-all-if-ambiguous"
+@/bind "set bell-style none"
+bind "set bell-style none"
+@/bind "set colored-completion-prefix off"
+bind "set colored-completion-prefix off"
+@/bind "set colored-stats off"
+bind "set colored-stats off"
+@/git remote add 	git remote add 
+github
+gitlab
+jp
+origin
+phb
+upstream
+@/git remote add ^C
+@/source /usr/share/bash-completion/bash_completion
+@/source /usr/share/bash-completion/bash_completion
+@/echo $?
+echo $?
+0
+@/source /home/phc001/.git-completion.bash
+source /home/phc001/.git-completion.bash
+@/echo $?
+echo $?
+0
+@/source git-completion-extras.bash
+source git-completion-extras.bash
+@/echo $?
+echo $?
+0
+@/bind "set page-completions off"
+bind "set page-completions off"
+@/bind "set completion-query-items -1"
+bind "set completion-query-items -1"
+@/bind "set completion-display-width 0"
+bind "set completion-display-width 0"
+@/bind "set show-all-if-ambiguous"
+bind "set show-all-if-ambiguous"
+@/bind "set bell-style none"
+bind "set bell-style none"
+@/bind "set colored-completion-prefix off"
+bind "set colored-completion-prefix off"
+@/bind "set colored-stats off"
+bind "set colored-stats off"
+@/git remote add 	git remote add 
+github
+gitlab
+jp
+origin
+phb
+upstream
+@/git remote add ^C
+@/source /usr/share/bash-completion/bash_completion
+@/source /usr/share/bash-completion/bash_completion
+@/echo $?
+echo $?
+0
+@/source /home/phc001/.git-completion.bash
+source /home/phc001/.git-completion.bash
+@/echo $?
+echo $?
+0
+@/source git-completion-extras.bash
+source git-completion-extras.bash
+@/echo $?
+echo $?
+0
+@/bind "set page-completions off"
+bind "set page-completions off"
+@/bind "set completion-query-items -1"
+bind "set completion-query-items -1"
+@/bind "set completion-display-width 0"
+bind "set completion-display-width 0"
+@/bind "set show-all-if-ambiguous"
+bind "set show-all-if-ambiguous"
+@/bind "set bell-style none"
+bind "set bell-style none"
+@/bind "set colored-completion-prefix off"
+bind "set colored-completion-prefix off"
+@/bind "set colored-stats off"
+bind "set colored-stats off"
+@/git remote add 	git remote add 
+github
+gitlab
+jp
+origin
+phb
+upstream
+@/git remote add ^C
+@/source /usr/share/bash-completion/bash_completion
+@/source /usr/share/bash-completion/bash_completion
+@/echo $?
+echo $?
+0
+@/source /home/phc001/.git-completion.bash
+source /home/phc001/.git-completion.bash
+@/echo $?
+echo $?
+0
+@/source git-completion-extras.bash
+source git-completion-extras.bash
+@/echo $?
+echo $?
+0
+@/bind "set page-completions off"
+bind "set page-completions off"
+@/bind "set completion-query-items -1"
+bind "set completion-query-items -1"
+@/bind "set completion-display-width 0"
+bind "set completion-display-width 0"
+@/bind "set show-all-if-ambiguous"
+bind "set show-all-if-ambiguous"
+@/bind "set bell-style none"
+bind "set bell-style none"
+@/bind "set colored-completion-prefix off"
+bind "set colored-completion-prefix off"
+@/bind "set colored-stats off"
+bind "set colored-stats off"
+@/git remote add 	git remote add 
+github
+gitlab
+jp
+origin
+phb
+upstream
+@/git remote add ^C
+@/git remote add origin 	git remote add origin 
+git@
+https://
+@/git remote add origin ^C
+@/source /usr/share/bash-completion/bash_completion
+@/source /usr/share/bash-completion/bash_completion
+@/echo $?
+echo $?
+0
+@/source /home/phc001/.git-completion.bash
+source /home/phc001/.git-completion.bash
+@/echo $?
+echo $?
+0
+@/source git-completion-extras.bash
+source git-completion-extras.bash
+@/echo $?
+echo $?
+0
+@/bind "set page-completions off"
+bind "set page-completions off"
+@/bind "set completion-query-items -1"
+bind "set completion-query-items -1"
+@/bind "set completion-display-width 0"
+bind "set completion-display-width 0"
+@/bind "set show-all-if-ambiguous"
+bind "set show-all-if-ambiguous"
+@/bind "set bell-style none"
+bind "set bell-style none"
+@/bind "set colored-completion-prefix off"
+bind "set colored-completion-prefix off"
+@/bind "set colored-stats off"
+bind "set colored-stats off"
+@/git remote add 	git remote add 
+github
+gitlab
+jp
+origin
+phb
+upstream
+@/git remote add ^C
+@/git remote add origin 	git remote add origin 
+git@
+https://
+@/git remote add origin ^C
+@/git remote add origin g	git remote add origin git@^C
+@/source /usr/share/bash-completion/bash_completion
+@/source /usr/share/bash-completion/bash_completion
+@/echo $?
+echo $?
+0
+@/source /home/phc001/.git-completion.bash
+source /home/phc001/.git-completion.bash
+@/echo $?
+echo $?
+0
+@/source git-completion-extras.bash
+source git-completion-extras.bash
+@/echo $?
+echo $?
+0
+@/bind "set page-completions off"
+bind "set page-completions off"
+@/bind "set completion-query-items -1"
+bind "set completion-query-items -1"
+@/bind "set completion-display-width 0"
+bind "set completion-display-width 0"
+@/bind "set show-all-if-ambiguous"
+bind "set show-all-if-ambiguous"
+@/bind "set bell-style none"
+bind "set bell-style none"
+@/bind "set colored-completion-prefix off"
+bind "set colored-completion-prefix off"
+@/bind "set colored-stats off"
+bind "set colored-stats off"
+@/git remote add 	git remote add 
+github
+gitlab
+jp
+origin
+phb
+upstream
+@/git remote add ^C
+@/git remote add origin 	git remote add origin 
+git@
+https://
+@/git remote add origin ^C
+@/git remote add origin g	git remote add origin git@^C
+@/git remote add origin git@	git remote add origin git@
+git@github.com:
+git@gitlab.com:
+git@gitlab.science.gc.ca:
+@/git remote add origin git@git^C
+@/source /usr/share/bash-completion/bash_completion
+@/source /usr/share/bash-completion/bash_completion
+@/echo $?
+echo $?
+0
+@/source /home/phc001/.git-completion.bash
+source /home/phc001/.git-completion.bash
+@/echo $?
+echo $?
+0
+@/source git-completion-extras.bash
+source git-completion-extras.bash
+@/echo $?
+echo $?
+0
+@/bind "set page-completions off"
+bind "set page-completions off"
+@/bind "set completion-query-items -1"
+bind "set completion-query-items -1"
+@/bind "set completion-display-width 0"
+bind "set completion-display-width 0"
+@/bind "set show-all-if-ambiguous"
+bind "set show-all-if-ambiguous"
+@/bind "set bell-style none"
+bind "set bell-style none"
+@/bind "set colored-completion-prefix off"
+bind "set colored-completion-prefix off"
+@/bind "set colored-stats off"
+bind "set colored-stats off"
+@/git remote add 	git remote add 
+github
+gitlab
+jp
+origin
+phb
+upstream
+@/git remote add ^C
+@/git remote add origin 	git remote add origin 
+git@
+https://
+@/git remote add origin ^C
+@/git remote add origin g	git remote add origin git@^C
+@/git remote add origin git@	git remote add origin git@
+git@github.com:
+git@gitlab.com:
+git@gitlab.science.gc.ca:
+@/git remote add origin git@git^C
+@/source /usr/share/bash-completion/bash_completion
+@/source /usr/share/bash-completion/bash_completion
+@/echo $?
+echo $?
+0
+@/source /home/phc001/.git-completion.bash
+source /home/phc001/.git-completion.bash
+@/echo $?
+echo $?
+0
+@/source git-completion-extras.bash
+source git-completion-extras.bash
+@/echo $?
+echo $?
+0
+@/bind "set page-completions off"
+bind "set page-completions off"
+@/bind "set completion-query-items -1"
+bind "set completion-query-items -1"
+@/bind "set completion-display-width 0"
+bind "set completion-display-width 0"
+@/bind "set show-all-if-ambiguous"
+bind "set show-all-if-ambiguous"
+@/bind "set bell-style none"
+bind "set bell-style none"
+@/bind "set colored-completion-prefix off"
+bind "set colored-completion-prefix off"
+@/bind "set colored-stats off"
+bind "set colored-stats off"
+@/git remote add 	git remote add 
+github
+gitlab
+jp
+origin
+phb
+upstream
+@/git remote add ^C
+@/git remote add origin 	git remote add origin 
+git@
+https://
+@/git remote add origin ^C
+@/git remote add origin g	git remote add origin git@^C
+@/git remote add origin git@	git remote add origin git@
+git@github.com:
+git@gitlab.com:
+git@gitlab.science.gc.ca:
+@/git remote add origin git@git^C
+@/source /usr/share/bash-completion/bash_completion
+@/source /usr/share/bash-completion/bash_completion
+@/echo $?
+echo $?
+0
+@/source /home/phc001/.git-completion.bash
+source /home/phc001/.git-completion.bash
+@/echo $?
+echo $?
+0
+@/source git-completion-extras.bash
+source git-completion-extras.bash
+@/echo $?
+echo $?
+0
+@/bind "set page-completions off"
+bind "set page-completions off"
+@/bind "set completion-query-items -1"
+bind "set completion-query-items -1"
+@/bind "set completion-display-width 0"
+bind "set completion-display-width 0"
+@/bind "set show-all-if-ambiguous"
+bind "set show-all-if-ambiguous"
+@/bind "set bell-style none"
+bind "set bell-style none"
+@/bind "set colored-completion-prefix off"
+bind "set colored-completion-prefix off"
+@/bind "set colored-stats off"
+bind "set colored-stats off"
+@/git remote add 	git remote add 
+github
+gitlab
+jp
+origin
+phb
+upstream
+@/git remote add ^C
+@/git remote add origin 	git remote add origin 
+git@
+https://
+@/git remote add origin ^C
+@/git remote add origin g	git remote add origin git@^C
+@/git remote add origin git@	git remote add origin git@
+git@github.com:
+git@gitlab.com:
+git@gitlab.science.gc.ca:
+@/git remote add origin git@git^C
+@/git remote add origin ./	git remote add origin ./
+diff-so-fancy/
+dot-config/
+test/
+@/git remote add origin ./^C
+@/
