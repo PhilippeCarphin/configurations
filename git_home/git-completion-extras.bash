@@ -216,6 +216,10 @@ __gitextras_complete_url(){
 	local url=${1:-${cur}}
 	local dir=${2}
 	case "${url}" in
+		# _filedir -d seems like it doesn't add '/' after .. or ../..
+		# not sure why because it seems to do it
+		..) COMPREPLY+=(../) ; return ;;
+		../..) COMPREPLY+=(../../) ; return ;;
 		..*|/*|.*)
 			_filedir -d
 			if [[ ${dir} != "-d" ]] ; then
