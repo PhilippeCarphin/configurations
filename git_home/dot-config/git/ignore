@@ -3,6 +3,7 @@
 *.swp
 *.swn
 *.swm
+man/index.db
 
 # -- Emacs temp files
 .#*
