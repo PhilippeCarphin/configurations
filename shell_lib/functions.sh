@@ -1539,5 +1539,14 @@ _qdel(){
 sshpwd(){
     ssh localhost -t "cd $PWD ; bash -l"
 }
+
+if-ok(){
+    if (( $? == 0 )) ; then
+        "$@"
+    else
+        printf "Previous command failed, not running '%s'\n" "$*" >&2
+    fi
+}
+
 complete -F _qdel qdel
 
