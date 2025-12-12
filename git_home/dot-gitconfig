@@ -82,6 +82,7 @@
     to-http = "!f(){ remote=origin ; if [[ $# == 1 ]] ; then remote=$1 ; fi ;  git remote get-url $remote | sed -e 's/:/\\//' -e 's/^git@/https:\\/\\//' -e 's/\\.git$//' ; } ; f"
     grep-call = "!f() { : git grep ; pattern=\"$1\"; shift; git -C \"$GIT_PREFIX\" --work-tree=$PWD grep -i -p -E -e \"call[ ]+$pattern([ ]+|\\()*\" \"$@\" ; }; f"
     alias = "!f(){ if [[ -z $1 ]] ; then git config --list | grep alias | sed 's/alias.\\([^=]\\+\\)=.*/\\1/' ; else a=\"$(git config --get alias.$1)\" ; echo \"alias.$1=${a@Q}\" ; fi ; } ; f"
+    logdh = "!f(){ git -c color.ui=always -c core.pager='bat --wrap=never --style=plain' logd \"$@\"; } ; f"
 
 [diff "fortran-namelist"]
 	xfuncname = "^[ \\t]*&.*$"
