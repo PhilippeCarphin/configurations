@@ -112,7 +112,7 @@ configure_spack(){
     if [[ -d ${HOME}/site7 ]] ; then
         spack_dir=$HOME/site7/spack
     elif [[ -d ${HOME}/site6/ ]] ; then
-        spack_dir=$HOME/site7/spack
+        spack_dir=$HOME/site6/spack
     else
         return 1
     fi
