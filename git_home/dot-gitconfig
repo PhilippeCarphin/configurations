@@ -97,7 +97,7 @@
 	insteadOf = me:
 
 [core]
-	pager = diff-so-fancy | less --tabs=4 -RFX
+	pager = diff-so-fancy | less --tabs=4 -SRFX
 	# pager = /home/phc001/Repositories/github.com/dandavison/delta/localinstall/bin/delta -n
 
 # [interactive]
