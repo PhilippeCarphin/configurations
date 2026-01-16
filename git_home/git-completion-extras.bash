@@ -2,7 +2,8 @@
 # vim: noet:ts=8:sw=8:sts=8:listchars=lead\:x,trail\:y,tab\:\ \ :
 #
 # Adds to git-completion.bash by overriding `_git_clone` and `_git_remote`
-# to give URL completion that is configurable in the gitconfig file.
+# adn `_git_submodule` to give URL completion that is configurable in the 
+# gitconfig file.
 #
 # Domain suggestions are configured with
 #
