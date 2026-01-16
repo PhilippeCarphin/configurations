@@ -219,11 +219,9 @@
 # Define completion of git URLs
 ################################################################################
 [gitcomp]
-    domains = github.com gitlab.com
-    domains = gitlab.science.gc.ca
-    remoteNames = upstream origin phb jp github gitlab
 	domains = github.com gitlab.com
 	domains = gitlab.science.gc.ca
+	remoteNames = upstream origin phb jp github gitlab
 [gitcomp-domain "github.com"]
 	users = philippecarphin torvalds phil-blain itsgifnotjiff
 	users = ECCC-ASTD-MRD

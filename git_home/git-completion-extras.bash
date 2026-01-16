@@ -1,20 +1,34 @@
 #!/usr/bin/env bash
-# vim: noet:ts=8:sw=8:sts=8:listchars=lead\:x,trail\:y,tab\:\ \ :
+# vim: noet:ts=8:sw=8:sts=8:listchars=lead\:x,trail\:y,tab\:\ \ ,space:z:
 #
 # Adds to git-completion.bash by overriding `_git_clone` and `_git_remote`
 # adn `_git_submodule` to give URL completion that is configurable in the 
 # gitconfig file.
 #
-# Domain suggestions are configured with
+# Domain suggestions are configured using the ~/.gitconfig file following this
+# example:
 #
 #	[gitcomp]
 #		domains = github.com gitlab.com
-#		remoteNames = origin upstream
-# And username suggestions are configured per domain with
+#		domains = gitlab.science.gc.ca
+#		remoteNames = upstream origin phb jp github gitlab
 #	[gitcomp-domain "github.com"]
-#		users = torvalds philippecarphin bminor ECCC_ASTD_MRD
+#		users = philippecarphin torvalds phil-blain itsgifnotjiff
+#		users = ECCC-ASTD-MRD
 #	[gitcomp-domain "gitlab.com"]
-#		users = philippecarphin gitlab-org
+#		users = philippecarphin gitlab-org phil-blain
+#	[gitcomp-domain "gitlab.science.gc.ca"]
+#		users = phc001 RPN-SI CMDS yor000 CMOI phb001
+#
+# or using git config commands like so:
+#
+#	git config --global gitcomp.domains "github.com gitlab.com"
+#	git config --global gitcomp.remoteNames "origin upstream"
+#	git config --global gitcomp-domain.github.com.users "philippecarphin phil-blain torvalds"
+#
+# the '--global' is optional but I don't see per-repo configs being useful in
+# this context.
+#
 
 if ! declare -F _git_clone &>/dev/null ; then
 	echo "git-completion needs to be sourced first because this defines overrides for two of the functions it defines" >&2
