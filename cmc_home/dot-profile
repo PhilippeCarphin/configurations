@@ -7,6 +7,7 @@ function p.profile.main(){
         p.profile.main_interactive ; unset -f $_
     fi
     source ~/.philconfig/shell_lib/bash_debug.sh
+    export PERL5LIB=$HOME/fs1/lib/perl5
     source ~/.philconfig/env_common_home.sh
     source ~/.philconfig/env_specific_work.sh
     source ~/.philconfig/shell_rc_common
