@@ -1515,22 +1515,6 @@ fqdel(){
     fi
 }
 
-
-_qdel(){
-    sc=$HOME/Repositories/github.com/philippecarphin/tests/BASH_tests/fancy_completion/square_choices.sh
-    if true || [[ -n ${FANCY_COMPLETION} ]] ; then
-        res=$($sc $(qselect -u anb007))
-        printf "\033[A\r%s%s" "${PS1@P}" "${COMP_LINE}"
-        COMPREPLY=($res)
-        return
-    fi
-    if (( BASH_VERSINFO[0] >= 5 && BASH_VERSINFO[1] >= 3 )) ; then
-        compgen -V COMPREPLY -W "$(qselect -u anb007)" -- "${COMP_WORDS[COMP_CWORD]}"
-    else
-        COMPREPLY=($(compgen -W "$(qselect -u anb007)" -- "${COMP_WORDS[COMP_CWORD]}"))
-    fi
-}
-
 sshpwd(){
     ssh localhost -t "cd $PWD ; bash -l"
 }
@@ -1541,15 +1525,6 @@ if-ok(){
     else
         printf "Previous command failed, not running '%s'\n" "$*" >&2
     fi
-}
-
-complete -F _qdel qdel
-
-fkill(){
-    ps -auxf | fzf | awk '{print $2}' | xargs kill -term
-}
-tkill(){
-    ps -auxf | tui-selector | awk '{print $2}' | xargs kill -term
 }
 
 fgdb(){
