@@ -1,5 +1,9 @@
 # Straight pipe copy of Philippe Blain's file
 namelist_*  diff=fortran-namelist
 ice_in*     diff=fortran-namelist
-*.[Ffh]90    diff=fortran
+*.[Ffh]90   diff=fortran
 *.ftn90     diff=fortran
+
+# My work uses the '.dot' extensions to designate BASH scripts that are meant
+# to be sourced (because you can source with `. my-file`)
+*.dot       diff=bash
