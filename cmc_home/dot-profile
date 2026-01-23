@@ -38,7 +38,10 @@ function p.profile.main_interactive(){
     check-alert-files ; unset -f $_
     maybe_cd_to_pbs_o_workdir ; unset -f $_
     complete -o default -o nospace -o filenames -F _DottableCompletion source .
-    if alias which >/dev/null 2>&1 ; then unalias which ; fi # rhel aliases which to something that includes aliases, but I know that 'type' exists
+
+    # These alias/functions for `which` are cringe
+    if alias which >/dev/null 2>&1 ; then unalias which ; fi
+    if declare -F which >/dev/null 2>&1 ; then unset -f which ; fi
 }
 
 maybe_cd_to_pbs_o_workdir(){
