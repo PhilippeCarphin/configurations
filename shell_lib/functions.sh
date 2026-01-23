@@ -1268,8 +1268,13 @@ ssh-key-signature(){
 }
 
 tree(){
-    # command tree -C "$@" | tr "$(printf '\xa0')" ' '
-    command tree -C "$@" | tr $'\xa0' ' '
+    # Some spaces in the output of tree are not real spaces but rather \xa0
+    # which emacs displays in a special way which is annoying when including
+    # the output of tree in a text file.
+    # Note: Those spaces are actually `\xc2,\xa0` or `\xa0c2` but the following
+    #     command tree -C "$@" | tr '\xa0' ' '
+    # works but this would probably be more accurate.  I'm not sure.
+    command tree -C "$@" | sed 's/\xc2\xa0/ /g'
 }
 
 pandoc(){
