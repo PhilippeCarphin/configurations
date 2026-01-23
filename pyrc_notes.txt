@@ -1,0 +1,84 @@
+=== NOTE on sys.modules vs globals() ===
+
+I used to do `if 'subprocess' not in sys.modules:` but that had a
+problem that if subprocess was not imported, doing this
+
+    >>> 'subprocess' in sys.modules
+    False
+    >>> subprocess
+    NameError: name 'subprocess' is not defined
+    >>> 'subprocess' in sys.modules
+    True
+
+So without importing, 'subprocess' could still make its way
+into sys.modules in a weird way.  So instead, I use the
+check that 'subprocess' not in globals()'.
+
+=== NOTE on global ===
+
+Initially, I had given up on un-importing because checking
+if importing was necessary with sys.modules was giving me
+weird stuff so I decided to just check if importing was necessary
+
+This had another problem which is that when doing
+
+    if 'subprocess' not in sys.modules
+        import subprocess
+
+inside a function, the subprocess module was referenced
+only by a local variable of the function.  It went out of
+scope at the end causing some stuff to be destroyed while
+sys.modules sitll contained the key 'subprocess'
+
+Making subprocess a global variable solved this problem
+however now that I am checking using membership in globals()
+instead, this is OK and it makes it so that I don't have
+to have a 'del subprocess' at the end.
+
+Importing still adds to sys.modules so we still need to
+delete it from there.
+
+=== OTHER NOTE ON GLOBAL ===
+
+Because of the 'import sys' in the function, this causes
+other places where 'sys' is used to refer to a local
+variable unless 'global' is used.
+
+For example,
+
+    >>> import sys
+    >>> view_code(os.path.split)
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+      File "/home/phc001/.pyrc", line 48, in view_code
+        del sys.modules['subprocess']
+    UnboundLocalError: local variable 'sys' referenced before assignment
+
+NOTE: If I want to guard against global variables named subprocess or sys
+
+On top of that, there was the possibility that I define a
+global variable with name `sys` or `subprocess`.  Even though
+that's the most rediculous thing to do, I found a way to 
+deal with it which is to do
+
+       old_sys = None
+       del_sys = False
+       global sys  # See note on global
+       if 'sys' in globals() and not isinstance(sys, type(__builtins__)):
+               old_sys = sys
+               print("IMPORTING SYS")
+               import sys
+       else:  # See note on sys.modules
+           print("IMPORTING SYS")
+           import sys
+           del_sys = True
+
+and do this at the end of the function
+
+        if old_sys:
+            sys = old_sys
+        if del_sys:
+            del sys
+
+But that's so crazy that I'm bringing it back to the
+more simple thing.
