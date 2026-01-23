@@ -17,6 +17,8 @@ else
     case ${host} in
         *collab.science.gc.ca)
             ln -svf ${this_dir_rel}/dot-tmux.conf.colors.work.collab ~/.tmux.conf.colors ;;
+        ppp7*)
+            ln -svf ${this_dir_rel}/dot-tmux.conf.colors.work.sci.u3 ~/.tmux.conf.colors ;;
         *science.gc.ca)
             ln -svf ${this_dir_rel}/dot-tmux.conf.colors.work.sci ~/.tmux.conf.colors ;;
         *ec.gc.ca)
