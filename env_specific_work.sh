@@ -29,7 +29,7 @@ env_specific_work(){
     host=$(hostname -f)
     case ${host} in
         *.collab.science.gc.ca) p=http://webproxy.collab.science.gc.ca:8888/ ;;
-        ppp[56]*|sc[56]*) p=http://webproxy.science.gc.ca:8888/ ;;
+        ppp[5678]*|sc[5678]*) p=http://webproxy.science.gc.ca:8888/ ;;
         *) : ;;
     esac
     # https://superuser.com/questions/944958/are-http-proxy-https-proxy-and-no-proxy-environment-variables-standard
