@@ -20,6 +20,8 @@ env_specific_work(){
     export PATH=$HOME/tools/go/bin:$PATH
     export PATH=$HOME/tools/tmux-3.5a/bin:$PATH
     export PATH=$HOME/tools/node/bin:$PATH
+    export PATH=$HOME/tools/netcat-0.7.1/localinstall/bin:$PATH
+    export PATH=$HOME/tools/libtool/bin:$PATH
     export PATH=$HOME/bin:$PATH
     export PATH="/home/phc001/.pixi/bin:$PATH"
 
