@@ -17,7 +17,7 @@ import math as m
 
 from factors import *
 
-print(f"~/.pyrc: Imported sys, os, subprocess, psutil, factors.*")
+print(f"~/.pyrc: Imported sys, os, subprocess, psutil, factors.*, math as m")
 
 # Set a nicer prompt with colors from the Python logo and a snake emoji
 __ps1_color = '255;212;59'
