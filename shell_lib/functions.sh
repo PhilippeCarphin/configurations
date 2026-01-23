@@ -1471,16 +1471,6 @@ fgdb(){
     fi
 }
 
-fqstaty(){
-    # Give FZF a command to run on the currently selected line to show
-    # in the preview window.
-    qstat -w "$@" \
-         | fzf \
-            --header-lines=2 \
-            --preview="echo '{}' | awk '{print \$1}' | xargs qstat -f -F json" \
-         | awk '{print $1}'
-}
-
 fqdel(){
     local jobid=$(fqstat "$@")
     if [[ -n ${jobid} ]] ; then
