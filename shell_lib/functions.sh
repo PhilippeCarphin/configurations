@@ -1545,3 +1545,16 @@ if-ok(){
 
 complete -F _qdel qdel
 
+fkill(){
+    ps -auxf | fzf | awk '{print $2}' | xargs kill -term
+}
+tkill(){
+    ps -auxf | tui-selector | awk '{print $2}' | xargs kill -term
+}
+
+fgdb(){
+    pid=$(pgrep -u $USER "$@" | xargs -r ps -f | fzf | awk '{print $2}')
+    if [[ -n $pid ]] ; then
+        gdb -tui -q -p $pid
+    fi
+}
