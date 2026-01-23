@@ -85,7 +85,7 @@ ps4(){
                   echo "ERROR: BASH < 5 does not have \$EPOCHREALTIME"
                   return 1
               fi
-              PS4=$'+ \033[35m${EPOCHREALTIME}\033[36m:\033[1;37m${FUNCNAME:-}\033[22;36m:\033[32m${LINENO}\033[36m:\033[0m ' ;;
+              PS4='+ \033[35m${EPOCHREALTIME}\033[36m:\033[1;37m${FUNCNAME:-}\033[22;36m:\033[32m${LINENO}\033[36m:\033[0m ' ;;
         *) printf "Unknown value: '%s'.  Should be full|short|no-color|short-no-color|time\n" "$1" ; return 1 ;;
     esac
     # Note: PS4 is normally a shell variable and is not exported but exporting
