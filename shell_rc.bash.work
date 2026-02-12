@@ -80,4 +80,5 @@ _module_nobox(){
     echo "${FUNCNAME[0]}: If the module is a compiler in sidr000, don't use it in production" >&2
     \module ${color} "$@" &> >(sed '/^$\|\s*|.*|\|\s*+-*+/d')
 }
-alias module="$_"
+alias pmodule="_module_nobox"
+$(complete -p module) pmpdule

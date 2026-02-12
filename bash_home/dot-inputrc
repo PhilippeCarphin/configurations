@@ -5,14 +5,17 @@ set colored-completion-prefix on
 # add type suffix to items during autocompletion
 set visible-stats on
 
-$if Bash
-    set keyseq-timeout 100
-    # set vi-ins-mode-string \001\033[1;42;37m\002 I \001\033[21;24;32;44m\002\001\033[0m\002
-    # set vi-cmd-mode-string \001\033[1;43;37m\002 N \001\033[21;24;33;44m\002\001\033[0m\002
-    set emacs-mode-string  ""
-    # \001\033[1;44;31m\002E\001\033[0m\002
-    set show-mode-in-prompt on
+set keyseq-timeout 100
 
+# Readline can print a string at the start of the current line to "show"
+# the editing mode.  We have it print an ANSI escape sequence to make the
+# terminal emulator change the cursor.
+set show-mode-in-prompt on
+set vi-ins-mode-string \001\033[6 q\033]12;green\007\002
+set vi-cmd-mode-string \001\033[2 q\033]12;yellow\007\002
+set emacs-mode-string  \001\033[2 q\033]12;red\007\002
+
+$if Bash
     # Causes references to previous commands to be expanded when pressing space
     # after something like `!!`  to be expanded as soon as a space is inserted.
     # Useful to confirm that it's the right thing for things like `!3:1` to get
@@ -34,17 +37,12 @@ $if Bash
     set colored-stats on
 $endif
 
-$if Python
-    # Surround the current input with help(_) and hit enter
-    # - C-a to go to beginning of line
-    # - Type "help("
-    # - C-e to go to end of line
-    # - Type ")" and Enter
-    "\C-h": "\C-ahelp(\C-e)\n"
-$endif
+set editing-mode vi
+    "\C-l": clear-screen
+    "\C-g": abort
+    # Vi mode specific keys
 
-
-$if mode=emacs
+set editing-mode emacs
     # Change C-f and C-b to move by shell words
     # Originally, C-f is forward-char and M-f is forward-word but I use
     # the Fn-' to produce right-arrow.
@@ -54,28 +52,24 @@ $if mode=emacs
     "\el": forward-word
     "\eh": backward-word
 
-    # "\C-t": dynamic-complete-history
-    # "\C-s": '\C-a \C-f \C-w' # Can't use C-s because it "freezes the probram"
-    # "\C-'": '\C-a\C-f\C-w'   # Also unusable for some reason
-
-    # Delete command (first word on command line)
-    "\C-y": '\C-a\C-f\C-w'
-
-    "\C-x \C-r": re-read-init-file
-    # "\C-n": non-incremental-forward-history-search
-    # Takes what you already have, puts it in "$(...)" and ends with your cursor
-    # at the start of the line.  Fun thing to try but you could just type '| xargs'
-    # instead.  But it's a cool demo of how you can customize readline
-    # - go to start (\C-a)
-    # - Insert ' "$('
-    # - go to end (\C-e)
-    # - insert '"'
-    # - go to start
+    # Wrap the whole command line in '$(...)'
     "\e\C-m": '\C-a "$(\C-e)"\C-a'
+
     # shell-expand-line is bound by default to '\e\C-e' but I like this better
     "\C- ": shell-expand-line
-    "\C-g": '\C-c'
-$endif
 
+    # Emacs universal cancel key
+    "\C-g": '\C-c'
+
+
+$if Python
+    # Surround the current input with help(_) and hit enter
+    # - C-a to go to beginning of line
+    # - Type "help("
+    # - C-e to go to end of line
+    # - Type ")" and Enter
+    "\C-h": "\C-ahelp(\C-e)\n"
+    set editing-mode emacs
+$endif
 # NOTE
 # - \e\C-e: Expand subshell on command line
