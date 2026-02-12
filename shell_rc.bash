@@ -27,27 +27,32 @@ shell_rc.bash.main(){
     if [ -z "$STOW_DIR" ] ; then
         printf "\033[1;31mERROR\033[0m: .bashrc:$LINENO STOW_DIR not set"
     fi
+    configure_fs1_env ; unset -f $_
+    remove_dot_from_path
+    if [[ $- == *i* ]] ; then
+        shell_rc.bash.main_interactive
+    fi
+}
+
+shell_rc.bash.main_interactive(){
 
     source ~/Repositories/github.com/philippecarphin/git-colon-paths/etc/profile.d/git-colon-path-support.bash
     complete -F _gcps_complete_cd cd
     complete -F _complete_vim vim
 
-    alias vim='_gcps_wrap_command vim'
-    alias cd='_gcps_wrap_command cd'
-    alias zsh="NORMAL_MODE=1 PS4=$'+ \033[35m%N\033[0m:\033[32m%i\033[0m ' zsh"
     # GNU xargs runs the command even with empty input.  The BSD version does
     # not by default.  The BSD version does accept -r for compatibility but it
     # already behaves as if -r has been profided.
     alias xargs='xargs -r'
     alias ncdu='ncdu --show-itemcount --color dark --confirm-quit'
-    configure_fs1_env ; unset -f $_
+    alias vim='_gcps_wrap_command vim'
+    alias cd='_gcps_wrap_command cd'
     configure_history ; unset -f $_
     configure_vim ; unset -f $_
     export EDITOR=ec
     # For commit messages, ec is good but for fc, we need extreme speed
     export FCEDIT=vim
     export PYTHONSTARTUP=$HOME/.pyrc
-    remove_dot_from_path
     set-extra-bindings
 }
 

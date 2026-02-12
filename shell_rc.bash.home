@@ -7,6 +7,8 @@ case $HOSTNAME in
     mini.local) _powerline_decorations=("" "🍎 ") ;;
 esac
 
+alias zsh="NORMAL_MODE=1 PS4=$'+ \033[35m%N\033[0m:\033[32m%i\033[0m ' zsh"
+
 source ~/Repositories/github.com/philippecarphin/rust-workout-log/_workout.sh
 if [[ "$-" == *i* ]] ; then
     export FZF_DEFAULT_OPTS="--height=10 --border"
