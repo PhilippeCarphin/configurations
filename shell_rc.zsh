@@ -4,7 +4,7 @@ source ${STOW_DIR}/etc/zsh_completion.d/repos_completion.zsh
 source /opt/homebrew/opt/modules/init/zsh
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 source $HOME/Repositories/github.com/philippecarphin/bash-powerline/powerline.zsh
-source $HOME/Repositories/github.com/philippecarphin/utils/etc/profile.d/git-colon-path-support.zsh
+source $HOME/Repositories/github.com/philippecarphin/git-colon-paths/etc/profile.d/git-colon-path-support.zsh
 export PS4=$'+ \033[35m%N\033[0m:\033[32m%i\033[0m '
 
 alias vim='wrap_command_colon_paths vim -p'
