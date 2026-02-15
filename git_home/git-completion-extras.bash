@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# vim: noet:ts=8:sw=8:sts=8:listchars=lead\:x,trail\:y,tab\:\ \ ,space:z:
+# vim: noet:ts=8:sw=8:sts=8:listchars=lead\:·,trail\:·,tab\:\ \ ,space\:\ :
 #
 # Adds to git-completion.bash by overriding `_git_clone` and `_git_remote`
 # adn `_git_submodule` to give URL completion that is configurable in the 
@@ -173,6 +173,75 @@ _git_submodule ()
 	*)
 		;;
 	esac
+}
+
+_git_push ()
+{
+	case "$prev" in
+	--repo)
+		__gitcomp_nl "$(__git_remotes)"
+		return
+		;;
+	--recurse-submodules)
+		__gitcomp "$__git_push_recurse_submodules"
+		return
+		;;
+	esac
+	case "$cur" in
+	--repo=*)
+		__gitcomp_nl "$(__git_remotes)" "" "${cur##--repo=}"
+		return
+		;;
+	--recurse-submodules=*)
+		__gitcomp "$__git_push_recurse_submodules" "" "${cur##--recurse-submodules=}"
+		return
+		;;
+	--force-with-lease=*)
+		__git_complete_force_with_lease "${cur##--force-with-lease=}"
+		return
+		;;
+	--*)
+		__gitcomp_builtin push
+		__gitextras_remove_force                               # EXTRA
+		return
+		;;
+	esac
+	__git_complete_remote_or_refspec
+}
+
+# I decided to never use '-f' and instead use --force-with-lease.  But since
+# '--force' is an option, doing '--for[]' and pressing TAB takes me to
+# '--force[]'.  I would much prefer it take me to '--force-[]' because when I'm
+# going fast, the presence of the '-' makes it smoother for me to see
+# intuitively that I need to continue the option by typing 'w'.  When there is
+# no '-', it looks like a complete option with compopt nospace.
+# So this is what I like:
+#     '--for[]' TAB -->
+#     '--force-[]' Trailing dash, I need to add a letter: w -->
+#     '--force-w[]' TAB -->
+#     '--force-with-lease []' done
+# instead of
+#     '--for[]' TAB -->
+#     '--force[]' Is the option name complete? Right, press -
+#     '--force-[]' TAB -->
+#     '--force-[]' Oh right, there are multiple --force-* options, press w
+#     '--force-w[]' TAB -->
+#     '--force-with-lease []' done
+# it's not a big deal but over the weeks of using the completion to type
+# --force-with-lease faster, that difference has annoyed me enough for me to
+# fix it like so
+__gitextras_remove_force(){
+	# Lenght needs to be saved because with for((_;i<${#COMPREPLY[@]};_))
+	# the '${#COMPREPLY[@]}' gets evaluated every time, so if we remove a
+	# non-last element during iteration, we won't even handle the last one.
+	local len=${#COMPREPLY[@]}
+	for((i=0;i<${len};i++)); do
+		case "${COMPREPLY[i]%% }" in
+			--force) unset 'COMPREPLY[i]' ;;
+		esac
+	done
+	# Repacking COMPREPLY could be done with 'COMPREPLY=("${COMPREPLY[@]}")
+	# but I don't think there is any reason to do that.
 }
 
 __gitextras_has_url(){
