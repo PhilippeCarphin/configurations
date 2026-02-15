@@ -23,6 +23,8 @@ alias ppu='ps hax -o user | sort -n | uniq -c | sort -n'
 alias rppu='ps haxr -o user | sort -n | uniq -c | sort -n'
 # -S truncate lines, -R process ANSI sequences
 alias less='less -RS'
+alias python3='python3 -q'
+alias python='python3 -q'
 # Use function because of expand_aliases option
 function ln(){ command ln -nv "$@" ; }
 

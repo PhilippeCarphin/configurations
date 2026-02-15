@@ -12,13 +12,22 @@ sys.path.append('/home/phc001/fs1/libexec/philutils/')
 sys.path.append('/home/phc001/fs1/bin')
 import os
 import subprocess
-import psutil
 import math as m
+imports = "sys, os, subprocess"
+try: import psutil
+except: imports += ", not(psutil)"
+else: imports += ", psutil"
 
-from factors import *
+try: import factors as f
+except: imports += ", not(factors)"
+else: imports += ", factors as f"
 
-print(f"~/.pyrc: Imported sys, os, subprocess, psutil, factors.*, math as m")
+try: import requests as r
+except: imports += ", not(requests)"
+else: imports += ", requests as r"
 
+print(f"iPython {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.minor} -- {sys.executable}")
+print(f"~/.pyrc: Imported {imports}")
 # Set a nicer prompt with colors from the Python logo and a snake emoji
 __ps1_color = '255;212;59'
 __ps2_color = '95;135;215'  # This is color 81 which looks best
@@ -29,40 +38,45 @@ del __ps1_color, __ps2_color
 
 # A quick function to open the code where any python object is defined (function,
 # module, class etc.
-def view_code(obj):
-    if hasattr(obj, "__code__"):
-        print(f"Object {obj}'s code is in {obj.__code__.co_filename} at line {obj.__code__.co_firstlineno}")
-        vi_args = [obj.__code__.co_filename, f'+{obj.__code__.co_firstlineno}']
-    elif hasattr(obj, "__file__"):
-        print(f"Object {obj} has does not have a __code__ attribute but does have a __file__ attribute: {obj.__file__}")
-        vi_args = [obj.__file__]
-    else:
-        print(f"Object {obj} does not have a __code__ or a __file__ attribute, we're out of luck")
-        return
-    subprocess.run(['vim', *vi_args])
+class p:
+    @staticmethod
+    def view_code(obj):
+        if hasattr(obj, "__code__"):
+            print(f"Object {obj}'s code is in {obj.__code__.co_filename} at line {obj.__code__.co_firstlineno}")
+            vi_args = [obj.__code__.co_filename, f'+{obj.__code__.co_firstlineno}']
+        elif hasattr(obj, "__file__"):
+            print(f"Object {obj} has does not have a __code__ attribute but does have a __file__ attribute: {obj.__file__}")
+            vi_args = [obj.__file__]
+        else:
+            print(f"Object {obj} does not have a __code__ or a __file__ attribute, we're out of luck")
+            return
+        subprocess.run(['vim', *vi_args])
 
-def get_output(cmd, type=lambda x:x, dir=None):
-    res = subprocess.run(cmd, cwd=dir, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-    if res.returncode != 0:
-        print(f"Command '{cmd}' failed: {res.stderr}")
-    l = list(map(type, res.stdout.strip().splitlines()))
-    if len(l) == 1:
-        return l[0]
-    elif len(l) == 0:
-        return None
-    else:
-        return l
+    @staticmethod
+    def run(cmd, type=lambda x:x, dir=None):
+        res = subprocess.run(cmd, cwd=dir, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+        if res.returncode != 0:
+            print(f"Command '{cmd}' failed: {res.stderr}")
+        l = list(map(type, res.stdout.strip().splitlines()))
+        if len(l) == 1:
+            return l[0]
+        elif len(l) == 0:
+            return None
+        else:
+            return l
 
-def read(file):
-    if not os.path.isfile(file):
-        print(f"read('{file}'): File does not exist")
-        return
-    with open(file) as f:
-        return f.read()
+    @staticmethod
+    def read(file):
+        if not os.path.isfile(file):
+            print(f"read('{file}'): File does not exist")
+            return
+        with open(file) as f:
+            return f.read()
 
-# And a few python functions that I find useful
-def get_process_memory_usage():
-    import sys
-    import os
-    process = psutil.Process(os.getpid())
-    return process.memory_info().rss
+    # And a few python functions that I find useful
+    @staticmethod
+    def get_process_memory_usage():
+        import sys
+        import os
+        process = psutil.Process(os.getpid())
+        return process.memory_info().rss
