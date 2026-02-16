@@ -1,3 +1,5 @@
+# vim: noet:ts=8:sw=8:sts=8:listchars=lead\:·,trail\:·,tab\:\ \ ,space\:\ :
+
 [user]
 	name = "Philippe Carphin"
 	# email set in specific files at the end
@@ -6,110 +8,91 @@
 	unmerged  = magenta
 	untracked = red bold
 [alias]
-    # begin Merci Philippe Blain
-    bra = "!f() { git branch --color --format='%(align:30,left)%(color:red)%(refname:short)%(color:reset)%(end)|%(color:yellow bold)%(objectname:short)%(color:reset)|%(color:dim blue)%(creatordate:relative)%(color:reset)|%(if)%(upstream)%(then)[%(color:blue)%(upstream:short)%(color:reset)%(upstream:trackshort)%(if)%(upstream:track)%(then): %(upstream:track,nobracket)%(end)] %(end)%(if:notequals=gone)%(push:track,nobracket)%(then){%(color:green)%(push:short)%(color:reset)%(push:trackshort)%(if)%(push:track)%(then): %(push:track,nobracket)%(end)} %(end)%(contents:subject) %(color:dim white) %(authorname)' "$@" | column -t -s '|'; }; f"
-    stb = "!f() { : git status ; git -C \"${GIT_PREFIX}\" --work-tree=$PWD status \"$@\"; git for-each-ref $(git rev-parse --symbolic-full-name HEAD) --format='%(if:notequals=gone)%(push:track,nobracket)%(then){%(color:green)%(push:short)%(color:reset)%(push:trackshort)%(if)%(push:track)%(then): %(push:track,nobracket)%(end)} %(end)'; }; f"
-    find =  "!f() { : git ls-files ; pattern=\"$1\"; shift; git -C \"${GIT_PREFIX}\" --work-tree=$PWD ls \"$@\" :/\\*\"$pattern\"\\*; }; f"
-    findi =  "!f() { : git ls-files ; pattern=\"$1\"; shift; git -C \"${GIT_PREFIX}\" --work-tree=$PWD ls \"$@\":\\(icase,top\\)\\*\"$pattern\"\\*; }; f"
-    # end Merci Philippe Blain
-    # Pipe git show into vim
-    view = "!f(){ git -C \"${GIT_PREFIX}\" show $1 | vim -R - -c \"doautocmd BufRead ${1##*:}\" ; } ; f"
-    # For each file in the current directory, show the last commit to have touched this file
-    last-commits = "!f(){ : git ls-tree ; git -C \"${GIT_PREFIX}\" ls-tree -r --name-only HEAD -z | TZ=UTC xargs -0 -IFILE git --no-pager log -1 --date=iso-local --format=\"%C(blue)%ad %C(reset)%an %C(yellow)%h %C(green)FILE %C(white)%s\" -- \"${GIT_PREFIX:-.}/FILE\" ; } ; f"
-    # Same as above but from the repo root
-    last-commits-root = "!f(){ : git ls-tree ; git ls-tree -r --name-only HEAD -z | TZ=UTC xargs -0 -IFILE git --no-pager log -1 --date=iso-local --format=\"%C(blue)%ad %C(yellow)%h %C(green)FILE %C(white)%s\" -- \"FILE\" ; } ; f"
-    submodule-upgrade = "!f(){ if [[ -z \"$1\" ]] ; then return 1 ; fi ; cd \"${GIT_PREFIX}\" && git submodule update --remote \"$1\" && cd \"${1}\" && git submodule update --init --recursive ; } ; f"
-    submodule-upgrade-all = "!f(){ git submodule update --remote && git submodule foreach 'git submodule update --init --recursive' ; } ; f"
-    #                                                                                                  submodule section                              submod header bold white          submod missing commits red    dubmod new commits green   untracked bold red                     'git commit -a' is wack, 'git add -p' is dope
-    st = "!f(){ : git status ; git -C \"${GIT_PREFIX}\" --work-tree=$PWD -c color.ui=always status \"$@\" | sed -u \"s/^Submodules changed.*/\\x1b[4;36m&\\x1b[0m/; s/^\\*.*/\\x1b[1;37m&\\x1b[0m/; s/^  <.*/\\x1b[31m&\\x1b[0m/; s/^  >.*/\\x1b[32m&\\x1b[0m/;   s/^Untracked.*/\\x1b[37;41m&\\x1b[0m/; s|\\\" and/or \\\"git commit -a\\\"| -p\\\"|; \" ; } ; f"
-    # Same as above but flashing bold white on red background for untracked files
-    # st = "!f(){ : git status ; git -C \"${GIT_PREFIX}\" -c color.ui=always status \"$@\" | sed -u \"s/^Submodules changed.*/\\x1b[4;36m&\\x1b[0m/; s/^\\*.*/\\x1b[1;37m&\\x1b[0m/; s/^  <.*/\\x1b[31m&\\x1b[0m/; s/^  >.*/\\x1b[32m&\\x1b[0m/; s/^Untracked.*/\\x1b[37;5;41m&\\x1b[0m/;\" ; } ; f"
-    sts = -c status.submoduleSummary=false status
-    # diffstat but with a header to remind me with which number is which
-    dss = "!f(){ printf '+   -   FILE\n' ; git diff --numstat ; } ; f"
-    # Additionnal remotes do not have <remote>/HEAD by default.  This config alias
-    # makes it so that fetches also get <remote>/HEAD
-    set-remote-head = "!f(){ for r in $(git remote) ; do git remote set-head --auto $r ; done ; } ; f"
-    # Show the sha of the submodule commit registered to the currently checked out super-project commit
-    submodule-sha = "!f(){ : git rev-parse ; submod=$1; shift ; git rev-parse :${submod} \"$@\" ; } ; f"
-    # Show log entry of the submodule commit registered to the currently checked out super-project commit
-    submodule-commit = "!f(){ : git rev-parse ; cd -- \"${GIT_PREFIX}\" ; submod=$1; shift ; sha=$(git rev-parse :${submod}) ; env -C ${submod} git log --format=logd -n 1 ${sha} ; } ; f"
-    # submodule-self-* are for use inside a submodule to show what commit of this submodule is registered to the currently checked out commit of the superproject
-    submodule-self-sha = "!f(){ super=$(git rev-parse --show-superproject-working-tree) ; if [[ -z ${super} ]] ; then return 1 ; fi ; submod=${PWD##${super}/} ; env GIT_DIR=${super}/.git  git rev-parse :${submod} ; } ; f"
-    # Show the log entry of the commit of the current repo registered to the currently checked out commit of its super-project
-    submodule-self-commit = "!f(){ super=$(git rev-parse --show-superproject-working-tree) ; if [[ -z ${super} ]] ; then return 1 ; fi ; submod=${PWD##${super}/} ; sha=$(env GIT_DIR=${super}/.git  git rev-parse :${submod}) ; git log --format=logd -n 1 ${sha} ; } ; f"
-    # Git status of the current repo from the point of view of the super-project
-    submodule-self-status = "!f(){ super=$(git rev-parse --show-superproject-working-tree) ; if [[ -z ${super} ]] ; then return 1 ; fi ; submod=${PWD##${super}/} ; sha=$(env GIT_DIR=${super}/.git  git rev-parse :${submod}) ; env -C ${super} GIT_DIR=${super}/.git git -c status.submoduleSummary=true status ${submod} ; } ; f"
-    logd   = log --oneline --graph --format=logd
-    logdw  = log --oneline --graph --format=logdw
-    logdu  = log --oneline --graph --format=logd     HEAD HEAD@{u}
-    diff-search = "!f(){ git log --oneline --graph --format=logd -S \"$@\" ; } ; f"
-    log-pickaxe-s  = "!f() { : git log;  [[ \"$*\" == *\"--pickaxe-regex\"* ]] && export PICKAXE_REGEX=1; GREPDIFF_REGEX=\"$1\" git -C \"${GIT_PREFIX}\" --work-tree=$PWD -c diff.external=pickaxe-diff log  -p --ext-diff -S \"$@\"; }; f"
+	st = "!f(){ : git status ; git -C \"${GIT_PREFIX}\" --work-tree=\"${PWD}\" -c color.ui=always status \"$@\" | sed -u \"s/^Submodules changed.*/\\x1b[4;36m&\\x1b[0m/; s/^\\*.*/\\x1b[1;37m&\\x1b[0m/; s/^  <.*/\\x1b[31m&\\x1b[0m/; s/^  >.*/\\x1b[32m&\\x1b[0m/;   s/^Untracked.*/\\x1b[37;41m&\\x1b[0m/; s|\\\" and/or \\\"git commit -a\\\"| -p\\\"|; \" ; } ; f"
+	sts = -c status.submoduleSummary=false status
 
-    logo = log --abbrev-commit --decorate --format=ol
-    logu = logo @{upstream}..
-    log-series = ! git tag UPSTREAM @{u} && git logu --topo-order --format=\"- [PATCH %(describe:tags=true,match=UPSTREAM)/$(git rev-list @{u}.. | wc -l)] %s  \" --reverse  | sed -e \"s/UPSTREAM-//\" -e \"s|-g[a-f0-9]\\+/|/|\" && git tag -d UPSTREAM > /dev/null
+	suir = submodule update --init --recursive
+	grepr = grep --recurse-submodules
+	lsr = ls-files --recurse-submodule
 
-    grepr = grep --recurse-submodules
-    find =  "!f() { : git ls-files ; git -C \"${GIT_PREFIX}\" --work-tree=$PWD ls-files :/\\*\"$1\"\\*; }; f"
-    cfind =  "!f() { : git ls-files ; git -C \"${GIT_PREFIX}\" --work-tree=$PWD ls-files | grep \"$@\"; }; f"
-    findr =  "!f() { : git ls-files ; git -C \"${GIT_PREFIX}\" --work-tree=$PWD lsr :/\\*\"$1\"\\*; }; f"
-    lsr = ls-files --recurse-submodule
-    ldap = "!f() { result=$(ldapsearch -xLLL \"(|(cn=*$1*)(uid=$1))\"); name=$(printf \"$result\" | \\grep ^cn | awk -F': ' '{print $2}'); mail=$(printf \"$result\" | \\grep ^mail | awk -F': ' '{print $2}'); echo \"$name <${mail,,}>\" ; }; f"
-    detach = "!f() { echo \"Just use 'git checkout --detach'\" ; git checkout --detach ; } ; f"
-    suir = submodule update --init --recursive
-    # view = "!f() { revision_and_line=\"$1\"; blob_revision=$(echo \"$revision_and_line\" | cut -d: -f1-2); line=$(echo \"$revision_and_line\" | cut -d: -f3); git show $blob_revision | vim -R - -c \"doautocmd BufRead $blob_revision\" +$line ; }; f"
-    # NOTE: I don't think I really need these aliases because it seems that when
-    # output is not a tty, git doesn't use the pager
-    rawdiff = "-c \"core.pager=less --tabs=4 -RFX\" diff"
-    rawshow = "-c \"core.pager=less --tabs=4 -RFX\" show"
-    rawlog = "-c \"core.pager=less --tabs=4 -RFX\" log"
-    xd = difftool --dir-diff
-    dt = difftool --dir-diff
-    ydiff = difftool -x 'ydiff -s -w0 -c auto'
-    yddiff = difftool --dir-diff -x 'ydiff -s -w0 -c auto'
-    xxdiff = difftool -x 'xxdiff' --dir-diff
-    meld = difftool -x 'meld'
-    meld2 = difftool --dir-diff -x 'meld'
-    # With --dir-diff it seems like it doens't work if the version
-    # of git is not recent enough saying "<paht> : Is a directory
-    comparedir = difftool --dir-diff -x 'meld'
-    comparetxt = difftool -x 'meld'
+	# Various log commands
+	logd   = log --oneline --graph --format=logd
+	logdw  = log --oneline --graph --format=logdw
+	logdu  = log --oneline --graph --format=logd     HEAD HEAD@{u}
 
-    hist = log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short
-    # Change git@domain:project-path[.git] to https://domain/project-path
-    #		^^^^	  ^			^^^^^^	^^^^^^^^	  ^			^
-    to-http = "!f(){ remote=origin ; if [[ $# == 1 ]] ; then remote=$1 ; fi ;  git remote get-url $remote | sed -e 's/:/\\//' -e 's/^git@/https:\\/\\//' -e 's/\\.git$//' ; } ; f"
-    grep-call = "!f() { : git grep ; pattern=\"$1\"; shift; git -C \"$GIT_PREFIX\" --work-tree=$PWD grep -i -p -E -e \"call[ ]+$pattern([ ]+|\\()*\" \"$@\" ; }; f"
-    alias = "!f(){ if [[ -z $1 ]] ; then git config --list | grep alias | sed 's/alias.\\([^=]\\+\\)=.*/\\1/' ; else a=\"$(git config --get alias.$1)\" ; echo \"alias.$1=${a@Q}\" ; fi ; } ; f"
-    logdh = "!f(){ git -c color.ui=always -c core.pager='bat --wrap=never --style=plain' logd \"$@\"; } ; f"
+	# Pipe git show into vim.  Autocomplete in git_completion_extras
+	view = "!f(){ git -C \"${GIT_PREFIX}\" --work-tree=\"${PWD}\" show $1 | vim -R - -c \"doautocmd BufRead ${1##*:}\" ; } ; f"
+
+	# For each file in the current directory, show the last commit to have touched this file
+	last-commits = "!f(){ : git ls-tree ; git -C \"${GIT_PREFIX}\" --work-tree=\"${PWD}\" ls-tree -r --name-only HEAD -z | TZ=UTC xargs -0 -IFILE git --no-pager log -1 --date=iso-local --format=\"%C(blue)%ad %C(reset)%an %C(yellow)%h %C(green)FILE %C(white)%s\" -- \"${GIT_PREFIX:-.}/FILE\" ; } ; f"
+	# Same as above but from the repo root
+	last-commits-root = "!f(){ : git ls-tree ; git ls-tree -r --name-only HEAD -z | TZ=UTC xargs -0 -IFILE git --no-pager log -1 --date=iso-local --format=\"%C(blue)%ad %C(yellow)%h %C(green)FILE %C(white)%s\" -- \"FILE\" ; } ; f"
+	submodule-upgrade = "!f(){ if [[ -z \"$1\" ]] ; then return 1 ; fi ; cd \"${GIT_PREFIX}\" && git submodule update --remote \"$1\" && cd \"${1}\" && git submodule update --init --recursive ; } ; f"
+	submodule-upgrade-all = "!f(){ git submodule update --remote && git submodule foreach 'git submodule update --init --recursive' ; } ; f"
+
+	# diffstat but with a header to remind me with which number is which
+	dss = "!f(){ printf '+   -   FILE\n' ; git diff --numstat ; } ; f"
+
+	# Additionnal remotes do not have <remote>/HEAD by default.  This config alias
+	# makes it so that fetches also get <remote>/HEAD
+	set-remote-head = "!f(){ for r in $(git remote) ; do git remote set-head --auto $r ; done ; } ; f"
+
+	# Show the sha of the submodule commit registered to the currently checked out super-project commit
+	submodule-sha = "!f(){ : git rev-parse ; submod=$1; shift ; git rev-parse :${submod} \"$@\" ; } ; f"
+	# Show log entry of the submodule commit registered to the currently checked out super-project commit
+	submodule-commit = "!f(){ : git rev-parse ; cd -- \"${GIT_PREFIX}\" ; submod=$1; shift ; sha=$(git rev-parse :${submod}) ; env -C ${submod} git log --format=logd -n 1 ${sha} ; } ; f"
+	# submodule-self-* are for use inside a submodule to show what commit of this submodule is registered to the currently checked out commit of the superproject
+	submodule-self-sha = "!f(){ super=$(git rev-parse --show-superproject-working-tree) ; if [[ -z ${super} ]] ; then return 1 ; fi ; submod=${PWD##${super}/} ; env GIT_DIR=${super}/.git  git rev-parse :${submod} ; } ; f"
+	# Show the log entry of the commit of the current repo registered to the currently checked out commit of its super-project
+	submodule-self-commit = "!f(){ super=$(git rev-parse --show-superproject-working-tree) ; if [[ -z ${super} ]] ; then return 1 ; fi ; submod=${PWD##${super}/} ; sha=$(env GIT_DIR=${super}/.git  git rev-parse :${submod}) ; git log --format=logd -n 1 ${sha} ; } ; f"
+	# Git status of the current repo from the point of view of the super-project
+	submodule-self-status = "!f(){ super=$(git rev-parse --show-superproject-working-tree) ; if [[ -z ${super} ]] ; then return 1 ; fi ; submod=${PWD##${super}/} ; sha=$(env GIT_DIR=${super}/.git  git rev-parse :${submod}) ; env -C ${super} GIT_DIR=${super}/.git git -c status.submoduleSummary=true status ${submod} ; } ; f"
+
+
+	# Difftool stuff.  I created these aliases to test various commands
+	xd = difftool --dir-diff
+	dt = difftool --dir-diff
+	ydiff = difftool -x 'ydiff -s -w0 -c auto'
+	yddiff = difftool --dir-diff -x 'ydiff -s -w0 -c auto'
+	xxdiff = difftool -x 'xxdiff' --dir-diff
+	meld = difftool -x 'meld'
+	meld2 = difftool --dir-diff -x 'meld'
+	# With --dir-diff it seems like it doens't work if the version
+	# of git is not recent enough saying "<paht> : Is a directory
+	comparedir = difftool --dir-diff -x 'meld'
+	comparetxt = difftool -x 'meld'
+
+	# begin Merci Philippe Blain
+	#logd = %C(yellow)%h%C(reset)%C(auto)%d%C(reset) %C(bold white)%<|(90,trunc)%s %<(17)%C(cyan)%ad%Creset %C(blue)%an%C(reset)
+	bra = "!f() { git branch --color --format='%(align:30,left)%(color:red)%(refname:short)%(color:reset)%(end)|%(color:yellow)%(objectname:short)%(color:reset)|%(color:cyan)%(creatordate:relative)%(color:reset)|%(color:dim white)%(authorname)%(color:reset)|%(if)%(upstream)%(then)[%(color:blue)%(upstream:short)%(color:reset)%(upstream:trackshort)%(if)%(upstream:track)%(then): %(upstream:track,nobracket)%(end)] %(end)%(if:notequals=gone)%(push:track,nobracket)%(then){%(color:green)%(push:short)%(color:reset)%(push:trackshort)%(if)%(push:track)%(then): %(push:track,nobracket)%(end)} %(end)%(contents:subject)' "$@" | column -t -s '|'; }; f"
+	stb = "!f() { : git status ; git -C \"${GIT_PREFIX}\" --work-tree=$PWD status \"$@\"; git for-each-ref $(git rev-parse --symbolic-full-name HEAD) --format='%(if:notequals=gone)%(push:track,nobracket)%(then){%(color:green)%(push:short)%(color:reset)%(push:trackshort)%(if)%(push:track)%(then): %(push:track,nobracket)%(end)} %(end)'; }; f"
+	find =  "!f() { : git ls-files ; pattern=\"$1\"; shift; git -C \"${GIT_PREFIX}\" --work-tree=$PWD ls-files --recurse-submodules --sparse \"$@\" :/\\*\"$pattern\"\\*; }; f"
+	findi =  "!f() { : git ls-files ; pattern=\"$1\"; shift; git -C \"${GIT_PREFIX}\" --work-tree=$PWD ls \"$@\":\\(icase,top\\)\\*\"$pattern\"\\*; }; f"
+	grep-call = "!f() { : git grep ; pattern=\"$1\"; shift; git -C \"$GIT_PREFIX\" --work-tree=$PWD grep -i -p -E -e \"call[ ]+$pattern([ ]+|\\()*\" \"$@\" ; }; f"
+	alias = "!f(){ if [[ -z $1 ]] ; then git config --list | grep alias | sed 's/alias.\\([^=]\\+\\)=.*/\\1/' ; else a=\"$(git config --get alias.$1)\" ; echo \"alias.$1=${a@Q}\" ; fi ; } ; f"
+	# end Merci Philippe Blain
 
 [diff "fortran-namelist"]
 	xfuncname = "^[ \\t]*&.*$"
 
+# Useless nowadays.  Keeping in case it re-becomes useful
 [credential]
 	helper = cache --timeout 36000
 
-[pull]
-	# ff = only
-
-[url "https://github.com/PhilippeCarphin/"]
-	insteadOf = me:
-
 [core]
+	# NOTE: -S is to chop long lines according to display width
 	pager = diff-so-fancy | less --tabs=4 -SRFX
-	# pager = /home/phc001/Repositories/github.com/dandavison/delta/localinstall/bin/delta -n
 
 # [interactive]
 #	 diffFilter = /home/phc001/Repositories/github.com/dandavison/delta/localinstall/bin/delta --color-only --features=interactive
-# 
+#
 # [delta]
 #	 navigate = true	# use n and N to move between diff sections
 #	 light = false	  # set to true if you're in a terminal w/ a light background color (e.g. the default macOS terminal)
-# 
+#
 # [merge]
 #	 conflictstyle = diff3
-# 
+#
 [diff]
 	colorMoved = true
 	colorMovedWS = allow-indentation-change
@@ -140,8 +123,7 @@
 [gui]
 	fontui = -family \".SF NS Text\" -size 18 -weight normal -slant roman -underline 0 -overstrike 0
 	fontdiff = -family \"DejaVu Sans Mono\" -size 16 -weight normal -slant roman -underline 0 -overstrike 0
-# [http "https://gitlab.science.gc.ca/"]
-#		proxy = socks5h://127.0.0.1:8080
+
 [log]
 	date = human
 	excludeDecoration = refs/remotes/private*
@@ -149,8 +131,6 @@
 [pretty]
 	logd = %C(yellow)%h%C(reset)%C(auto)%d%C(reset) %C(bold white)%<|(90,trunc)%s %<(17)%C(cyan)%ad%Creset %C(blue)%an%C(reset)
 	logdw = %C(yellow)%h%C(reset)%C(auto)%d%C(reset) %C(bold white)%<|(140,trunc)%s %<(17)%C(cyan)%ad%Creset %C(blue)%an%C(reset)
-	# similar to '--oneline' but with additional information (author, author date, (notes truncated at 2 chars) )
-	ol = %C(yellow)%h%C(reset) %C(normal)%s%C(reset) %C(dim white)%an%C(reset) %C(dim blue)(%ad)%C(reset) %C(auto)%d%C(reset)
 
 [status]
 	submoduleSummary = true
@@ -195,6 +175,34 @@
 [diff]
 	submodule = log
 
+[blame]
+	markUnblamableLines = true
+	markIgnoredLines = true
+
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+
+[stash]
+	showPatch = true
+
+################################################################################
+# Define completion of git URLs
+################################################################################
+[gitcomp]
+	domains = github.com gitlab.com
+	domains = gitlab.science.gc.ca
+	remoteNames = upstream origin phb jp github gitlab
+[gitcomp-domain "github.com"]
+	users = philippecarphin torvalds phil-blain itsgifnotjiff
+	users = ECCC-ASTD-MRD
+[gitcomp-domain "gitlab.com"]
+	users = philippecarphin gitlab-org phil-blain
+[gitcomp-domain "gitlab.science.gc.ca"]
+	users = phc001 RPN-SI CMDS yor000 CMOI phb001
+
 ################################################################################
 # Specific settings: Leave this at the end to ensure that specific settings
 # override less specific ones
@@ -215,29 +223,3 @@
 	path = ~/.philconfig/git_home/work-email.gitconfig
 
 
-################################################################################
-# Define completion of git URLs
-################################################################################
-[gitcomp]
-	domains = github.com gitlab.com
-	domains = gitlab.science.gc.ca
-	remoteNames = upstream origin phb jp github gitlab
-[gitcomp-domain "github.com"]
-	users = philippecarphin torvalds phil-blain itsgifnotjiff
-	users = ECCC-ASTD-MRD
-[gitcomp-domain "gitlab.com"]
-	users = philippecarphin gitlab-org phil-blain
-[gitcomp-domain "gitlab.science.gc.ca"]
-	users = phc001 RPN-SI CMDS yor000 CMOI phb001
-
-[blame]
-	# ignoreRevsFile = ignoreRevsFile
-	markUnblamableLines = true
-	markIgnoredLines = true
-[filter "lfs"]
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
-	process = git-lfs filter-process
-	required = true
-[stash]
-	showPatch = true
