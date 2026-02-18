@@ -25,6 +25,7 @@ alias rppu='ps haxr -o user | sort -n | uniq -c | sort -n'
 alias less='less -RS'
 alias python3='python3 -q'
 alias python='python3 -q'
+alias cp='cp -p'
 # Use function because of expand_aliases option
 function ln(){ command ln -nv "$@" ; }
 
