@@ -86,54 +86,15 @@ remove_dot_from_path(){
 
 
 configure_fs1_env(){
-    # See code of __load_completion from /usr/share/bash-completion/bash_completion ...
-    # It searches an array of directories that starts out as
-    # Since I don't define BASH_COMPLETION_USER_DIR and XDG_DATA_HOME
-    # is also not defined, dirs=(${HOME}/.local/share/bash-completion/completions).
-    # 1   dirs=(${BASH_COMPLETION_USER_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/bash-completion}/completions)
-    #     # Equivalently: dirs is defined following this logic:
-    #     # if[[ -z ${BASH_COMPLETION_USER_DIR} ]] ; then
-    #     #     dirs=(${BASH_COMPLETION_USER_DIR}/completions)
-    #     # else
-    #     #     if [[ -n ${XDG_DATA_HOME} ]] ; then
-    #     #         dirs=(${XDG_DATA_HOME}/bash-completion/completions)
-    #     #     else
-    #     #         dirs=($HOME/.local/share/bash-completion/completions)
-    #     #     fi
-    #     # fi
-    #
-    #     # Add '$d/bash-completion/completions' for each dir in XDG_DATA_DIRS and /usr/local/share and /usr/share
-    # 2   for dir in ${XDG_DATA_DIRS:-/usr/local/share:/usr/share};
-    #         dirs+=($dir/bash-completion/completions);
-    #     done
-    #
-    # So basically, the initialization at 1 adds
-    #
-    #       $HOME/.local/share/bash-completion/completions
-    #
-    # because BASH_COMPLETION_USER_DIR and XDG_DATA_HOME are unset.  Next, we
-    # add
-    #
-    #       $dir/bash-completion/completions
-    #
-    # for d in $XDG_DATA_DIRS (colon separated list) therefore.
-    #
-    # To work with this system, completions should be stored in
-    #
-    #       <SOME_DIR>/bash-completion/completions
-    #
-    # and <SOME_DIR> should be added to XDG_DATA_DIRS.  In this case, I have
-    # been putting completion scripts inside etc but looking at 2, it seems
-    # like share would be more appropriate.
-    #
     export STOW_DIR=$HOME/fs1
+    # See `man 7 bash-completion-notes` for details about XDG_DATA_DIRS
     XDG_DATA_DIRS=${XDG_DATA_DIRS:+${XDG_DATA_DIRS}:}$HOME/.local/share:${STOW_DIR}/share:${STOW_DIR}/etc
     export PACKAGE_DIR="$STOW_DIR/Cellar"
     export LD_LIBRARY_PATH="${STOW_DIR}/lib:${STOW_DIR}/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
     export PATH=${STOW_DIR}/bin${PATH:+:${PATH}}
     source-dir "$HOME/fs1/etc/bash_completion.d"
 
-    # Prefere this not being necessary
+    # Prefere this not being necessary using proper placement of completion files
     local phil_bash_completion_dir=$STOW_DIR/etc/bash_completion.d
     local f
     for f in $(env -i ls $phil_bash_completion_dir) ; do
@@ -191,6 +152,7 @@ function configure_vim(){
         # Help YouCompleteMe find header files even if compile_commands.json
         # is not there.
         #
+        local d
         for d in ${CMAKE_PREFIX_PATH//:/ } ; do
             C_INCLUDE_PATH=${d}/include${C_INCLUDE_PATH:+:${C_INCLUDE_PATH}}
         done
