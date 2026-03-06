@@ -42,6 +42,14 @@ function p.profile.main_interactive(){
     # These alias/functions for `which` are cringe
     if alias which >/dev/null 2>&1 ; then unalias which ; fi
     if declare -F which >/dev/null 2>&1 ; then unset -f which ; fi
+
+    # The compute nodes don't have BASH completion installed?
+    if [[ $- == *i* ]] && ! declare -f _init_completion &>/dev/null ; then
+        comp_file=/home/phc001/Repositories/github.com/scop/bash-completion/localinstall/share/bash-completion/bash_completion
+        if [[ -f ${comp_file} ]] ; then
+            source ${comp_file}
+        fi
+    fi
 }
 
 maybe_cd_to_pbs_o_workdir(){
