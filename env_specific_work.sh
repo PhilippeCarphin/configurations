@@ -15,10 +15,9 @@ env_specific_work(){
     export GITLAB_RUNNER_SCIENCE_ORDSOUMET_KEEP_FILES='yas'
     export GONOSUMDB=gitlab.science.gc.ca
     export APP_VERBOSE_NOBOX='chu tellement tanné des grosses boîtes!'
-    export MODULEPATH=~sidr000/modules${MODULEPATH:+:${MODULEPATH}}
+    export MODULEPATH=${HOME}/privatemodules:${HOME}/philmodules:~sidr000/modules${MODULEPATH:+:${MODULEPATH}}
     export PATH=$HOME/tools/rust/bin:$PATH
     export PATH=$HOME/tools/go/bin:$PATH
-    export PATH=$HOME/tools/tmux-3.5a/bin:$PATH
     export PATH=$HOME/tools/node/bin:$PATH
     export PATH=$HOME/tools/netcat-0.7.1/localinstall/bin:$PATH
     export PATH=$HOME/tools/libtool/bin:$PATH
