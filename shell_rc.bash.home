@@ -25,9 +25,9 @@ else
     echo "git-completion not found"
 fi
 
-if [[ -r "$HOME/Repositories/github.com/spack/spack/share/spack/setup-env.sh" ]] ; then
-    source "$HOME/Repositories/github.com/spack/spack/share/spack/setup-env.sh"
-fi
+# if [[ -r "$HOME/Repositories/github.com/spack/spack/share/spack/setup-env.sh" ]] ; then
+#     source "$HOME/Repositories/github.com/spack/spack/share/spack/setup-env.sh"
+# fi
 
 case ${BASH_VERSINFO[0]} in
     4|5)
