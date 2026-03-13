@@ -5,6 +5,9 @@ source ~/.philconfig/shell_rc_common
 source ~/.philconfig/shell_rc.bash.home
 source ~/.philconfig/shell_rc.bash
 source ~/.philconfig/shell_lib/functions.sh
+if [[ -r /opt/homebrew/Cellar/lmod/9.1.2/init/profile ]] ; then
+    source /opt/homebrew/Cellar/lmod/9.1.2/init/profile
+fi
 
 if [[ -t 0 ]] ; then
     cat ~/apple-mini.txt >&2
