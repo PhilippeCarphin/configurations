@@ -1114,9 +1114,8 @@ clip(){
            return 1
         fi
     fi
-    local clip_file=${1:-}
-    # man base64: with no file or when file is '-', read from stdin
-    printf "\033]52;c;%s\007" "$(base64 $clip_file)"
+    # Darwin's base64 only reads from STDIN
+    printf "\033]52;c;%s\007" "$(base64)"
 }
 
 jq-help(){
