@@ -1,10 +1,56 @@
 #!/bin/bash
 
-[ -d $HOME/.bash_completion.d ] && source-dir "$HOME/.bash_completion.d"
-source ~/.git-completion.bash
-source "$HOME/.philconfig/git_home/git-completion-extras.bash"
-source ~/.philconfig/cmc_home/cmc_functions.sh
-_powerline_decorations=("" 🐧)
+shell_rc.bash.work-main(){
+
+    configure_spack ; unset -f $_
+    set_and_goto_true_home ; unset -f $_
+    local waiting_job=$(cat ~/.waiting_job 2>/dev/null)
+    if [[ -n ${waiting_job} ]] && [[ $PBS_JOBID == ${waiting_job}* ]] ; then
+        mail -s "Logged into job $PBS_JOBID" phil103@hotmail.com <<- EOF
+			Job $PBS_JOBID has started on $(hostname --fqdn)
+			- Phil's profile
+		EOF
+        echo "Job Start email sent for ${PBS_JOBID}" >&2
+    fi
+
+    if [[ "$-" == *i* ]] ; then
+        shell_rc.bash.work-main-interactive ; unset -f $_
+    fi
+
+}
+
+shell_rc.bash.work-main-interactive(){
+
+    [ -d $HOME/.bash_completion.d ] && source-dir "$HOME/.bash_completion.d"
+    source ~/.git-completion.bash
+    source "$HOME/.philconfig/git_home/git-completion-extras.bash"
+    source ~/.philconfig/cmc_home/cmc_functions.sh
+    export PACK_DIR=${HOME}/.profile.d/interactive/pack
+
+    source "$HOME/.ssh/ssh_functions.sh"
+    source "$HOME/.philconfig/shell_lib/p.load"
+    set_ls_colors_for_readline_and_ls ; unset $_ # Needs to be before fzf because fzf causes readline initialization
+    FZF_COMPLETION_OPT="--preview 'bat --color=always {}'"
+    [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+    # Needs to be after fzf because bot do `bind '"\C-t": ...'`
+    source ~/Repositories/github.com/philippecarphin/tui-selector/file-selector-widget.bash
+    check-alert-files ; unset -f $_
+    maybe_cd_to_pbs_o_workdir ; unset -f $_
+    complete -o default -o nospace -o filenames -F _DottableCompletion source .
+
+    # These alias/functions for `which` are cringe
+    if alias which >/dev/null 2>&1 ; then unalias which ; fi
+    if declare -F which >/dev/null 2>&1 ; then unset -f which ; fi
+
+    # The compute nodes don't have BASH completion installed?
+    if [[ $- == *i* ]] && ! declare -f _init_completion &>/dev/null ; then
+        comp_file=/home/phc001/Repositories/github.com/scop/bash-completion/localinstall/share/bash-completion/bash_completion
+        if [[ -f ${comp_file} ]] ; then
+            source ${comp_file}
+        fi
+    fi
+    _powerline_decorations=("" 🐧)
+}
 
 glcurl-project-job(){
     if [[ "$1" == -h ]] || (( $# != 2 )); then
@@ -76,8 +122,159 @@ _module_nobox(){
     # - empty lines
     # - lines consisting of spaces, a pipe, anything, another pipe, some spaces
     # - lines consisting of spaces, a plus sign, some dashes, and a plus sign
-    echo "${FUNCNAME[0]}: If the module is a compiler in sidr000, don't use it in production" >&2
+    # echo "${FUNCNAME[0]}: If the module is a compiler in sidr000, don't use it in production" >&2
     \module ${color} "$@" &> >(sed '/^$\|\s*|.*|\|\s*+-*+/d')
 }
 alias pmodule="_module_nobox"
 $(complete -p module) pmpdule
+
+maybe_cd_to_pbs_o_workdir(){
+    if [[ -z "${PBS_JOBID}" ]] ; then
+        return 0
+    fi
+
+    local jobid dir
+    if [[ "${PBS_JOBID}" == *,* ]] ; then
+        # Coming from sshj variables are injected using PBS_JOBID because it is
+        # one of the variables that can be sent over SSH with -oSendEnv
+        local IFS=","
+        local vars=( ${PBS_JOBID} )
+        export PBS_JOBID=${vars[0]}
+        export PBS_O_WORKDIR=${vars[1]}
+        export PBSTMPFSDIR=${vars[2]}
+        echo "Coming from sshj, PBS_JOBID=${PBS_JOBID}, PBS_O_WORKDIR=${PBS_O_WORKDIR}" >&2
+    elif [[ "${PBS_ENVIRONMENT}" == PBS_INTERACTIVE ]] ; then
+        # Coming from qsub -I
+        if [[ -n "${DISPLAY}" ]] ; then
+            local ddt=". ssmuse-sh -x /fs/ssm/main/opt/forge/24.1.1/"
+            printf "\033[35mIn interactive job with display:\033[1;32m %s\033[0m\n" "${ddt}"
+            ${dtt}
+        fi
+        echo "${PBS_JOBID}" > ~/.ssh/current_job
+        echo "${PBS_O_WORKDIR}" >> ~/.ssh/current_job
+        echo "${PBS_TMPFSDIR}" >> ~/.ssh/current_job
+        echo "JOBID ${PBS_JOBID} written in ~/.ssh/current_job" >&2
+    fi
+
+    if ! cd "${PBS_O_WORKDIR}" ; then
+        p.error "Could not CD to '$PBS_O_WORKDIR', perhaps it is not on a network filesystem"
+    fi
+}
+
+check-alert-files(){
+    check-alert-file ~sici000/alert
+    check-alert-file ~/alert
+    unset -f check-alert-file
+}
+
+function check-alert-file(){
+    local alert_file="$1"
+    if [ -e "${alert_file}" ] ; then
+        printf "\033[1;31m Alert from %s\n" "${alert_file}" >&2
+        cat "${alert_file}"
+    fi
+}
+
+################################################################################
+# Regular setup is that HOME=/home/$USER which is a link to where your home
+# really is but this causes some annoying little things:
+# - #{pane_current_path} in TMUX is always the physical path so when we create
+#   a new pane with `split-window "#{pane_current_path}"`, PWD in the new shell
+#   is different from in the pane that we split from.  Without this, starting
+#   in `~/Documents (/home/$USER/Documents)` and splitting gives a new pane in
+#   `/some/path/x/y/abcd/efgh/$USER/Documents` which is annoying.
+#   This trick is mainly so that I can see a tilde instead of that long prefix.
+# - With VSCode debugger, when it opens files for you, it won't notice that
+#   the file is already open because the open file is `/home/$USER/.../file.c`
+#   but the file where the debugger stopped is `/some/path/x/y/abcd/$USER/.../file.c`
+#   so you get the file opened in two tabs which is also annoying.
+################################################################################
+function set_and_goto_true_home(){
+    return
+    local old_home=$HOME
+    local true_home=$(realpath $HOME)
+    HOME=${true_home}
+    case $PWD in ${old_home}|${old_home}/*)
+        cd ${true_home}/${PWD##${old_home}} ;;
+    esac
+}
+
+
+configure_spack(){
+    local spack_dir
+    if [[ -d ${HOME}/site7 ]] ; then
+        spack_dir=$HOME/site7/spack
+    elif [[ -d ${HOME}/site6/ ]] ; then
+        spack_dir=$HOME/site6/spack
+    else
+        return 1
+    fi
+
+    export SPACK_SKIP_MODULES=y
+    if [[ -n "${SPACK_SKIP_MODULES}" ]] ; then
+        echo "WARNING: SPACK_SKIP_MODULES is set" >&2
+    fi
+    # setup-env.sh uses cmd as a temporary variable without making it local
+    local cmd
+    . ${spack_dir}/share/spack/setup-env.sh
+}
+
+################################################################################
+# PROBLEM: If you have 'set colored-stats on' in your ~/.inputrc, readline will
+# color completion candidates according to LS_COLORS.  Therefore it will color
+# anything that is not a file (program options) according to the as 'missing
+# files' which if you have 'mi=01;05;37;49' in your LS_COLORS is bold blinking
+# bright white on red background which is super annoying.
+
+# SOLUTION: Since readline parses LS_COLORS at initialization and never again
+# after that, the trick is to set 'mi=00' in LS_COLORS, then do anything that
+# causes readline to be initialized, and then set LS_COLORS back to its
+# original value.  Alternatively we could just not put anything for missing
+# files in LS_COLORS but I wanted figure out a way to have some coloring for
+# missing files
+#
+# RELEVANT CODE FROM READLINE
+# In http://git.savannah.gnu.org/cgit/bash.git/tree/lib/readline/:
+# - In parse_colors.c:300 Function _rl_parse_colors() parses LS_COLORS
+# - In readline.c:1322 Function readline_initialize_everything calls
+#   _rl_parse_colors();
+# - In readline.c:1183 Function rl_initialize() calls readline_initialize_everything()
+#   only if rl_initialized == 0 then sets rl_initialized to 1 so that it
+#   is never called again and does "other stuff".  Future calls to
+#   rl_initialize() only do the "other stuff"
+# - In realine.c:354 Function readline(), rl_initialize() is called everytime
+#   but after the first time, it only does the "other stuff".
+#
+# IMPORTANT: This needs to be done before anything else causes the
+# initialization of readline otherwise the initialization will already have
+# happened with whatever LS_COLORS was at that time.  For example, fzf
+# initialization does many 'bind x y' commands which initializes readline
+################################################################################
+set_ls_colors_for_readline_and_ls(){
+
+    :
+    # Set LS_COLORS however you like
+    # eval "$(dircolors -b)"
+
+    # # Initialize readline with those same LS_COLORS except for the 'mi' part
+    local my_ls_colors="${LS_COLORS}"
+    LS_COLORS="$(echo "${LS_COLORS}" | sed 's/mi=[0-9;]*/mi=00/')"
+    bind -f ~/.inputrc # Anything that causes initialization of readline library
+
+    # # Put back the 'mi' part in LS_COLORS
+    # # We need the 'show-colored-stats' to be for BASH only in ~/.inputrc since
+    # # the python interpreter will initialize readline in its process and will
+    # # read LS_COLORS.  Anyway, we don't want show-colored-stats in Python so
+    # # that is totally OK.
+    LS_COLORS="${my_ls_colors}"
+}
+
+
+# Open this file
+p.pr(){
+    local this_file=${BASH_SOURCE[0]}
+    vim ${this_file}
+    source ${this_file}
+}
+
+shell_rc.bash.work-main ; unset -f $_
