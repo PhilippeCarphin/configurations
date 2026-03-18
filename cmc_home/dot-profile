@@ -7,8 +7,8 @@ function p.profile.main(){
     source ~/.philconfig/env_common_home.sh
     source ~/.philconfig/env_specific_work.sh
     source ~/.philconfig/shell_rc_common
-    source ~/.philconfig/shell_rc.bash
     source ~/.philconfig/shell_rc.bash.work
+    source ~/.philconfig/shell_rc.bash
 }
 
 ###################### KEEP THIS AT THE END ####################################
