@@ -50,8 +50,7 @@ make(){
     fi
 }
 
-alias gdb='~phb001/.local_rhel-8-icelake-64/bin/gdb -q -tui'
-alias gdbserver='~phb001/.local_rhel-8-icelake-64/bin/gdbserver'
+alias gdb='gdb -q -tui'
 
 # I always forget whether it's SSMUSE_VERBOSE_XTRACE or SSMUSE_XTRACE_VERBOSE
 # plus ssmuse-sh checks if the value is == 1, not empty vs non-empty which would

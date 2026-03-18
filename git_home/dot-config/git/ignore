@@ -47,3 +47,6 @@ fortls_debug.log
 
 # -- Revisions to ignore in git blame
 ignoreRevsFile
+
+# -- Worktrees inside the repo
+wt-*

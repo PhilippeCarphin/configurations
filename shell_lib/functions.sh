@@ -1537,3 +1537,11 @@ fgdb(){
 int-to-ipv4(){
     printf "%d.%d.%d.%d" "$(($1/16776216))" "$(( ($1/65536)%256))" "$(( ($1/256) %256))" "$(($1%256))"
 }
+
+port-usage(){
+    # Normally what is shown in Stack Overflow answers is `netstat -tulpen`
+    # I just replace -n (equivalent to --numeric-ports and --numeric-users) with
+    # --numeric-ports.  The rest of the options are just the long equivalent of
+    # the single letter ones in -tulpen
+    netstat --tcp --udp --listening --program --extend --numeric-ports | command grep "\($1\)\|\(User\)"
+}
