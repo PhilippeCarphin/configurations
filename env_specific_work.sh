@@ -22,7 +22,11 @@ env_specific_work(){
     export PATH=$HOME/tools/netcat-0.7.1/localinstall/bin:$PATH
     export PATH=$HOME/tools/libtool/bin:$PATH
     export PATH=$HOME/bin:$PATH
-    export PATH="/home/phc001/.pixi/bin:$PATH"
+    export PATH=$HOME/.pixi/bin:$PATH
+
+    if [[ -e "$HOME/.cargo/env" ]] ; then
+        . "$HOME/.cargo/env"
+    fi
 
     local p
     host=$(hostname -f)

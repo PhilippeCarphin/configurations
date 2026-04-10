@@ -24,7 +24,7 @@ shell_rc.bash.work-main-interactive(){
     [ -d $HOME/.bash_completion.d ] && source-dir "$HOME/.bash_completion.d"
     source ~/.git-completion.bash
     source "$HOME/.philconfig/git_home/git-completion-extras.bash"
-    source ~/.philconfig/cmc_home/cmc_functions.sh
+    source /home/phc001/Repositories/gitlab.science.gc.ca/phc001/p.load/etc/profile.d/p.load
     export PACK_DIR=${HOME}/.profile.d/interactive/pack
 
     source "$HOME/.ssh/ssh_functions.sh"
@@ -145,10 +145,12 @@ maybe_cd_to_pbs_o_workdir(){
         echo "Coming from sshj, PBS_JOBID=${PBS_JOBID}, PBS_O_WORKDIR=${PBS_O_WORKDIR}" >&2
     elif [[ "${PBS_ENVIRONMENT}" == PBS_INTERACTIVE ]] ; then
         # Coming from qsub -I
+        if [[ -e ~/.ssh/notify-job-start ]] ; then
+            mail -s "PBS Job has started" phil103@hotmail.com <<< "PBS Job has started at $(date).  Remove ~/.ssh/notify-job-start to disable this email"
+        fi
         if [[ -n "${DISPLAY}" ]] ; then
-            local ddt=". ssmuse-sh -x /fs/ssm/main/opt/forge/24.1.1/"
-            printf "\033[35mIn interactive job with display:\033[1;32m %s\033[0m\n" "${ddt}"
-            ${dtt}
+            printf "\033[35mIn interactive job with display:\033[1;32m %s\033[0m\n" ". ssmuse-sh -x /fs/ssm/main/opt/forge/24.1.1/"
+            . ssmuse-sh -x /fs/ssm/main/opt/forge/24.1.1/
         fi
         echo "${PBS_JOBID}" > ~/.ssh/current_job
         echo "${PBS_O_WORKDIR}" >> ~/.ssh/current_job
