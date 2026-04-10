@@ -14,6 +14,7 @@
 	suir = submodule update --init --recursive
 	grepr = grep --recurse-submodules
 	lsr = ls-files --recurse-submodule
+        is-clean = "!f(){ git diff --quiet && git diff --quiet --cached ; } ; f"
 
 	# Various log commands
 	logd   = log --oneline --graph --format=logd
