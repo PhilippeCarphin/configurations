@@ -2,6 +2,9 @@
 # Various ways of starting new shells
 ################################################################################
 set -g default-command 'eval env -i $(~/.philconfig/tmux_home/vars) $HOME/fs1/bin/bash -l'
+# set -g default-command "env -u ORDENV_PLAT -u EC_ARCH -u ARCH -u TMPDIR -u PATH -u ORDENV_SETUP -u ORDENV_USER_PROFILE_FILENAMES ORDENV_SESSION_TYPE=interactive /bin/bash --login"
+# set -g default-command "env -u TMPDIR -u PATH -u ORDENV_SETUP -u ORDENV_USER_PROFILE_FILENAMES ORDENV_SESSION_TYPE=interactive /bin/bash --login"
+# set -g default-command "env -i LOGNAME=$LOGNAME HOME=$HOME USER=$USER LANG=$LANG TERM=$TERM /bin/bash --login"
 
 # Start a shell with maximum
 bind W split-window -h \
