@@ -1544,3 +1544,21 @@ port-usage(){
     # the single letter ones in -tulpen
     netstat --tcp --udp --listening --program --extend --numeric-ports | command grep "\($1\)\|\(User\)"
 }
+tail(){
+    OPTIND=1
+    while getopts "as" opt "$@" ; do
+        case $opt in
+            a) mode=alternate ;;
+            s) mode=short ;;
+            ?) printf "ERROR: bad option '-${OPTARG}'\n" ; return 1 ;;
+        esac
+    done
+
+    shift $((OPTIND-1))
+
+    case $mode in
+        alternate) tail-with-header "$@" ;;
+        short) short-tail "$@" ;;
+        *) command tail "$@" ;;
+    esac
+}
