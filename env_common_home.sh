@@ -13,6 +13,7 @@ if [[ ${_env_common_home_sourced} == 1 ]] ; then
 fi
 _env_common_home_sourced=1
 
+export MODULEPATH=${HOME}/privatemodules:${HOME}/publicmodules${MODULEPATH:+:${MODULEPATH}}
 export CLICOLOR=true
 export PATH=$HOME/.local/bin:$PATH
 export EDITOR=vim

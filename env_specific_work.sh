@@ -11,11 +11,9 @@ env_specific_work(){
     export LOG_LEVEL=ERROR # NOTE: I see errors I wouldn't normally see with LOG_LEVEL=INFO due to weirdness in shortcut-tools
     export TZ=America/Toronto
     export LANG=en_US.UTF-8
-    export SSM_DEV=/home/ords/cmdd/cmds/nil000/ssm
     export GITLAB_RUNNER_SCIENCE_ORDSOUMET_KEEP_FILES='yas'
     export GONOSUMDB=gitlab.science.gc.ca
-    export APP_VERBOSE_NOBOX='chu tellement tanné des grosses boîtes!'
-    export MODULEPATH=${HOME}/privatemodules:${HOME}/philmodules:~sidr000/modules${MODULEPATH:+:${MODULEPATH}}
+    export APP_VERBOSE_NOBOX='chu pas trop un fan des boîtes'
     export PATH=$HOME/tools/rust/bin:$PATH
     export PATH=$HOME/tools/go/bin:$PATH
     export PATH=$HOME/tools/node/bin:$PATH
