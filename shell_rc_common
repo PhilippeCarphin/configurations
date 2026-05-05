@@ -1,31 +1,35 @@
 #!/bin/bash
 
-source ~/.git-prompt.sh
+shell_rc_common_main(){
+    source ~/.git-prompt.sh
+    source "$HOME/.ssh/ssh_functions.sh"
 
-alias n='nnn -dhQex'
-alias ls='ls --color=auto -h'
-alias grep='grep -n --color'
-# alias tree='tree -C'
-alias rg='rg --no-heading --color=auto'
-alias diff='diff -u --color'
-alias :wqa='exit 0'
-alias :q='exit 0'
-alias :qa='exit 0'
-alias :wq='exit 0'
-alias :cq='exit 1'
-GIT_CD_VERBOSE=yessir
-alias git='$HOME/.philconfig/git_home/git-enforce-rules-of-philippes'
-alias diff='diff -u --color'
-alias update_repos='repos find ~/Repositories --recursive --merge --cleanup'
-# Stolen from gil000: Processes Per User
-alias ppu='ps hax -o user | sort -n | uniq -c | sort -n'
-# Stolen from gil000: Running Processes Per User
-alias rppu='ps haxr -o user | sort -n | uniq -c | sort -n'
-# -S truncate lines, -R process ANSI sequences
-alias less='less -RS'
-alias python3='python3 -q'
-alias python='python3 -q'
-alias cp='cp -p'
+    alias n='nnn -dhQex'
+    alias ls='ls --color=auto -h'
+    alias grep='grep -n --color'
+    # alias tree='tree -C'
+    alias rg='rg --no-heading --color=auto'
+    alias diff='diff -u --color'
+    alias :wqa='exit 0'
+    alias :q='exit 0'
+    alias :qa='exit 0'
+    alias :wq='exit 0'
+    alias :cq='exit 1'
+    GIT_CD_VERBOSE=yessir
+    alias git='$HOME/.philconfig/git_home/git-enforce-rules-of-philippes'
+    alias diff='diff -u --color'
+    alias update_repos='repos find ~/Repositories --recursive --merge --cleanup'
+    # Stolen from gil000: Processes Per User
+    alias ppu='ps hax -o user | sort -n | uniq -c | sort -n'
+    # Stolen from gil000: Running Processes Per User
+    alias rppu='ps haxr -o user | sort -n | uniq -c | sort -n'
+    # -S truncate lines, -R process ANSI sequences
+    alias less='less -RS'
+    alias python3='python3 -q'
+    alias python='python3 -q'
+    alias cp='cp -p'
+}
+
 # Use function because of expand_aliases option
 function ln(){ command ln -nv "$@" ; }
 
@@ -103,3 +107,5 @@ _unset_ps0(){
         :
     }
 }
+
+shell_rc_common_main "$@" ; unset -f $_
