@@ -37,6 +37,12 @@ shell_rc.bash.work-main-interactive(){
     maybe_cd_to_pbs_o_workdir ; unset -f $_
     complete -o default -o nospace -o filenames -F _DottableCompletion source .
 
+    alias pmodule="_module_nobox"
+    local module_compspec=$(complete -p module 2>/dev/null)
+    if [[ -n ${module_compspec} ]] ; then
+        ${module_compspec} pmodule
+    fi
+
     # These alias/functions for `which` are cringe
     if alias which >/dev/null 2>&1 ; then unalias which ; fi
     if declare -F which >/dev/null 2>&1 ; then unset -f which ; fi
@@ -124,8 +130,6 @@ _module_nobox(){
     # echo "${FUNCNAME[0]}: If the module is a compiler in sidr000, don't use it in production" >&2
     \module ${color} "$@" &> >(sed '/^$\|\s*|.*|\|\s*+-*+/d')
 }
-alias pmodule="_module_nobox"
-$(complete -p module) pmpdule
 
 maybe_cd_to_pbs_o_workdir(){
     if [[ -z "${PBS_JOBID}" ]] ; then
