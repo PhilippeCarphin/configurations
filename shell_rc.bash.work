@@ -24,7 +24,7 @@ shell_rc.bash.work-main-interactive(){
     [ -d $HOME/.bash_completion.d ] && source-dir "$HOME/.bash_completion.d"
     source ~/.git-completion.bash
     source "$HOME/.philconfig/git_home/git-completion-extras.bash"
-    source /home/phc001/Repositories/gitlab.science.gc.ca/phc001/p.load/etc/profile.d/p.load
+    source "$HOME/Repositories/gitlab.science.gc.ca/phc001/p.load/etc/profile.d/p.load"
     export PACK_DIR=${HOME}/.profile.d/interactive/pack
 
     source "$HOME/.philconfig/shell_lib/p.load"
