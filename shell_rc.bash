@@ -18,8 +18,6 @@ shell_rc.bash.main(){
         shopt -s checkhash # Perform PATH search if command from hash table is not found
         if (( BASH_VERSINFO[0] >= 5 && BASH_VERSINFO[1] >= 3 )) ; then
             shopt -s bash_source_fullpath # Store full paths in BASH_SOURCE array
-        else
-            printf "${BASH_SOURCE[0]}: \033[1;33mWARNING\033[0m: Not activating shell option bash_source_fullpath because version ${BASH_VERSION} does not have it\n" >&2
         fi
     fi
 
