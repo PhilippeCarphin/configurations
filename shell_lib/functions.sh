@@ -1544,10 +1544,52 @@ port-usage(){
     # the single letter ones in -tulpen
     netstat --tcp --udp --listening --program --extend --numeric-ports | command grep "\($1\)\|\(User\)"
 }
+
+for-list(){
+    delim=':'
+    if [[ ${1:-} == "-d" ]] ; then
+        local delim=${2}
+        shift 2
+    fi
+
+    local -n _list=$1 ; shift
+    local cmd=("$@")
+
+    local IFS=${delim}
+    for element in ${_list} ; do
+        (
+            set -- $element
+            eval ${cmd[*]}
+        )
+    done
+}
+complete -v for-list
+
+less(){
+    (
+        command less "$@" </dev/tty &
+        trap "kill $! ; wait" EXIT
+        wait
+    )
+}
+
 tail(){
-    case "$1" in
-        -a) tail-with-header "$2" ;;
-        -s) short-tail "$2" ;;
-        *)  command tail "$@" ;;
-    esac
+    (
+        local cmd
+        case $1 in
+            -a) shift ; cmd=(tail-with-header "$@") ;;
+            -s) shift ; cmd=(short-tail "$@") ;;
+            *) cmd=(command tail "$@") ;;
+        esac
+        "${cmd[@]}" &
+        tail_pid=$!
+        trap "kill $tail_pid; wait" EXIT
+
+        while read -N 1 key ; do
+            case "${key}" in
+                q) printf "\n" ; break ;;
+                *) printf "%s" "${key}" ;;
+            esac
+        done
+    )
 }
