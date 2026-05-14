@@ -187,10 +187,6 @@ function configure_vim(){
 }
 
 set-extra-bindings(){
-    weak_mind(){
-        READLINE_LINE="$READLINE_LINE your mind is weak"
-        READLINE_POINT=0x7fffffff
-    }
     # Escape twice switches to vi-mode, C-k switches to emacs
     bind -m emacs-standard '"\e\e": vi-editing-mode'
     bind -m vi-command '"\v": emacs-editing-mode'
@@ -207,11 +203,6 @@ set-extra-bindings(){
     bind -m vi-command '"\016": next-history'
     bind -m vi-insert '"\020": previous-history'
     bind -m vi-insert '"\016": next-history'
-
-    bind -m vi-command -x '"\e[C": weak_mind'
-    bind -m vi-command -x '"\e[D": weak_mind'
-    bind -m vi-insert -x '"\e[C": weak_mind'
-    bind -m vi-insert -x '"\e[D": weak_mind'
 }
 
 
