@@ -18,6 +18,7 @@ set -s escape-time 100
 
 bind r display 'Sourcing config file ~/.tmux.conf' \; source-file ~/.tmux.conf
 
+set -g status-right-length 100
 set -g status-right 'ORJI CASPAR #(whoami)@#(hostname)  #(TZ="America/Toronto" date "+%%Y-%%m-%%d %%H:%%M")'
 
 set -g default-terminal "xterm-256color"
