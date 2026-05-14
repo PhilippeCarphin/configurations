@@ -1,5 +1,8 @@
 #!/bin/bash
 
+local restore_expand_aliases=$(shopt -p expand_aliases)
+shopt -u expand_aliases
+
 source ~/.philconfig/shell_lib/bash_debug.sh
 source ~/.philconfig/shell_rc_common
 source ~/.philconfig/shell_rc.bash.home
@@ -13,3 +16,5 @@ if [[ -t 0 ]] ; then
     cat ~/apple-mini.txt >&2
 fi
 . "$HOME/.cargo/env"
+
+${restore_expand_aliases}
