@@ -188,6 +188,11 @@
 
 [stash]
 	showPatch = true
+[sequence]
+        # Editor to use only for rebase-todo.txt.  Emacs/magit give me a
+        # read-only buffer where I have hotkeys that I can never remember.
+        # I just want to edit the file.
+	editor = vim
 
 ################################################################################
 # Define completion of git URLs
