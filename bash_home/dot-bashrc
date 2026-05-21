@@ -1,6 +1,6 @@
 #!/bin/bash
 
-local restore_expand_aliases=$(shopt -p expand_aliases)
+bashrc_restore_expand_aliases=$(shopt -p expand_aliases)
 shopt -u expand_aliases
 
 source ~/.philconfig/shell_lib/bash_debug.sh
@@ -17,4 +17,5 @@ if [[ -t 0 ]] ; then
 fi
 . "$HOME/.cargo/env"
 
-${restore_expand_aliases}
+${bashrc_restore_expand_aliases}
+unset bashrc_restore_expand_aliases
