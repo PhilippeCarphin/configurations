@@ -1,5 +1,6 @@
 #!/bin/bash
-
+_functions_expand_aliases=$(shopt -p expand_aliases)
+shopt -u expand_aliases
 
 #
 # Since I put my gitlab access token in an environment variable, and for
@@ -704,6 +705,14 @@ list-remove(){
 
     list="${result_array[*]}"
 }
+_list-remove(){
+    if ((${COMP_CWORD} == 1)) ; then
+        COMPREPLY=($(compgen -A variable -- "${COMP_WORDS[COMP_CWORD]}"))
+    else
+        return
+    fi
+}
+complete -F _list-remove list-remove
 
 complete -A variable print-list
 
@@ -1308,15 +1317,15 @@ r.date(){
 }
 
 
-cmakeh(){
-    cmake --help-command $1 | less
+cmakehc(){
+    cmake --help-command $1 | command less
 }
-_cmakeh(){
+_cmakehc(){
     COMPREPLY=($(compgen -W "$(cmake --help-command-list)" -- "${COMP_WORDS[COMP_CWORD]}"))
 }
-complete -F _cmakeh cmakeh
+complete -F _cmakehc cmakehc
 cmakehm(){
-    cmake --help-module $1 | less
+    cmake --help-module $1 | command less
 }
 _cmakehm(){
     COMPREPLY=($(compgen -W "$(cmake --help-module-list)" -- "${COMP_WORDS[COMP_CWORD]}"))
@@ -1326,24 +1335,60 @@ complete -F _cmakehm cmakehm
 
 ldaps(){
     case "${1}" in -h|--help)
-        echo "${FUNCNAME[0]} PROP=VALUE [PROP=VALUE...] [DISPLAY_PROP...]" ; return 0 ;;
+        echo "${FUNCNAME[0]} PROP=VALUE [PROP=VALUE...] [DISPLAY_PROP...]"
+        echo "'P1=V1 P2=V2' maps to the LDAP filter '(&(P1=*V1*)(P2=*V2*)...)'"
+        echo "Valid properties include cn (full name), uid (username)"
+        return 0 ;;
     esac
 
+    local cmd=(ldapsearch -xLLL)
+
+    #
+    # Combine with an AND all the arguments that contain an equal sign:
+    # `P1=V1 P2=V2` --> `(&(P1=*V1*)(P2=*V2)`
+    #
     local filter="(&"
     while [[ "$1" == *=* ]] ; do
         filter+="(${1%%=*}=*${1#*=}*)" ; shift
     done
     filter+=")"
+    cmd+=("${filter}")
 
-    local cmd=(ldapsearch -xLLL "${filter}" "$@")
+    #
+    # The remaining arguments are forwarded to the command ldapsearch
+    # command.  They are the list of properties we want to see for each result
+    #
+    cmd+=("$@")
+
     printf "filter='${filter}'\n"
     printf "cmd: " ; declare -p cmd
     "${cmd[@]}"
 }
+_ldaps(){
+    local cur=${COMP_WORDS[COMP_CWORD]}
+    declare -p COMP_WORDS
+    case ${cur} in
+        *=*) prop=${cur%%=*}; val=${cur##*=}
+             case ${prop} in
+                 uid) COMPREPLY=($(compgen -p "${prop}=" -u -- "${val}")) ;;
+             esac
+             ;;
+    esac
+}
+complete -F _ldaps ldaps
 
 finger(){
-    ldapsearch -xLLL "(|(cn=*${1}*)(uid=*${1}*))" cn uid mail loginShell
+    case $1 in -h|--help)
+        echo "${FUNCNAME[0]} STR:"
+        echo "Find users whose cn (full name) or uid (username) contains STR"
+        return 0 ;;
+    esac
+    for str in "$@" ; do
+        ldapsearch -xLLL "(|(cn=*${str}*)(uid=*${str}*))" cn uid mail loginShell
+    done
 }
+
+complete -u finger
 
 _killu(){
     local cur prev words cword
@@ -1574,6 +1619,11 @@ less(){
 }
 
 tail(){
+    # Only do the funky stuff if called interactively on the command line
+    if (( ${#FUNCNAME[@]} > 1 )) ; then
+        command tail "$@"
+        return
+    fi
     (
         local cmd
         case $1 in
@@ -1593,3 +1643,5 @@ tail(){
         done
     )
 }
+
+${_functions_expand_aliases} ; unset _functions_expand_aliases

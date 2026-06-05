@@ -37,6 +37,13 @@ export LC_COLLATE=C
 export LC_ADDRESS=en_CA.UTF-8
 export LC_TIME=en_CA.UTF-8
 
+# Ensure a leading colon in MANPATH.  This ensures that we will do the
+# PATH-based search first which in turn ensures that we will be getting the
+# manpage for the same program we are running.
+if [[ $MANPATH != :* ]] ; then
+    export MANPATH=:$MANPATH
+fi
+
 # TERM should probably be set by whatever is launching shells, not by
 # a startup file that has no idea what terminal emulator the shell
 # is running in.
