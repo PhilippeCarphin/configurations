@@ -13,7 +13,7 @@ if [[ -r /opt/homebrew/Cellar/lmod/9.1.2/init/profile ]] ; then
 fi
 
 if [[ -t 0 ]] ; then
-    cat ~/apple-mini.txt >&2
+    cat ~/.login-image.txt >&2
 fi
 . "$HOME/.cargo/env"
 

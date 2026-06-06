@@ -5,6 +5,7 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 case $HOSTNAME in
     studio.local) _powerline_decorations=("" 🍏) ;;
     mini.local) _powerline_decorations=("" "🍎 ") ;;
+    cool-magma.local) _powerline_decorations=("" 🍎) ;;
 esac
 
 alias zsh="NORMAL_MODE=1 PS4=$'+ \033[35m%N\033[0m:\033[32m%i\033[0m ' zsh"
