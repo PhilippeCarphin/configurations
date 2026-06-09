@@ -177,7 +177,8 @@ function check-alert-file(){
     local alert_file="$1"
     if [ -e "${alert_file}" ] ; then
         printf "\033[1;31m Alert from %s\n" "${alert_file}" >&2
-        cat "${alert_file}"
+        cat "${alert_file}" >&2
+        printf "\033[0m" >&2
     fi
 }
 
