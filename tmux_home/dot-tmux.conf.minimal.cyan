@@ -1,0 +1,2 @@
+source-file $TMUX_HOME/dot-tmux.conf.minimal
+source-file $TMUX_HOME/dot-tmux.conf.colors.cyan

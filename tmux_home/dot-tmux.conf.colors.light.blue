@@ -1,0 +1,3 @@
+set -g pane-active-border-style 'bg=color45 fg=color51'
+set -g pane-border-style 'bg=color27 fg=color51'
+set -g status-bg color33

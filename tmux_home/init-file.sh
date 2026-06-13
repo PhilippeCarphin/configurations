@@ -6,3 +6,5 @@ source /home/phc001/Repositories/github.com/philippecarphin/view-command/etc/pro
 source /home/phc001/Repositories/github.com/philippecarphin/tui-selector/file-selector-widget.bash
 PATH=/home/phc001/fs1/bin:$PATH
 LD_LIBRARY_PATH=/home/phc001/fs1/lib:${LD_LIBRARY_PATH}
+
+export LD_LIBRARY_PATH PATH
