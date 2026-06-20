@@ -205,6 +205,7 @@
 [gitcomp]
 	domains = github.com gitlab.com
 	domains = gitlab.science.gc.ca
+	domains = git.savannah.gnu.org
 	remoteNames = upstream origin phb jp github gitlab
 [gitcomp-domain "github.com"]
 	users = philippecarphin torvalds phil-blain itsgifnotjiff
@@ -213,6 +214,8 @@
 	users = philippecarphin gitlab-org phil-blain
 [gitcomp-domain "gitlab.science.gc.ca"]
 	users = phc001 RPN-SI CMDS yor000 CMOI phb001
+[gitcomp-domain "git.savannah.gnu.org"]
+	users = git
 
 ################################################################################
 # Specific settings: Leave this at the end to ensure that specific settings
