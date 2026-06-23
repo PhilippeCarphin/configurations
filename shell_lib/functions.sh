@@ -1564,6 +1564,11 @@ sshpwd(){
     ssh localhost -t "cd $PWD ; bash -l"
 }
 
+projects(){
+    # Command to list values for `-project` in ord_soumet commands (Thanks Ron)
+    sacctmgr -r -p list accounts
+}
+
 if-ok(){
     if (( $? == 0 )) ; then
         "$@"
