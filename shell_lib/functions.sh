@@ -1344,15 +1344,15 @@ ldaps(){
     local cmd=(ldapsearch -xLLL)
 
     #
-    # Combine with an AND all the arguments that contain an equal sign:
-    # `P1=V1 P2=V2` --> `(&(P1=*V1*)(P2=*V2)`
+    # Consume arguments containing '=' as filters
     #
-    local filter="(&"
     while [[ "$1" == *=* ]] ; do
-        filter+="(${1%%=*}=*${1#*=}*)" ; shift
+        filters+="(${1%%=*}=*${1#*=}*)" ; shift
     done
-    filter+=")"
-    cmd+=("${filter}")
+
+    if (( ${#filters[@]} )) ; then
+        cmd+=( "(& ${filters[*]} )")
+    fi
 
     #
     # The remaining arguments are forwarded to the command ldapsearch
@@ -1364,6 +1364,7 @@ ldaps(){
     printf "cmd: " ; declare -p cmd
     "${cmd[@]}"
 }
+
 _ldaps(){
     local cur=${COMP_WORDS[COMP_CWORD]}
     declare -p COMP_WORDS
