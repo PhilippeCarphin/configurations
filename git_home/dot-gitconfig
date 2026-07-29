@@ -73,6 +73,9 @@
 	alias = "!f(){ if [[ -z $1 ]] ; then git config --list | grep alias | sed 's/alias.\\([^=]\\+\\)=.*/\\1/' ; else a=\"$(git config --get alias.$1)\" ; echo \"alias.$1=${a@Q}\" ; fi ; } ; f"
 	# end Merci Philippe Blain
 
+	rawdiff = "!f(){ : git diff ; git -c core.pager=less diff "$@" ; } ; f"
+	rawshow = "!f(){ : git show ; git -c core.pager=less show "$@" ; } ; f"
+
 [diff "fortran-namelist"]
 	xfuncname = "^[ \\t]*&.*$"
 
