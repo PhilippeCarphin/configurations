@@ -24,6 +24,9 @@ p.env(){
     # whole sequence.  This needs to be done as the very first thing so that
     # we only do this to ansi sequences that are part of the value of a variable
     # and not to the ansi sequences added by the following substitutions.
+    # NOTE That only *color* stuff gets matched by this regex and any other
+    # type of ANSI thing will not be matched (we match only the ones that end
+    # with an 'm').
     local replace_ansi_with_chars='s/\x1b\(\[[0-9;]*m\)/\x1b[1;37m\\x1b\1\x1b[0m\x1b\1/g'
     # Hide bash function bodies.  Needs to be done before colorizing the variable
     # names otherwise we won't have a match because there will be an ansi sequence
@@ -31,7 +34,7 @@ p.env(){
     # sed so this will match multiple lines.
     local hide_bash_func_body='s/\(BASH_FUNC_.*%%\)=.*/\1=\x1b[1;38;5;245m{...}\x1b[0m/'
     # Colorize variable names.
-    local colorize_var_names='s/\([a-zA-Z_%]\+\)=\(.*\)/\x1b[34m\1\x1b[1;36m=\x1b[0m\2/'
+    local colorize_var_names='s/\([a-zA-Z0-9_%]\+\)=\(.*\)/\x1b[34m\1\x1b[1;36m=\x1b[0m\2/'
     # Replace gitlab access token with a string of big dots of the same length
     local hide_gitlab_access_token="s/^GITLAB_ACCESS_TOKEN=.*/GITLAB_ACCESS_TOKEN=$(dots "$GITLAB_ACCESS_TOKEN")/"
     local append_sgr0='s/$/\x1b[0m/'
@@ -324,6 +327,25 @@ glcurl(){
     local url="https://gitlab.science.gc.ca/api/v4${request}"
     printf 'curl --header "%s" %s %s\n' "${header}" "${url}" "$*" >&2
     curl --header "$(eval echo $header)" ${url} "$@"
+}
+
+glcurl-simple(){
+    local request="$1" ; shift
+    if [[ -z ${request} ]] ; then
+        printf "${FUNCNAME[0]}: ERROR: Empty request\n"
+        return 1
+    fi
+    if [[ ${request} != /* ]] ; then
+        printf "${FUNCNAME[0]}: ERROR: Requests must start with '/' to match documentation\n"
+        return 1
+    fi
+    if ! [[ -f ~/.ssh/gitlab-access-token ]] ; then
+        printf "${FUNCNAME[0]}: ERROR: File \~/.ssh/gitlab-access-token must and be a single line containing a gitlab access token\n"
+        return 1
+    fi
+    curl --header "PRIVATE-TOKEN: $(<~/.ssh/gitlab-access-token)" \
+         "https://gitlab.science.gc.ca/api/v4${request}" \
+         "$@"
 }
 
 glscurl(){
@@ -988,22 +1010,15 @@ rsync(){
 rsync(){
     # Assume that the last two arguments are the source and destination
     local src="${@: -2:1}" # Space before '-' is necessary
-    local src_base="$(basename "${src}")"
-    local src_path="${src##*:}"
-    local dst="${@: -1:1}" # Space before '-' is necessary
-    local dst_base="$(basename "${dst}")"
-    local dst_path="${dst##*:}"
 
     # With no trailing slash, rsync copies SRC *into* DST which surely not what
     # you want when SRC and DST have the same basenames because you want to make
     # two directories have the same content, not copy one directory into the
     # other.
-    if [[ "${src}" != */ ]] \
-       && [[ "${src_base}" == "${dst_base}" ]] \
-       && [[ -d "${src##*:}" ]] ; then
-        echo "This will create ${posargs[1]##*:}/${base1} at the destination"
+    if [[ "${src}" != */ ]] ; then
+        echo "PHIL: You are missing a trailing slash after the first argument"
         local answer
-        read -p "are you sure you want to continue? [y/n] > " answer
+        read -p "PHIL: are you sure you want to continue? [y/n] > " answer
         if [[ "${answer}" == "n" ]] ; then
             return 1
         fi
@@ -1346,10 +1361,12 @@ ldaps(){
     #
     # Consume arguments containing '=' as filters
     #
+    local filters
     while [[ "$1" == *=* ]] ; do
-        filters+="(${1%%=*}=*${1#*=}*)" ; shift
+        filters+=("(${1%%=*}=*${1#*=}*)") ; shift
     done
 
+    declare -p filters
     if (( ${#filters[@]} )) ; then
         cmd+=( "(& ${filters[*]} )")
     fi
@@ -1388,27 +1405,8 @@ finger(){
         ldapsearch -xLLL "(|(cn=*${str}*)(uid=*${str}*))" cn uid mail loginShell
     done
 }
-
 complete -u finger
 
-_killu(){
-    local cur prev words cword
-    _init_completion || return
-
-    case $prev in
-        -s) _signals ; return ;;
-        -l) return ;;
-    esac
-
-    if (( cword == 1 )) && [[ "$cur" == -* ]] ; then
-        _signals -
-        COMPREPLY+=( $(compgen -W "-s -l" -- "$cur") )
-    else
-        #COMPREPLY=( $(compgen -W '$(pgrep -u $USER)' -- "$cur") )
-        _psu
-    fi
-}
-complete -F _killu kill
 psu(){
     ps -au $USER
 }
@@ -1560,6 +1558,17 @@ fqdel(){
     fi
 }
 
+tmux-uptime(){
+    # local ctime="$(tmux display-message -p "#{session_created}")"
+    # local now="$(date +%s)"
+    # printf "%d\n" "$((now - ctime))"
+    #python3 -c "import datetime ; print(datetime.timedelta(seconds=(${now} - ${ctime})))"
+    python3 <<-EOF
+import datetime
+print(datetime.timedelta(seconds=( $(date +%s) - $(tmux display-message -p "#{session_created}") )))
+EOF
+}
+
 sshpwd(){
     ssh localhost -t "cd $PWD ; bash -l"
 }
@@ -1570,7 +1579,13 @@ projects(){
 }
 
 if-ok(){
-    if (( $? == 0 )) ; then
+    local previous_exit_code=$?
+    if [[ "${1:-}" == "-h" ]] ; then
+        printf "USAGE:\n\n\tif-ok CMD...\n\nRun CMD... if previous command was successful\n"
+        return 0
+    fi
+
+    if (( $previous_exit_code == 0 )) ; then
         "$@"
     else
         printf "Previous command failed, not running '%s'\n" "$*" >&2
@@ -1616,38 +1631,114 @@ for-list(){
 }
 complete -v for-list
 
-less(){
-    (
-        command less "$@" </dev/tty &
-        trap "kill $! ; wait" EXIT
-        wait
-    )
+# less(){
+#     (
+#         command less "$@" </dev/tty &
+#         trap "kill $! ; wait" EXIT
+#         wait
+#     )
+# }
+
+# tail(){
+#     # Only do the funky stuff if called interactively on the command line
+#     if (( ${#FUNCNAME[@]} > 1 )) ; then
+#         command tail "$@"
+#         return
+#     fi
+#     (
+#         local cmd
+#         case $1 in
+#             -a) shift ; cmd=(tail-with-header "$@") ;;
+#             -s) shift ; cmd=(short-tail "$@") ;;
+#             *) cmd=(command tail "$@") ;;
+#         esac
+#         "${cmd[@]}" &
+#         tail_pid=$!
+#         trap "kill $tail_pid; wait" EXIT
+
+#         while read -N 1 key ; do
+#             case "${key}" in
+#                 q) printf "\n" ; break ;;
+#                 *) printf "%s" "${key}" ;;
+#             esac
+#         done
+#     )
+# }
+
+p.apptainer(){
+    # Add /var/spool/pbs,/opt/pbs for MPI stuff (and maybe also for OpenMP)
+    local APPTAINER_BINDPATH="${APPTAINER_BINDPATH:+${APPTAINER_BINDPATH},}/var/spool/pbs,/opt/pbs"
+    env -i LOGNAME=$LOGNAME HOME=$HOME USER=$USER LANG=$LANG TERM=$TERM APPTAINER_BINDPATH=$APPTAINER_BINDPATH PS4="$PS4" apptainer "$@"
+}
+p.apptainer-shell(){
+    local imgage=${1:-~sici000/ci_images/ubuntu-24.04}
+    p.apptainer exec "${image}" bash -l
 }
 
-tail(){
-    # Only do the funky stuff if called interactively on the command line
-    if (( ${#FUNCNAME[@]} > 1 )) ; then
-        command tail "$@"
+p.one-file(){
+    local dir=${1:-.}
+    find ${dir} -mindepth 1 -maxdepth 1 -type f -print -quit
+}
+
+indent(){
+    while IFS= read line ; do
+        printf -- "\t%s\n" "${line}"
+    done
+}
+
+cddrw(){
+    cd $(dirname $(readlink -f $(which $1)))
+}
+
+_philcomp_process_desc(){
+    local -n candidate_array=$1
+    local -n description_array=$2
+
+    #
+    # Return single candidate or nothing if there is only one
+    #
+    if (( ${#candidate_array[@]} <= 1 )) ; then
+        COMPREPLY=(${candidate_array})
         return
     fi
-    (
-        local cmd
-        case $1 in
-            -a) shift ; cmd=(tail-with-header "$@") ;;
-            -s) shift ; cmd=(short-tail "$@") ;;
-            *) cmd=(command tail "$@") ;;
-        esac
-        "${cmd[@]}" &
-        tail_pid=$!
-        trap "kill $tail_pid; wait" EXIT
 
-        while read -N 1 key ; do
-            case "${key}" in
-                q) printf "\n" ; break ;;
-                *) printf "%s" "${key}" ;;
-            esac
-        done
-    )
+    #
+    # Obtain maximum string lengths of PIDs and descriptions
+    #
+    local i max_candidate=0 max_desc=0
+    for ((i=0;i<${#candidate_array[@]};i++)) ; do
+        if (( ${#candidate_array[i]} > max_candidate )) ; then
+            max_candidate=${#candidate_array[i]}
+        fi
+        if (( ${#description_array[i]} > max_desc )) ; then
+            max_desc=${#description_array[i]}
+        fi
+    done
+
+    #
+    # Format completion candidates as
+    #
+    #   '${PID} (${TRUNCATED_DESC})'
+    #
+    local max_len=$((COLUMNS - max_candidate - 4))
+    for((i=0;i<${#candidate_array[@]};i++)); do
+        local desc=${description_array[i]}
+        if ((${#desc} > max_len)) ; then
+            desc=${desc:0:$((max_len-1))}
+            desc+='…'
+        fi
+        printf -v COMPREPLY[i] "%-${max_candidate}s (%s)" "${c_pid[i]}" "${desc}"
+    done
+}
+
+xios-retest(){
+    local root
+    root=$(git rev-parse --show-toplevel)
+    if ! env -C ${root}       ./make_xios --arch intel_u3 --debug "$@" ; then
+        echo "${BASH_SOURCE[0]}:${FUNCNAME[0]}: ERROR: Failed to recompile xios" >&2
+        return 1
+    fi
+    env -C ${root}/tests ARCH=intel_u3 make clean copyexe jobs
 }
 
 ${_functions_expand_aliases} ; unset _functions_expand_aliases

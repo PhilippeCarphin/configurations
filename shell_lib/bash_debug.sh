@@ -63,7 +63,11 @@ function debug(){
 }
 
 function tdebug(){
-    tail -f ~/.bash_debug.d/latest
+    if command -v log-monitor ; then
+        env -C ${HOME}/.bash_debug.d log-monitor
+    else
+        tail -f ~/.bash_debug.d/latest
+    fi
 }
 
 function undebug(){

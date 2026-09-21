@@ -11,6 +11,8 @@
 	st = "!f(){ : git status ; git -C \"${GIT_PREFIX}\" --work-tree=\"${PWD}\" -c color.ui=always status \"$@\" | sed -u \"s/^Submodules changed.*/\\x1b[4;36m&\\x1b[0m/; s/^\\*.*/\\x1b[1;37m&\\x1b[0m/; s/^  <.*/\\x1b[31m&\\x1b[0m/; s/^  >.*/\\x1b[32m&\\x1b[0m/;   s/^Untracked.*/\\x1b[37;41m&\\x1b[0m/; s|\\\" and/or \\\"git commit -a\\\"| -p\\\"|; \" ; } ; f"
 	sts = -c status.submoduleSummary=false status
 
+	# line-merge="!f() { export GIT_HIRES_MERGE_NON_INTERACTIVE_MODE=1; git checkout --conflict=zdiff3 "$@" && git hires-merge "$@" ;}; f"
+	line-merge="!f() { echo 'Install git-hires-merge: https://github.com/paulaltin/git-hires-merge as suggested by Philippe Blain' ; } ; f"
 	suir = submodule update --init --recursive
 	grepr = grep --recurse-submodules
 	lsr = ls-files --recurse-submodule

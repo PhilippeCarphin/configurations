@@ -7,7 +7,11 @@ shell_rc.bash.main(){
     [ -d $HOME/.bash_completion.d ] && source-dir "$HOME/.bash_completion.d"
     source "$HOME/.philconfig/shell_lib/functions.sh"
     if command which glab &>/dev/null ; then
-        eval "$(glab completion)"
+        local glab_completion=$HOME/.local/share/bash-completion/completions/_glab
+        if ! [[ -f $HOME/.local/share/bash-completion/completions/_glab ]] ; then
+            glab completion > ${glab_completion}
+        fi
+        # eval "$(glab completion)"
     fi
     if (( BASH_VERSINFO[0] < 4 )) ; then
         printf "${BASH_SOURCE[0]}: \033[1;33mWARNING\033[0m: bash ${BASH_VERSION}\n"

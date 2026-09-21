@@ -51,3 +51,5 @@ fi
 # if [[ "$-" == *i* ]] ; then
 #     export TERM=screen-256color
 # fi
+
+export MODULES_PAGER="less -R"
