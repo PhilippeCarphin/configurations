@@ -1,2 +1,3 @@
 source-file $TMUX_HOME/dot-tmux.conf.minimal
 source-file $TMUX_HOME/dot-tmux.conf.colors.light.blue
+bind r display-message "Sourcing $TMUX_HOME/dot-tmux.conf.minimal.light.blue" \; source-file $TMUX_HOME/dot-tmux.conf.minimal.light.blue

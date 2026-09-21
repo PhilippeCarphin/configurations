@@ -142,6 +142,7 @@ function main(){
         TLPROFILE
         TLSESSIONDATA
         TMUX
+        TMUX_HOME # A custom thing for me
         USER
         USERNAME
         VSCODE_GIT_ASKPASS_EXTRA_ARGS

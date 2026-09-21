@@ -33,11 +33,16 @@ set -g history-limit 100000
 # Clear history
 bind -n C-l send-keys C-l \; run 'sleep 0.1' \; clear-history
 
+# Allows TMUX to set the clipboard and forward requests to set the clipboard
+# coming from applications to the terminal emulatore.
+set -g set-clipboard on
+
 
 # Ref : https://gitlab.science.gc.ca/hpc/support/-/issues/851
 # set -g default-command "env -u PATH -u TMPDIR -u FIX_THE_PATHS -u ORDENV_SETUP -u ORDENV_USER_PROFILE_FILENAMES /bin/bash --login"
 set -g default-command \
     'env -i \
+        TMUX_HOME=$TMUX_HOME \
         LOGNAME=$LOGNAME \
         USER=$USER \
         HOME=$HOME \
