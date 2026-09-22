@@ -119,7 +119,7 @@ configure_history(){
     HISTTIMEFORMAT=$'\033[1;32m%Y-%m-%d \033[1;33m%H:%M:%S\033[0m '
     HISTFILESIZE=-1
     HISTFILE=~/.eternal_bash_history
-    HISTIGNORE="rm -rf *"
+    HISTIGNORE="rm -rf *${HISTIGNORE:+:${HISTIGNORE}}"
     # At work this is set by /etc/profile
     HISTCONTROL=ignoredups:ignorespace
     if (( BASH_VERSINFO[0] > 4 )) ; then
