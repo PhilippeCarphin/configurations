@@ -528,8 +528,13 @@ p.org-tangle(){
     # It does not say  that  for  the  file  to  open  but  from
     # experimentation, that's what I've seen
     #
-    local file=$1
-    shift
+
+    if (( $# == 0 )) ; then
+        printf "\033[31mERROR\033[0m: Missing FILE argument\n"
+        return 1
+    fi
+
+    local file=$1 ; shift
     if ! [[ -f ${file} ]] ; then
         printf "\033[31mERROR\033[0m: '$file' is not a file or doesn't exist\n"
         return 1
