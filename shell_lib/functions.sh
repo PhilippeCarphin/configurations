@@ -125,6 +125,9 @@ vimf(){
     local directory=$1; shift
     vim -p $(find ${directory} -type f "$@")
 }
+vimgf(){
+    vim $(git find "$@")
+}
 
 cddrw(){
     local cmd=$1
@@ -1745,5 +1748,23 @@ xios-retest(){
     fi
     env -C ${root}/tests ARCH=intel_u3 make clean copyexe jobs
 }
+
+# Select the first argument.
+one(){
+    echo $1
+}
+
+globone(){
+    for f in ${1:-./*} ; do
+        echo $f
+        return
+    done
+}
+
+newest(){
+    local GLOBSORT=-mtime
+    globone "$1"
+}
+
 
 ${_functions_expand_aliases} ; unset _functions_expand_aliases

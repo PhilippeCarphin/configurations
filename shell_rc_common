@@ -27,7 +27,7 @@ shell_rc_common_main(){
     alias less='less -RS'
     alias python3='python3 -q'
     alias python='python3 -q'
-    alias cp='cp -p'
+    alias cp='cp --preserve=mode,timestamps --no-dereference'
 }
 
 # Use function because of expand_aliases option

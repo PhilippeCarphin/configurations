@@ -40,6 +40,9 @@ $endif
 set editing-mode vi
     "\C-l": clear-screen
     "\C-g": abort
+
+    # Take one from the glob expansion the current arg
+    "\C-o": '\C-b"$(one \C-e)"'
     # Vi mode specific keys
 
 set editing-mode emacs
@@ -61,6 +64,11 @@ set editing-mode emacs
     # Emacs universal cancel key
     "\C-g": '\C-c'
 
+    # Take one from the glob expansion the current arg
+    "\C-o": '\C-b"$(one \C-e)"'
+
+    # Surround current line with 'echo ... | clip'
+    "\C-k": '\C-aecho \C-e | clip'
 
 $if Python
     # Surround the current input with help(_) and hit enter
