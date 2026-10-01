@@ -1,0 +1,13 @@
+# Ref : https://gitlab.science.gc.ca/hpc/support/-/issues/851
+# set -g default-command "env -u PATH -u TMPDIR -u FIX_THE_PATHS -u ORDENV_SETUP -u ORDENV_USER_PROFILE_FILENAMES /bin/bash --login"
+set -g default-command \
+    'env -i \
+        TMUX_HOME=$TMUX_HOME \
+        LOGNAME=$LOGNAME \
+        USER=$USER \
+        HOME=$HOME \
+        TERM=$TERM \
+        DISPLAY=$DISPLAY \
+        LANG=$LANG \
+        PS4="+ \033[35m\${BASH_SOURCE[0]}\033[36m:\033[1;37m\${FUNCNAME:+${FUNCNAME[0]}}\033[22;36m:\033[32m\${LINENO}\033[36m:\033[0m " \
+    /bin/bash --init-file /home/phc001/.philconfig/tmux_home/init-file.sh'

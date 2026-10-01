@@ -1,3 +1,5 @@
-source-file $TMUX_HOME/dot-tmux.conf.minimal
+source-file $TMUX_HOME/dot-tmux.conf.base
+source-file $TMUX_HOME/dot-tmux.conf.work
 source-file $TMUX_HOME/dot-tmux.conf.colors.cyan
+source-file $TMUX_HOME/dot-tmux.conf.default-command-init-file
 bind r display-message "Sourcing $TMUX_HOME/dot-tmux.conf.minimal.cyan" \; source-file $TMUX_HOME/dot-tmux.conf.minimal.cyan
