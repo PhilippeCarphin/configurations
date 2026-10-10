@@ -105,5 +105,5 @@ complete -F _ps4 ps4
 if [[ -t 2 ]] ; then
     ps4 full
 else
-    ps4 no-color
+    ps4 short
 fi
