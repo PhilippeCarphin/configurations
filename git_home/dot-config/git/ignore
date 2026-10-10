@@ -50,3 +50,9 @@ ignoreRevsFile
 
 # -- Worktrees inside the repo
 wt-*
+
+# -- Random things
+# I don't want to see this for now and I don't want to adjust the build scripts
+GEM_WORK
+tmp
+xios-dev-package*
