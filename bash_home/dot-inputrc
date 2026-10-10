@@ -1,10 +1,12 @@
 $include /etc/inputrc
-# These 3 are from Philippe Blain
+# These 2 are from Philippe Blain along with 'set colored-stats on' which is
+# in the bash-only section.
 # color common prefix during completion
 set colored-completion-prefix on
 # add type suffix to items during autocompletion
 set visible-stats on
 
+set page-completions off
 set keyseq-timeout 100
 
 # Readline can print a string at the start of the current line to "show"
