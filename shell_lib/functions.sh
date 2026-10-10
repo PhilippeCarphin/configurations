@@ -1529,7 +1529,7 @@ if-ok(){
     fi
 
     if (( $previous_exit_code == 0 )) ; then
-        "$@"
+        eval "$@"
     else
         printf "Previous command failed, not running '%s'\n" "$*" >&2
     fi
