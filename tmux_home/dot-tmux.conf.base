@@ -154,7 +154,7 @@ bind T command-prompt -p "vsplit command >" "split-window \"bash -il /home/phc00
 bind -n C-l send-keys C-l \; run 'sleep 0.1' \; clear-history
 
 # Popups
-bind f display-popup $HOME/bin/tmux-popup-ftclient.sh
+bind f display-popup -E -d '#{pane_current_path}' $HOME/bin/tmux-popup-ftclient.sh
 bind A display-popup -EE -w 120 -h 90% $HOME/.emacs.d/agenda.sh
 bind i display-popup -EE -w 120 -h 40% $HOME/.emacs.d/capture.sh
 
