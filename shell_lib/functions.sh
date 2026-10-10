@@ -1357,6 +1357,8 @@ complete -F _cmakehm cmakehm
 
 
 ldaps(){
+    echo "USE fldap if you don't need complex filters!"
+    sleep 2
     case "${1}" in -h|--help)
         echo "${FUNCNAME[0]} PROP=VALUE [PROP=VALUE...] [DISPLAY_PROP...]"
         echo "'P1=V1 P2=V2' maps to the LDAP filter '(&(P1=*V1*)(P2=*V2*)...)'"
@@ -1497,73 +1499,6 @@ tui-jobdel(){
         qdel "${job}"
     fi
     set +x
-}
-
-fpselect(){
-    local user=${1:-$USER}
-    local pid=$(pgrep -u $user "$@" | xargs -r ps -f | fzf --header-lines=1 | awk '{print $2}')
-    if [[ -z ${pid} ]] ; then
-        return 1
-    fi
-    echo ${pid}
-}
-
-fkill(){
-    local pid
-    if pid=$(fpselect) ; then
-        kill "$@" ${pid}
-    fi
-}
-
-fgdb(){
-    local pid
-    if pid=$(fpselect) ; then
-        gdb -q -tui -p ${pid}
-    fi
-}
-
-fqdel(){
-    local jobid=$(fqstat "$@")
-    if [[ -n ${jobid} ]] ; then
-        qdel ${jobid}
-    fi
-}
-
-fqstat(){
-    local header_lines=2
-    local a
-    # Header is different when -u is used
-    for a in "$@" ; do if [[ $a == -u ]] ; then header_lines=5 ; fi ; done
-    qstat -w "$@" | fzf \
-        --header-lines=${header_lines} \
-        --preview-window=right,40%,wrap \
-        --preview="echo '{}' | awk '{print \$1}' | xargs qstat -f -F json | jq --color-output ' .Jobs | .[]'"
-}
-
-fll(){
-    local dir=${1:-}
-    dir=${dir%/}
-    local result
-    if ! result=$(ls -lhrt ${dir} | fzf | awk '{print $9}') ; then
-        return 1
-    fi
-    echo "${dir:+${dir}/}${result}"
-}
-
-fldap(){
-    getent passwd | \
-        fzf \
-            --preview="echo '{}' | awk -F : '{print \$1}' | xargs -I UID ldapsearch -xLLL uid=UID | sed 's/\(.*\):\(.*\)/\x1b[1;34m\1\x1b[37m:\x1b[0;32m\2\x1b[0m/'" \
-            --preview-window=right,40%,wrap
-}
-
-
-fqdel(){
-    local j=$(fqstat "$@" | awk '{print $1}')
-    if [[ -n $j ]] ; then
-        echo "qdel $j"
-        qdel $j
-    fi
 }
 
 tmux-uptime(){
