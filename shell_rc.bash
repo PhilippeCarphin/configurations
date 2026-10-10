@@ -166,10 +166,11 @@ function configure_vim(){
         done < <(env -0)
         export C_INCLUDE_PATH
         # echo "C_INCLUDE_PATH=${C_INCLUDE_PATH}"
+        local vim_args=(-p --startuptime ~/tmp/vim.log "$@")
         if type -f _gcps_wrap_command 2>/dev/null ; then
-            _gcps_wrap_command command vim -p "$@"
+            _gcps_wrap_command command vim "${vim_args[@]}"
         else
-            command vim -p "$@"
+            command vim -p "${vim_args[@]}"
         fi
     )
 
