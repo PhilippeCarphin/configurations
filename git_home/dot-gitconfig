@@ -90,6 +90,9 @@
 	pager = diff-so-fancy | less --tabs=4 -SRFX
 	hooksPath = ~/.config/git/hooks
 
+[rerere]
+	enabled = true
+	autoUpdate = true
 
 # [interactive]
 #	 diffFilter = /home/phc001/Repositories/github.com/dandavison/delta/localinstall/bin/delta --color-only --features=interactive
