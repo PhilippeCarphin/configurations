@@ -91,7 +91,7 @@ game_of_thrones_shame(){
     trap 'stty echo' EXIT
     stty -echo
     echo "The penalty for violating this rule is the Game of Thrones 'shame' thing"
-    trap 'echo "sorry, you gotta wait through the whole thing"' SIGINT
+    trap "echo \"sorry, you gotta wait through this whole bit that I'm doing\"" SIGINT
     for((n=0;n<5;n++)); do
         echo -n $'ding\a'
         sleep 0.5
