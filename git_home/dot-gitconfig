@@ -8,6 +8,7 @@
 	unmerged  = magenta
 	untracked = red bold
 [alias]
+	rc = rebase --continue
 	st = "!f(){ : git status ; git -C \"${GIT_PREFIX}\" --work-tree=\"${PWD}\" -c color.ui=always status \"$@\" | sed -u \"s/^Submodules changed.*/\\x1b[4;36m&\\x1b[0m/; s/^\\*.*/\\x1b[1;37m&\\x1b[0m/; s/^  <.*/\\x1b[31m&\\x1b[0m/; s/^  >.*/\\x1b[32m&\\x1b[0m/;   s/^Untracked.*/\\x1b[37;41m&\\x1b[0m/; s|\\\" and/or \\\"git commit -a\\\"| -p\\\"|; \" ; } ; f"
 	sts = -c status.submoduleSummary=false status
 
