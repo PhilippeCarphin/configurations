@@ -107,6 +107,9 @@
 [diff]
 	colorMoved = true
 	colorMovedWS = allow-indentation-change
+	# Use letters with some git significance instead of a,b in
+	# a,b in --- a/..., +++ b/...
+	mnemonicPrefix = true
 
 ################################################################################
 # difftool options
