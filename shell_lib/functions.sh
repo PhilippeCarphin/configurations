@@ -1701,5 +1701,9 @@ newest(){
     globone "$1"
 }
 
+json-to-yaml(){
+    python3 -c 'import json; import yaml; import sys; print(yaml.dump(json.load(sys.stdin), sys.stdout))'
+}
+
 
 ${_functions_expand_aliases} ; unset _functions_expand_aliases
