@@ -153,6 +153,12 @@
 
 [submodule]
 	# recurse = true
+
+# With push.default=current and remote.pushDefault=origin, I can set the
+# my branch to track another branch than its upstream counterpart.
+# - git push stays equivalent to git push origin <this-branch>
+# - My prompt will show how many commits ahead/behind my current branch is
+#   relative to this other branch instead of relative to its remote counterpart.
 [push]
 	default = current
 	recurseSubmodules = check
